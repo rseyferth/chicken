@@ -1,10 +1,43 @@
 import Chicken_Core_Object from './Object';
 
+/**
+ * @module Core
+ */
 class Chicken_Core_Observable extends Chicken_Core_Object {
 
 	/**
-	 * Create new observable
-	 * @return {Chicken_Core_Observable}
+	 * The basic object class that notifies **observers** and **students** about 
+	 * changes in its attributes. 
+	 *
+	 * ## Observers
+	 * An observer is an object (in actuality a callback) that watches for changes on 
+	 * a certain attribute or it's child attributes, in case of nested Observables. 
+	 * An observer can {{#crossLink "Core.Observable/disregard"}}{{/crossLink}} the attribute to stop watching.
+	 *
+	 * <code>
+	 * 	// Initialize object and watch for changes
+	 * 	var obj = new Chicken.Core.Observable();
+	 * 	obj.set('foo', 'bar');
+	 * 	var callback = () => {
+	 * 		alert('Changed: ' + obj.get('foo'));
+	 * 	};
+	 * 	obj.observe('foo', callback);
+	 *
+	 * 	// Change
+	 * 	obj.set('foo', 'boo'); // Will alert 'Changed: boo'
+	 *
+	 * 	// Stop watching
+	 *  obj.disregard('foo', callback);
+	 *  obj.set('foo', 'back-to-bar'); // Will not alert anthing
+	 * </code>
+	 *
+	 * ## Students
+	 * A student is an object (in actuality a callback) that watches for changes in
+	 * **any attribute** or any **child attribute**, in case of nested Observables.
+	 * An observer can **neglect** their study to stop wachting.
+	 *
+	 * @class Core.Observable
+	 * @extends Core.Object
 	 */
 	constructor() {
 		
@@ -21,9 +54,26 @@ class Chicken_Core_Observable extends Chicken_Core_Object {
 	// Public methods //
 	////////////////////
 
+	/**
+	 * Get attribute from object
+	 *
+	 * @method get
+	 * @param  {string} key The name of the key to retrieve the value of
+	 * @return The value or undefined when the key is not set
+	 */
 	get(key) {
 		return this._data.get(key);
 	}
+
+	/**
+	 * Set attribute on object. When you set a attribute on Observable, all
+	 * *observers* and *students* will be notified of the change.
+	 *
+	 * @method set
+	 * @param {string} key   The name of the key to store the value of
+	 * @param {mixed} value  The value to store
+	 * @chainable
+	 */
 	set(key, value) {
 
 		// Store the value

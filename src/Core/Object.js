@@ -1,8 +1,13 @@
+/**
+ * @module Core
+ */
 class Chicken_Core_Object {
 
 	/**
-	 * Create new object
-	 * @return {Chicken_Core_Object}
+	 * Basic object that can trigger events
+	 *
+	 * @class Core.Object
+	 * @constructor
 	 */
 	constructor() {
 		
@@ -15,6 +20,19 @@ class Chicken_Core_Object {
 	// Public methods //
 	////////////////////
 
+	/**
+	 * Add listener for chosen event
+	 *
+	 * @method on
+	 * @param  {string}   eventName The event name to listen for.
+	 * @param  {Function} callback  The function to call when the event occurs. Depending on the event, this 
+	 *                              callback can receive 0 or more arguments when called.
+	 * @example
+	 * 		obj.on('message', function(message) {
+	 * 			console.log(message);
+	 * 		});
+	 * @chainable
+	 */
 	on(eventName, callback) {
 
 		// Get the set
@@ -31,6 +49,14 @@ class Chicken_Core_Object {
 
 	}
 
+	/**
+	 * Remove a previously added listener for chosen event
+	 *
+	 * @method off
+	 * @param  {string}   eventName The event name to remove listener for.
+	 * @param  {Function} callback  The previously added callback to remove from listeners.
+	 * @chainable
+	 */
 	off(eventName, callback) {
 
 		// Get the callbacks
