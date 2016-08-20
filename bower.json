@@ -1,0 +1,17 @@
+{
+  "name": "chicken",
+  "description": "Chicken Javascript Webapp Framework",
+  "main": "build/main.bundle.js",
+  "authors": [
+    "Ruben Seyferth <ruben.seyferth@gmail.com>"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ]
+}

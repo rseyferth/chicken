@@ -1,0 +1,29 @@
+{
+  "name": "chickenjs",
+  "version": "0.0.1",
+  "description": "Chicken Javascript Webapp Framework",
+  "main": "src/main.js",
+  "scripts": {
+    "test": "gulp mocha"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.13.2",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.13.2",
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-mocha": "^3.0.1",
+    "mocha": "^3.0.2",
+    "node.extend": "^1.1.5",
+    "webpack": "^1.13.2",
+    "webpack-stream": "^3.2.0"
+  },
+  "dependencies": {
+    "babel-polyfill": "^6.13.0",
+    "deep-get-set": "^1.0.0",
+    "jquery": "^3.1.0",
+    "underscore": "^1.8.3"
+  }
+}
