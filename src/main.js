@@ -2,15 +2,22 @@
 // Vendor libraries //
 //////////////////////
 
-import $ from 'jquery';
-import _ from 'underscore';
+//import $ from 'jquery';
+//import _ from 'underscore';
 
 
 /////////////////////
 // Chicken Classes //
 /////////////////////
 
-import Core_Observable from './Core/Observable';
+import Application from '~/Application';
+
+import Obj from '~/Core/Obj';
+import Observable from '~/Core/Observable';
+import ObservableArray from '~/Core/ObservableArray';
+
+import Router from '~/Routing/Router';
+import Route from '~/Routing/Route';
 
 
 /////////////////////////////
@@ -19,8 +26,24 @@ import Core_Observable from './Core/Observable';
 
 module.exports = {
 
+	Application: Application,
+
 	Core: {
-		Observable: Core_Observable
+		Object: Obj,
+		Observable: Observable,
+		ObservableArray: ObservableArray,
+	},
+
+	Routing: {
+		Route: Route,
+		Router: Router
+	},
+
+
+	createApplication: ($element, options) => {
+
+		return new Application($element, options);
+
 	}
 
 };

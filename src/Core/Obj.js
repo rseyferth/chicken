@@ -1,12 +1,12 @@
 /**
  * @module Core
  */
-class Chicken_Core_Object {
+class Obj {
 
 	/**
 	 * Basic object that can trigger events
 	 *
-	 * @class Core.Object
+	 * @class Core.Obj
 	 * @constructor
 	 */
 	constructor() {
@@ -53,8 +53,8 @@ class Chicken_Core_Object {
 	 * Remove a previously added listener for chosen event
 	 *
 	 * @method off
-	 * @param  {string}   eventName The event name to remove listener for.
-	 * @param  {Function} callback  The previously added callback to remove from listeners.
+	 * @param  {string}   eventName The event name to remove listener for
+	 * @param  {Function} callback  The previously added callback to remove from listeners
 	 * @chainable
 	 */
 	off(eventName, callback) {
@@ -70,6 +70,15 @@ class Chicken_Core_Object {
 
 	}
 
+	/**
+	 * Trigger calling of all registered callbacks for given event
+	 * with given arguments.
+	 *
+	 * @method trigger
+	 * @param  {string}    eventName The event name to trigger callbacks for
+	 * @param  {...mixed}  args      Zero or more arguments to pass along to each callback
+	 * @chainable
+	 */
 	trigger(eventName, ...args) {
 
 		// Get the callbacks
@@ -97,4 +106,4 @@ class Chicken_Core_Object {
 
 }
 
-export default Chicken_Core_Object;
+module.exports = Obj;

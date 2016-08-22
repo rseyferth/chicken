@@ -1,14 +1,35 @@
+/* global describe, it */
+
 import { assert } from 'chai';
-import Observable from '../../src/Core/Observable';
-import Object from '../../src/Core/Object';
+import Observable from '~/Core/Observable';
+import ObservableArray from '~/Core/ObservableArray';
+import Obj from '~/Core/Obj';
 
 
 var obj = new Observable();
 
-describe('Chicken_Core_Observable', () => {
+describe('Core.Observable', () => {
 
-	it('should extend Object', () => {
-		assert.instanceOf(obj, Object);
+	it('should extend Core.Obj', () => {
+		assert.instanceOf(obj, Obj);
+	});
+
+
+	describe('#constructor(initValues, convertObjectToObservables)', () => {
+		it('should store initValues', () => {
+			let o = new Observable({
+				'foo': 'bar'
+			});
+			assert.equal(o.get('foo'), 'bar');
+		});
+		it('should convert Objects in initValues to Observables', () => {
+			let o = new Observable({
+				'child': {
+					'foo': 'bar'
+				}
+			});
+			assert.instanceOf(o.get('child'), Observable);
+		});		
 	});
 
 
@@ -16,13 +37,60 @@ describe('Chicken_Core_Observable', () => {
 		it('should return itself', () => {
 			assert.equal(obj.set('foo', 'bar'), obj);
 		});
+		it('should allow deep setting of attributes in child Observables', () => {
+
+			obj.set('a.third.level', 'inception');
+			assert.instanceOf(obj.get('a'), Observable, 'Not able to get value for "a"');
+			assert.instanceOf(obj.get('a.third'), Observable, 'Not able to get value for "a.third"');
+			assert.equal(obj.get('a.third.level'), 'inception');
+
+		});
+		it('should allow deep setting of ObservableArray\'s', () => {
+
+			obj.set('words.0', 'Hi');
+			obj.set('words.1', 'Bye');
+			obj.set('planets.0.name', 'Mercury');
+			obj.set('planets.0.size', 102051);
+			obj.set('planets.1', {
+				name: 'Venus',
+				size: 6565419
+			}, true);	// Convert object to observable
+			
+			assert.instanceOf(obj.get('words'), ObservableArray, 'words is not an ObservableArray');
+			assert.strictEqual(obj.get('words.0'), 'Hi');
+			assert.strictEqual(obj.get('words.1'), 'Bye');
+
+			assert.instanceOf(obj.get('planets'), ObservableArray);
+			assert.instanceOf(obj.get('planets.0'), Observable);
+			assert.strictEqual(obj.get('planets.0.name'), 'Mercury');
+			assert.strictEqual(obj.get('planets.0.size'), 102051);
+
+			assert.instanceOf(obj.get('planets.1'), Observable);
+			assert.strictEqual(obj.get('planets.1.name'), 'Venus');
+			assert.strictEqual(obj.get('planets.1.size'), 6565419);
+
+		});
+
+		it('should allow deep setting and getting using wildcards', () => {
+
+			obj.set('planets.0.name', 'Mercury');
+			obj.set('planets.0.size', 102051);
+			obj.set('planets.1.name', 'Venus');
+			obj.set('planets.1.size', 6565419);
+
+			assert.deepEqual(obj.get('planets.*.name'), ['Mercury', 'Venus']);
+
+		});
+
 	});
-	it('should remember a property when set', () => {
+	describe('#get(keyName)', () => {
+		it('should return a value when the attribute set', () => {
 
-		var foo = 'bar';
-		obj.set('foo', foo);
-		assert.strictEqual(obj.get('foo'), foo);
+			var foo = 'bar';
+			obj.set('foo', foo);
+			assert.strictEqual(obj.get('foo'), foo);
 
+		});
 	});
 
 	describe('#study(callback)', () => {
@@ -30,7 +98,7 @@ describe('Chicken_Core_Observable', () => {
 		it('should return itself', () => {
 			assert.equal(obj.study(function() {}), obj);
 		});
-		it('should call the callback when any property is updated', () => {
+		it('should call the callback when any attribute is updated', () => {
 
 			var called = false;
 			var callback = (changedAttributes) => {
@@ -54,7 +122,7 @@ describe('Chicken_Core_Observable', () => {
 		it('should return itself', () => {
 			assert.equal(obj.neglect(function() {}), obj);
 		});
-		it('should not call the callback when any property is updated after the object is neglected', () => {
+		it('should not call the callback when any attribute is updated after the object is neglected', () => {
 
 			var called = false;
 			var callback = (changedAttributes) => {
@@ -81,7 +149,7 @@ describe('Chicken_Core_Observable', () => {
 			assert.equal(obj.observe('foo', function() {}), obj);
 		});
 
-		it('should call the callback when the property itself is updated', () => {
+		it('should call the callback when the attribute itself is updated', () => {
 
 			var called = false;
 			obj.observe('foo', () => {
@@ -95,7 +163,7 @@ describe('Chicken_Core_Observable', () => {
 
 		});
 
-		it('should call the callback when a child property of the property is updated', () => {
+		it('should call the callback when a child attribute of the attribute is updated', () => {
 
 			// Create child observable
 			var called = false;
@@ -124,10 +192,10 @@ describe('Chicken_Core_Observable', () => {
 			assert.equal(obj.disregard('foo', function() {}), obj);
 		});
 
-		it('should not call the callback when the property is updated after it is disregarded', () => {
+		it('should not call the callback when the attribute is updated after it is disregarded', () => {
 
 			var called = false;
-			var callback = (value) => {
+			var callback = () => {
 				called = true;
 			};
 			obj.observe('foo', callback);
@@ -139,6 +207,8 @@ describe('Chicken_Core_Observable', () => {
 		});
 
 	});
+
+
 
 
 });

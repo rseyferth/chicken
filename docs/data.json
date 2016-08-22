@@ -106,13 +106,35 @@
             "params": [
                 {
                     "name": "eventName",
-                    "description": "The event name to remove listener for.",
+                    "description": "The event name to remove listener for",
                     "type": "String"
                 },
                 {
                     "name": "callback",
-                    "description": "The previously added callback to remove from listeners.",
+                    "description": "The previously added callback to remove from listeners",
                     "type": "Function"
+                }
+            ],
+            "chainable": 1,
+            "class": "Core.Object",
+            "module": "Core"
+        },
+        {
+            "file": "src/Core/Object.js",
+            "line": 73,
+            "description": "Trigger calling of all registered callbacks for given event\nwith given arguments.",
+            "itemtype": "method",
+            "name": "trigger",
+            "params": [
+                {
+                    "name": "eventName",
+                    "description": "The event name to trigger callbacks for",
+                    "type": "String"
+                },
+                {
+                    "name": "args",
+                    "description": "Zero or more arguments to pass along to each callback",
+                    "type": "...mixed"
                 }
             ],
             "chainable": 1,

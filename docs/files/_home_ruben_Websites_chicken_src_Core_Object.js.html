@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Core</title>
+    <title>/home/ruben/Websites/chicken/src/Core/Object.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -47,8 +47,6 @@
             
                 <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
             
-                <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
-            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
             
                 <li><a href="../classes/Routing.Route.html">Routing.Route</a></li>
@@ -62,8 +60,6 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
-            
-                <li><a href="../modules/Helpers.html">Helpers</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -102,67 +98,120 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Core Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Core/Object.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * @module Core
+ */
+class Obj {
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Core_ObservableArray.js.html#l11"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ObservableArray.js:11</code></a>
-        </div>
-    
+	/**
+	 * Basic object that can trigger events
+	 *
+	 * @class Core.Obj
+	 * @constructor
+	 */
+	constructor() {
+		
+		// Init values
+		this._listeners = new Map();
 
-    
-</div>
+	}
+
+	////////////////////
+	// Public methods //
+	////////////////////
+
+	/**
+	 * Add listener for chosen event
+	 *
+	 * @method on
+	 * @param  {string}   eventName The event name to listen for.
+	 * @param  {Function} callback  The function to call when the event occurs. Depending on the event, this 
+	 *                              callback can receive 0 or more arguments when called.
+	 * @example
+	 * 		obj.on(&#x27;message&#x27;, function(message) {
+	 * 			console.log(message);
+	 * 		});
+	 * @chainable
+	 */
+	on(eventName, callback) {
+
+		// Get the set
+		if (!this._listeners.has(eventName)) {
+			this._listeners.set(eventName, new Set());
+		}
+		var events = this._listeners.get(eventName);
+		
+		// Add callback
+		events.add(callback);
+
+		// Chain
+		return this;
+
+	}
+
+	/**
+	 * Remove a previously added listener for chosen event
+	 *
+	 * @method off
+	 * @param  {string}   eventName The event name to remove listener for
+	 * @param  {Function} callback  The previously added callback to remove from listeners
+	 * @chainable
+	 */
+	off(eventName, callback) {
+
+		// Get the callbacks
+		var callbacks = this._listeners.get(eventName);
+		if (callbacks === undefined) return this;
+
+		// Remove callback
+		callbacks.delete(callback);
+
+		return this;
+
+	}
+
+	/**
+	 * Trigger calling of all registered callbacks for given event
+	 * with given arguments.
+	 *
+	 * @method trigger
+	 * @param  {string}    eventName The event name to trigger callbacks for
+	 * @param  {...mixed}  args      Zero or more arguments to pass along to each callback
+	 * @chainable
+	 */
+	trigger(eventName, ...args) {
+
+		// Get the callbacks
+		var callbacks = this._listeners.get(eventName);
+		if (callbacks === undefined) return this;
+
+		// Loop and call
+		callbacks.forEach((cb) =&gt; {
+			cb.apply(this, args);			
+		});	
+
+
+		return this;
+	}
 
 
 
-<div class="box intro">
-    
-</div>
+	/////////////////////
+	// Private methods //
+	/////////////////////
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Application.html">
-                        Application
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Core.Obj.html">
-                        Core.Obj
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Core.Observable.html">
-                        Core.Observable
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Core.ObservableArray.html">
-                        Core.ObservableArray
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+}
+
+module.exports = Obj;
+    </pre>
 </div>
 
                     </div>

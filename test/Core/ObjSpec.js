@@ -1,10 +1,11 @@
+/* global describe, it */
+
 import { assert } from 'chai';
-import Chicken_Core_Object from '../../src/Core/Object';
+import Obj from '~/Core/Obj';
 
+var obj = new Obj();
 
-var obj = new Chicken_Core_Object();
-
-describe('Chicken_Core_Object', function() {
+describe('Core.Obj', function() {
 	
 	describe('#on(eventName, callback)', function() {
 		it('should return itself', function() {
@@ -21,11 +22,11 @@ describe('Chicken_Core_Object', function() {
 
 			obj.on('testEvent', function(a, b, c) {
 				assert.equal(1, a);
-				assert.equal("2", b);
+				assert.equal('2', b);
 				assert.deepEqual({ value: 3 }, c);
 				done();
 			});
-			obj.trigger('testEvent', 1, "2", { value: 3 });
+			obj.trigger('testEvent', 1, '2', { value: 3 });
 
 		});
 
