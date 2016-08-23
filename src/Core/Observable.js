@@ -62,10 +62,10 @@ class Observable extends Obj {
 	 * @extends Core.Object
 	 *
 	 * @constructor
-	 * @param  {Object}  [initValues={}]          			 A hash of key-value pairs to initialize the object with
-	 * @param  {Boolean} [convertObjectsToObservables=true]	 Whether to convert any  Object values in the `initValues` parameter into Observable instance
+	 * @param  {Object}  [initValues={}]       			 A hash of key-value pairs to initialize the object with
+	 * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
 	 **/
-	constructor(initValues = {}, convertObjectsToObservables = true) {
+	constructor(initValues = {}, convertToObservables = true) {
 		
 		// Basics
 		super();
@@ -75,7 +75,7 @@ class Observable extends Obj {
 		////////////////
 		
 		/**
-		 * @attribute observers
+		 * @property observers
 		 * @type {Map}
 		 */
 		this.observers = new Map();
@@ -92,15 +92,52 @@ class Observable extends Obj {
 		////////////////////
 
 		// Initialize values
-		_.each(initValues, (value, key) => {
-			this.set(key, value, convertObjectsToObservables);
-		});
-
+		this.import(initValues, convertToObservables, true);
+		
 	}
 
 	////////////////////
 	// Public methods //
 	////////////////////
+
+	/**
+	 * Check if attribute is defined
+	 *
+	 * @method has
+	 * @param  {string}  key The name of the key to check
+	 * @return {Boolean}     True when the attribute has been defined
+	 */
+	has(key) {
+
+		// Split
+		let parts = Number.isInteger(key) ? [key] : key.split(/\./);
+		let currentPart = parts.shift(); 
+
+		// No deep shit?
+		if (parts.length === 0) return this.attributes.has(currentPart);
+
+		// Look deeper
+		let value = this.attributes.get(currentPart);
+
+		// No value
+		if (value === undefined) {
+			return false;
+		}
+
+		// Check if the value is also an observable
+		if (Observable.isObservable(value)) {
+
+			// Pass the rest along to go a level deeper
+			return value.has(parts.join('.'));
+
+		} else {
+
+			return false;
+
+		}
+
+
+	}
 
 	/**
 	 * Get attribute from object
@@ -124,7 +161,7 @@ class Observable extends Obj {
 		}
 
 		// Check if the value is also an observable
-		if (typeof value === 'object' && value.isObservable) {
+		if (Observable.isObservable(value)) {
 
 			// Pass the rest along to go a level deeper
 			return value.get(parts.join('.'));
@@ -146,14 +183,16 @@ class Observable extends Obj {
 	 * @method set
 	 * @param {string/array} key   	The name of the key to store the value of. You can use dot-notation to use deep-setting
 	 * @param {mixed} value 		The value to store
-	 * @param {boolean} [convertObjectsToObservables=false]
+	 * @param {boolean} [convertToObservables=false]
 	 *        						Whether to convert standard object values into Observable instances
+	 * @param {boolean} [doNotNotify=false]
+	 *        						Whether to skip notifying listeners
 	 * @chainable
 	 */
-	set(key, value, convertObjectsToObservables = false) {
+	set(key, value, convertToObservables = false, doNotNotify = false) {
 
 		// Convert?
-		if (convertObjectsToObservables === true && typeof value === 'object' && value.constructor === Object) {
+		if (convertToObservables === true && typeof value === 'object' && value.constructor === Object) {
 			value = new Observable(value);
 		}
 
@@ -208,7 +247,7 @@ class Observable extends Obj {
 		this.attributes.set(key, value);
 
 		// Is the value observable?
-		if (typeof value === 'object' && value.isObservable) {
+		if (Observable.isObservable(value)) {
 
 			// Study the object
 			value.study(() => {
@@ -218,10 +257,61 @@ class Observable extends Obj {
 		}
 
 		// Update attribute
-		this._triggerAttributeChanged(key, value);
+		if (!doNotNotify) this._triggerAttributeChanged(key, value);
 
 		return this;
+
 	}
+
+
+	import(obj, convertToObservables = true, doNotNotify = false) {
+
+		// Go through to the object's first level
+		_.each(obj, (value, key) => {
+
+			// Is the value an array or object?
+			if ((Array.isArray(value) || typeof value === 'object') && value !== null && convertToObservables === true) {
+
+				// Do I have this value?
+				if (this.attributes.has(key) && Observable.isObservable(this.attributes.get(key))) {
+
+					// Import
+					var obj = this.attributes.get(key);
+					obj.import(value, convertToObservables, doNotNotify);
+
+				} else {
+
+					// Array or object?
+					if (Array.isArray(value)) {
+						
+						// Put a new observable array in there
+						this.attributes.set(key, ClassMap.create('ObservableArray', [value]));
+
+					} else {
+
+						// Put a new observable in there
+						this.attributes.set(key, new Observable(value));
+
+					}
+
+				}
+			
+			} else {
+
+				// Just set the value (don't notify)
+				this.set(key, value, convertToObservables, true);
+
+			}
+
+		});	
+
+		// Notify!
+		this.trigger(Observable.Events.Import);
+
+		return this;
+
+	}
+
 
 	/**
 	 * Listen for any changes in any of the object's attributes. 
@@ -339,6 +429,41 @@ class Observable extends Obj {
 	}
 
 
+	toObject() { 
+
+		var obj = {};
+		this.attributes.forEach((item, key) => {
+
+			// Observable?
+			if (Observable.isObservable(item)) {
+
+				// Array?
+				if (item instanceof Observable) {
+					item = item.toObject();
+				} else {
+					item = item.toArray();
+				}
+
+			}
+
+			obj[key] = item;
+
+		});
+
+		return obj;
+
+	}
+
+
+	clone(convertToObservables = true) {
+
+		// Make copy!
+		var c = this.constructor;
+		var copy = new c(this.toObject(), convertToObservables);
+		return copy;
+
+	}
+
 
 	/////////////////////
 	// Private methods //
@@ -383,7 +508,7 @@ class Observable extends Obj {
 
 
 
-	get isObservable() {
+	isObservable() {
 		return true;
 	}
 
@@ -404,9 +529,23 @@ Observable.Events = {
 	 * 
 	 * @event change
 	 */
-	Change: 'change'
+	Change: 'change',
+
+	/**
+	 * This event is fired whenever an import is completed
+	 *
+	 * @event import
+	 */
+	Import: 'import'
 	
 };
+
+Observable.isObservable = (obj) => {
+
+	return typeof obj === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
+
+};
+
 
 ClassMap.register('Observable', Observable);
 

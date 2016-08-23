@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Routing/Router.js</title>
+    <title>Routing.Controller</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -112,189 +112,66 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Routing/Router.js</h1>
+                        <h1>Routing.Controller Class</h1>
+<div class="box meta">
+    
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-/* eslint no-console: [&quot;error&quot;, { allow: [&quot;table&quot;] }] */
+    
 
-import _ from &#x27;underscore&#x27;;
+    
+        <div class="foundat">
+            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Routing_Controller.js.html#l7"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Controller.js:7</code></a>
+        </div>
+    
 
-import Obj from &#x27;~/Core/Obj&#x27;;
-import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
-import Route from &#x27;~/Routing/Route&#x27;;
-import Request from &#x27;~/Routing/Request&#x27;;
+    
+        
+            Module: <a href="../modules/Routing.html">Routing</a>
+        
+    
 
-
-/**
- * @module Routing
- */
-class Router extends Obj
-{
-	
-	/**
-	 * 
-	 * 
-	 * @class Routing.Router
-	 * @extends Core.Object
-	 */
-	constructor() {
-		super();
-		
-		////////////////
-		// Properties //
-		////////////////
-
-		/**
-		 * @property routes
-		 * @type {Array}
-		 */
-		this.routes = [];
-
-
-		///////////////////////////////////////////
-		// Grouped configuration state variables //
-		///////////////////////////////////////////
-
-		this._currentConfig = SettingsObject.create({
-
-			parentRoute: null,
-			viewContainer: &#x27;main&#x27;
-
-		}, [&#x27;parentRoute&#x27;, &#x27;viewContainer&#x27;]);
+    
+</div>
 
 
 
-
-	}	
-
-
-	////////////////////////
-	// Definition methods //
-	////////////////////////
-
-	/**
-	 * Create a Route and add it to the Router.
-	 *
-	 * @method route
-	 * @param  {string} 			pattern 	The uri pattern
-	 * @param  {Object|String} 		actions     
-	 * @param  {Object} 			[options] 
-	 * @return {Routing.Route}        
-	 */
-	route(pattern, actions, options = {}) {
-
-		// Merge options
-		options = _.defaults({}, options, _.omit(this._currentConfig.toObject(), &#x27;parentRoute&#x27;));
-		
-		// Create the route
-		var route = new Route(this, this._currentConfig.get(&#x27;parentRoute&#x27;),	pattern, actions, options);
-		
-		// Add route
-		this.routes.push(route);
-
-		// Return route
-		return route;
-
-	}
-
-	/**
-	 * Configure the Router to add the given options to
-	 * the Routes you define within the callback.
-	 *
-	 * @method group
-	 * @param  {object}   options  
-	 * @param  {Function} callback 
-	 * @chainable
-	 */
-	group(options, callback) {
-
-		// Store options
-		var oldConfig = this._currentConfig.clone();
-		this._currentConfig.apply(options);
-
-		// Do the callback
-		callback.apply(this);
-
-		// Restore options
-		this._currentConfig = oldConfig;
-
-		return this;
-
-	}
+<div class="box intro">
+    
+</div>
 
 
 
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-	//////////////////////
-	// Router in action //
-	//////////////////////
+        
+        
+        
+        
+    </ul>
 
-	/**
-	 * Handle given Request, by finding a matching Route
-	 * and executing it.
-	 * 
-	 * @method handle
-	 * @param  {Routing.Request} request 
-	 * @chainable
-	 */
-	handle(request) {
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
 
-		// Is it just a URL passed along?
-		if (!(request instanceof Request)) {
-			request = new Request(request);
-		}
+            
 
-		// Loop through routes until we found something.
-		var routeMatch = _.find(this.routes, (route) =&gt; {
-			return route.match(request);
-		});
-		
+            
 
+            
 
-		// Found something?
+            
+        </div>
 
-		console.log(&#x27;Router&#x27;, routeMatch);
+        
 
-		return this;
+        
 
-	}
+        
 
-
-
-	/**
-	 * Output a table to the console containing an overview
-	 * of all defined routes.
-	 *
-	 * Note: This is not supported in all browsers!
-	 * https://developer.mozilla.org/en-US/docs/Web/API/Console/table
-	 *  
-	 * @method outputToConsole
-	 * @chainable
-	 */
-	outputToConsole() {
-
-		// Loop and log
-		console.table(_.map(this.routes, (route) =&gt; {
-			return {
-				&#x27;Pattern&#x27;: route.getFullPattern(),
-				&#x27;Actions&#x27;: route.isAbstract() ? &#x27;(abstract)&#x27; : _.map(route.getFullActions(), (action, targetViewContainer) =&gt; { 
-					return targetViewContainer + &#x27;: &#x27; + (typeof action === &#x27;function&#x27; ? &#x27;(Callback)&#x27; : action);
-				}).join(&#x27;, &#x27;),
-				&#x27;Regular expression&#x27;: route.getRegExp()
-			};
-		}));
-
-		return this;
-
-	}
-
-
-}
-
-
-module.exports = Router;
-    </pre>
+        
+    </div>
 </div>
 
                     </div>

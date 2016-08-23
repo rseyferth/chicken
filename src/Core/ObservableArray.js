@@ -13,14 +13,68 @@ class ObservableArray extends Obj
 	 * of any changes in the list or any of it's observable items.
 	 *
 	 * @class Core.ObservableArray
+	 *
+	 * @constructor
+	 * @param  {Array}  [initValues=[]]        			 An array of values to initialize the object with
+	 * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
 	 */
-	constructor(...values) {
+	constructor(initValues = [], convertToObservables = true) {
 		super();
 
 		
-		// Add items
+		// Properties
 		this._items = [];
-		this.add.apply(this, values);
+		
+
+		// Import start values
+		this.import(initValues, convertToObservables, true);
+
+
+	}
+
+
+	import(arr, convertToObservables = true, doNotNotify = false) {
+
+		// Go through to the object's first level
+		_.each(arr, (value) => {
+
+			// Is the value an array or object?
+			if ((Array.isArray(value) || typeof value === 'object') && convertToObservables === true) {
+
+				// Array or object?
+				if (Array.isArray(value)) {
+					
+					// Put a new observable array in there
+					this.items.push(new ObservableArray(value));
+
+				} else {
+
+					// Put a new observable in there
+					this.items.push(ClassMap.create('Observable', [value]));					
+
+				}
+
+			} else {
+
+				// Just add the value (don't notify)
+				this.items.push(value);
+
+			}
+
+		});	
+
+		// Trigger import
+		this.trigger(ObservableArray.Events.Import);
+
+		// Notify of change?
+		if (!doNotNotify) {
+			this.trigger('change');
+			this.trigger('added', arr);
+		}
+
+
+		return this;
+
 	}
 
 
@@ -58,7 +112,7 @@ class ObservableArray extends Obj
 		}
 
 		// Check if the value is also an observable
-		if (typeof value === 'object' && value.isObservable) {
+		if (ObservableArray.isObservable(value)) {
 
 			// Pass the rest along to go a level deeper
 			return value.get(parts.join('.'));
@@ -73,10 +127,10 @@ class ObservableArray extends Obj
 
 	}
 
-	set(key, value, convertObjectsToObservables = false) {
+	set(key, value, convertToObservables = false) {
 
 		// Convert?
-		if (convertObjectsToObservables === true && typeof value === 'object' && value.constructor === Object) {
+		if (convertToObservables === true && typeof value === 'object' && value.constructor === Object) {
 			value = ClassMap.create('Observable', value);
 		}
 
@@ -158,7 +212,7 @@ class ObservableArray extends Obj
 			this._items.push(value);
 
 			// Is it observable?
-			if (typeof value === 'object' && value.isObservable) {
+			if (ObservableArray.isObservable(value)) {
 				value.on('change', () => {
 					this.trigger('change');
 				});
@@ -276,6 +330,29 @@ class ObservableArray extends Obj
 
 
 
+	toArray() {
+
+		return this.items.map((item) => {
+
+			// Observable?
+			if (ObservableArray.isObservable(item)) {
+
+				// Array?
+				if (item instanceof ObservableArray) {
+					return item.toArray();
+				} else {
+					return item.toObject();
+				}
+
+			}
+
+			return item;
+		});
+
+	}
+
+
+
 	/**
 	 * The number of items in the array
 	 * 
@@ -298,7 +375,8 @@ class ObservableArray extends Obj
 	}
 
 
-	get isObservable() {
+
+	isObservable() {
 		return true;
 	}
 
@@ -344,11 +422,26 @@ ObservableArray.Events = {
 	 *
 	 * @event empty
 	 */
-	Empty: 'empty'
+	Empty: 'empty',
+
+	/**
+	 * This event is fired whenever an import is completed
+	 *
+	 * @event import
+	 */
+	Import: 'import'
 	
 };
 
+ObservableArray.isObservable = (obj) => {
+
+	return typeof obj === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
+
+};
+
 ClassMap.register('ObservableArray', ObservableArray);
+
+
 
 
 module.exports = ObservableArray;

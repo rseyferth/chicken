@@ -3,10 +3,10 @@
 import { assert } from 'chai';
 import jsdom from 'jsdom';
 import jQuery from 'jquery';
+import { createMemoryHistory } from 'history';
 
 import Application from '~/Application';
 import Obj from '~/Core/Obj';
-
 
 // Initialize jQuery
 var document = jsdom.jsdom('<!doctype html><html><body></body></html>');
@@ -16,7 +16,9 @@ var $body = $('body');
 
 // Init objects
 const $app = $('<div id="application"></div>').appendTo($body);
-const app = new Application($app);
+const app = new Application($app, {
+
+}, createMemoryHistory());
 
 
 

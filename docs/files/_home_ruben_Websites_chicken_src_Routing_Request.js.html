@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Routing/Router.js</title>
+    <title>/home/ruben/Websites/chicken/src/Routing/Request.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -112,188 +112,67 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Routing/Router.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Routing/Request.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-/* eslint no-console: [&quot;error&quot;, { allow: [&quot;table&quot;] }] */
-
-import _ from &#x27;underscore&#x27;;
-
-import Obj from &#x27;~/Core/Obj&#x27;;
-import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
-import Route from &#x27;~/Routing/Route&#x27;;
-import Request from &#x27;~/Routing/Request&#x27;;
-
+import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 
 /**
  * @module Routing
  */
-class Router extends Obj
+class Request
 {
-	
-	/**
-	 * 
-	 * 
-	 * @class Routing.Router
-	 * @extends Core.Object
-	 */
-	constructor() {
-		super();
-		
-		////////////////
-		// Properties //
-		////////////////
-
-		/**
-		 * @property routes
-		 * @type {Array}
-		 */
-		this.routes = [];
-
-
-		///////////////////////////////////////////
-		// Grouped configuration state variables //
-		///////////////////////////////////////////
-
-		this._currentConfig = SettingsObject.create({
-
-			parentRoute: null,
-			viewContainer: &#x27;main&#x27;
-
-		}, [&#x27;parentRoute&#x27;, &#x27;viewContainer&#x27;]);
-
-
-
-
-	}	
-
-
-	////////////////////////
-	// Definition methods //
-	////////////////////////
 
 	/**
-	 * Create a Route and add it to the Router.
+	 * @class Routing.Request
 	 *
-	 * @method route
-	 * @param  {string} 			pattern 	The uri pattern
-	 * @param  {Object|String} 		actions     
-	 * @param  {Object} 			[options] 
-	 * @return {Routing.Route}        
+	 * @constructor
+	 * @param {object} 			location 		The location received from the History library
+	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
 	 */
-	route(pattern, actions, options = {}) {
+	constructor(location, application = null) {
 
-		// Merge options
-		options = _.defaults({}, options, _.omit(this._currentConfig.toObject(), &#x27;parentRoute&#x27;));
+		// Guess application if not given
+		if (!application) application = ClassMap.get(&#x27;Application&#x27;).getInstance();
+
+		// Parse the uri 
+		let uri = Request.cleanUri(location.pathname);
 		
-		// Create the route
-		var route = new Route(this, this._currentConfig.get(&#x27;parentRoute&#x27;),	pattern, actions, options);
-		
-		// Add route
-		this.routes.push(route);
-
-		// Return route
-		return route;
-
-	}
-
-	/**
-	 * Configure the Router to add the given options to
-	 * the Routes you define within the callback.
-	 *
-	 * @method group
-	 * @param  {object}   options  
-	 * @param  {Function} callback 
-	 * @chainable
-	 */
-	group(options, callback) {
-
-		// Store options
-		var oldConfig = this._currentConfig.clone();
-		this._currentConfig.apply(options);
-
-		// Do the callback
-		callback.apply(this);
-
-		// Restore options
-		this._currentConfig = oldConfig;
-
-		return this;
-
-	}
-
-
-
-
-	//////////////////////
-	// Router in action //
-	//////////////////////
-
-	/**
-	 * Handle given Request, by finding a matching Route
-	 * and executing it.
-	 * 
-	 * @method handle
-	 * @param  {Routing.Request} request 
-	 * @chainable
-	 */
-	handle(request) {
-
-		// Is it just a URL passed along?
-		if (!(request instanceof Request)) {
-			request = new Request(request);
+		// Strip of base part
+		var baseUrl = Request.cleanUri(application.settings.get(&#x27;baseUrl&#x27;));
+		if (uri.length &gt;= baseUrl.length &amp;&amp; uri.substr(0, baseUrl.length)) {
+			uri = uri.substr(baseUrl.length);
 		}
 
-		// Loop through routes until we found something.
-		var routeMatch = _.find(this.routes, (route) =&gt; {
-			return route.match(request);
-		});
-		
+		// Add the / back again
+		uri = &#x27;/&#x27; + uri;
 
-
-		// Found something?
-
-		console.log(&#x27;Router&#x27;, routeMatch);
-
-		return this;
+		/**
+		 * @property uri
+		 * @type {string}
+		 */
+		this.uri = uri;
 
 	}
 
 
-
-	/**
-	 * Output a table to the console containing an overview
-	 * of all defined routes.
-	 *
-	 * Note: This is not supported in all browsers!
-	 * https://developer.mozilla.org/en-US/docs/Web/API/Console/table
-	 *  
-	 * @method outputToConsole
-	 * @chainable
-	 */
-	outputToConsole() {
-
-		// Loop and log
-		console.table(_.map(this.routes, (route) =&gt; {
-			return {
-				&#x27;Pattern&#x27;: route.getFullPattern(),
-				&#x27;Actions&#x27;: route.isAbstract() ? &#x27;(abstract)&#x27; : _.map(route.getFullActions(), (action, targetViewContainer) =&gt; { 
-					return targetViewContainer + &#x27;: &#x27; + (typeof action === &#x27;function&#x27; ? &#x27;(Callback)&#x27; : action);
-				}).join(&#x27;, &#x27;),
-				&#x27;Regular expression&#x27;: route.getRegExp()
-			};
-		}));
-
-		return this;
-
-	}
+	
 
 
 }
 
+Request.cleanUri = (uri) =&gt; {
 
-module.exports = Router;
+	if (/^\//.test(uri)) uri = uri.substr(1);
+	if (/\/$/.test(uri)) uri = uri.substr(0, uri.length - 1);
+	return uri;
+
+};
+
+
+module.exports = Request;
+
     </pre>
 </div>
 

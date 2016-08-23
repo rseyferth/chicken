@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Routing/Router.js</title>
+    <title>/home/ruben/Websites/chicken/src/Routing/Action.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -112,188 +112,187 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Routing/Router.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Routing/Action.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-/* eslint no-console: [&quot;error&quot;, { allow: [&quot;table&quot;] }] */
-
-import _ from &#x27;underscore&#x27;;
-
+import XRegExp from &#x27;xregexp&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
-import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
-import Route from &#x27;~/Routing/Route&#x27;;
-import Request from &#x27;~/Routing/Request&#x27;;
-
 
 /**
  * @module Routing
  */
-class Router extends Obj
+class Action extends Obj
 {
-	
+
 	/**
-	 * 
-	 * 
-	 * @class Routing.Router
-	 * @extends Core.Object
+	 * @class Routing.Action
+	 * @extends Core.Obj
 	 */
-	constructor() {
+	constructor(targetViewContainer, controllerActionOrCallback, request) {
+
 		super();
-		
+
 		////////////////
-		// Properties //
+		// Attributes //
 		////////////////
 
 		/**
-		 * @property routes
+		 * The name of the ViewContainer that this action is targeting.
+		 * 
+		 * @property targetViewContainer
+		 * @type {string}
+		 */
+		this.targetViewContainer = targetViewContainer;
+
+
+		/**
+		 * The Request instance that was used to create this action
+		 * 
+		 * @property request
+		 * @type {Routing.Request}
+		 */
+		this.request = request;
+
+
+		/**
+		 * The Route that defined this action
+		 *
+		 * @property route
+		 * @type {Routing.Route}
+		 */
+		this.route = null;
+
+
+		/**
+		 * The Route that matched the Request
+		 *
+		 * @property matchedRoute
+		 * @type {Routing.Route}
+		 */
+		this.matchedRoute = null;
+
+
+		/**
+		 * The RouteMatch that this Action is a part
+		 *
+		 * @property routeMatch
+		 * @type {Routing.RouteMatch}
+		 */
+		this.routeMatch = null;
+
+
+		/**
+		 * The instance of the Controller that has been created by 
+		 * this action.
+		 * 
+		 * @property controller
+		 * @type {Routing.Controller}
+		 */
+		this.controller = null;
+
+
+		/**
+		 * The name of the Controller class used by this action
+		 * 
+		 * @property controllerClass
+		 * @type {string}
+		 */
+		this.controllerClass = null;
+
+		/**
+		 * The name of the Controller method used by this action
+		 * 
+		 * @property controllerMethod
+		 * @type {string}
+		 */
+		this.controllerMethod = null;
+
+
+		/**
+		 * A callback function, when the route did not configure
+		 * a Controller to be used, but an inline callback instead.
+		 * 
+		 * @property callback
+		 * @type {function}
+		 */
+		this.callback = false;
+
+
+		/**
+		 * A map of request parameters that are supplied to this action.
+		 * 
+		 * @property parameters
+		 * @type {Map}
+		 */
+		this.parameters = new Map();
+
+
+		/**
+		 * An array of request parameters, in the order of the route&#x27;s
+		 * pattern definition
+		 *
+		 * @property parameterArray
 		 * @type {Array}
 		 */
-		this.routes = [];
+		this.parameterArray = [];
 
 
-		///////////////////////////////////////////
-		// Grouped configuration state variables //
-		///////////////////////////////////////////
-
-		this._currentConfig = SettingsObject.create({
-
-			parentRoute: null,
-			viewContainer: &#x27;main&#x27;
-
-		}, [&#x27;parentRoute&#x27;, &#x27;viewContainer&#x27;]);
-
-
-
-
-	}	
-
-
-	////////////////////////
-	// Definition methods //
-	////////////////////////
-
-	/**
-	 * Create a Route and add it to the Router.
-	 *
-	 * @method route
-	 * @param  {string} 			pattern 	The uri pattern
-	 * @param  {Object|String} 		actions     
-	 * @param  {Object} 			[options] 
-	 * @return {Routing.Route}        
-	 */
-	route(pattern, actions, options = {}) {
-
-		// Merge options
-		options = _.defaults({}, options, _.omit(this._currentConfig.toObject(), &#x27;parentRoute&#x27;));
-		
-		// Create the route
-		var route = new Route(this, this._currentConfig.get(&#x27;parentRoute&#x27;),	pattern, actions, options);
-		
-		// Add route
-		this.routes.push(route);
-
-		// Return route
-		return route;
-
-	}
-
-	/**
-	 * Configure the Router to add the given options to
-	 * the Routes you define within the callback.
-	 *
-	 * @method group
-	 * @param  {object}   options  
-	 * @param  {Function} callback 
-	 * @chainable
-	 */
-	group(options, callback) {
-
-		// Store options
-		var oldConfig = this._currentConfig.clone();
-		this._currentConfig.apply(options);
-
-		// Do the callback
-		callback.apply(this);
-
-		// Restore options
-		this._currentConfig = oldConfig;
-
-		return this;
-
-	}
+		/**
+		 * An array of other Actions that this Action depends on, 
+		 * meaning it will wait for them to finish, before executing.
+		 *
+		 * This is useful when you have a route where the second action
+		 * renders into a ViewContainer that is created by the first action.
+		 * Child routes will automatically wait for the parent route to finish
+		 * before running it&#x27;s own actions.
+		 * 
+		 * @property dependsOn
+		 * @type {Array}
+		 */
+		this.dependsOn = [];
 
 
 
 
-	//////////////////////
-	// Router in action //
-	//////////////////////
+		///////////////////////////
+		// Check passed argument //
+		///////////////////////////
 
-	/**
-	 * Handle given Request, by finding a matching Route
-	 * and executing it.
-	 * 
-	 * @method handle
-	 * @param  {Routing.Request} request 
-	 * @chainable
-	 */
-	handle(request) {
+		if (typeof controllerActionOrCallback === &#x27;string&#x27;) {
 
-		// Is it just a URL passed along?
-		if (!(request instanceof Request)) {
-			request = new Request(request);
+			// Parse controller name
+			var match = XRegExp.exec(controllerActionOrCallback, Action.controllerActionRegExp);
+			if (!match) throw new TypeError(&#x27;Invalid action string: &#x27; + controllerActionOrCallback + &#x27;. Use controller@method format.&#x27;);
+			
+			// Store this
+			this.controllerClass = match.class;
+			this.controllerAction = match.action;
+
+
+
+		} else if (controllerActionOrCallback === &#x27;function&#x27;) {
+
+			// Store it
+			this.callback = controllerActionOrCallback;
+
+		} else {
+
+			throw new TypeError(&#x27;Unknown controllerActionOrCallback value&#x27;);
+
 		}
 
-		// Loop through routes until we found something.
-		var routeMatch = _.find(this.routes, (route) =&gt; {
-			return route.match(request);
-		});
-		
 
-
-		// Found something?
-
-		console.log(&#x27;Router&#x27;, routeMatch);
-
-		return this;
 
 	}
-
-
-
-	/**
-	 * Output a table to the console containing an overview
-	 * of all defined routes.
-	 *
-	 * Note: This is not supported in all browsers!
-	 * https://developer.mozilla.org/en-US/docs/Web/API/Console/table
-	 *  
-	 * @method outputToConsole
-	 * @chainable
-	 */
-	outputToConsole() {
-
-		// Loop and log
-		console.table(_.map(this.routes, (route) =&gt; {
-			return {
-				&#x27;Pattern&#x27;: route.getFullPattern(),
-				&#x27;Actions&#x27;: route.isAbstract() ? &#x27;(abstract)&#x27; : _.map(route.getFullActions(), (action, targetViewContainer) =&gt; { 
-					return targetViewContainer + &#x27;: &#x27; + (typeof action === &#x27;function&#x27; ? &#x27;(Callback)&#x27; : action);
-				}).join(&#x27;, &#x27;),
-				&#x27;Regular expression&#x27;: route.getRegExp()
-			};
-		}));
-
-		return this;
-
-	}
-
 
 }
 
+Action.controllerActionRegExp = XRegExp(&#x27;^(?&lt;class&gt;[A-Z][a-zA-Z0-9\-\.]+)@(?&lt;action&gt;[a-z][a-zA-Z0-9\_]+)$&#x27;);
 
-module.exports = Router;
+
+module.exports = Action;
+
     </pre>
 </div>
 

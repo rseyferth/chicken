@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("_"));
+		module.exports = factory(require("$"), require("_"));
 	else if(typeof define === 'function' && define.amd)
-		define(["_"], factory);
+		define(["$", "_"], factory);
 	else if(typeof exports === 'object')
-		exports["Chicken"] = factory(require("_"));
+		exports["Chicken"] = factory(require("$"), require("_"));
 	else
-		root["Chicken"] = factory(root["_"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_2__) {
+		root["Chicken"] = factory(root["$"], root["_"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_27__, __WEBPACK_EXTERNAL_MODULE_29__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -60,25 +60,61 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Application2 = _interopRequireDefault(_Application);
 
-	var _Obj = __webpack_require__(4);
+	var _Obj = __webpack_require__(30);
 
 	var _Obj2 = _interopRequireDefault(_Obj);
 
-	var _Observable = __webpack_require__(3);
+	var _Observable = __webpack_require__(28);
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(7);
+	var _ObservableArray = __webpack_require__(49);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
-	var _Router = __webpack_require__(6);
+	var _SettingsObject = __webpack_require__(32);
 
-	var _Router2 = _interopRequireDefault(_Router);
+	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Route = __webpack_require__(8);
+	var _View = __webpack_require__(50);
+
+	var _View2 = _interopRequireDefault(_View);
+
+	var _ViewContainer = __webpack_require__(34);
+
+	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
+
+	var _Chainable = __webpack_require__(33);
+
+	var _Chainable2 = _interopRequireDefault(_Chainable);
+
+	var _ClassMap = __webpack_require__(31);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	var _Action = __webpack_require__(47);
+
+	var _Action2 = _interopRequireDefault(_Action);
+
+	var _Controller = __webpack_require__(51);
+
+	var _Controller2 = _interopRequireDefault(_Controller);
+
+	var _Request = __webpack_require__(48);
+
+	var _Request2 = _interopRequireDefault(_Request);
+
+	var _Route = __webpack_require__(36);
 
 	var _Route2 = _interopRequireDefault(_Route);
+
+	var _RouteMatch = __webpack_require__(46);
+
+	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
+
+	var _Router = __webpack_require__(35);
+
+	var _Router2 = _interopRequireDefault(_Router);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -86,7 +122,55 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Chicken Package exports //
 	/////////////////////////////
 
-	//////////////////////
+	// Routing
+
+
+	// Helpers
+
+
+	// Dom
+
+
+	// Core
+	module.exports = {
+
+		Application: _Application2.default,
+
+		Core: {
+			Obj: _Obj2.default,
+			Observable: _Observable2.default,
+			ObservableArray: _ObservableArray2.default,
+			SettingsObject: _SettingsObject2.default
+		},
+
+		Dom: {
+			View: _View2.default,
+			ViewContainer: _ViewContainer2.default
+		},
+
+		Helpers: {
+			Chainable: _Chainable2.default,
+			ClassMap: _ClassMap2.default
+		},
+
+		Routing: {
+			Action: _Action2.default,
+			Controller: _Controller2.default,
+			Request: _Request2.default,
+			Route: _Route2.default,
+			RouteMatch: _RouteMatch2.default,
+			Router: _Router2.default
+		},
+
+		createApplication: function createApplication($element, options) {
+
+			return new _Application2.default($element, options);
+		},
+
+		getApplicationInstance: function getApplicationInstance() {
+			return _Application2.default.getInstance();
+		}
+	}; //////////////////////
 	// Vendor libraries //
 	//////////////////////
 
@@ -98,28 +182,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Chicken Classes //
 	/////////////////////
 
-	module.exports = {
-
-		Application: _Application2.default,
-
-		Core: {
-			Object: _Obj2.default,
-			Observable: _Observable2.default,
-			ObservableArray: _ObservableArray2.default
-		},
-
-		Routing: {
-			Route: _Route2.default,
-			Router: _Router2.default
-		},
-
-		createApplication: function createApplication($element, options) {
-
-			return new _Application2.default($element, options);
-		}
-
-	};
-
 /***/ },
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
@@ -128,15 +190,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _underscore = __webpack_require__(2);
+	var _history = __webpack_require__(2);
 
-	var _underscore2 = _interopRequireDefault(_underscore);
+	var _jquery = __webpack_require__(27);
 
-	var _Observable2 = __webpack_require__(3);
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Observable2 = __webpack_require__(28);
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _Router = __webpack_require__(6);
+	var _SettingsObject = __webpack_require__(32);
+
+	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
+
+	var _ViewContainer = __webpack_require__(34);
+
+	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
+
+	var _ClassMap = __webpack_require__(31);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	var _Router = __webpack_require__(35);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -158,16 +234,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Class definitino //
 	//////////////////////
 
-	var Chicken_Application = function (_Observable) {
-		_inherits(Chicken_Application, _Observable);
+	var __instance = undefined;
+
+	var Application = function (_Observable) {
+		_inherits(Application, _Observable);
 
 		/**
-	  * [constructor description]
+	  * The Application class is 
 	  *
 	  * @class Application
+	  * @extend Core.Observable
 	  */
-		function Chicken_Application($app, settings) {
-			_classCallCheck(this, Chicken_Application);
+		function Application($app, settings, history) {
+			_classCallCheck(this, Application);
+
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Application).call(this));
+
+			// Basics
+
+
+			__instance = _this;
 
 			////////////////
 			// Properties //
@@ -179,11 +265,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property $app
 	   * @type {jQuery}
 	   */
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Chicken_Application).call(this));
-
-			// Basics
-
-
 			_this.$app = $app;
 
 			/**
@@ -195,14 +276,43 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.viewContainers = new Map();
 
-			_this.router = new _Router2.default();
+			/**
+	   * @property router
+	   * @type {Routing.Router}
+	   */
+			_this.router = new _Router2.default(_this);
 
-			_this.settings = new _Observable3.default(_underscore2.default.defaults(settings, {}));
+			/**
+	   * @property settings
+	   * @type {Core.SettingsObject}
+	   */
+			_this.settings = _SettingsObject2.default.create({
+				baseUrl: '/'
+			}, ['baseUrl']).apply(settings);
+
+			/**
+	   * @property history
+	   * @type {History}
+	   */
+			_this.history = history ? history : (0, _history.createHistory)();
 
 			return _this;
 		}
 
-		_createClass(Chicken_Application, [{
+		_createClass(Application, [{
+			key: 'findViewContainers',
+			value: function findViewContainers() {
+				var $element = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+
+				// No element to look in?
+				if (!$element) $element = _jquery2.default;
+
+				// Find view containers
+				var $vcs = $element.find(_ViewContainer2.default.ElementSelector);
+				console.log($vcs);
+			}
+		}, {
 			key: 'routes',
 			value: function routes(callback) {
 
@@ -210,21 +320,2220 @@ return /******/ (function(modules) { // webpackBootstrap
 				callback.apply(this.router, []);
 				return this;
 			}
+		}, {
+			key: 'start',
+			value: function start() {
+				var _this2 = this;
+
+				// Find initial view containers
+				this.findViewContainers();
+
+				// Listen to browser's address bar
+				this.history.listen(function (location) {
+					_this2.router.handle(location);
+				});
+
+				// Start with current location
+				this.router.handle(this.history.getCurrentLocation());
+			}
 		}]);
 
-		return Chicken_Application;
+		return Application;
 	}(_Observable3.default);
 
-	module.exports = Chicken_Application;
+	Application.getInstance = function () {
+		return __instance;
+	};
+	_ClassMap2.default.register('Application', Application);
+
+	module.exports = Application;
 
 /***/ },
 /* 2 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_2__;
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.locationsAreEqual = exports.Actions = exports.useQueries = exports.useBeforeUnload = exports.useBasename = exports.createMemoryHistory = exports.createHashHistory = exports.createHistory = undefined;
+
+	var _LocationUtils = __webpack_require__(3);
+
+	Object.defineProperty(exports, 'locationsAreEqual', {
+	  enumerable: true,
+	  get: function get() {
+	    return _LocationUtils.locationsAreEqual;
+	  }
+	});
+
+	var _createBrowserHistory = __webpack_require__(9);
+
+	var _createBrowserHistory2 = _interopRequireDefault(_createBrowserHistory);
+
+	var _createHashHistory2 = __webpack_require__(18);
+
+	var _createHashHistory3 = _interopRequireDefault(_createHashHistory2);
+
+	var _createMemoryHistory2 = __webpack_require__(20);
+
+	var _createMemoryHistory3 = _interopRequireDefault(_createMemoryHistory2);
+
+	var _useBasename2 = __webpack_require__(21);
+
+	var _useBasename3 = _interopRequireDefault(_useBasename2);
+
+	var _useBeforeUnload2 = __webpack_require__(22);
+
+	var _useBeforeUnload3 = _interopRequireDefault(_useBeforeUnload2);
+
+	var _useQueries2 = __webpack_require__(23);
+
+	var _useQueries3 = _interopRequireDefault(_useQueries2);
+
+	var _Actions2 = __webpack_require__(8);
+
+	var _Actions3 = _interopRequireDefault(_Actions2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.createHistory = _createBrowserHistory2.default;
+	exports.createHashHistory = _createHashHistory3.default;
+	exports.createMemoryHistory = _createMemoryHistory3.default;
+	exports.useBasename = _useBasename3.default;
+	exports.useBeforeUnload = _useBeforeUnload3.default;
+	exports.useQueries = _useQueries3.default;
+	exports.Actions = _Actions3.default;
 
 /***/ },
 /* 3 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.locationsAreEqual = exports.statesAreEqual = exports.createLocation = exports.createQuery = undefined;
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _invariant = __webpack_require__(5);
+
+	var _invariant2 = _interopRequireDefault(_invariant);
+
+	var _PathUtils = __webpack_require__(6);
+
+	var _Actions = __webpack_require__(8);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var createQuery = exports.createQuery = function createQuery(props) {
+	  return _extends(Object.create(null), props);
+	};
+
+	var createLocation = exports.createLocation = function createLocation() {
+	  var input = arguments.length <= 0 || arguments[0] === undefined ? '/' : arguments[0];
+	  var action = arguments.length <= 1 || arguments[1] === undefined ? _Actions.POP : arguments[1];
+	  var key = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+	  var object = typeof input === 'string' ? (0, _PathUtils.parsePath)(input) : input;
+
+	  var pathname = object.pathname || '/';
+	  var search = object.search || '';
+	  var hash = object.hash || '';
+	  var state = object.state;
+
+	  return {
+	    pathname: pathname,
+	    search: search,
+	    hash: hash,
+	    state: state,
+	    action: action,
+	    key: key
+	  };
+	};
+
+	var isDate = function isDate(object) {
+	  return Object.prototype.toString.call(object) === '[object Date]';
+	};
+
+	var statesAreEqual = exports.statesAreEqual = function statesAreEqual(a, b) {
+	  if (a === b) return true;
+
+	  var typeofA = typeof a === 'undefined' ? 'undefined' : _typeof(a);
+	  var typeofB = typeof b === 'undefined' ? 'undefined' : _typeof(b);
+
+	  if (typeofA !== typeofB) return false;
+
+	  !(typeofA !== 'function') ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'You must not store functions in location state') : (0, _invariant2.default)(false) : void 0;
+
+	  // Not the same object, but same type.
+	  if (typeofA === 'object') {
+	    !!(isDate(a) && isDate(b)) ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'You must not store Date objects in location state') : (0, _invariant2.default)(false) : void 0;
+
+	    if (!Array.isArray(a)) return Object.keys(a).every(function (key) {
+	      return statesAreEqual(a[key], b[key]);
+	    });
+
+	    return Array.isArray(b) && a.length === b.length && a.every(function (item, index) {
+	      return statesAreEqual(item, b[index]);
+	    });
+	  }
+
+	  // All other serializable types (string, number, boolean)
+	  // should be strict equal.
+	  return false;
+	};
+
+	var locationsAreEqual = exports.locationsAreEqual = function locationsAreEqual(a, b) {
+	  return a.key === b.key &&
+	  // a.action === b.action && // Different action !== location change.
+	  a.pathname === b.pathname && a.search === b.search && a.hash === b.hash && statesAreEqual(a.state, b.state);
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 4 */
+/***/ function(module, exports) {
+
+	// shim for using process in browser
+	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	(function () {
+	    try {
+	        cachedSetTimeout = setTimeout;
+	    } catch (e) {
+	        cachedSetTimeout = function () {
+	            throw new Error('setTimeout is not defined');
+	        }
+	    }
+	    try {
+	        cachedClearTimeout = clearTimeout;
+	    } catch (e) {
+	        cachedClearTimeout = function () {
+	            throw new Error('clearTimeout is not defined');
+	        }
+	    }
+	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
+
+	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
+	    } else {
+	        queueIndex = -1;
+	    }
+	    if (queue.length) {
+	        drainQueue();
+	    }
+	}
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = runTimeout(cleanUpNextTick);
+	    draining = true;
+
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            if (currentQueue) {
+	                currentQueue[queueIndex].run();
+	            }
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    runClearTimeout(timeout);
+	}
+
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        runTimeout(drainQueue);
+	    }
+	};
+
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function() { return 0; };
+
+
+/***/ },
+/* 5 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2013-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	'use strict';
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var invariant = function(condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error(
+	        'Minified exception occurred; use the non-minified dev environment ' +
+	        'for the full error message and additional helpful warnings.'
+	      );
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(
+	        format.replace(/%s/g, function() { return args[argIndex++]; })
+	      );
+	      error.name = 'Invariant Violation';
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+
+	module.exports = invariant;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 6 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.createPath = exports.parsePath = exports.getQueryStringValueFromPath = exports.stripQueryStringValueFromPath = exports.addQueryStringValueToPath = exports.isAbsolutePath = undefined;
+
+	var _warning = __webpack_require__(7);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var isAbsolutePath = exports.isAbsolutePath = function isAbsolutePath(path) {
+	  return typeof path === 'string' && path.charAt(0) === '/';
+	};
+
+	var addQueryStringValueToPath = exports.addQueryStringValueToPath = function addQueryStringValueToPath(path, key, value) {
+	  var _parsePath = parsePath(path);
+
+	  var pathname = _parsePath.pathname;
+	  var search = _parsePath.search;
+	  var hash = _parsePath.hash;
+
+
+	  return createPath({
+	    pathname: pathname,
+	    search: search + (search.indexOf('?') === -1 ? '?' : '&') + key + '=' + value,
+	    hash: hash
+	  });
+	};
+
+	var stripQueryStringValueFromPath = exports.stripQueryStringValueFromPath = function stripQueryStringValueFromPath(path, key) {
+	  var _parsePath2 = parsePath(path);
+
+	  var pathname = _parsePath2.pathname;
+	  var search = _parsePath2.search;
+	  var hash = _parsePath2.hash;
+
+
+	  return createPath({
+	    pathname: pathname,
+	    search: search.replace(new RegExp('([?&])' + key + '=[a-zA-Z0-9]+(&?)'), function (match, prefix, suffix) {
+	      return prefix === '?' ? prefix : suffix;
+	    }),
+	    hash: hash
+	  });
+	};
+
+	var getQueryStringValueFromPath = exports.getQueryStringValueFromPath = function getQueryStringValueFromPath(path, key) {
+	  var _parsePath3 = parsePath(path);
+
+	  var search = _parsePath3.search;
+
+	  var match = search.match(new RegExp('[?&]' + key + '=([a-zA-Z0-9]+)'));
+	  return match && match[1];
+	};
+
+	var extractPath = function extractPath(string) {
+	  var match = string.match(/^(https?:)?\/\/[^\/]*/);
+	  return match == null ? string : string.substring(match[0].length);
+	};
+
+	var parsePath = exports.parsePath = function parsePath(path) {
+	  var pathname = extractPath(path);
+	  var search = '';
+	  var hash = '';
+
+	  process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(path === pathname, 'A path must be pathname + search + hash only, not a full URL like "%s"', path) : void 0;
+
+	  var hashIndex = pathname.indexOf('#');
+	  if (hashIndex !== -1) {
+	    hash = pathname.substring(hashIndex);
+	    pathname = pathname.substring(0, hashIndex);
+	  }
+
+	  var searchIndex = pathname.indexOf('?');
+	  if (searchIndex !== -1) {
+	    search = pathname.substring(searchIndex);
+	    pathname = pathname.substring(0, searchIndex);
+	  }
+
+	  if (pathname === '') pathname = '/';
+
+	  return {
+	    pathname: pathname,
+	    search: search,
+	    hash: hash
+	  };
+	};
+
+	var createPath = exports.createPath = function createPath(location) {
+	  if (location == null || typeof location === 'string') return location;
+
+	  var basename = location.basename;
+	  var pathname = location.pathname;
+	  var search = location.search;
+	  var hash = location.hash;
+
+	  var path = (basename || '') + pathname;
+
+	  if (search && search !== '?') path += search;
+
+	  if (hash) path += hash;
+
+	  return path;
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 7 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	'use strict';
+
+	/**
+	 * Similar to invariant but only logs a warning if the condition is not met.
+	 * This can be used to log issues in development environments in critical
+	 * paths. Removing the logging code for production environments will keep the
+	 * same logic and follow the same code paths.
+	 */
+
+	var warning = function() {};
+
+	if (process.env.NODE_ENV !== 'production') {
+	  warning = function(condition, format, args) {
+	    var len = arguments.length;
+	    args = new Array(len > 2 ? len - 2 : 0);
+	    for (var key = 2; key < len; key++) {
+	      args[key - 2] = arguments[key];
+	    }
+	    if (format === undefined) {
+	      throw new Error(
+	        '`warning(condition, format, ...args)` requires a warning ' +
+	        'message argument'
+	      );
+	    }
+
+	    if (format.length < 10 || (/^[s\W]*$/).test(format)) {
+	      throw new Error(
+	        'The warning format should be able to uniquely identify this ' +
+	        'warning. Please, use a more descriptive format than: ' + format
+	      );
+	    }
+
+	    if (!condition) {
+	      var argIndex = 0;
+	      var message = 'Warning: ' +
+	        format.replace(/%s/g, function() {
+	          return args[argIndex++];
+	        });
+	      if (typeof console !== 'undefined') {
+	        console.error(message);
+	      }
+	      try {
+	        // This error was thrown as a convenience so that you can use this stack
+	        // to find the callsite that caused this warning to fire.
+	        throw new Error(message);
+	      } catch(x) {}
+	    }
+	  };
+	}
+
+	module.exports = warning;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 8 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	/**
+	 * Indicates that navigation was caused by a call to history.push.
+	 */
+	var PUSH = exports.PUSH = 'PUSH';
+
+	/**
+	 * Indicates that navigation was caused by a call to history.replace.
+	 */
+	var REPLACE = exports.REPLACE = 'REPLACE';
+
+	/**
+	 * Indicates that navigation was caused by some other action such
+	 * as using a browser's back/forward buttons and/or manually manipulating
+	 * the URL in a browser's location bar. This is the default.
+	 *
+	 * See https://developer.mozilla.org/en-US/docs/Web/API/WindowEventHandlers/onpopstate
+	 * for more information.
+	 */
+	var POP = exports.POP = 'POP';
+
+/***/ },
+/* 9 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _invariant = __webpack_require__(5);
+
+	var _invariant2 = _interopRequireDefault(_invariant);
+
+	var _ExecutionEnvironment = __webpack_require__(10);
+
+	var _BrowserProtocol = __webpack_require__(11);
+
+	var BrowserProtocol = _interopRequireWildcard(_BrowserProtocol);
+
+	var _RefreshProtocol = __webpack_require__(14);
+
+	var RefreshProtocol = _interopRequireWildcard(_RefreshProtocol);
+
+	var _DOMUtils = __webpack_require__(12);
+
+	var _createHistory = __webpack_require__(15);
+
+	var _createHistory2 = _interopRequireDefault(_createHistory);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	/**
+	 * Creates and returns a history object that uses HTML5's history API
+	 * (pushState, replaceState, and the popstate event) to manage history.
+	 * This is the recommended method of managing history in browsers because
+	 * it provides the cleanest URLs.
+	 *
+	 * Note: In browsers that do not support the HTML5 history API full
+	 * page reloads will be used to preserve clean URLs. You can force this
+	 * behavior using { forceRefresh: true } in options.
+	 */
+	var createBrowserHistory = function createBrowserHistory() {
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	  !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'Browser history needs a DOM') : (0, _invariant2.default)(false) : void 0;
+
+	  var useRefresh = options.forceRefresh || !(0, _DOMUtils.supportsHistory)();
+	  var Protocol = useRefresh ? RefreshProtocol : BrowserProtocol;
+
+	  var getUserConfirmation = Protocol.getUserConfirmation;
+	  var getCurrentLocation = Protocol.getCurrentLocation;
+	  var pushLocation = Protocol.pushLocation;
+	  var replaceLocation = Protocol.replaceLocation;
+	  var go = Protocol.go;
+
+
+	  var history = (0, _createHistory2.default)(_extends({
+	    getUserConfirmation: getUserConfirmation }, options, {
+	    getCurrentLocation: getCurrentLocation,
+	    pushLocation: pushLocation,
+	    replaceLocation: replaceLocation,
+	    go: go
+	  }));
+
+	  var listenerCount = 0,
+	      stopListener = void 0;
+
+	  var startListener = function startListener(listener, before) {
+	    if (++listenerCount === 1) stopListener = BrowserProtocol.startListener(history.transitionTo);
+
+	    var unlisten = before ? history.listenBefore(listener) : history.listen(listener);
+
+	    return function () {
+	      unlisten();
+
+	      if (--listenerCount === 0) stopListener();
+	    };
+	  };
+
+	  var listenBefore = function listenBefore(listener) {
+	    return startListener(listener, true);
+	  };
+
+	  var listen = function listen(listener) {
+	    return startListener(listener, false);
+	  };
+
+	  return _extends({}, history, {
+	    listenBefore: listenBefore,
+	    listen: listen
+	  });
+	};
+
+	exports.default = createBrowserHistory;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 10 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var canUseDOM = exports.canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+/***/ },
+/* 11 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.go = exports.replaceLocation = exports.pushLocation = exports.startListener = exports.getUserConfirmation = exports.getCurrentLocation = undefined;
+
+	var _LocationUtils = __webpack_require__(3);
+
+	var _DOMUtils = __webpack_require__(12);
+
+	var _DOMStateStorage = __webpack_require__(13);
+
+	var _PathUtils = __webpack_require__(6);
+
+	/* eslint-disable no-alert */
+
+
+	var PopStateEvent = 'popstate';
+
+	var _createLocation = function _createLocation(historyState) {
+	  var key = historyState && historyState.key;
+
+	  return (0, _LocationUtils.createLocation)({
+	    pathname: window.location.pathname,
+	    search: window.location.search,
+	    hash: window.location.hash,
+	    state: key ? (0, _DOMStateStorage.readState)(key) : undefined
+	  }, undefined, key);
+	};
+
+	var getCurrentLocation = exports.getCurrentLocation = function getCurrentLocation() {
+	  var historyState = void 0;
+	  try {
+	    historyState = window.history.state || {};
+	  } catch (error) {
+	    // IE 11 sometimes throws when accessing window.history.state
+	    // See https://github.com/mjackson/history/pull/289
+	    historyState = {};
+	  }
+
+	  return _createLocation(historyState);
+	};
+
+	var getUserConfirmation = exports.getUserConfirmation = function getUserConfirmation(message, callback) {
+	  return callback(window.confirm(message));
+	};
+
+	var startListener = exports.startListener = function startListener(listener) {
+	  var handlePopState = function handlePopState(event) {
+	    if (event.state !== undefined) // Ignore extraneous popstate events in WebKit
+	      listener(_createLocation(event.state));
+	  };
+
+	  (0, _DOMUtils.addEventListener)(window, PopStateEvent, handlePopState);
+
+	  return function () {
+	    return (0, _DOMUtils.removeEventListener)(window, PopStateEvent, handlePopState);
+	  };
+	};
+
+	var updateLocation = function updateLocation(location, updateState) {
+	  var state = location.state;
+	  var key = location.key;
+
+
+	  if (state !== undefined) (0, _DOMStateStorage.saveState)(key, state);
+
+	  updateState({ key: key }, (0, _PathUtils.createPath)(location));
+	};
+
+	var pushLocation = exports.pushLocation = function pushLocation(location) {
+	  return updateLocation(location, function (state, path) {
+	    return window.history.pushState(state, null, path);
+	  });
+	};
+
+	var replaceLocation = exports.replaceLocation = function replaceLocation(location) {
+	  return updateLocation(location, function (state, path) {
+	    return window.history.replaceState(state, null, path);
+	  });
+	};
+
+	var go = exports.go = function go(n) {
+	  if (n) window.history.go(n);
+	};
+
+/***/ },
+/* 12 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	var addEventListener = exports.addEventListener = function addEventListener(node, event, listener) {
+	  return node.addEventListener ? node.addEventListener(event, listener, false) : node.attachEvent('on' + event, listener);
+	};
+
+	var removeEventListener = exports.removeEventListener = function removeEventListener(node, event, listener) {
+	  return node.removeEventListener ? node.removeEventListener(event, listener, false) : node.detachEvent('on' + event, listener);
+	};
+
+	/**
+	 * Returns true if the HTML5 history API is supported. Taken from Modernizr.
+	 *
+	 * https://github.com/Modernizr/Modernizr/blob/master/LICENSE
+	 * https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
+	 * changed to avoid false negatives for Windows Phones: https://github.com/reactjs/react-router/issues/586
+	 */
+	var supportsHistory = exports.supportsHistory = function supportsHistory() {
+	  var ua = window.navigator.userAgent;
+
+	  if ((ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) && ua.indexOf('Mobile Safari') !== -1 && ua.indexOf('Chrome') === -1 && ua.indexOf('Windows Phone') === -1) return false;
+
+	  return window.history && 'pushState' in window.history;
+	};
+
+	/**
+	 * Returns false if using go(n) with hash history causes a full page reload.
+	 */
+	var supportsGoWithoutReloadUsingHash = exports.supportsGoWithoutReloadUsingHash = function supportsGoWithoutReloadUsingHash() {
+	  return window.navigator.userAgent.indexOf('Firefox') === -1;
+	};
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.readState = exports.saveState = undefined;
+
+	var _warning = __webpack_require__(7);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var QuotaExceededErrors = ['QuotaExceededError', 'QUOTA_EXCEEDED_ERR']; /* eslint-disable no-empty */
+
+
+	var SecurityError = 'SecurityError';
+	var KeyPrefix = '@@History/';
+
+	var createKey = function createKey(key) {
+	  return KeyPrefix + key;
+	};
+
+	var saveState = exports.saveState = function saveState(key, state) {
+	  if (!window.sessionStorage) {
+	    // Session storage is not available or hidden.
+	    // sessionStorage is undefined in Internet Explorer when served via file protocol.
+	    process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, '[history] Unable to save state; sessionStorage is not available') : void 0;
+	    return;
+	  }
+
+	  try {
+	    if (state == null) {
+	      window.sessionStorage.removeItem(createKey(key));
+	    } else {
+	      window.sessionStorage.setItem(createKey(key), JSON.stringify(state));
+	    }
+	  } catch (error) {
+	    if (error.name === SecurityError) {
+	      // Blocking cookies in Chrome/Firefox/Safari throws SecurityError on any
+	      // attempt to access window.sessionStorage.
+	      process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, '[history] Unable to save state; sessionStorage is not available due to security settings') : void 0;
+
+	      return;
+	    }
+
+	    if (QuotaExceededErrors.indexOf(error.name) >= 0 && window.sessionStorage.length === 0) {
+	      // Safari "private mode" throws QuotaExceededError.
+	      process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, '[history] Unable to save state; sessionStorage is not available in Safari private mode') : void 0;
+
+	      return;
+	    }
+
+	    throw error;
+	  }
+	};
+
+	var readState = exports.readState = function readState(key) {
+	  var json = void 0;
+	  try {
+	    json = window.sessionStorage.getItem(createKey(key));
+	  } catch (error) {
+	    if (error.name === SecurityError) {
+	      // Blocking cookies in Chrome/Firefox/Safari throws SecurityError on any
+	      // attempt to access window.sessionStorage.
+	      process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, '[history] Unable to read state; sessionStorage is not available due to security settings') : void 0;
+
+	      return undefined;
+	    }
+	  }
+
+	  if (json) {
+	    try {
+	      return JSON.parse(json);
+	    } catch (error) {
+	      // Ignore invalid JSON.
+	    }
+	  }
+
+	  return undefined;
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 14 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.replaceLocation = exports.pushLocation = exports.getCurrentLocation = exports.go = exports.getUserConfirmation = undefined;
+
+	var _BrowserProtocol = __webpack_require__(11);
+
+	Object.defineProperty(exports, 'getUserConfirmation', {
+	  enumerable: true,
+	  get: function get() {
+	    return _BrowserProtocol.getUserConfirmation;
+	  }
+	});
+	Object.defineProperty(exports, 'go', {
+	  enumerable: true,
+	  get: function get() {
+	    return _BrowserProtocol.go;
+	  }
+	});
+
+	var _LocationUtils = __webpack_require__(3);
+
+	var _PathUtils = __webpack_require__(6);
+
+	var getCurrentLocation = exports.getCurrentLocation = function getCurrentLocation() {
+	  return (0, _LocationUtils.createLocation)(window.location);
+	};
+
+	var pushLocation = exports.pushLocation = function pushLocation(location) {
+	  window.location.href = (0, _PathUtils.createPath)(location);
+	  return false; // Don't update location
+	};
+
+	var replaceLocation = exports.replaceLocation = function replaceLocation(location) {
+	  window.location.replace((0, _PathUtils.createPath)(location));
+	  return false; // Don't update location
+	};
+
+/***/ },
+/* 15 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _AsyncUtils = __webpack_require__(16);
+
+	var _PathUtils = __webpack_require__(6);
+
+	var _runTransitionHook = __webpack_require__(17);
+
+	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
+
+	var _Actions = __webpack_require__(8);
+
+	var _LocationUtils = __webpack_require__(3);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var createHistory = function createHistory() {
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var getCurrentLocation = options.getCurrentLocation;
+	  var getUserConfirmation = options.getUserConfirmation;
+	  var pushLocation = options.pushLocation;
+	  var replaceLocation = options.replaceLocation;
+	  var go = options.go;
+	  var keyLength = options.keyLength;
+
+
+	  var currentLocation = void 0;
+	  var pendingLocation = void 0;
+	  var beforeListeners = [];
+	  var listeners = [];
+	  var allKeys = [];
+
+	  var getCurrentIndex = function getCurrentIndex() {
+	    if (pendingLocation && pendingLocation.action === _Actions.POP) return allKeys.indexOf(pendingLocation.key);
+
+	    if (currentLocation) return allKeys.indexOf(currentLocation.key);
+
+	    return -1;
+	  };
+
+	  var updateLocation = function updateLocation(nextLocation) {
+	    currentLocation = nextLocation;
+
+	    var currentIndex = getCurrentIndex();
+
+	    if (currentLocation.action === _Actions.PUSH) {
+	      allKeys = [].concat(_toConsumableArray(allKeys.slice(0, currentIndex + 1)), [currentLocation.key]);
+	    } else if (currentLocation.action === _Actions.REPLACE) {
+	      allKeys[currentIndex] = currentLocation.key;
+	    }
+
+	    listeners.forEach(function (listener) {
+	      return listener(currentLocation);
+	    });
+	  };
+
+	  var listenBefore = function listenBefore(listener) {
+	    beforeListeners.push(listener);
+
+	    return function () {
+	      return beforeListeners = beforeListeners.filter(function (item) {
+	        return item !== listener;
+	      });
+	    };
+	  };
+
+	  var listen = function listen(listener) {
+	    listeners.push(listener);
+
+	    return function () {
+	      return listeners = listeners.filter(function (item) {
+	        return item !== listener;
+	      });
+	    };
+	  };
+
+	  var confirmTransitionTo = function confirmTransitionTo(location, callback) {
+	    (0, _AsyncUtils.loopAsync)(beforeListeners.length, function (index, next, done) {
+	      (0, _runTransitionHook2.default)(beforeListeners[index], location, function (result) {
+	        return result != null ? done(result) : next();
+	      });
+	    }, function (message) {
+	      if (getUserConfirmation && typeof message === 'string') {
+	        getUserConfirmation(message, function (ok) {
+	          return callback(ok !== false);
+	        });
+	      } else {
+	        callback(message !== false);
+	      }
+	    });
+	  };
+
+	  var transitionTo = function transitionTo(nextLocation) {
+	    if (currentLocation && (0, _LocationUtils.locationsAreEqual)(currentLocation, nextLocation) || pendingLocation && (0, _LocationUtils.locationsAreEqual)(pendingLocation, nextLocation)) return; // Nothing to do
+
+	    pendingLocation = nextLocation;
+
+	    confirmTransitionTo(nextLocation, function (ok) {
+	      if (pendingLocation !== nextLocation) return; // Transition was interrupted during confirmation
+
+	      pendingLocation = null;
+
+	      if (ok) {
+	        // Treat PUSH to same path like REPLACE to be consistent with browsers
+	        if (nextLocation.action === _Actions.PUSH) {
+	          var prevPath = (0, _PathUtils.createPath)(currentLocation);
+	          var nextPath = (0, _PathUtils.createPath)(nextLocation);
+
+	          if (nextPath === prevPath && (0, _LocationUtils.statesAreEqual)(currentLocation.state, nextLocation.state)) nextLocation.action = _Actions.REPLACE;
+	        }
+
+	        if (nextLocation.action === _Actions.POP) {
+	          updateLocation(nextLocation);
+	        } else if (nextLocation.action === _Actions.PUSH) {
+	          if (pushLocation(nextLocation) !== false) updateLocation(nextLocation);
+	        } else if (nextLocation.action === _Actions.REPLACE) {
+	          if (replaceLocation(nextLocation) !== false) updateLocation(nextLocation);
+	        }
+	      } else if (currentLocation && nextLocation.action === _Actions.POP) {
+	        var prevIndex = allKeys.indexOf(currentLocation.key);
+	        var nextIndex = allKeys.indexOf(nextLocation.key);
+
+	        if (prevIndex !== -1 && nextIndex !== -1) go(prevIndex - nextIndex); // Restore the URL
+	      }
+	    });
+	  };
+
+	  var push = function push(input) {
+	    return transitionTo(createLocation(input, _Actions.PUSH));
+	  };
+
+	  var replace = function replace(input) {
+	    return transitionTo(createLocation(input, _Actions.REPLACE));
+	  };
+
+	  var goBack = function goBack() {
+	    return go(-1);
+	  };
+
+	  var goForward = function goForward() {
+	    return go(1);
+	  };
+
+	  var createKey = function createKey() {
+	    return Math.random().toString(36).substr(2, keyLength || 6);
+	  };
+
+	  var createHref = function createHref(location) {
+	    return (0, _PathUtils.createPath)(location);
+	  };
+
+	  var createLocation = function createLocation(location, action) {
+	    var key = arguments.length <= 2 || arguments[2] === undefined ? createKey() : arguments[2];
+	    return (0, _LocationUtils.createLocation)(location, action, key);
+	  };
+
+	  return {
+	    getCurrentLocation: getCurrentLocation,
+	    listenBefore: listenBefore,
+	    listen: listen,
+	    transitionTo: transitionTo,
+	    push: push,
+	    replace: replace,
+	    go: go,
+	    goBack: goBack,
+	    goForward: goForward,
+	    createKey: createKey,
+	    createPath: _PathUtils.createPath,
+	    createHref: createHref,
+	    createLocation: createLocation
+	  };
+	};
+
+	exports.default = createHistory;
+
+/***/ },
+/* 16 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	var loopAsync = exports.loopAsync = function loopAsync(turns, work, callback) {
+	  var currentTurn = 0,
+	      isDone = false;
+	  var isSync = false,
+	      hasNext = false,
+	      doneArgs = void 0;
+
+	  var done = function done() {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    isDone = true;
+
+	    if (isSync) {
+	      // Iterate instead of recursing if possible.
+	      doneArgs = args;
+	      return;
+	    }
+
+	    callback.apply(undefined, args);
+	  };
+
+	  var next = function next() {
+	    if (isDone) return;
+
+	    hasNext = true;
+
+	    if (isSync) return; // Iterate instead of recursing if possible.
+
+	    isSync = true;
+
+	    while (!isDone && currentTurn < turns && hasNext) {
+	      hasNext = false;
+	      work(currentTurn++, next, done);
+	    }
+
+	    isSync = false;
+
+	    if (isDone) {
+	      // This means the loop finished synchronously.
+	      callback.apply(undefined, _toConsumableArray(doneArgs));
+	      return;
+	    }
+
+	    if (currentTurn >= turns && hasNext) {
+	      isDone = true;
+	      callback();
+	    }
+	  };
+
+	  next();
+	};
+
+/***/ },
+/* 17 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _warning = __webpack_require__(7);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var runTransitionHook = function runTransitionHook(hook, location, callback) {
+	  var result = hook(location, callback);
+
+	  if (hook.length < 2) {
+	    // Assume the hook runs synchronously and automatically
+	    // call the callback with the return value.
+	    callback(result);
+	  } else {
+	    process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(result === undefined, 'You should not "return" in a transition hook with a callback argument; ' + 'call the callback instead') : void 0;
+	  }
+	};
+
+	exports.default = runTransitionHook;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 18 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _warning = __webpack_require__(7);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _invariant = __webpack_require__(5);
+
+	var _invariant2 = _interopRequireDefault(_invariant);
+
+	var _ExecutionEnvironment = __webpack_require__(10);
+
+	var _DOMUtils = __webpack_require__(12);
+
+	var _HashProtocol = __webpack_require__(19);
+
+	var HashProtocol = _interopRequireWildcard(_HashProtocol);
+
+	var _createHistory = __webpack_require__(15);
+
+	var _createHistory2 = _interopRequireDefault(_createHistory);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var DefaultQueryKey = '_k';
+
+	var createHashHistory = function createHashHistory() {
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	  !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'Hash history needs a DOM') : (0, _invariant2.default)(false) : void 0;
+
+	  var queryKey = options.queryKey;
+
+
+	  process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(queryKey !== false, 'Using { queryKey: false } no longer works. Instead, just don\'t ' + 'use location state if you don\'t want a key in your URL query string') : void 0;
+
+	  if (typeof queryKey !== 'string') queryKey = DefaultQueryKey;
+
+	  var getUserConfirmation = HashProtocol.getUserConfirmation;
+
+
+	  var getCurrentLocation = function getCurrentLocation() {
+	    return HashProtocol.getCurrentLocation(queryKey);
+	  };
+
+	  var pushLocation = function pushLocation(location) {
+	    return HashProtocol.pushLocation(location, queryKey);
+	  };
+
+	  var replaceLocation = function replaceLocation(location) {
+	    return HashProtocol.replaceLocation(location, queryKey);
+	  };
+
+	  var history = (0, _createHistory2.default)(_extends({
+	    getUserConfirmation: getUserConfirmation }, options, {
+	    getCurrentLocation: getCurrentLocation,
+	    pushLocation: pushLocation,
+	    replaceLocation: replaceLocation,
+	    go: HashProtocol.go
+	  }));
+
+	  var listenerCount = 0,
+	      stopListener = void 0;
+
+	  var startListener = function startListener(listener, before) {
+	    if (++listenerCount === 1) stopListener = HashProtocol.startListener(history.transitionTo, queryKey);
+
+	    var unlisten = before ? history.listenBefore(listener) : history.listen(listener);
+
+	    return function () {
+	      unlisten();
+
+	      if (--listenerCount === 0) stopListener();
+	    };
+	  };
+
+	  var listenBefore = function listenBefore(listener) {
+	    return startListener(listener, true);
+	  };
+
+	  var listen = function listen(listener) {
+	    return startListener(listener, false);
+	  };
+
+	  var goIsSupportedWithoutReload = (0, _DOMUtils.supportsGoWithoutReloadUsingHash)();
+
+	  var go = function go(n) {
+	    process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(goIsSupportedWithoutReload, 'Hash history go(n) causes a full page reload in this browser') : void 0;
+
+	    history.go(n);
+	  };
+
+	  var createHref = function createHref(path) {
+	    return '#' + history.createHref(path);
+	  };
+
+	  return _extends({}, history, {
+	    listenBefore: listenBefore,
+	    listen: listen,
+	    go: go,
+	    createHref: createHref
+	  });
+	};
+
+	exports.default = createHashHistory;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 19 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	exports.replaceLocation = exports.pushLocation = exports.startListener = exports.getCurrentLocation = exports.go = exports.getUserConfirmation = undefined;
+
+	var _BrowserProtocol = __webpack_require__(11);
+
+	Object.defineProperty(exports, 'getUserConfirmation', {
+	  enumerable: true,
+	  get: function get() {
+	    return _BrowserProtocol.getUserConfirmation;
+	  }
+	});
+	Object.defineProperty(exports, 'go', {
+	  enumerable: true,
+	  get: function get() {
+	    return _BrowserProtocol.go;
+	  }
+	});
+
+	var _warning = __webpack_require__(7);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _LocationUtils = __webpack_require__(3);
+
+	var _DOMUtils = __webpack_require__(12);
+
+	var _DOMStateStorage = __webpack_require__(13);
+
+	var _PathUtils = __webpack_require__(6);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var HashChangeEvent = 'hashchange';
+
+	var getHashPath = function getHashPath() {
+	  // We can't use window.location.hash here because it's not
+	  // consistent across browsers - Firefox will pre-decode it!
+	  var href = window.location.href;
+	  var index = href.indexOf('#');
+	  return index === -1 ? '' : href.substring(index + 1);
+	};
+
+	var pushHashPath = function pushHashPath(path) {
+	  return window.location.hash = path;
+	};
+
+	var replaceHashPath = function replaceHashPath(path) {
+	  var i = window.location.href.indexOf('#');
+
+	  window.location.replace(window.location.href.slice(0, i >= 0 ? i : 0) + '#' + path);
+	};
+
+	var ensureSlash = function ensureSlash() {
+	  var path = getHashPath();
+
+	  if ((0, _PathUtils.isAbsolutePath)(path)) return true;
+
+	  replaceHashPath('/' + path);
+
+	  return false;
+	};
+
+	var getCurrentLocation = exports.getCurrentLocation = function getCurrentLocation(queryKey) {
+	  var path = getHashPath();
+	  var key = (0, _PathUtils.getQueryStringValueFromPath)(path, queryKey);
+
+	  var state = void 0;
+	  if (key) {
+	    path = (0, _PathUtils.stripQueryStringValueFromPath)(path, queryKey);
+	    state = (0, _DOMStateStorage.readState)(key);
+	  }
+
+	  var init = (0, _PathUtils.parsePath)(path);
+	  init.state = state;
+
+	  return (0, _LocationUtils.createLocation)(init, undefined, key);
+	};
+
+	var prevLocation = void 0;
+
+	var startListener = exports.startListener = function startListener(listener, queryKey) {
+	  var handleHashChange = function handleHashChange() {
+	    if (!ensureSlash()) return; // Hash path must always begin with a /
+
+	    var currentLocation = getCurrentLocation(queryKey);
+
+	    if (prevLocation && currentLocation.key && prevLocation.key === currentLocation.key) return; // Ignore extraneous hashchange events
+
+	    prevLocation = currentLocation;
+
+	    listener(currentLocation);
+	  };
+
+	  ensureSlash();
+	  (0, _DOMUtils.addEventListener)(window, HashChangeEvent, handleHashChange);
+
+	  return function () {
+	    return (0, _DOMUtils.removeEventListener)(window, HashChangeEvent, handleHashChange);
+	  };
+	};
+
+	var updateLocation = function updateLocation(location, queryKey, updateHash) {
+	  var state = location.state;
+	  var key = location.key;
+
+	  var path = (0, _PathUtils.createPath)(location);
+
+	  if (state !== undefined) {
+	    path = (0, _PathUtils.addQueryStringValueToPath)(path, queryKey, key);
+	    (0, _DOMStateStorage.saveState)(key, state);
+	  }
+
+	  prevLocation = location;
+
+	  updateHash(path);
+	};
+
+	var pushLocation = exports.pushLocation = function pushLocation(location, queryKey) {
+	  return updateLocation(location, queryKey, function (path) {
+	    if (getHashPath() !== path) {
+	      pushHashPath(path);
+	    } else {
+	      process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, 'You cannot PUSH the same path using hash history') : void 0;
+	    }
+	  });
+	};
+
+	var replaceLocation = exports.replaceLocation = function replaceLocation(location, queryKey) {
+	  return updateLocation(location, queryKey, function (path) {
+	    if (getHashPath() !== path) replaceHashPath(path);
+	  });
+	};
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 20 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _warning = __webpack_require__(7);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _invariant = __webpack_require__(5);
+
+	var _invariant2 = _interopRequireDefault(_invariant);
+
+	var _LocationUtils = __webpack_require__(3);
+
+	var _PathUtils = __webpack_require__(6);
+
+	var _createHistory = __webpack_require__(15);
+
+	var _createHistory2 = _interopRequireDefault(_createHistory);
+
+	var _Actions = __webpack_require__(8);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var createStateStorage = function createStateStorage(entries) {
+	  return entries.filter(function (entry) {
+	    return entry.state;
+	  }).reduce(function (memo, entry) {
+	    memo[entry.key] = entry.state;
+	    return memo;
+	  }, {});
+	};
+
+	var createMemoryHistory = function createMemoryHistory() {
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	  if (Array.isArray(options)) {
+	    options = { entries: options };
+	  } else if (typeof options === 'string') {
+	    options = { entries: [options] };
+	  }
+
+	  var getCurrentLocation = function getCurrentLocation() {
+	    var entry = entries[current];
+	    var path = (0, _PathUtils.createPath)(entry);
+
+	    var key = void 0,
+	        state = void 0;
+	    if (entry.key) {
+	      key = entry.key;
+	      state = readState(key);
+	    }
+
+	    var init = (0, _PathUtils.parsePath)(path);
+
+	    return (0, _LocationUtils.createLocation)(_extends({}, init, { state: state }), undefined, key);
+	  };
+
+	  var canGo = function canGo(n) {
+	    var index = current + n;
+	    return index >= 0 && index < entries.length;
+	  };
+
+	  var go = function go(n) {
+	    if (!n) return;
+
+	    if (!canGo(n)) {
+	      process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, 'Cannot go(%s) there is not enough history', n) : void 0;
+
+	      return;
+	    }
+
+	    current += n;
+	    var currentLocation = getCurrentLocation();
+
+	    // Change action to POP
+	    history.transitionTo(_extends({}, currentLocation, { action: _Actions.POP }));
+	  };
+
+	  var pushLocation = function pushLocation(location) {
+	    current += 1;
+
+	    if (current < entries.length) entries.splice(current);
+
+	    entries.push(location);
+
+	    saveState(location.key, location.state);
+	  };
+
+	  var replaceLocation = function replaceLocation(location) {
+	    entries[current] = location;
+	    saveState(location.key, location.state);
+	  };
+
+	  var history = (0, _createHistory2.default)(_extends({}, options, {
+	    getCurrentLocation: getCurrentLocation,
+	    pushLocation: pushLocation,
+	    replaceLocation: replaceLocation,
+	    go: go
+	  }));
+
+	  var _options = options;
+	  var entries = _options.entries;
+	  var current = _options.current;
+
+
+	  if (typeof entries === 'string') {
+	    entries = [entries];
+	  } else if (!Array.isArray(entries)) {
+	    entries = ['/'];
+	  }
+
+	  entries = entries.map(function (entry) {
+	    return (0, _LocationUtils.createLocation)(entry);
+	  });
+
+	  if (current == null) {
+	    current = entries.length - 1;
+	  } else {
+	    !(current >= 0 && current < entries.length) ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'Current index must be >= 0 and < %s, was %s', entries.length, current) : (0, _invariant2.default)(false) : void 0;
+	  }
+
+	  var storage = createStateStorage(entries);
+
+	  var saveState = function saveState(key, state) {
+	    return storage[key] = state;
+	  };
+
+	  var readState = function readState(key) {
+	    return storage[key];
+	  };
+
+	  return history;
+	};
+
+	exports.default = createMemoryHistory;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 21 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _runTransitionHook = __webpack_require__(17);
+
+	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
+
+	var _PathUtils = __webpack_require__(6);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var useBasename = function useBasename(createHistory) {
+	  return function () {
+	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	    var history = createHistory(options);
+	    var basename = options.basename;
+
+
+	    var addBasename = function addBasename(location) {
+	      if (!location) return location;
+
+	      if (basename && location.basename == null) {
+	        if (location.pathname.indexOf(basename) === 0) {
+	          location.pathname = location.pathname.substring(basename.length);
+	          location.basename = basename;
+
+	          if (location.pathname === '') location.pathname = '/';
+	        } else {
+	          location.basename = '';
+	        }
+	      }
+
+	      return location;
+	    };
+
+	    var prependBasename = function prependBasename(location) {
+	      if (!basename) return location;
+
+	      var object = typeof location === 'string' ? (0, _PathUtils.parsePath)(location) : location;
+	      var pname = object.pathname;
+	      var normalizedBasename = basename.slice(-1) === '/' ? basename : basename + '/';
+	      var normalizedPathname = pname.charAt(0) === '/' ? pname.slice(1) : pname;
+	      var pathname = normalizedBasename + normalizedPathname;
+
+	      return _extends({}, location, {
+	        pathname: pathname
+	      });
+	    };
+
+	    // Override all read methods with basename-aware versions.
+	    var getCurrentLocation = function getCurrentLocation() {
+	      return addBasename(history.getCurrentLocation());
+	    };
+
+	    var listenBefore = function listenBefore(hook) {
+	      return history.listenBefore(function (location, callback) {
+	        return (0, _runTransitionHook2.default)(hook, addBasename(location), callback);
+	      });
+	    };
+
+	    var listen = function listen(listener) {
+	      return history.listen(function (location) {
+	        return listener(addBasename(location));
+	      });
+	    };
+
+	    // Override all write methods with basename-aware versions.
+	    var push = function push(location) {
+	      return history.push(prependBasename(location));
+	    };
+
+	    var replace = function replace(location) {
+	      return history.replace(prependBasename(location));
+	    };
+
+	    var createPath = function createPath(location) {
+	      return history.createPath(prependBasename(location));
+	    };
+
+	    var createHref = function createHref(location) {
+	      return history.createHref(prependBasename(location));
+	    };
+
+	    var createLocation = function createLocation(location) {
+	      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	        args[_key - 1] = arguments[_key];
+	      }
+
+	      return addBasename(history.createLocation.apply(history, [prependBasename(location)].concat(args)));
+	    };
+
+	    return _extends({}, history, {
+	      getCurrentLocation: getCurrentLocation,
+	      listenBefore: listenBefore,
+	      listen: listen,
+	      push: push,
+	      replace: replace,
+	      createPath: createPath,
+	      createHref: createHref,
+	      createLocation: createLocation
+	    });
+	  };
+	};
+
+	exports.default = useBasename;
+
+/***/ },
+/* 22 */
+/***/ function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _invariant = __webpack_require__(5);
+
+	var _invariant2 = _interopRequireDefault(_invariant);
+
+	var _DOMUtils = __webpack_require__(12);
+
+	var _ExecutionEnvironment = __webpack_require__(10);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var startListener = function startListener(getPromptMessage) {
+	  var handleBeforeUnload = function handleBeforeUnload(event) {
+	    var message = getPromptMessage();
+
+	    if (typeof message === 'string') {
+	      (event || window.event).returnValue = message;
+	      return message;
+	    }
+
+	    return undefined;
+	  };
+
+	  (0, _DOMUtils.addEventListener)(window, 'beforeunload', handleBeforeUnload);
+
+	  return function () {
+	    return (0, _DOMUtils.removeEventListener)(window, 'beforeunload', handleBeforeUnload);
+	  };
+	};
+
+	/**
+	 * Returns a new createHistory function that can be used to create
+	 * history objects that know how to use the beforeunload event in web
+	 * browsers to cancel navigation.
+	 */
+	var useBeforeUnload = function useBeforeUnload(createHistory) {
+	  !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'useBeforeUnload only works in DOM environments') : (0, _invariant2.default)(false) : void 0;
+
+	  return function (options) {
+	    var history = createHistory(options);
+
+	    var listeners = [];
+	    var stopListener = void 0;
+
+	    var getPromptMessage = function getPromptMessage() {
+	      var message = void 0;
+	      for (var i = 0, len = listeners.length; message == null && i < len; ++i) {
+	        message = listeners[i].call();
+	      }return message;
+	    };
+
+	    var listenBeforeUnload = function listenBeforeUnload(listener) {
+	      if (listeners.push(listener) === 1) stopListener = startListener(getPromptMessage);
+
+	      return function () {
+	        listeners = listeners.filter(function (item) {
+	          return item !== listener;
+	        });
+
+	        if (listeners.length === 0 && stopListener) {
+	          stopListener();
+	          stopListener = null;
+	        }
+	      };
+	    };
+
+	    return _extends({}, history, {
+	      listenBeforeUnload: listenBeforeUnload
+	    });
+	  };
+	};
+
+	exports.default = useBeforeUnload;
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+
+/***/ },
+/* 23 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _queryString = __webpack_require__(24);
+
+	var _runTransitionHook = __webpack_require__(17);
+
+	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
+
+	var _LocationUtils = __webpack_require__(3);
+
+	var _PathUtils = __webpack_require__(6);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var defaultStringifyQuery = function defaultStringifyQuery(query) {
+	  return (0, _queryString.stringify)(query).replace(/%20/g, '+');
+	};
+
+	var defaultParseQueryString = _queryString.parse;
+
+	/**
+	 * Returns a new createHistory function that may be used to create
+	 * history objects that know how to handle URL queries.
+	 */
+	var useQueries = function useQueries(createHistory) {
+	  return function () {
+	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+	    var history = createHistory(options);
+	    var stringifyQuery = options.stringifyQuery;
+	    var parseQueryString = options.parseQueryString;
+
+
+	    if (typeof stringifyQuery !== 'function') stringifyQuery = defaultStringifyQuery;
+
+	    if (typeof parseQueryString !== 'function') parseQueryString = defaultParseQueryString;
+
+	    var decodeQuery = function decodeQuery(location) {
+	      if (!location) return location;
+
+	      if (location.query == null) location.query = parseQueryString(location.search.substring(1));
+
+	      return location;
+	    };
+
+	    var encodeQuery = function encodeQuery(location, query) {
+	      if (query == null) return location;
+
+	      var object = typeof location === 'string' ? (0, _PathUtils.parsePath)(location) : location;
+	      var queryString = stringifyQuery(query);
+	      var search = queryString ? '?' + queryString : '';
+
+	      return _extends({}, object, {
+	        search: search
+	      });
+	    };
+
+	    // Override all read methods with query-aware versions.
+	    var getCurrentLocation = function getCurrentLocation() {
+	      return decodeQuery(history.getCurrentLocation());
+	    };
+
+	    var listenBefore = function listenBefore(hook) {
+	      return history.listenBefore(function (location, callback) {
+	        return (0, _runTransitionHook2.default)(hook, decodeQuery(location), callback);
+	      });
+	    };
+
+	    var listen = function listen(listener) {
+	      return history.listen(function (location) {
+	        return listener(decodeQuery(location));
+	      });
+	    };
+
+	    // Override all write methods with query-aware versions.
+	    var push = function push(location) {
+	      return history.push(encodeQuery(location, location.query));
+	    };
+
+	    var replace = function replace(location) {
+	      return history.replace(encodeQuery(location, location.query));
+	    };
+
+	    var createPath = function createPath(location) {
+	      return history.createPath(encodeQuery(location, location.query));
+	    };
+
+	    var createHref = function createHref(location) {
+	      return history.createHref(encodeQuery(location, location.query));
+	    };
+
+	    var createLocation = function createLocation(location) {
+	      for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+	        args[_key - 1] = arguments[_key];
+	      }
+
+	      var newLocation = history.createLocation.apply(history, [encodeQuery(location, location.query)].concat(args));
+
+	      if (location.query) newLocation.query = (0, _LocationUtils.createQuery)(location.query);
+
+	      return decodeQuery(newLocation);
+	    };
+
+	    return _extends({}, history, {
+	      getCurrentLocation: getCurrentLocation,
+	      listenBefore: listenBefore,
+	      listen: listen,
+	      push: push,
+	      replace: replace,
+	      createPath: createPath,
+	      createHref: createHref,
+	      createLocation: createLocation
+	    });
+	  };
+	};
+
+	exports.default = useQueries;
+
+/***/ },
+/* 24 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	var strictUriEncode = __webpack_require__(25);
+	var objectAssign = __webpack_require__(26);
+
+	function encode(value, opts) {
+		if (opts.encode) {
+			return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
+		}
+
+		return value;
+	}
+
+	exports.extract = function (str) {
+		return str.split('?')[1] || '';
+	};
+
+	exports.parse = function (str) {
+		// Create an object with no prototype
+		// https://github.com/sindresorhus/query-string/issues/47
+		var ret = Object.create(null);
+
+		if (typeof str !== 'string') {
+			return ret;
+		}
+
+		str = str.trim().replace(/^(\?|#|&)/, '');
+
+		if (!str) {
+			return ret;
+		}
+
+		str.split('&').forEach(function (param) {
+			var parts = param.replace(/\+/g, ' ').split('=');
+			// Firefox (pre 40) decodes `%3D` to `=`
+			// https://github.com/sindresorhus/query-string/pull/37
+			var key = parts.shift();
+			var val = parts.length > 0 ? parts.join('=') : undefined;
+
+			key = decodeURIComponent(key);
+
+			// missing `=` should be `null`:
+			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+			val = val === undefined ? null : decodeURIComponent(val);
+
+			if (ret[key] === undefined) {
+				ret[key] = val;
+			} else if (Array.isArray(ret[key])) {
+				ret[key].push(val);
+			} else {
+				ret[key] = [ret[key], val];
+			}
+		});
+
+		return ret;
+	};
+
+	exports.stringify = function (obj, opts) {
+		var defaults = {
+			encode: true,
+			strict: true
+		};
+
+		opts = objectAssign(defaults, opts);
+
+		return obj ? Object.keys(obj).sort().map(function (key) {
+			var val = obj[key];
+
+			if (val === undefined) {
+				return '';
+			}
+
+			if (val === null) {
+				return encode(key, opts);
+			}
+
+			if (Array.isArray(val)) {
+				var result = [];
+
+				val.slice().forEach(function (val2) {
+					if (val2 === undefined) {
+						return;
+					}
+
+					if (val2 === null) {
+						result.push(encode(key, opts));
+					} else {
+						result.push(encode(key, opts) + '=' + encode(val2, opts));
+					}
+				});
+
+				return result.join('&');
+			}
+
+			return encode(key, opts) + '=' + encode(val, opts);
+		}).filter(function (x) {
+			return x.length > 0;
+		}).join('&') : '';
+	};
+
+
+/***/ },
+/* 25 */
+/***/ function(module, exports) {
+
+	'use strict';
+	module.exports = function (str) {
+		return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+			return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+		});
+	};
+
+
+/***/ },
+/* 26 */
+/***/ function(module, exports) {
+
+	'use strict';
+	/* eslint-disable no-unused-vars */
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	function shouldUseNative() {
+		try {
+			if (!Object.assign) {
+				return false;
+			}
+
+			// Detect buggy property enumeration order in older V8 versions.
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+			var test1 = new String('abc');  // eslint-disable-line
+			test1[5] = 'de';
+			if (Object.getOwnPropertyNames(test1)[0] === '5') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test2 = {};
+			for (var i = 0; i < 10; i++) {
+				test2['_' + String.fromCharCode(i)] = i;
+			}
+			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+				return test2[n];
+			});
+			if (order2.join('') !== '0123456789') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test3 = {};
+			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+				test3[letter] = letter;
+			});
+			if (Object.keys(Object.assign({}, test3)).join('') !==
+					'abcdefghijklmnopqrst') {
+				return false;
+			}
+
+			return true;
+		} catch (e) {
+			// We don't expect any of the above to throw, but better to be safe.
+			return false;
+		}
+	}
+
+	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
+
+/***/ },
+/* 27 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_27__;
+
+/***/ },
+/* 28 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -233,15 +2542,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(29);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Obj2 = __webpack_require__(4);
+	var _Obj2 = __webpack_require__(30);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _ClassMap = __webpack_require__(5);
+	var _ClassMap = __webpack_require__(31);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
@@ -314,12 +2623,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @extends Core.Object
 	  *
 	  * @constructor
-	  * @param  {Object}  [initValues={}]          			 A hash of key-value pairs to initialize the object with
-	  * @param  {Boolean} [convertObjectsToObservables=true]	 Whether to convert any  Object values in the `initValues` parameter into Observable instance
+	  * @param  {Object}  [initValues={}]       			 A hash of key-value pairs to initialize the object with
+	  * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
 	  **/
 		function Observable() {
 			var initValues = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-			var convertObjectsToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+			var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 			_classCallCheck(this, Observable);
 
@@ -328,7 +2637,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			////////////////
 
 			/**
-	   * @attribute observers
+	   * @property observers
 	   * @type {Map}
 	   */
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Observable).call(this));
@@ -349,9 +2658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			////////////////////
 
 			// Initialize values
-			_underscore2.default.each(initValues, function (value, key) {
-				_this.set(key, value, convertObjectsToObservables);
-			});
+			_this.import(initValues, convertToObservables, true);
 
 			return _this;
 		}
@@ -361,15 +2668,53 @@ return /******/ (function(modules) { // webpackBootstrap
 		////////////////////
 
 		/**
-	  * Get attribute from object
+	  * Check if attribute is defined
 	  *
-	  * @method get
-	  * @param  {string} key The name of the key to retrieve the value of. You can use dot-notation to use deep-getting
-	  * @return The value or undefined when the key is not set
+	  * @method has
+	  * @param  {string}  key The name of the key to check
+	  * @return {Boolean}     True when the attribute has been defined
 	  */
 
 
 		_createClass(Observable, [{
+			key: 'has',
+			value: function has(key) {
+
+				// Split
+				var parts = Number.isInteger(key) ? [key] : key.split(/\./);
+				var currentPart = parts.shift();
+
+				// No deep shit?
+				if (parts.length === 0) return this.attributes.has(currentPart);
+
+				// Look deeper
+				var value = this.attributes.get(currentPart);
+
+				// No value
+				if (value === undefined) {
+					return false;
+				}
+
+				// Check if the value is also an observable
+				if (Observable.isObservable(value)) {
+
+					// Pass the rest along to go a level deeper
+					return value.has(parts.join('.'));
+				} else {
+
+					return false;
+				}
+			}
+
+			/**
+	   * Get attribute from object
+	   *
+	   * @method get
+	   * @param  {string} key The name of the key to retrieve the value of. You can use dot-notation to use deep-getting
+	   * @return The value or undefined when the key is not set
+	   */
+
+		}, {
 			key: 'get',
 			value: function get(key) {
 
@@ -386,7 +2731,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				// Check if the value is also an observable
-				if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.isObservable) {
+				if (Observable.isObservable(value)) {
 
 					// Pass the rest along to go a level deeper
 					return value.get(parts.join('.'));
@@ -403,8 +2748,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @method set
 	   * @param {string/array} key   	The name of the key to store the value of. You can use dot-notation to use deep-setting
 	   * @param {mixed} value 		The value to store
-	   * @param {boolean} [convertObjectsToObservables=false]
+	   * @param {boolean} [convertToObservables=false]
 	   *        						Whether to convert standard object values into Observable instances
+	   * @param {boolean} [doNotNotify=false]
+	   *        						Whether to skip notifying listeners
 	   * @chainable
 	   */
 
@@ -413,11 +2760,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function set(key, value) {
 				var _this2 = this;
 
-				var convertObjectsToObservables = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+				var convertToObservables = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+				var doNotNotify = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
 
 
 				// Convert?
-				if (convertObjectsToObservables === true && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.constructor === Object) {
+				if (convertToObservables === true && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.constructor === Object) {
 					value = new Observable(value);
 				}
 
@@ -471,7 +2819,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.attributes.set(key, value);
 
 				// Is the value observable?
-				if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.isObservable) {
+				if (Observable.isObservable(value)) {
 
 					// Study the object
 					value.study(function () {
@@ -480,7 +2828,53 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				// Update attribute
-				this._triggerAttributeChanged(key, value);
+				if (!doNotNotify) this._triggerAttributeChanged(key, value);
+
+				return this;
+			}
+		}, {
+			key: 'import',
+			value: function _import(obj) {
+				var _this3 = this;
+
+				var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+				var doNotNotify = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+
+
+				// Go through to the object's first level
+				_underscore2.default.each(obj, function (value, key) {
+
+					// Is the value an array or object?
+					if ((Array.isArray(value) || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') && value !== null && convertToObservables === true) {
+
+						// Do I have this value?
+						if (_this3.attributes.has(key) && Observable.isObservable(_this3.attributes.get(key))) {
+
+							// Import
+							var obj = _this3.attributes.get(key);
+							obj.import(value, convertToObservables, doNotNotify);
+						} else {
+
+							// Array or object?
+							if (Array.isArray(value)) {
+
+								// Put a new observable array in there
+								_this3.attributes.set(key, _ClassMap2.default.create('ObservableArray', [value]));
+							} else {
+
+								// Put a new observable in there
+								_this3.attributes.set(key, new Observable(value));
+							}
+						}
+					} else {
+
+						// Just set the value (don't notify)
+						_this3.set(key, value, convertToObservables, true);
+					}
+				});
+
+				// Notify!
+				this.trigger(Observable.Events.Import);
 
 				return this;
 			}
@@ -606,6 +3000,40 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this;
 			}
+		}, {
+			key: 'toObject',
+			value: function toObject() {
+
+				var obj = {};
+				this.attributes.forEach(function (item, key) {
+
+					// Observable?
+					if (Observable.isObservable(item)) {
+
+						// Array?
+						if (item instanceof Observable) {
+							item = item.toObject();
+						} else {
+							item = item.toArray();
+						}
+					}
+
+					obj[key] = item;
+				});
+
+				return obj;
+			}
+		}, {
+			key: 'clone',
+			value: function clone() {
+				var convertToObservables = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+
+				// Make copy!
+				var c = this.constructor;
+				var copy = new c(this.toObject(), convertToObservables);
+				return copy;
+			}
 
 			/////////////////////
 			// Private methods //
@@ -614,7 +3042,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_triggerAttributeChanged',
 			value: function _triggerAttributeChanged(key, value) {
-				var _this3 = this;
+				var _this4 = this;
 
 				var calledFromObjectChanged = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
@@ -625,7 +3053,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Call them
 					observers.forEach(function (observer) {
-						observer.apply(_this3);
+						observer.apply(_this4);
 					});
 				}
 
@@ -637,7 +3065,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_triggerObjectChanged',
 			value: function _triggerObjectChanged(changedAttributes) {
-				var _this4 = this;
+				var _this5 = this;
 
 				var calledFromAttributeChanged = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
@@ -650,13 +3078,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Call individual attributes
 					changedAttributes.forEach(function (value, key) {
-						_this4._triggerAttributeChanged(key, value, true);
+						_this5._triggerAttributeChanged(key, value, true);
 					});
 				}
 			}
 		}, {
 			key: 'isObservable',
-			get: function get() {
+			value: function isObservable() {
 				return true;
 			}
 		}]);
@@ -676,8 +3104,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * 
 	  * @event change
 	  */
-		Change: 'change'
+		Change: 'change',
 
+		/**
+	  * This event is fired whenever an import is completed
+	  *
+	  * @event import
+	  */
+		Import: 'import'
+
+	};
+
+	Observable.isObservable = function (obj) {
+
+		return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
 	};
 
 	_ClassMap2.default.register('Observable', Observable);
@@ -685,12 +3125,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Observable;
 
 /***/ },
-/* 4 */
+/* 29 */
 /***/ function(module, exports) {
 
-	"use strict";
+	module.exports = __WEBPACK_EXTERNAL_MODULE_29__;
+
+/***/ },
+/* 30 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(29);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -710,29 +3162,89 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			// Init values
 			this._listeners = new Map();
+			this._promises = new Map();
 		}
 
 		////////////////////
 		// Public methods //
 		////////////////////
 
-		/**
-	  * Add listener for chosen event
-	  *
-	  * @method on
-	  * @param  {string}   eventName The event name to listen for.
-	  * @param  {Function} callback  The function to call when the event occurs. Depending on the event, this 
-	  *                              callback can receive 0 or more arguments when called.
-	  * @example
-	  * 		obj.on('message', function(message) {
-	  * 			console.log(message);
-	  * 		});
-	  * @chainable
-	  */
-
 
 		_createClass(Obj, [{
-			key: "on",
+			key: 'promise',
+			value: function promise(key, callback) {
+
+				// Do the callback
+				var promise = this._getPromise(key);
+				callback.apply(null, [promise.resolve, promise.reject]);
+
+				return this;
+			}
+		}, {
+			key: '_getPromise',
+			value: function _getPromise(key) {
+
+				// Was the promise already defined
+				if (!this._promises.has(key)) {
+
+					// Store it
+					var p = {};
+					p.promise = new Promise(function (resolve, reject) {
+						p.resolve = resolve;
+						p.reject = reject;
+					});
+					this._promises.set(key, p);
+					return p;
+				}
+				return this._promises.get(key);
+			}
+		}, {
+			key: 'when',
+			value: function when() {
+				var _this = this;
+
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
+				}
+
+				// The last one should be a callback
+				var successCallback = args.pop();
+				var failCallback = function failCallback(error) {
+					throw new Error('Uncaught promise failure for ' + args.join(', ') + ': ' + error);
+				};
+				if (args.length > 1 && typeof _underscore2.default.last(args) === 'function') {
+					failCallback = successCallback;
+					successCallback = args.pop();
+				}
+
+				// Collect promises
+				var promises = [];
+				_underscore2.default.each(args, function (arg) {
+					promises.push(_this._getPromise(arg).promise);
+				});
+
+				// When all are done
+				Promise.all(promises).then(successCallback, failCallback);
+
+				return this;
+			}
+
+			/**
+	   * Add listener for chosen event
+	   *
+	   * @method on
+	   * @param  {string}   eventName The event name to listen for.
+	   * @param  {Function} callback  The function to call when the event occurs. Depending on the event, this 
+	   *                              callback can receive 0 or more arguments when called.
+	   * @example
+	   * 		obj.on('message', function(message) {
+	   * 			console.log(message);
+	   * 		});
+	   * @chainable
+	   */
+
+		}, {
+			key: 'on',
 			value: function on(eventName, callback) {
 
 				// Get the set
@@ -758,7 +3270,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 
 		}, {
-			key: "off",
+			key: 'off',
 			value: function off(eventName, callback) {
 
 				// Get the callbacks
@@ -782,12 +3294,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 
 		}, {
-			key: "trigger",
+			key: 'trigger',
 			value: function trigger(eventName) {
-				var _this = this;
+				var _this2 = this;
 
-				for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-					args[_key - 1] = arguments[_key];
+				for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+					args[_key2 - 1] = arguments[_key2];
 				}
 
 				// Get the callbacks
@@ -796,7 +3308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Loop and call
 				callbacks.forEach(function (cb) {
-					cb.apply(_this, args);
+					cb.apply(_this2, args);
 				});
 
 				return this;
@@ -815,7 +3327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Obj;
 
 /***/ },
-/* 5 */
+/* 31 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -849,12 +3361,138 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ClassMap;
 
 /***/ },
-/* 6 */
+/* 32 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _Obj2 = __webpack_require__(4);
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	var _underscore = __webpack_require__(29);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Observable2 = __webpack_require__(28);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	var _Chainable = __webpack_require__(33);
+
+	var _Chainable2 = _interopRequireDefault(_Chainable);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Core
+	 */
+	var SettingsObject = function (_Observable) {
+		_inherits(SettingsObject, _Observable);
+
+		/**
+	  * @class Core.SettingsObject
+	  * @extends Core.Observable
+	  *
+	  * @constructor
+	  * @param {object}  defaultSettings  	Initialize with these default settings
+	  * @param {array}   [allowedKeys] 		Optional array of allowed keys. By default all keys are allowed	 
+	  */
+		function SettingsObject() {
+			var defaultSettings = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+			var allowedKeys = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
+
+			_classCallCheck(this, SettingsObject);
+
+			/**
+	   * @property allowedKeys
+	   * @type Array
+	   */
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsObject).call(this, defaultSettings));
+
+			// Instantiate with default settings
+
+
+			_this.allowedKeys = allowedKeys;
+
+			return _this;
+		}
+
+		/**
+	  * Apply given settings
+	  *
+	  * @method apply
+	  * @param {object} 	settings	A hash-object with keys and values
+	  * @chainable
+	  */
+
+
+		_createClass(SettingsObject, [{
+			key: 'apply',
+			value: function apply(settings) {
+				var _this2 = this;
+
+				// Apply each key individually
+				_underscore2.default.each(settings, function (value, key) {
+					_this2.set(key, value);
+				});
+
+				return this;
+			}
+
+			// Extra check for allowedKeys.
+
+		}, {
+			key: 'set',
+			value: function set(key, value) {
+
+				// Is it allowed?
+				if (this.allowedKeys && this.allowedKeys.length > 0 && !this.allowedKeys.includes(key)) {
+					throw new Error('This SettingsObject does not have a setting for "' + key + '". The allowed settings are: ' + this.allowedKeys.join(', '));
+				}
+
+				// Do it.
+				return _get(Object.getPrototypeOf(SettingsObject.prototype), 'set', this).call(this, key, value);
+			}
+		}]);
+
+		return SettingsObject;
+	}(_Observable3.default);
+
+	module.exports = (0, _Chainable2.default)(SettingsObject);
+
+/***/ },
+/* 33 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	module.exports = function (cls) {
+
+		cls.create = function () {
+			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+				args[_key] = arguments[_key];
+			}
+
+			return new (Function.prototype.bind.apply(cls, [null].concat(args)))();
+		};
+
+		return cls;
+	};
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _Obj2 = __webpack_require__(30);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
@@ -865,6 +3503,91 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Dom
+	 */
+	var ViewContainer = function (_Obj) {
+		_inherits(ViewContainer, _Obj);
+
+		/**
+	  * A ViewContainer is en DomElement in your application that
+	  * can contain a rendered View. Each ViewContainer needs a 
+	  * unique name, and the main ViewContainer for the application
+	  * is always called 'app'.
+	  * 
+	  * @class Dom.ViewContainer 
+	  * @extends Core.Object
+	  */
+		function ViewContainer(name, $element) {
+			_classCallCheck(this, ViewContainer);
+
+			////////////////
+			// Properties //
+			////////////////
+
+			/**
+	   * The unique name you can use in your routes to target this
+	   * ViewContainer.
+	   * 
+	   * @property name
+	   * @type {string}
+	   */
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ViewContainer).call(this));
+
+			_this.name = name;
+
+			/**
+	   * The jQuery element that is the ViewContainer
+	   * 
+	   * @property $element
+	   * @type {jQuery}
+	   */
+			_this.$element = $element;
+
+			return _this;
+		}
+
+		return ViewContainer;
+	}(_Obj3.default);
+
+	module.exports = ViewContainer;
+
+/***/ },
+/* 35 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(29);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Obj2 = __webpack_require__(30);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	var _SettingsObject = __webpack_require__(32);
+
+	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
+
+	var _Route = __webpack_require__(36);
+
+	var _Route2 = _interopRequireDefault(_Route);
+
+	var _Request = __webpack_require__(48);
+
+	var _Request2 = _interopRequireDefault(_Request);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint no-console: ["error", { allow: ["table"] }] */
 
 	/**
 	 * @module Routing
@@ -881,12 +3604,156 @@ return /******/ (function(modules) { // webpackBootstrap
 		function Router() {
 			_classCallCheck(this, Router);
 
+			////////////////
+			// Properties //
+			////////////////
+
+			/**
+	   * @property routes
+	   * @type {Array}
+	   */
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Router).call(this));
 
-			_this.routes = new Set();
+			_this.routes = [];
+
+			///////////////////////////////////////////
+			// Grouped configuration state variables //
+			///////////////////////////////////////////
+
+			_this._currentConfig = _SettingsObject2.default.create({
+
+				parentRoute: null,
+				viewContainer: 'main'
+
+			}, ['parentRoute', 'viewContainer']);
 
 			return _this;
 		}
+
+		////////////////////////
+		// Definition methods //
+		////////////////////////
+
+		/**
+	  * Create a Route and add it to the Router.
+	  *
+	  * @method route
+	  * @param  {string} 			pattern 	The uri pattern
+	  * @param  {Object|String} 		actions     
+	  * @param  {Object} 			[options] 
+	  * @return {Routing.Route}        
+	  */
+
+
+		_createClass(Router, [{
+			key: 'route',
+			value: function route(pattern, actions) {
+				var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+
+				// Merge options
+				options = _underscore2.default.defaults({}, options, _underscore2.default.omit(this._currentConfig.toObject(), 'parentRoute'));
+
+				// Create the route
+				var route = new _Route2.default(this, this._currentConfig.get('parentRoute'), pattern, actions, options);
+
+				// Add route
+				this.routes.push(route);
+
+				// Return route
+				return route;
+			}
+
+			/**
+	   * Configure the Router to add the given options to
+	   * the Routes you define within the callback.
+	   *
+	   * @method group
+	   * @param  {object}   options  
+	   * @param  {Function} callback 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'group',
+			value: function group(options, callback) {
+
+				// Store options
+				var oldConfig = this._currentConfig.clone();
+				this._currentConfig.apply(options);
+
+				// Do the callback
+				callback.apply(this);
+
+				// Restore options
+				this._currentConfig = oldConfig;
+
+				return this;
+			}
+
+			//////////////////////
+			// Router in action //
+			//////////////////////
+
+			/**
+	   * Handle given Request, by finding a matching Route
+	   * and executing it.
+	   * 
+	   * @method handle
+	   * @param  {Routing.Request} request 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'handle',
+			value: function handle(request) {
+
+				// Is it just a URL passed along?
+				if (!(request instanceof _Request2.default)) {
+					request = new _Request2.default(request);
+				}
+
+				// Loop through routes until we found something.
+				var routeMatch = _underscore2.default.find(this.routes, function (route) {
+					return route.match(request);
+				});
+
+				// Found something?
+
+				console.log('Router', routeMatch);
+
+				return this;
+			}
+
+			/**
+	   * Output a table to the console containing an overview
+	   * of all defined routes.
+	   *
+	   * Note: This is not supported in all browsers!
+	   * https://developer.mozilla.org/en-US/docs/Web/API/Console/table
+	   *  
+	   * @method outputToConsole
+	   * @chainable
+	   */
+
+		}, {
+			key: 'outputToConsole',
+			value: function outputToConsole() {
+
+				// Loop and log
+				console.table(_underscore2.default.map(this.routes, function (route) {
+					return {
+						'Pattern': route.getFullPattern(),
+						'Actions': route.isAbstract() ? '(abstract)' : _underscore2.default.map(route.getFullActions(), function (action, targetViewContainer) {
+							return targetViewContainer + ': ' + (typeof action === 'function' ? '(Callback)' : action);
+						}).join(', '),
+						'Regular expression': route.getRegExp()
+					};
+				}));
+
+				return this;
+			}
+		}]);
 
 		return Router;
 	}(_Obj3.default);
@@ -894,411 +3761,28 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Router;
 
 /***/ },
-/* 7 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(29);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Obj2 = __webpack_require__(4);
-
-	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	var _ClassMap = __webpack_require__(5);
-
-	var _ClassMap2 = _interopRequireDefault(_ClassMap);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Core
-	 */
-	var ObservableArray = function (_Obj) {
-		_inherits(ObservableArray, _Obj);
-
-		/**
-	  * An ObservableArray is a simple list that notifies listeners
-	  * of any changes in the list or any of it's observable items.
-	  *
-	  * @class Core.ObservableArray
-	  */
-		function ObservableArray() {
-			_classCallCheck(this, ObservableArray);
-
-			// Add items
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ObservableArray).call(this));
-
-			_this._items = [];
-
-			for (var _len = arguments.length, values = Array(_len), _key = 0; _key < _len; _key++) {
-				values[_key] = arguments[_key];
-			}
-
-			_this.add.apply(_this, values);
-			return _this;
-		}
-
-		_createClass(ObservableArray, [{
-			key: 'get',
-			value: function get(key) {
-
-				// Split
-				var parts = Number.isInteger(key) ? [key] : key.split(/\./);
-				var currentPart = parts.shift();
-
-				// Is it a wildcard?
-				var value = undefined;
-				if (currentPart === '*') {
-
-					// We will return an array containg all the values we retrieve!
-					var restKey = parts.join('.');
-					return _underscore2.default.map(this._items, function (item) {
-						return item.get(restKey);
-					});
-				} else if (Number.isInteger(currentPart) || currentPart.match(/^\d+$/)) {
-
-					// Get the value
-					value = this._items[currentPart];
-				} else {
-
-					throw new TypeError('Invalid key');
-				}
-
-				// Value found?
-				if (value === undefined || parts.length === 0) {
-					return value;
-				}
-
-				// Check if the value is also an observable
-				if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.isObservable) {
-
-					// Pass the rest along to go a level deeper
-					return value.get(parts.join('.'));
-				} else {
-
-					throw new Error('The found value for ' + key + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)));
-				}
-			}
-		}, {
-			key: 'set',
-			value: function set(key, value) {
-				var _this2 = this;
-
-				var convertObjectsToObservables = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
-
-
-				// Convert?
-				if (convertObjectsToObservables === true && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.constructor === Object) {
-					value = _ClassMap2.default.create('Observable', value);
-				}
-
-				// Numeric?
-				if (Number.isInteger(key) || typeof key === 'string' && key.match(/^\d+$/)) {
-
-					// Set it
-					this._items[key] = value;
-					return this;
-				}
-
-				// Is there a dot in there?
-				if (typeof key === 'string' && key.match(/\.\w/)) {
-
-					////////////////////////
-					// Split and deep set //
-					////////////////////////
-
-					var parts = key.split(/\./);
-					var currentPart = parts.shift();
-
-					// Does the first key exist?
-					var item = this._items[currentPart];
-					if (item === undefined) {
-
-						// Should it be an array or an observable?
-						var newValue = void 0;
-						if (Number.isInteger(parts[0]) || typeof parts[0] === 'string' && parts[0].match(/^\d+$/)) {
-
-							// Create list (using classmap to prevent circular dependencies)
-							newValue = new ObservableArray();
-						} else {
-
-							// Create it
-							newValue = _ClassMap2.default.create('Observable');
-						}
-
-						// Study it
-						newValue.study(function () {
-							_this2.trigger(ObservableArray.Events.Change);
-						});
-
-						// Store it
-						this._items[currentPart] = newValue;
-					}
-
-					// Do deep setting
-					this.get(currentPart).set(parts.join('.'), value);
-
-					return this;
-				}
-
-				throw new TypeError('Invalid key');
-			}
-
-			/**
-	   * Add one or more items to the array
-	   *
-	   * @method add
-	   * @param {...[mixed]} values One or more values to add
-	   * @chainable
-	   */
-
-		}, {
-			key: 'add',
-			value: function add() {
-				var _this3 = this;
-
-				for (var _len2 = arguments.length, values = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-					values[_key2] = arguments[_key2];
-				}
-
-				// Add items
-				_underscore2.default.each(values, function (value) {
-
-					// Add it.
-					_this3._items.push(value);
-
-					// Is it observable?
-					if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.isObservable) {
-						value.on('change', function () {
-							_this3.trigger('change');
-						});
-					}
-				});
-
-				// Trigger events
-				this.trigger(ObservableArray.Events.Change);
-				this.trigger(ObservableArray.Events.Add, values);
-
-				return this;
-			}
-
-			/**
-	   * Delete one or more items from the array
-	   *
-	   * @method delete
-	   * @param  {...[mixed]} values One or more values to delete
-	   * @chainable
-	   */
-
-		}, {
-			key: 'delete',
-			value: function _delete() {
-				for (var _len3 = arguments.length, values = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-					values[_key3] = arguments[_key3];
-				}
-
-				this._items = _underscore2.default.difference(this._items, values);
-
-				// Trigger events
-				this.trigger('change');
-				this.trigger('delete', values);
-
-				return this;
-			}
-
-			/**
-	   * Remove all items from the array
-	   *
-	   * @method empty
-	   * @chainable
-	   */
-
-		}, {
-			key: 'empty',
-			value: function empty() {
-
-				// Values that are deleted
-				var deleted = _underscore2.default.difference(this._items, []);
-
-				// Now clear
-				this._items = [];
-
-				// Trigger events
-				this.trigger(ObservableArray.Events.Change);
-				this.trigger(ObservableArray.Events.Delete, deleted);
-				this.trigger(ObservableArray.Events.Empty);
-
-				return this;
-			}
-
-			/**
-	   * Listen for any changes in any of the object's attributes. 
-	   * The callback will receive an array containing the names of
-	   * all updates attributes. 
-	   *
-	   * Note: This is an alias of the 'changed' event, so calling
-	   * ```this.on('changed', callback)``` will achieve the same result.
-	   *
-	   * @example
-	   * 	// Initialize object
-	   * 	var obj = new Chicken.Core.Observable();
-	   * 	obj.set('foo', 'bar');
-	   * 	var childObj = new Chicken.Core.Observable();
-	   * 	childObj.set('free', 'willy');
-	   * 	obj.set('child', childObj);
-	   *
-	   * 	// Listen
-	   * 	obj.study((changedAttributes) {
-	   * 		console.log(changedAttributes);
-	   * 	});
-	   *
-	   * 	// Update attributes
-	   *	obj.set('foo', 'boo');                  // Will log ['foo']
-	   *	obj.get('child').set('free', 'tibet');  // Will log ['child']
-	   * 	childObj.set('foo', 'bee');             // Will log ['child']
-	   *
-	   * @method study
-	   * @param  {Function} callback
-	   * @chainable
-	   */
-
-		}, {
-			key: 'study',
-			value: function study(callback) {
-
-				// This is an alias of the 'changed' event
-				return this.on('change', callback);
-			}
-
-			/**
-	   * Stop listening for changes on the object's attributes.
-	   *
-	   * Note: This is an alias of the 'changed' event, so calling
-	   * ```this.off('changed', callback)``` will achieve the same result.
-	   *
-	   * @example
-	   * 
-	   * 
-	   * @method neglect
-	   * @param  {Function} callback 
-	   * @chainable
-	   */
-
-		}, {
-			key: 'neglect',
-			value: function neglect(callback) {
-
-				// This is an alias of the 'changed' event
-				return this.off('change', callback);
-			}
-
-			/**
-	   * The number of items in the array
-	   * 
-	   * @property length
-	   * @type {Number}
-	   */
-
-		}, {
-			key: 'length',
-			get: function get() {
-				return this._items.length;
-			}
-
-			/**
-	   * The native Javascript array containing the items
-	   * 
-	   * @property items
-	   * @type {Array}
-	   */
-
-		}, {
-			key: 'items',
-			get: function get() {
-				return this._items;
-			}
-		}, {
-			key: 'isObservable',
-			get: function get() {
-				return true;
-			}
-		}]);
-
-		return ObservableArray;
-	}(_Obj3.default);
-
-	////////////
-	// Events //
-	////////////
-
-	ObservableArray.Events = {
-
-		/**
-	  * This event is fired whenever anything changes in the array
-	  * of one of its observable items.
-	  * 
-	  * @event change
-	  */
-		Change: 'change',
-
-		/**
-	  * This event is fired whenever one or more items are added
-	  * 
-	  * @event add
-	  * @param {Array} values		The item values that were added
-	  */
-		Add: 'add',
-
-		/**
-	  * This event is fired whenever one or more items are deleted
-	  * 
-	  * @event delete
-	  * @param {Array} values		The item values that were deleted
-	  */
-		Delete: 'delete',
-
-		/**
-	  * This event is fired when the array is emptied. Not that the `delete`
-	  * event is also triggered, right before the `empty` event.
-	  *
-	  * @event empty
-	  */
-		Empty: 'empty'
-
-	};
-
-	_ClassMap2.default.register('ObservableArray', ObservableArray);
-
-	module.exports = ObservableArray;
-
-/***/ },
-/* 8 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _xregexp = __webpack_require__(9);
+	var _xregexp = __webpack_require__(37);
 
 	var _xregexp2 = _interopRequireDefault(_xregexp);
 
-	var _Obj2 = __webpack_require__(4);
+	var _Obj2 = __webpack_require__(30);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	var _RouteMatch = __webpack_require__(46);
+
+	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1322,32 +3806,76 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @extends Core.Object
 	  * 
 	  * @constructor
-	  * @param {Routing.Route} 	parent 		The route that the route you are creating is to be child of. Use `null` when there is no parent.
-	  * @param {Routing.Router} 	router 		The application's Router instance
-	  * @param {string} 			pattern 	The route's pattern, not including the parent's pattern
-	  * @param {object}  		actions		An object containing one or more actions, keyed by the target ViewContainer
-	  * @param {object = {}}		options		An object containing one or more configuration options
+	  * @param {Routing.Router} 	router 				The application's Router instance
+	  * @param {Routing.Route} 	parent 				The route that the route you are creating is to be child of. Use `null` when there is no parent.
+	  * @param {string} 			pattern 			The route's pattern, not including the parent's pattern
+	  * @param {object|string}	[actions=null]		An action string o object containing one or more actions, keyed by the target ViewContainer. 
+	  *                                        		If you don't define actions this route will be made abstract.
+	  * @param {object}			[options={}]		An object containing one or more configuration options
 	  */
-		function Route(parent, router, pattern, actions) {
+		function Route(router, parent, pattern) {
+			var actions = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 			var options = arguments.length <= 4 || arguments[4] === undefined ? {} : arguments[4];
 
 			_classCallCheck(this, Route);
 
-			// Localize
+			// Private vars
 			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Route).call(this));
 
 			// Basics
 
 
-			_this._parent = parent;
-			_this._router = router;
-			_this._pattern = pattern;
+			_this._parameterConstraints = new Map();
+			_this._actions = actions;
 
-			// Parse the pattern
-			_this._regExp = _this._parsePattern();
+			////////////////
+			// Properties //
+			////////////////
 
-			// Parse actions
-			_this.actions = _this._parseActions(actions);
+			/**
+	   * The Route that this Route is nested in
+	   * 
+	   * @property parentRoute
+	   * @type {Routing.Route}
+	   */
+			_this.parentRoute = parent;
+
+			/**
+	   * The Router that this Route is a part of
+	   * 
+	   * @property router
+	   * @type {Routing.Router}
+	   */
+			_this.router = router;
+
+			/**
+	   * The defined pattern, not including any parent patterns
+	   * 
+	   * @property pattern
+	   * @type {string}
+	   */
+			_this.pattern = pattern.replace(/(.)\/$/, '$1'); // Remove trailing slash
+
+
+			/**
+	   * The parameter names used in this route
+	   * 
+	   * @property parameters
+	   * @type {array}
+	   */
+			_this.parameters = [];
+
+			/**
+	   * The options used when defining this Route
+	   * 
+	   * @property options
+	   * @type {object}
+	   */
+			_this.options = _underscore2.default.defaults(options, {
+				abstract: actions === null,
+				as: null,
+				viewContainer: 'main'
+			});
 
 			return _this;
 		}
@@ -1357,33 +3885,178 @@ return /******/ (function(modules) { // webpackBootstrap
 		////////////////////
 
 		/**
-	  * Get the full Route pattern within the application for this route,
-	  * including any parent Routes.
+	  * Call this when you want to define routes nested under the current one. The provided callback
+	  * will be called with the Router as context, allowing you to use this.route to define the nested
+	  * routes.
 	  *
-	  * @method getFullPattern
-	  * @return {string}
+	  * @example
+	  * 	Chicken.createApplication($('#application'), {
+	  * 		baseUrl: '/'
+	  * 	}).routes(function() {
+	  *  
+	  *  	this.route('/animals', 'Animal@index')                            // /animals
+	  *  		.nest(function() {
+	  *  			this.route('/dog', 'Animal@dog')                          // /animals/dog
+	  *  				.nest({ viewContainer: 'dogs'}, function() {
+	  *      				this.route('/:dogName', 'Animal@dogDetails');     // /animals/dog/:dogName
+	  *      				this.route('/about-dogs', 'Animal@aboutDogs');    // /animals/dog/about-dogs
+	  *  				});  				
+	  *      		this.route('/cat', 'Animal@cat');                         // /animals/cat
+	  *  		 });
+	  *  	
+	  *   
+	  * 	});
+	  * 	
+	  *
+	  * @method nest
+	  * @param {object} 		[options]   An optional options hash, to apply to all nested routes
+	  * @param {function} 	callback 	Your callback
+	  * @chainable
 	  */
 
 
 		_createClass(Route, [{
+			key: 'nest',
+			value: function nest() {
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
+				}
+
+				// Check if options were given
+				var callback = args.pop();
+				var options = args.length > 0 ? args.pop() : {};
+
+				// Make me the parent route
+				this.router.group(_underscore2.default.defaults({
+					parentRoute: this
+				}, options), callback);
+
+				return this;
+			}
+
+			/**
+	   * Check whether this Route matches the given Request. If so, the method
+	   * will return a complete RouteMatch. If not, the method will return `false`.
+	   * 
+	   * @method match
+	   * @param  {Routing.Request} request     
+	   * @return {Routing.RouteMatch|boolean}  
+	   */
+
+		}, {
+			key: 'match',
+			value: function match(request) {
+
+				// Am I an abstract route?
+				if (this.isAbstract()) return;
+
+				// Does it match?
+				var match = _xregexp2.default.exec(request.uri, this.getRegExp());
+
+				// No match?
+				if (!match) return false;
+
+				// We matched! Let's create a match object.
+				return new _RouteMatch2.default(this, match, request);
+			}
+
+			/**
+	   * Get the action definitions for the Route. An action definition can either
+	   * be a Controller action (e.g.: `Product@index`), or a callback. The result
+	   * is keyed by the target ViewContainer name.
+	   *
+	   * @method getActions
+	   * @return {object} 
+	   */
+
+		}, {
+			key: 'getActions',
+			value: function getActions() {
+
+				// Is it still a string (Controller@action) or callback?
+				if (typeof this._actions === 'string' || typeof this._actions === 'function') {
+
+					// Wrap in object using default view container
+					var actions = {};
+					actions[this.options.viewContainer] = this._actions;
+					this._actions = actions;
+				}
+
+				return this._actions;
+			}
+
+			/**
+	   * Get the action definitions for this Route, and any parent routes that it may have.
+	   *
+	   * @method getFullActions
+	   * @return {object} [description]
+	   */
+
+		}, {
+			key: 'getFullActions',
+			value: function getFullActions() {
+
+				// Start with mine
+				var actions = this.getActions();
+
+				// Add parent
+				if (this.parentRoute) {
+					return _underscore2.default.defaults(actions, this.parentRoute.actions);
+				}
+				return actions;
+			}
+
+			/**
+	   * Get the full Route pattern within the application for this route,
+	   * including any parent Routes.
+	   *
+	   * @method getFullPattern
+	   * @return {string}
+	   */
+
+		}, {
 			key: 'getFullPattern',
 			value: function getFullPattern() {
 
 				// My pattern as base
 				var p = this.pattern;
 
-				// Loop through parents upwards
-				var parent = this._parent;
-				while (parent) {
-
-					// Prefix the pattern
-					p = parent.pattern + p;
-
-					// Level up
-					parent = parent.parentRoute;
+				// Get parent's full pattern
+				if (this.parentRoute) {
+					var parentPart = this.parentRoute.getFullPattern();
+					if (parentPart !== '/') {
+						p = parentPart + p;
+					}
 				}
 
 				return p;
+			}
+
+			/**
+	   * Get all parameter constraints for this Route, combining constraints
+	   * defined by parent routes.
+	   *
+	   * @method getAllParameterConstraints
+	   * @return {Map} Map with a regular expression constraint for each constrained parameter
+	   */
+
+		}, {
+			key: 'getAllParameterConstraints',
+			value: function getAllParameterConstraints() {
+
+				// My constraints (don't overwrite)
+				var c = new Map(this._parameterConstraints);
+
+				// Get parent's constraints
+				if (this.parentRoute) {
+
+					// Prefix the pattern
+					this.parentRoute.getAllParameterConstraints().forEach(function (regex, key) {
+						if (!c.has(key)) c.set(key, regex);
+					});
+				}
+
+				return c;
 			}
 
 			/**
@@ -1397,101 +4070,136 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getRegExp',
 			value: function getRegExp() {
+				var _this2 = this;
 
 				// Not yet set?
 				if (this._regExp === undefined) {
+					(function () {
 
-					// Expression
-					var exp = '^';
+						// Collect buildingBlocks (a regular expression pattern for each parameter)
+						var buildingBlocks = {};
 
-					console.log(exp);
+						// Convert :params into regex with building blocks 
+						// (see XRegExp.build documentation)
+						var constraints = _this2.getAllParameterConstraints();
+						var exp = _xregexp2.default.replace(_this2.getFullPattern(), /(([\:\*])([a-zA-Z\-\_]+))/, function (match, complete, paramType, paramName) {
 
-					exp = '^/page$';
+							// Wildcard?
+							var paramRegex = void 0;
+							if (paramType === '*') {
 
-					// Create it
-					this._regExp = _xregexp2.default.build(exp);
+								// Use wildcard
+								paramRegex = Route.ParameterType.Wildcard;
+							} else {
+
+								// Check if there is a constraint
+								paramRegex = constraints.has(paramName) ? constraints.get(paramName) : Route.ParameterType.Standard;
+							}
+
+							// Store as building block for regex
+							buildingBlocks[paramName] = paramRegex;
+
+							// Store parameter
+							_this2.parameters.push(paramName);
+
+							// Replace with a building block using named parameter
+							return '({{' + paramName + '}})';
+						}, 'all');
+
+						// Create it
+						_this2._regExp = _xregexp2.default.build('^' + exp + '$', buildingBlocks);
+					})();
 				}
 
 				// Return it
 				return this._regExp;
 			}
 
-			//////////////////////
-			// Internal methods //
-			//////////////////////
-
-		}, {
-			key: '_parsePattern',
-			value: function _parsePattern() {}
-		}, {
-			key: '_parseActions',
-			value: function _parseActions() {}
-
-			////////////////
-			// Properties //
-			////////////////
-
 			/**
-	   * @property parentRoute
-	   * @type Routing.Route
-	   */
-
-		}, {
-			key: 'parentRoute',
-			get: function get() {
-				return this._parent;
-			}
-
-			/**
-	   * The application's router
+	   * Add a constraint to a parameter, by supplying a regular expression.
 	   * 
-	   * @property router
-	   * @type Routing.Router
+	   * @method constrain
+	   * @param  {string} parameterName The name of the parameter to add constrains to
+	   * @param  {RegExp} regExp        A regular expression to use when matching the parameter
+	   * @chainable
 	   */
 
 		}, {
-			key: 'router',
-			get: function get() {
-				return this._router;
+			key: 'constrain',
+			value: function constrain(parameterName, regExp) {
+
+				// Store it
+				this._parameterConstraints.set(parameterName, regExp);
+
+				return this;
 			}
 
 			/**
-	   * @property pattern
-	   * @type string
+	   * An abstract Route can never be matched. This is useful when you have a Route
+	   * that only has subroutes, but no actions itself. If you define a Route without
+	   * actions, this will automatically be set to true.
+	   * 
+	   * @method isAbstract
+	   * @return {Boolean}
 	   */
 
 		}, {
-			key: 'pattern',
-			get: function get() {
-				return this._pattern;
+			key: 'isAbstract',
+			value: function isAbstract() {
+				return !!this.options.abstract;
 			}
 		}]);
 
 		return Route;
 	}(_Obj3.default);
 
+	Route.ParameterType = {
+
+		/**
+	  * Regular expression for a standard parameter 
+	  *
+	  * Default: `/[^\/]+/`
+	  * 
+	  * @property ParameterType.Standard
+	  * @static
+	  * @type {RegExp}
+	  */
+		Standard: /[^\/]+/,
+
+		/**
+	  * Regular expression for a wildcard parameter
+	  *
+	  * Default: `/.+/`
+	  * 
+	  * @property ParameterType.Wildcard
+	  * @static
+	  * @type {RegExp}
+	  */
+		Wildcard: /.+/
+
+	};
+
 	module.exports = Route;
 
 /***/ },
-/* 9 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
-	'use strict';
+	var XRegExp = __webpack_require__(38);
 
-	var XRegExp = __webpack_require__(10);
-
-	__webpack_require__(11)(XRegExp);
-	__webpack_require__(12)(XRegExp);
-	__webpack_require__(13)(XRegExp);
-	__webpack_require__(14)(XRegExp);
-	__webpack_require__(15)(XRegExp);
-	__webpack_require__(16)(XRegExp);
-	__webpack_require__(17)(XRegExp);
+	__webpack_require__(39)(XRegExp);
+	__webpack_require__(40)(XRegExp);
+	__webpack_require__(41)(XRegExp);
+	__webpack_require__(42)(XRegExp);
+	__webpack_require__(43)(XRegExp);
+	__webpack_require__(44)(XRegExp);
+	__webpack_require__(45)(XRegExp);
 
 	module.exports = XRegExp;
 
+
 /***/ },
-/* 10 */
+/* 38 */
 /***/ function(module, exports) {
 
 	/*!
@@ -1514,7 +4222,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	// ==--------------------------==
 
 	// Property name used for extended regex instance data
-
 	var REGEX_DATA = 'xregexp';
 	// Optional features that can be installed and uninstalled
 	var features = {
@@ -1670,22 +4377,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    options = options || {};
 
-	    if (options.removeG) {
-	        flagsToRemove += 'g';
-	    }
-	    if (options.removeY) {
-	        flagsToRemove += 'y';
-	    }
+	    if (options.removeG) {flagsToRemove += 'g';}
+	    if (options.removeY) {flagsToRemove += 'y';}
 	    if (flagsToRemove) {
 	        flags = nativ.replace.call(flags, new RegExp('[' + flagsToRemove + ']+', 'g'), '');
 	    }
 
-	    if (options.addG) {
-	        flagsToAdd += 'g';
-	    }
-	    if (options.addY) {
-	        flagsToAdd += 'y';
-	    }
+	    if (options.addG) {flagsToAdd += 'g';}
+	    if (options.addY) {flagsToAdd += 'y';}
 	    if (flagsToAdd) {
 	        flags = clipDuplicates(flags + flagsToAdd);
 	    }
@@ -1707,7 +4406,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // searching for special tokens. That would be wrong for regexes constructed by `RegExp`, and
 	    // unnecessary for regexes constructed by `XRegExp` because the regex has already undergone the
 	    // translation to native regex syntax
-	    regex = augment(new RegExp(regex.source, flags), hasNamedCapture(regex) ? xData.captureNames.slice(0) : null, xregexpSource, xregexpFlags, options.isInternalOnly);
+	    regex = augment(
+	        new RegExp(regex.source, flags),
+	        hasNamedCapture(regex) ? xData.captureNames.slice(0) : null,
+	        xregexpSource,
+	        xregexpFlags,
+	        options.isInternalOnly
+	    );
 
 	    return regex;
 	}
@@ -1729,11 +4434,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {String} Native flags in use.
 	 */
 	function getNativeFlags(regex) {
-	    return hasFlagsProp ? regex.flags :
-	    // Explicitly using `RegExp.prototype.toString` (rather than e.g. `String` or concatenation
-	    // with an empty string) allows this to continue working predictably when
-	    // `XRegExp.proptotype.toString` is overriden
-	    nativ.exec.call(/\/([a-z]*)$/i, RegExp.prototype.toString.call(regex))[1];
+	    return hasFlagsProp ?
+	        regex.flags :
+	        // Explicitly using `RegExp.prototype.toString` (rather than e.g. `String` or concatenation
+	        // with an empty string) allows this to continue working predictably when
+	        // `XRegExp.proptotype.toString` is overriden
+	        nativ.exec.call(/\/([a-z]*)$/i, RegExp.prototype.toString.call(regex))[1];
 	}
 
 	/**
@@ -1764,8 +4470,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Number} Zero-based index at which the item is found, or -1.
 	 */
 	function indexOf(array, value) {
-	    var len = array.length,
-	        i;
+	    var len = array.length, i;
 
 	    for (i = 0; i < len; ++i) {
 	        if (array[i] === value) {
@@ -1796,11 +4501,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Boolean} Whether the next token is a quantifier.
 	 */
 	function isQuantifierNext(pattern, pos, flags) {
-	    return nativ.test.call(flags.indexOf('x') > -1 ?
-	    // Ignore any leading whitespace, line comments, and inline comments
-	    /^(?:\s|#[^#\n]*|\(\?#[^)]*\))*(?:[?*+]|{\d+(?:,\d*)?})/ :
-	    // Ignore any leading inline comments
-	    /^(?:\(\?#[^)]*\))*(?:[?*+]|{\d+(?:,\d*)?})/, pattern.slice(pos));
+	    return nativ.test.call(
+	        flags.indexOf('x') > -1 ?
+	            // Ignore any leading whitespace, line comments, and inline comments
+	            /^(?:\s|#[^#\n]*|\(\?#[^)]*\))*(?:[?*+]|{\d+(?:,\d*)?})/ :
+	            // Ignore any leading inline comments
+	            /^(?:\(\?#[^)]*\))*(?:[?*+]|{\d+(?:,\d*)?})/,
+	        pattern.slice(pos)
+	    );
 	}
 
 	/**
@@ -1833,7 +4541,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    // Strip and apply a leading mode modifier with any combination of flags except g or y
-	    pattern = nativ.replace.call(pattern, /^\(\?([\w$]+)\)/, function ($0, $1) {
+	    pattern = nativ.replace.call(pattern, /^\(\?([\w$]+)\)/, function($0, $1) {
 	        if (nativ.test.call(/[gy]/, $1)) {
 	            throw new SyntaxError('Cannot use flag g or y in mode modifier ' + $0);
 	        }
@@ -1865,7 +4573,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    var options = {};
 
 	    if (isType(value, 'String')) {
-	        XRegExp.forEach(value, /[^\s,]+/, function (match) {
+	        XRegExp.forEach(value, /[^\s,]+/, function(match) {
 	            options[match] = true;
 	        });
 
@@ -1909,7 +4617,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Run in reverse insertion order
 	    while (i--) {
 	        t = tokens[i];
-	        if (t.leadChar && t.leadChar !== leadChar || t.scope !== scope && t.scope !== 'all' || t.flag && flags.indexOf(t.flag) === -1) {
+	        if (
+	            (t.leadChar && t.leadChar !== leadChar) ||
+	            (t.scope !== scope && t.scope !== 'all') ||
+	            (t.flag && flags.indexOf(t.flag) === -1)
+	        ) {
 	            continue;
 	        }
 
@@ -2053,13 +4765,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	                // If the matched token used the `reparse` option, splice its output into the
 	                // pattern before running tokens again at the same position
 	                if (result && result.reparse) {
-	                    appliedPattern = appliedPattern.slice(0, pos) + result.output + appliedPattern.slice(pos + result.matchLength);
+	                    appliedPattern = appliedPattern.slice(0, pos) +
+	                        result.output +
+	                        appliedPattern.slice(pos + result.matchLength);
 	                }
 	            } while (result && result.reparse);
 
 	            if (result) {
 	                output += result.output;
-	                pos += result.matchLength || 1;
+	                pos += (result.matchLength || 1);
 	            } else {
 	                // Get the native token at the current position
 	                var token = XRegExp.exec(appliedPattern, nativeTokens[scope], pos, 'sticky')[0];
@@ -2086,7 +4800,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	    }
 
 	    var generated = patternCache[pattern][flags];
-	    return augment(new RegExp(generated.pattern, generated.flags), generated.captures, pattern, flags);
+	    return augment(
+	        new RegExp(generated.pattern, generated.flags),
+	        generated.captures,
+	        pattern,
+	        flags
+	    );
 	}
 
 	// Add `RegExp.prototype` to the prototype chain
@@ -2163,10 +4882,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * XRegExp('a+', 'U').exec('aaa')[0]; // -> 'a'
 	 * XRegExp('a+?', 'U').exec('aaa')[0]; // -> 'aaa'
 	 */
-	XRegExp.addToken = function (regex, handler, options) {
+	XRegExp.addToken = function(regex, handler, options) {
 	    options = options || {};
-	    var optionalFlags = options.optionalFlags,
-	        i;
+	    var optionalFlags = options.optionalFlags, i;
 
 	    if (options.flag) {
 	        registerFlag(options.flag);
@@ -2211,15 +4929,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *   // The regex is compiled once only
 	 * }
 	 */
-	XRegExp.cache = function (pattern, flags) {
+	XRegExp.cache = function(pattern, flags) {
 	    if (!regexCache[pattern]) {
 	        regexCache[pattern] = {};
 	    }
-	    return regexCache[pattern][flags] || (regexCache[pattern][flags] = XRegExp(pattern, flags));
+	    return regexCache[pattern][flags] || (
+	        regexCache[pattern][flags] = XRegExp(pattern, flags)
+	    );
 	};
 
 	// Intentionally undocumented; used in tests
-	XRegExp.cache.flush = function (cacheName) {
+	XRegExp.cache.flush = function(cacheName) {
 	    if (cacheName === 'patterns') {
 	        // Flush the pattern cache used by the `XRegExp` constructor
 	        patternCache = {};
@@ -2240,7 +4960,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * XRegExp.escape('Escaped? <.>');
 	 * // -> 'Escaped\?\ <\.>'
 	 */
-	XRegExp.escape = function (str) {
+	XRegExp.escape = function(str) {
 	    return nativ.replace.call(toObject(str), /[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 	};
 
@@ -2272,13 +4992,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * }
 	 * // result -> ['2', '3', '4']
 	 */
-	XRegExp.exec = function (str, regex, pos, sticky) {
+	XRegExp.exec = function(str, regex, pos, sticky) {
 	    var cacheKey = 'g',
 	        addY = false,
 	        match,
 	        r2;
 
-	    addY = hasNativeY && !!(sticky || regex.sticky && sticky !== false);
+	    addY = hasNativeY && !!(sticky || (regex.sticky && sticky !== false));
 	    if (addY) {
 	        cacheKey += 'y';
 	    }
@@ -2286,12 +5006,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	    regex[REGEX_DATA] = regex[REGEX_DATA] || {};
 
 	    // Shares cached copies with `XRegExp.match`/`replace`
-	    r2 = regex[REGEX_DATA][cacheKey] || (regex[REGEX_DATA][cacheKey] = copyRegex(regex, {
-	        addG: true,
-	        addY: addY,
-	        removeY: sticky === false,
-	        isInternalOnly: true
-	    }));
+	    r2 = regex[REGEX_DATA][cacheKey] || (
+	        regex[REGEX_DATA][cacheKey] = copyRegex(regex, {
+	            addG: true,
+	            addY: addY,
+	            removeY: sticky === false,
+	            isInternalOnly: true
+	        })
+	    );
 
 	    r2.lastIndex = pos = pos || 0;
 
@@ -2330,12 +5052,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * });
 	 * // evens -> [2, 4]
 	 */
-	XRegExp.forEach = function (str, regex, callback) {
+	XRegExp.forEach = function(str, regex, callback) {
 	    var pos = 0,
 	        i = -1,
 	        match;
 
-	    while (match = XRegExp.exec(str, regex, pos)) {
+	    while ((match = XRegExp.exec(str, regex, pos))) {
 	        // Because `regex` is provided to `callback`, the function could use the deprecated/
 	        // nonstandard `RegExp.prototype.compile` to mutate the regex. However, since `XRegExp.exec`
 	        // doesn't use `lastIndex` to set the search position, this can't lead to an infinite loop,
@@ -2360,8 +5082,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * var globalCopy = XRegExp.globalize(/regex/);
 	 * globalCopy.global; // -> true
 	 */
-	XRegExp.globalize = function (regex) {
-	    return copyRegex(regex, { addG: true });
+	XRegExp.globalize = function(regex) {
+	    return copyRegex(regex, {addG: true});
 	};
 
 	/**
@@ -2383,7 +5105,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // With an options string
 	 * XRegExp.install('astral natives');
 	 */
-	XRegExp.install = function (options) {
+	XRegExp.install = function(options) {
 	    options = prepareOptions(options);
 
 	    if (!features.astral && options.astral) {
@@ -2406,8 +5128,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *
 	 * XRegExp.isInstalled('astral');
 	 */
-	XRegExp.isInstalled = function (feature) {
-	    return !!features[feature];
+	XRegExp.isInstalled = function(feature) {
+	    return !!(features[feature]);
 	};
 
 	/**
@@ -2423,7 +5145,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * XRegExp.isRegExp(RegExp('^', 'm')); // -> true
 	 * XRegExp.isRegExp(XRegExp('(?s).')); // -> true
 	 */
-	XRegExp.isRegExp = function (value) {
+	XRegExp.isRegExp = function(value) {
 	    return toString.call(value) === '[object RegExp]';
 	    //return isType(value, 'RegExp');
 	};
@@ -2454,30 +5176,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * XRegExp.match('abc', /\w/, 'all'); // -> ['a', 'b', 'c']
 	 * XRegExp.match('abc', /x/, 'all'); // -> []
 	 */
-	XRegExp.match = function (str, regex, scope) {
-	    var global = regex.global && scope !== 'one' || scope === 'all',
-	        cacheKey = (global ? 'g' : '') + (regex.sticky ? 'y' : '') || 'noGY',
+	XRegExp.match = function(str, regex, scope) {
+	    var global = (regex.global && scope !== 'one') || scope === 'all',
+	        cacheKey = ((global ? 'g' : '') + (regex.sticky ? 'y' : '')) || 'noGY',
 	        result,
 	        r2;
 
 	    regex[REGEX_DATA] = regex[REGEX_DATA] || {};
 
 	    // Shares cached copies with `XRegExp.exec`/`replace`
-	    r2 = regex[REGEX_DATA][cacheKey] || (regex[REGEX_DATA][cacheKey] = copyRegex(regex, {
-	        addG: !!global,
-	        removeG: scope === 'one',
-	        isInternalOnly: true
-	    }));
+	    r2 = regex[REGEX_DATA][cacheKey] || (
+	        regex[REGEX_DATA][cacheKey] = copyRegex(regex, {
+	            addG: !!global,
+	            removeG: scope === 'one',
+	            isInternalOnly: true
+	        })
+	    );
 
 	    result = nativ.match.call(toObject(str), r2);
 
 	    if (regex.global) {
-	        regex.lastIndex = scope === 'one' && result ?
-	        // Can't use `r2.lastIndex` since `r2` is nonglobal in this case
-	        result.index + result[0].length : 0;
+	        regex.lastIndex = (
+	            (scope === 'one' && result) ?
+	                // Can't use `r2.lastIndex` since `r2` is nonglobal in this case
+	                (result.index + result[0].length) : 0
+	        );
 	    }
 
-	    return global ? result || [] : result && result[0];
+	    return global ? (result || []) : (result && result[0]);
 	};
 
 	/**
@@ -2507,9 +5233,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * ]);
 	 * // -> ['xregexp.com', 'www.google.com']
 	 */
-	XRegExp.matchChain = function (str, chain) {
-	    return function recurseChain(values, level) {
-	        var item = chain[level].regex ? chain[level] : { regex: chain[level] };
+	XRegExp.matchChain = function(str, chain) {
+	    return (function recurseChain(values, level) {
+	        var item = chain[level].regex ? chain[level] : {regex: chain[level]};
 	        var matches = [];
 
 	        function addMatch(match) {
@@ -2533,8 +5259,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	            XRegExp.forEach(values[i], item.regex, addMatch);
 	        }
 
-	        return level === chain.length - 1 || !matches.length ? matches : recurseChain(matches, level + 1);
-	    }([str], 0);
+	        return ((level === chain.length - 1) || !matches.length) ?
+	            matches :
+	            recurseChain(matches, level + 1);
+	    }([str], 0));
 	};
 
 	/**
@@ -2583,10 +5311,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * XRegExp.replace('RegExp builds RegExps', 'RegExp', 'XRegExp', 'all');
 	 * // -> 'XRegExp builds XRegExps'
 	 */
-	XRegExp.replace = function (str, search, replacement, scope) {
+	XRegExp.replace = function(str, search, replacement, scope) {
 	    var isRegex = XRegExp.isRegExp(search),
-	        global = search.global && scope !== 'one' || scope === 'all',
-	        cacheKey = (global ? 'g' : '') + (search.sticky ? 'y' : '') || 'noGY',
+	        global = (search.global && scope !== 'one') || scope === 'all',
+	        cacheKey = ((global ? 'g' : '') + (search.sticky ? 'y' : '')) || 'noGY',
 	        s2 = search,
 	        result;
 
@@ -2595,11 +5323,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        // Shares cached copies with `XRegExp.exec`/`match`. Since a copy is used, `search`'s
 	        // `lastIndex` isn't updated *during* replacement iterations
-	        s2 = search[REGEX_DATA][cacheKey] || (search[REGEX_DATA][cacheKey] = copyRegex(search, {
-	            addG: !!global,
-	            removeG: scope === 'one',
-	            isInternalOnly: true
-	        }));
+	        s2 = search[REGEX_DATA][cacheKey] || (
+	            search[REGEX_DATA][cacheKey] = copyRegex(search, {
+	                addG: !!global,
+	                removeG: scope === 'one',
+	                isInternalOnly: true
+	            })
+	        );
 	    } else if (global) {
 	        s2 = new RegExp(XRegExp.escape(String(search)), 'g');
 	    }
@@ -2638,7 +5368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 *   }]
 	 * ]);
 	 */
-	XRegExp.replaceEach = function (str, replacements) {
+	XRegExp.replaceEach = function(str, replacements) {
 	    var i, r;
 
 	    for (i = 0; i < replacements.length; ++i) {
@@ -2674,7 +5404,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * XRegExp.split('..word1..', /([a-z]+)(\d+)/i);
 	 * // -> ['..', 'word', '1', '..']
 	 */
-	XRegExp.split = function (str, separator, limit) {
+	XRegExp.split = function(str, separator, limit) {
 	    return fixed.split.call(toObject(str), separator, limit);
 	};
 
@@ -2700,7 +5430,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * XRegExp.test('abc', /c/, 0, 'sticky'); // -> false
 	 * XRegExp.test('abc', /c/, 2, 'sticky'); // -> true
 	 */
-	XRegExp.test = function (str, regex, pos, sticky) {
+	XRegExp.test = function(str, regex, pos, sticky) {
 	    // Do this the easy way :-)
 	    return !!XRegExp.exec(str, regex, pos, sticky);
 	};
@@ -2724,7 +5454,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * // With an options string
 	 * XRegExp.uninstall('astral natives');
 	 */
-	XRegExp.uninstall = function (options) {
+	XRegExp.uninstall = function(options) {
 	    options = prepareOptions(options);
 
 	    if (features.astral && options.astral) {
@@ -2751,7 +5481,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * XRegExp.union(['a+b*c', /(dogs)\1/, /(cats)\1/], 'i');
 	 * // -> /a\+b\*c|(dogs)\1|(cats)\2/i
 	 */
-	XRegExp.union = function (patterns, flags) {
+	XRegExp.union = function(patterns, flags) {
 	    var numCaptures = 0;
 	    var numPriorCaptures;
 	    var captureNames;
@@ -2766,7 +5496,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	            if (name) {
 	                return '(?<' + name + '>';
 	            }
-	            // Backreference
+	        // Backreference
 	        } else if (backref) {
 	            // Rewrite the backreference
 	            return '\\' + (+backref + numPriorCaptures);
@@ -2787,7 +5517,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        if (XRegExp.isRegExp(pattern)) {
 	            numPriorCaptures = numCaptures;
-	            captureNames = pattern[REGEX_DATA] && pattern[REGEX_DATA].captureNames || [];
+	            captureNames = (pattern[REGEX_DATA] && pattern[REGEX_DATA].captureNames) || [];
 
 	            // Rewrite backreferences. Passing to XRegExp dies on octals and ensures patterns are
 	            // independently valid; helps keep this simple. Named captures are put back
@@ -2812,7 +5542,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String} str String to search.
 	 * @returns {Array} Match array with named backreference properties, or `null`.
 	 */
-	fixed.exec = function (str) {
+	fixed.exec = function(str) {
 	    var origLastIndex = this.lastIndex,
 	        match = nativ.exec.apply(this, arguments),
 	        name,
@@ -2830,9 +5560,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	            });
 	            // Using `str.slice(match.index)` rather than `match[0]` in case lookahead allowed
 	            // matching due to characters outside the match
-	            nativ.replace.call(String(str).slice(match.index), r2, function () {
-	                var len = arguments.length,
-	                    i;
+	            nativ.replace.call(String(str).slice(match.index), r2, function() {
+	                var len = arguments.length, i;
 	                // Skip index 0 and the last 2
 	                for (i = 1; i < len - 2; ++i) {
 	                    if (arguments[i] === undefined) {
@@ -2854,7 +5583,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        }
 
 	        // Fix browsers that increment `lastIndex` after zero-length matches
-	        if (this.global && !match[0].length && this.lastIndex > match.index) {
+	        if (this.global && !match[0].length && (this.lastIndex > match.index)) {
 	            this.lastIndex = match.index;
 	        }
 	    }
@@ -2874,7 +5603,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String} str String to search.
 	 * @returns {Boolean} Whether the regex matched the provided value.
 	 */
-	fixed.test = function (str) {
+	fixed.test = function(str) {
 	    // Do this the easy way :-)
 	    return !!fixed.exec.call(this, str);
 	};
@@ -2888,7 +5617,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @returns {Array} If `regex` uses flag g, an array of match strings or `null`. Without flag g,
 	 *   the result of calling `regex.exec(this)`.
 	 */
-	fixed.match = function (regex) {
+	fixed.match = function(regex) {
 	    var result;
 
 	    if (!XRegExp.isRegExp(regex)) {
@@ -2918,7 +5647,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {String|Function} replacement Replacement string or a function invoked to create it.
 	 * @returns {String} New string with one or all matches replaced.
 	 */
-	fixed.replace = function (search, replacement) {
+	fixed.replace = function(search, replacement) {
 	    var isRegex = XRegExp.isRegExp(search),
 	        origLastIndex,
 	        captureNames,
@@ -2938,9 +5667,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	    if (isType(replacement, 'Function')) {
 	        // Stringifying `this` fixes a bug in IE < 9 where the last argument in replacement
 	        // functions isn't type-converted to a string
-	        result = nativ.replace.call(String(this), search, function () {
-	            var args = arguments,
-	                i;
+	        result = nativ.replace.call(String(this), search, function() {
+	            var args = arguments, i;
 	            if (captureNames) {
 	                // Change the `arguments[0]` string primitive to a `String` object that can store
 	                // properties. This really does need to use `String` as a constructor
@@ -2963,10 +5691,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	    } else {
 	        // Ensure that the last value of `args` will be a string when given nonstring `this`,
 	        // while still throwing on null or undefined context
-	        result = nativ.replace.call(this == null ? this : String(this), search, function () {
+	        result = nativ.replace.call(this == null ? this : String(this), search, function() {
 	            // Keep this function's `arguments` available through closure
 	            var args = arguments;
-	            return nativ.replace.call(String(replacement), replacementToken, function ($0, $1, $2) {
+	            return nativ.replace.call(String(replacement), replacementToken, function($0, $1, $2) {
 	                var n;
 	                // Named or numbered backreference with curly braces
 	                if ($1) {
@@ -2991,20 +5719,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    return args[n + 1] || '';
 	                }
 	                // Else, special variable or numbered backreference without curly braces
-	                if ($2 === '$') {
-	                    // $$
+	                if ($2 === '$') { // $$
 	                    return '$';
 	                }
-	                if ($2 === '&' || +$2 === 0) {
-	                    // $&, $0 (not followed by 1-9), $00
+	                if ($2 === '&' || +$2 === 0) { // $&, $0 (not followed by 1-9), $00
 	                    return args[0];
 	                }
-	                if ($2 === '`') {
-	                    // $` (left context)
+	                if ($2 === '`') { // $` (left context)
 	                    return args[args.length - 1].slice(0, args[args.length - 2]);
 	                }
-	                if ($2 === "'") {
-	                    // $' (right context)
+	                if ($2 === "'") { // $' (right context)
 	                    return args[args.length - 1].slice(args[args.length - 2] + args[0].length);
 	                }
 	                // Else, numbered backreference without curly braces
@@ -3054,7 +5778,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {Number} [limit] Maximum number of items to include in the result array.
 	 * @returns {Array} Array of substrings.
 	 */
-	fixed.split = function (separator, limit) {
+	fixed.split = function(separator, limit) {
 	    if (!XRegExp.isRegExp(separator)) {
 	        // Browsers handle nonregex split correctly, so use the faster native method
 	        return nativ.split.apply(this, arguments);
@@ -3076,9 +5800,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Opera Dragonfly is open (go figure). It works in at least Opera 9.5-10.1 and 11+
 	    limit = (limit === undefined ? -1 : limit) >>> 0;
 
-	    XRegExp.forEach(str, separator, function (match) {
+	    XRegExp.forEach(str, separator, function(match) {
 	        // This condition is not the same as `if (match[0].length)`
-	        if (match.index + match[0].length > lastLastIndex) {
+	        if ((match.index + match[0].length) > lastLastIndex) {
 	            output.push(str.slice(lastLastIndex, match.index));
 	            if (match.length > 1 && match.index < str.length) {
 	                Array.prototype.push.apply(output, match.slice(1));
@@ -3109,16 +5833,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * SyntaxErrors but are allowed in web reality. XRegExp makes them errors for cross-browser
 	 * consistency and to reserve their syntax, but lets them be superseded by addons.
 	 */
-	XRegExp.addToken(/\\([ABCE-RTUVXYZaeg-mopqyz]|c(?![A-Za-z])|u(?![\dA-Fa-f]{4}|{[\dA-Fa-f]+})|x(?![\dA-Fa-f]{2}))/, function (match, scope) {
-	    // \B is allowed in default scope only
-	    if (match[1] === 'B' && scope === defaultScope) {
-	        return match[0];
+	XRegExp.addToken(
+	    /\\([ABCE-RTUVXYZaeg-mopqyz]|c(?![A-Za-z])|u(?![\dA-Fa-f]{4}|{[\dA-Fa-f]+})|x(?![\dA-Fa-f]{2}))/,
+	    function(match, scope) {
+	        // \B is allowed in default scope only
+	        if (match[1] === 'B' && scope === defaultScope) {
+	            return match[0];
+	        }
+	        throw new SyntaxError('Invalid escape ' + match[0]);
+	    },
+	    {
+	        scope: 'all',
+	        leadChar: '\\'
 	    }
-	    throw new SyntaxError('Invalid escape ' + match[0]);
-	}, {
-	    scope: 'all',
-	    leadChar: '\\'
-	});
+	);
 
 	/*
 	 * Unicode code point escape with curly braces: `\u{N..}`. `N..` is any one or more digit
@@ -3128,96 +5856,137 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * if you follow a `\u{N..}` token that references a code point above U+FFFF with a quantifier, or
 	 * if you use the same in a character class.
 	 */
-	XRegExp.addToken(/\\u{([\dA-Fa-f]+)}/, function (match, scope, flags) {
-	    var code = dec(match[1]);
-	    if (code > 0x10FFFF) {
-	        throw new SyntaxError('Invalid Unicode code point ' + match[0]);
+	XRegExp.addToken(
+	    /\\u{([\dA-Fa-f]+)}/,
+	    function(match, scope, flags) {
+	        var code = dec(match[1]);
+	        if (code > 0x10FFFF) {
+	            throw new SyntaxError('Invalid Unicode code point ' + match[0]);
+	        }
+	        if (code <= 0xFFFF) {
+	            // Converting to \uNNNN avoids needing to escape the literal character and keep it
+	            // separate from preceding tokens
+	            return '\\u' + pad4(hex(code));
+	        }
+	        // If `code` is between 0xFFFF and 0x10FFFF, require and defer to native handling
+	        if (hasNativeU && flags.indexOf('u') > -1) {
+	            return match[0];
+	        }
+	        throw new SyntaxError('Cannot use Unicode code point above \\u{FFFF} without flag u');
+	    },
+	    {
+	        scope: 'all',
+	        leadChar: '\\'
 	    }
-	    if (code <= 0xFFFF) {
-	        // Converting to \uNNNN avoids needing to escape the literal character and keep it
-	        // separate from preceding tokens
-	        return '\\u' + pad4(hex(code));
-	    }
-	    // If `code` is between 0xFFFF and 0x10FFFF, require and defer to native handling
-	    if (hasNativeU && flags.indexOf('u') > -1) {
-	        return match[0];
-	    }
-	    throw new SyntaxError('Cannot use Unicode code point above \\u{FFFF} without flag u');
-	}, {
-	    scope: 'all',
-	    leadChar: '\\'
-	});
+	);
 
 	/*
 	 * Empty character class: `[]` or `[^]`. This fixes a critical cross-browser syntax inconsistency.
 	 * Unless this is standardized (per the ES spec), regex syntax can't be accurately parsed because
 	 * character class endings can't be determined.
 	 */
-	XRegExp.addToken(/\[(\^?)]/, function (match) {
-	    // For cross-browser compatibility with ES3, convert [] to \b\B and [^] to [\s\S].
-	    // (?!) should work like \b\B, but is unreliable in some versions of Firefox
-	    return match[1] ? '[\\s\\S]' : '\\b\\B';
-	}, { leadChar: '[' });
+	XRegExp.addToken(
+	    /\[(\^?)]/,
+	    function(match) {
+	        // For cross-browser compatibility with ES3, convert [] to \b\B and [^] to [\s\S].
+	        // (?!) should work like \b\B, but is unreliable in some versions of Firefox
+	        return match[1] ? '[\\s\\S]' : '\\b\\B';
+	    },
+	    {leadChar: '['}
+	);
 
 	/*
 	 * Comment pattern: `(?# )`. Inline comments are an alternative to the line comments allowed in
 	 * free-spacing mode (flag x).
 	 */
-	XRegExp.addToken(/\(\?#[^)]*\)/, function (match, scope, flags) {
-	    // Keep tokens separated unless the following token is a quantifier. This avoids e.g.
-	    // inadvertedly changing `\1(?#)1` to `\11`.
-	    return isQuantifierNext(match.input, match.index + match[0].length, flags) ? '' : '(?:)';
-	}, { leadChar: '(' });
+	XRegExp.addToken(
+	    /\(\?#[^)]*\)/,
+	    function(match, scope, flags) {
+	        // Keep tokens separated unless the following token is a quantifier. This avoids e.g.
+	        // inadvertedly changing `\1(?#)1` to `\11`.
+	        return isQuantifierNext(match.input, match.index + match[0].length, flags) ?
+	            '' : '(?:)';
+	    },
+	    {leadChar: '('}
+	);
 
 	/*
 	 * Whitespace and line comments, in free-spacing mode (aka extended mode, flag x) only.
 	 */
-	XRegExp.addToken(/\s+|#[^\n]*\n?/, function (match, scope, flags) {
-	    // Keep tokens separated unless the following token is a quantifier. This avoids e.g.
-	    // inadvertedly changing `\1 1` to `\11`.
-	    return isQuantifierNext(match.input, match.index + match[0].length, flags) ? '' : '(?:)';
-	}, { flag: 'x' });
+	XRegExp.addToken(
+	    /\s+|#[^\n]*\n?/,
+	    function(match, scope, flags) {
+	        // Keep tokens separated unless the following token is a quantifier. This avoids e.g.
+	        // inadvertedly changing `\1 1` to `\11`.
+	        return isQuantifierNext(match.input, match.index + match[0].length, flags) ?
+	            '' : '(?:)';
+	    },
+	    {flag: 'x'}
+	);
 
 	/*
 	 * Dot, in dotall mode (aka singleline mode, flag s) only.
 	 */
-	XRegExp.addToken(/\./, function () {
-	    return '[\\s\\S]';
-	}, {
-	    flag: 's',
-	    leadChar: '.'
-	});
+	XRegExp.addToken(
+	    /\./,
+	    function() {
+	        return '[\\s\\S]';
+	    },
+	    {
+	        flag: 's',
+	        leadChar: '.'
+	    }
+	);
 
 	/*
 	 * Named backreference: `\k<name>`. Backreference names can use the characters A-Z, a-z, 0-9, _,
 	 * and $ only. Also allows numbered backreferences as `\k<n>`.
 	 */
-	XRegExp.addToken(/\\k<([\w$]+)>/, function (match) {
-	    // Groups with the same name is an error, else would need `lastIndexOf`
-	    var index = isNaN(match[1]) ? indexOf(this.captureNames, match[1]) + 1 : +match[1],
-	        endIndex = match.index + match[0].length;
-	    if (!index || index > this.captureNames.length) {
-	        throw new SyntaxError('Backreference to undefined group ' + match[0]);
-	    }
-	    // Keep backreferences separate from subsequent literal numbers. This avoids e.g.
-	    // inadvertedly changing `(?<n>)\k<n>1` to `()\11`.
-	    return '\\' + index + (endIndex === match.input.length || isNaN(match.input.charAt(endIndex)) ? '' : '(?:)');
-	}, { leadChar: '\\' });
+	XRegExp.addToken(
+	    /\\k<([\w$]+)>/,
+	    function(match) {
+	        // Groups with the same name is an error, else would need `lastIndexOf`
+	        var index = isNaN(match[1]) ? (indexOf(this.captureNames, match[1]) + 1) : +match[1],
+	            endIndex = match.index + match[0].length;
+	        if (!index || index > this.captureNames.length) {
+	            throw new SyntaxError('Backreference to undefined group ' + match[0]);
+	        }
+	        // Keep backreferences separate from subsequent literal numbers. This avoids e.g.
+	        // inadvertedly changing `(?<n>)\k<n>1` to `()\11`.
+	        return '\\' + index + (
+	            endIndex === match.input.length || isNaN(match.input.charAt(endIndex)) ?
+	                '' : '(?:)'
+	        );
+	    },
+	    {leadChar: '\\'}
+	);
 
 	/*
 	 * Numbered backreference or octal, plus any following digits: `\0`, `\11`, etc. Octals except `\0`
 	 * not followed by 0-9 and backreferences to unopened capture groups throw an error. Other matches
 	 * are returned unaltered. IE < 9 doesn't support backreferences above `\99` in regex syntax.
 	 */
-	XRegExp.addToken(/\\(\d+)/, function (match, scope) {
-	    if (!(scope === defaultScope && /^[1-9]/.test(match[1]) && +match[1] <= this.captureNames.length) && match[1] !== '0') {
-	        throw new SyntaxError('Cannot use octal escape or backreference to undefined group ' + match[0]);
+	XRegExp.addToken(
+	    /\\(\d+)/,
+	    function(match, scope) {
+	        if (
+	            !(
+	                scope === defaultScope &&
+	                /^[1-9]/.test(match[1]) &&
+	                +match[1] <= this.captureNames.length
+	            ) &&
+	            match[1] !== '0'
+	        ) {
+	            throw new SyntaxError('Cannot use octal escape or backreference to undefined group ' +
+	                match[0]);
+	        }
+	        return match[0];
+	    },
+	    {
+	        scope: 'all',
+	        leadChar: '\\'
 	    }
-	    return match[0];
-	}, {
-	    scope: 'all',
-	    leadChar: '\\'
-	});
+	);
 
 	/*
 	 * Named capturing group; match the opening delimiter only: `(?<name>`. Capture names can use the
@@ -3226,45 +5995,52 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * supported the Python-style syntax. Otherwise, XRegExp might treat numbered backreferences to
 	 * Python-style named capture as octals.
 	 */
-	XRegExp.addToken(/\(\?P?<([\w$]+)>/, function (match) {
-	    // Disallow bare integers as names because named backreferences are added to match arrays
-	    // and therefore numeric properties may lead to incorrect lookups
-	    if (!isNaN(match[1])) {
-	        throw new SyntaxError('Cannot use integer as capture name ' + match[0]);
-	    }
-	    if (match[1] === 'length' || match[1] === '__proto__') {
-	        throw new SyntaxError('Cannot use reserved word as capture name ' + match[0]);
-	    }
-	    if (indexOf(this.captureNames, match[1]) > -1) {
-	        throw new SyntaxError('Cannot use same name for multiple groups ' + match[0]);
-	    }
-	    this.captureNames.push(match[1]);
-	    this.hasNamedCapture = true;
-	    return '(';
-	}, { leadChar: '(' });
+	XRegExp.addToken(
+	    /\(\?P?<([\w$]+)>/,
+	    function(match) {
+	        // Disallow bare integers as names because named backreferences are added to match arrays
+	        // and therefore numeric properties may lead to incorrect lookups
+	        if (!isNaN(match[1])) {
+	            throw new SyntaxError('Cannot use integer as capture name ' + match[0]);
+	        }
+	        if (match[1] === 'length' || match[1] === '__proto__') {
+	            throw new SyntaxError('Cannot use reserved word as capture name ' + match[0]);
+	        }
+	        if (indexOf(this.captureNames, match[1]) > -1) {
+	            throw new SyntaxError('Cannot use same name for multiple groups ' + match[0]);
+	        }
+	        this.captureNames.push(match[1]);
+	        this.hasNamedCapture = true;
+	        return '(';
+	    },
+	    {leadChar: '('}
+	);
 
 	/*
 	 * Capturing group; match the opening parenthesis only. Required for support of named capturing
 	 * groups. Also adds explicit capture mode (flag n).
 	 */
-	XRegExp.addToken(/\((?!\?)/, function (match, scope, flags) {
-	    if (flags.indexOf('n') > -1) {
-	        return '(?:';
+	XRegExp.addToken(
+	    /\((?!\?)/,
+	    function(match, scope, flags) {
+	        if (flags.indexOf('n') > -1) {
+	            return '(?:';
+	        }
+	        this.captureNames.push(null);
+	        return '(';
+	    },
+	    {
+	        optionalFlags: 'n',
+	        leadChar: '('
 	    }
-	    this.captureNames.push(null);
-	    return '(';
-	}, {
-	    optionalFlags: 'n',
-	    leadChar: '('
-	});
+	);
 
 	module.exports = XRegExp;
 
-/***/ },
-/* 11 */
-/***/ function(module, exports) {
 
-	'use strict';
+/***/ },
+/* 39 */
+/***/ function(module, exports) {
 
 	/*!
 	 * XRegExp.build 3.1.1
@@ -3273,7 +6049,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Inspired by Lea Verou's RegExp.create <lea.verou.me>
 	 */
 
-	module.exports = function (XRegExp) {
+	module.exports = function(XRegExp) {
 	    'use strict';
 
 	    var REGEX_DATA = 'xregexp';
@@ -3292,9 +6068,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	        var leadingAnchor = /^(?:\(\?:\))*\^/,
 	            trailingAnchor = /\$(?:\(\?:\))*$/;
 
-	        if (leadingAnchor.test(pattern) && trailingAnchor.test(pattern) &&
-	        // Ensure that the trailing `$` isn't escaped
-	        trailingAnchor.test(pattern.replace(/\\[\s\S]/g, ''))) {
+	        if (
+	            leadingAnchor.test(pattern) &&
+	            trailingAnchor.test(pattern) &&
+	            // Ensure that the trailing `$` isn't escaped
+	            trailingAnchor.test(pattern.replace(/\\[\s\S]/g, ''))
+	        ) {
 	            return pattern.replace(leadingAnchor, '').replace(trailingAnchor, '');
 	        }
 
@@ -3308,13 +6087,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * @returns {RegExp} XRegExp object with XRegExp syntax applied.
 	     */
 	    function asXRegExp(value) {
-	        return XRegExp.isRegExp(value) ? value[REGEX_DATA] && value[REGEX_DATA].captureNames ?
-	        // Don't recompile, to preserve capture names
-	        value :
-	        // Recompile as XRegExp
-	        XRegExp(value.source) :
-	        // Compile string as XRegExp
-	        XRegExp(value);
+	        return XRegExp.isRegExp(value) ?
+	            (value[REGEX_DATA] && value[REGEX_DATA].captureNames ?
+	                // Don't recompile, to preserve capture names
+	                value :
+	                // Recompile as XRegExp
+	                XRegExp(value.source)
+	            ) :
+	            // Compile string as XRegExp
+	            XRegExp(value);
 	    }
 
 	    /**
@@ -3341,12 +6122,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * time.test('10:59'); // -> true
 	     * XRegExp.exec('10:59', time).minutes; // -> '59'
 	     */
-	    XRegExp.build = function (pattern, subs, flags) {
+	    XRegExp.build = function(pattern, subs, flags) {
 	        var inlineFlags = /^\(\?([\w$]+)\)/.exec(pattern),
 	            data = {},
-	            numCaps = 0,
-	            // 'Caps' is short for captures
-	        numPriorCaps,
+	            numCaps = 0, // 'Caps' is short for captures
+	            numPriorCaps,
 	            numOuterCaps = 0,
 	            outerCapsMap = [0],
 	            outerCapNames,
@@ -3356,9 +6136,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // Add flags within a leading mode modifier to the overall pattern's flags
 	        if (inlineFlags) {
 	            flags = flags || '';
-	            inlineFlags[1].replace(/./g, function (flag) {
+	            inlineFlags[1].replace(/./g, function(flag) {
 	                // Don't add duplicates
-	                flags += flags.indexOf(flag) > -1 ? '' : flag;
+	                flags += (flags.indexOf(flag) > -1 ? '' : flag);
 	            });
 	        }
 
@@ -3382,7 +6162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // helps keep this simple. Named captures will be put back
 	        pattern = asXRegExp(pattern);
 	        outerCapNames = pattern[REGEX_DATA].captureNames || [];
-	        pattern = pattern.source.replace(parts, function ($0, $1, $2, $3, $4) {
+	        pattern = pattern.source.replace(parts, function($0, $1, $2, $3, $4) {
 	            var subName = $1 || $2,
 	                capName,
 	                intro,
@@ -3403,7 +6183,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                    intro = '(?:';
 	                }
 	                numPriorCaps = numCaps;
-	                return intro + data[subName].pattern.replace(subParts, function (match, paren, backref) {
+	                return intro + data[subName].pattern.replace(subParts, function(match, paren, backref) {
 	                    // Capturing group
 	                    if (paren) {
 	                        capName = data[subName].names[numCaps - numPriorCaps];
@@ -3412,13 +6192,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	                        if (capName) {
 	                            return '(?<' + capName + '>';
 	                        }
-	                        // Backreference
+	                    // Backreference
 	                    } else if (backref) {
 	                        localCapIndex = +backref - 1;
 	                        // Rewrite the backreference
 	                        return data[subName].names[localCapIndex] ?
-	                        // Need to preserve the backreference name in case using flag `n`
-	                        '\\k<' + data[subName].names[localCapIndex] + '>' : '\\' + (+backref + numPriorCaps);
+	                            // Need to preserve the backreference name in case using flag `n`
+	                            '\\k<' + data[subName].names[localCapIndex] + '>' :
+	                            '\\' + (+backref + numPriorCaps);
 	                    }
 	                    return match;
 	                }) + ')';
@@ -3431,26 +6212,27 @@ return /******/ (function(modules) { // webpackBootstrap
 	                if (capName) {
 	                    return '(?<' + capName + '>';
 	                }
-	                // Backreference
+	            // Backreference
 	            } else if ($4) {
 	                localCapIndex = +$4 - 1;
 	                // Rewrite the backreference
 	                return outerCapNames[localCapIndex] ?
-	                // Need to preserve the backreference name in case using flag `n`
-	                '\\k<' + outerCapNames[localCapIndex] + '>' : '\\' + outerCapsMap[+$4];
+	                    // Need to preserve the backreference name in case using flag `n`
+	                    '\\k<' + outerCapNames[localCapIndex] + '>' :
+	                    '\\' + outerCapsMap[+$4];
 	            }
 	            return $0;
 	        });
 
 	        return XRegExp(pattern, flags);
 	    };
+
 	};
 
-/***/ },
-/* 12 */
-/***/ function(module, exports) {
 
-	'use strict';
+/***/ },
+/* 40 */
+/***/ function(module, exports) {
 
 	/*!
 	 * XRegExp.matchRecursive 3.1.1
@@ -3458,13 +6240,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Steven Levithan (c) 2009-2016 MIT License
 	 */
 
-	module.exports = function (XRegExp) {
+	module.exports = function(XRegExp) {
 	    'use strict';
 
 	    /**
 	     * Returns a match detail object composed of the provided values.
 	     */
-
 	    function row(name, value, start, end) {
 	        return {
 	            name: name,
@@ -3523,14 +6304,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * XRegExp.matchRecursive(str, '<', '>', 'gy');
 	     * // -> ['1', '<<2>>', '3']
 	     */
-	    XRegExp.matchRecursive = function (str, left, right, flags, options) {
+	    XRegExp.matchRecursive = function(str, left, right, flags, options) {
 	        flags = flags || '';
 	        options = options || {};
 	        var global = flags.indexOf('g') > -1,
 	            sticky = flags.indexOf('y') > -1,
-
-	        // Flag `y` is controlled internally
-	        basicFlags = flags.replace(/y/g, ''),
+	            // Flag `y` is controlled internally
+	            basicFlags = flags.replace(/y/g, ''),
 	            escapeChar = options.escapeChar,
 	            vN = options.valueNames,
 	            output = [],
@@ -3552,9 +6332,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	            }
 	            escapeChar = XRegExp.escape(escapeChar);
 	            // Using `XRegExp.union` safely rewrites backreferences in `left` and `right`
-	            esc = new RegExp('(?:' + escapeChar + '[\\S\\s]|(?:(?!' + XRegExp.union([left, right]).source + ')[^' + escapeChar + '])+)+',
-	            // Flags `gy` not needed here
-	            flags.replace(/[^imu]+/g, ''));
+	            esc = new RegExp(
+	                '(?:' + escapeChar + '[\\S\\s]|(?:(?!' +
+	                    XRegExp.union([left, right]).source +
+	                    ')[^' + escapeChar + '])+)+',
+	                // Flags `gy` not needed here
+	                flags.replace(/[^imu]+/g, '')
+	            );
 	        }
 
 	        while (true) {
@@ -3599,7 +6383,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	                }
 	                ++openTokens;
 	            } else if (rightMatch && openTokens) {
-	                if (! --openTokens) {
+	                if (!--openTokens) {
 	                    if (vN) {
 	                        if (vN[0] && outerStart > lastOuterEnd) {
 	                            output.push(row(vN[0], str.slice(lastOuterEnd, outerStart), lastOuterEnd, outerStart));
@@ -3636,13 +6420,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	        return output;
 	    };
+
 	};
 
-/***/ },
-/* 13 */
-/***/ function(module, exports) {
 
-	'use strict';
+/***/ },
+/* 41 */
+/***/ function(module, exports) {
 
 	/*!
 	 * XRegExp Unicode Base 3.1.1
@@ -3650,7 +6434,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Steven Levithan (c) 2008-2016 MIT License
 	 */
 
-	module.exports = function (XRegExp) {
+	module.exports = function(XRegExp) {
 	    'use strict';
 
 	    /**
@@ -3672,7 +6456,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // ==--------------------------==
 
 	    // Storage for Unicode data
-
 	    var unicode = {};
 
 	    // Reuse utils
@@ -3688,23 +6471,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Gets the decimal code of a literal code unit, \xHH, \uHHHH, or a backslash-escaped literal
 	    function charCode(chr) {
 	        var esc = /^\\[xu](.+)/.exec(chr);
-	        return esc ? dec(esc[1]) : chr.charCodeAt(chr.charAt(0) === '\\' ? 1 : 0);
+	        return esc ?
+	            dec(esc[1]) :
+	            chr.charCodeAt(chr.charAt(0) === '\\' ? 1 : 0);
 	    }
 
 	    // Inverts a list of ordered BMP characters and ranges
 	    function invertBmp(range) {
 	        var output = '';
 	        var lastEnd = -1;
-	        XRegExp.forEach(range, /(\\x..|\\u....|\\?[\s\S])(?:-(\\x..|\\u....|\\?[\s\S]))?/, function (m) {
-	            var start = charCode(m[1]);
-	            if (start > lastEnd + 1) {
-	                output += '\\u' + pad4(hex(lastEnd + 1));
-	                if (start > lastEnd + 2) {
-	                    output += '-\\u' + pad4(hex(start - 1));
+	        XRegExp.forEach(
+	            range,
+	            /(\\x..|\\u....|\\?[\s\S])(?:-(\\x..|\\u....|\\?[\s\S]))?/,
+	            function(m) {
+	                var start = charCode(m[1]);
+	                if (start > (lastEnd + 1)) {
+	                    output += '\\u' + pad4(hex(lastEnd + 1));
+	                    if (start > (lastEnd + 2)) {
+	                        output += '-\\u' + pad4(hex(start - 1));
+	                    }
 	                }
+	                lastEnd = charCode(m[2] || m[1]);
 	            }
-	            lastEnd = charCode(m[2] || m[1]);
-	        });
+	        );
 	        if (lastEnd < 0xFFFF) {
 	            output += '\\u' + pad4(hex(lastEnd + 1));
 	            if (lastEnd < 0xFFFE) {
@@ -3717,7 +6506,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Generates an inverted BMP range on first use
 	    function cacheInvertedBmp(slug) {
 	        var prop = 'b!';
-	        return unicode[slug][prop] || (unicode[slug][prop] = invertBmp(unicode[slug].bmp));
+	        return unicode[slug][prop] || (
+	            unicode[slug][prop] = invertBmp(unicode[slug].bmp)
+	        );
 	    }
 
 	    // Combines and optionally negates BMP and astral data
@@ -3734,13 +6525,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	            combined += (item.astral ? '|' : '') + '[' + item.bmp + ']';
 	        }
 	        // Astral Unicode tokens always match a code point, never a code unit
-	        return isNegated ? '(?:(?!' + combined + ')(?:[�-�][�-�]|[\u0000-￿]))' : '(?:' + combined + ')';
+	        return isNegated ?
+	            '(?:(?!' + combined + ')(?:[\uD800-\uDBFF][\uDC00-\uDFFF]|[\0-\uFFFF]))' :
+	            '(?:' + combined + ')';
 	    }
 
 	    // Builds a complete astral pattern on first use
 	    function cacheAstral(slug, isNegated) {
 	        var prop = isNegated ? 'a!' : 'a=';
-	        return unicode[slug][prop] || (unicode[slug][prop] = buildAstral(slug, isNegated));
+	        return unicode[slug][prop] || (
+	            unicode[slug][prop] = buildAstral(slug, isNegated)
+	        );
 	    }
 
 	    // ==--------------------------==
@@ -3751,60 +6546,61 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * Add Unicode token syntax: \p{..}, \P{..}, \p{^..}. Also add astral mode (flag A).
 	     */
 	    XRegExp.addToken(
-	    // Use `*` instead of `+` to avoid capturing `^` as the token name in `\p{^}`
-	    /\\([pP])(?:{(\^?)([^}]*)}|([A-Za-z]))/, function (match, scope, flags) {
-	        var ERR_DOUBLE_NEG = 'Invalid double negation ',
-	            ERR_UNKNOWN_NAME = 'Unknown Unicode token ',
-	            ERR_UNKNOWN_REF = 'Unicode token missing data ',
-	            ERR_ASTRAL_ONLY = 'Astral mode required for Unicode token ',
-	            ERR_ASTRAL_IN_CLASS = 'Astral mode does not support Unicode tokens within character classes',
+	        // Use `*` instead of `+` to avoid capturing `^` as the token name in `\p{^}`
+	        /\\([pP])(?:{(\^?)([^}]*)}|([A-Za-z]))/,
+	        function(match, scope, flags) {
+	            var ERR_DOUBLE_NEG = 'Invalid double negation ',
+	                ERR_UNKNOWN_NAME = 'Unknown Unicode token ',
+	                ERR_UNKNOWN_REF = 'Unicode token missing data ',
+	                ERR_ASTRAL_ONLY = 'Astral mode required for Unicode token ',
+	                ERR_ASTRAL_IN_CLASS = 'Astral mode does not support Unicode tokens within character classes',
+	                // Negated via \P{..} or \p{^..}
+	                isNegated = match[1] === 'P' || !!match[2],
+	                // Switch from BMP (0-FFFF) to astral (0-10FFFF) mode via flag A
+	                isAstralMode = flags.indexOf('A') > -1,
+	                // Token lookup name. Check `[4]` first to avoid passing `undefined` via `\p{}`
+	                slug = normalize(match[4] || match[3]),
+	                // Token data object
+	                item = unicode[slug];
 
-	        // Negated via \P{..} or \p{^..}
-	        isNegated = match[1] === 'P' || !!match[2],
-
-	        // Switch from BMP (0-FFFF) to astral (0-10FFFF) mode via flag A
-	        isAstralMode = flags.indexOf('A') > -1,
-
-	        // Token lookup name. Check `[4]` first to avoid passing `undefined` via `\p{}`
-	        slug = normalize(match[4] || match[3]),
-
-	        // Token data object
-	        item = unicode[slug];
-
-	        if (match[1] === 'P' && match[2]) {
-	            throw new SyntaxError(ERR_DOUBLE_NEG + match[0]);
-	        }
-	        if (!unicode.hasOwnProperty(slug)) {
-	            throw new SyntaxError(ERR_UNKNOWN_NAME + match[0]);
-	        }
-
-	        // Switch to the negated form of the referenced Unicode token
-	        if (item.inverseOf) {
-	            slug = normalize(item.inverseOf);
+	            if (match[1] === 'P' && match[2]) {
+	                throw new SyntaxError(ERR_DOUBLE_NEG + match[0]);
+	            }
 	            if (!unicode.hasOwnProperty(slug)) {
-	                throw new ReferenceError(ERR_UNKNOWN_REF + match[0] + ' -> ' + item.inverseOf);
-	            }
-	            item = unicode[slug];
-	            isNegated = !isNegated;
-	        }
-
-	        if (!(item.bmp || isAstralMode)) {
-	            throw new SyntaxError(ERR_ASTRAL_ONLY + match[0]);
-	        }
-	        if (isAstralMode) {
-	            if (scope === 'class') {
-	                throw new SyntaxError(ERR_ASTRAL_IN_CLASS);
+	                throw new SyntaxError(ERR_UNKNOWN_NAME + match[0]);
 	            }
 
-	            return cacheAstral(slug, isNegated);
-	        }
+	            // Switch to the negated form of the referenced Unicode token
+	            if (item.inverseOf) {
+	                slug = normalize(item.inverseOf);
+	                if (!unicode.hasOwnProperty(slug)) {
+	                    throw new ReferenceError(ERR_UNKNOWN_REF + match[0] + ' -> ' + item.inverseOf);
+	                }
+	                item = unicode[slug];
+	                isNegated = !isNegated;
+	            }
 
-	        return scope === 'class' ? isNegated ? cacheInvertedBmp(slug) : item.bmp : (isNegated ? '[^' : '[') + item.bmp + ']';
-	    }, {
-	        scope: 'all',
-	        optionalFlags: 'A',
-	        leadChar: '\\'
-	    });
+	            if (!(item.bmp || isAstralMode)) {
+	                throw new SyntaxError(ERR_ASTRAL_ONLY + match[0]);
+	            }
+	            if (isAstralMode) {
+	                if (scope === 'class') {
+	                    throw new SyntaxError(ERR_ASTRAL_IN_CLASS);
+	                }
+
+	                return cacheAstral(slug, isNegated);
+	            }
+
+	            return scope === 'class' ?
+	                (isNegated ? cacheInvertedBmp(slug) : item.bmp) :
+	                (isNegated ? '[^' : '[') + item.bmp + ']';
+	        },
+	        {
+	            scope: 'all',
+	            optionalFlags: 'A',
+	            leadChar: '\\'
+	        }
+	    );
 
 	    /**
 	     * Adds to the list of Unicode tokens that XRegExp regexes can match via `\p` or `\P`.
@@ -3833,7 +6629,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	     * }]);
 	     * XRegExp('\\p{XDigit}:\\p{Hexadecimal}+').test('0:3D'); // -> true
 	     */
-	    XRegExp.addUnicodeData = function (data) {
+	    XRegExp.addUnicodeData = function(data) {
 	        var ERR_NO_NAME = 'Unicode token requires name',
 	            ERR_NO_DATA = 'Unicode token has no character data ',
 	            item,
@@ -3857,13 +6653,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	        // flags might now produce different results
 	        XRegExp.cache.flush('patterns');
 	    };
+
 	};
 
-/***/ },
-/* 14 */
-/***/ function(module, exports) {
 
-	'use strict';
+/***/ },
+/* 42 */
+/***/ function(module, exports) {
 
 	/*!
 	 * XRegExp Unicode Blocks 3.1.1
@@ -3872,7 +6668,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Unicode data by Mathias Bynens <mathiasbynens.be>
 	 */
 
-	module.exports = function (XRegExp) {
+	module.exports = function(XRegExp) {
 	    'use strict';
 
 	    /**
@@ -3889,800 +6685,1063 @@ return /******/ (function(modules) { // webpackBootstrap
 	        throw new ReferenceError('Unicode Base must be loaded before Unicode Blocks');
 	    }
 
-	    XRegExp.addUnicodeData([{
-	        name: 'InAegean_Numbers',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InAhom',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InAlchemical_Symbols',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InAlphabetic_Presentation_Forms',
-	        bmp: 'ﬀ-ﭏ'
-	    }, {
-	        name: 'InAnatolian_Hieroglyphs',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InAncient_Greek_Musical_Notation',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InAncient_Greek_Numbers',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InAncient_Symbols',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InArabic',
-	        bmp: '؀-ۿ'
-	    }, {
-	        name: 'InArabic_Extended_A',
-	        bmp: 'ࢠ-ࣿ'
-	    }, {
-	        name: 'InArabic_Mathematical_Alphabetic_Symbols',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InArabic_Presentation_Forms_A',
-	        bmp: 'ﭐ-﷿'
-	    }, {
-	        name: 'InArabic_Presentation_Forms_B',
-	        bmp: 'ﹰ-﻿'
-	    }, {
-	        name: 'InArabic_Supplement',
-	        bmp: 'ݐ-ݿ'
-	    }, {
-	        name: 'InArmenian',
-	        bmp: '԰-֏'
-	    }, {
-	        name: 'InArrows',
-	        bmp: '←-⇿'
-	    }, {
-	        name: 'InAvestan',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InBalinese',
-	        bmp: 'ᬀ-᭿'
-	    }, {
-	        name: 'InBamum',
-	        bmp: 'ꚠ-꛿'
-	    }, {
-	        name: 'InBamum_Supplement',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InBasic_Latin',
-	        bmp: '\0-\x7F'
-	    }, {
-	        name: 'InBassa_Vah',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InBatak',
-	        bmp: 'ᯀ-᯿'
-	    }, {
-	        name: 'InBengali',
-	        bmp: 'ঀ-৿'
-	    }, {
-	        name: 'InBlock_Elements',
-	        bmp: '▀-▟'
-	    }, {
-	        name: 'InBopomofo',
-	        bmp: '㄀-ㄯ'
-	    }, {
-	        name: 'InBopomofo_Extended',
-	        bmp: 'ㆠ-ㆿ'
-	    }, {
-	        name: 'InBox_Drawing',
-	        bmp: '─-╿'
-	    }, {
-	        name: 'InBrahmi',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InBraille_Patterns',
-	        bmp: '⠀-⣿'
-	    }, {
-	        name: 'InBuginese',
-	        bmp: 'ᨀ-᨟'
-	    }, {
-	        name: 'InBuhid',
-	        bmp: 'ᝀ-᝟'
-	    }, {
-	        name: 'InByzantine_Musical_Symbols',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InCJK_Compatibility',
-	        bmp: '㌀-㏿'
-	    }, {
-	        name: 'InCJK_Compatibility_Forms',
-	        bmp: '︰-﹏'
-	    }, {
-	        name: 'InCJK_Compatibility_Ideographs',
-	        bmp: '豈-﫿'
-	    }, {
-	        name: 'InCJK_Compatibility_Ideographs_Supplement',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InCJK_Radicals_Supplement',
-	        bmp: '⺀-⻿'
-	    }, {
-	        name: 'InCJK_Strokes',
-	        bmp: '㇀-㇯'
-	    }, {
-	        name: 'InCJK_Symbols_and_Punctuation',
-	        bmp: '　-〿'
-	    }, {
-	        name: 'InCJK_Unified_Ideographs',
-	        bmp: '一-鿿'
-	    }, {
-	        name: 'InCJK_Unified_Ideographs_Extension_A',
-	        bmp: '㐀-䶿'
-	    }, {
-	        name: 'InCJK_Unified_Ideographs_Extension_B',
-	        astral: '[�-�][�-�]|�[�-�]'
-	    }, {
-	        name: 'InCJK_Unified_Ideographs_Extension_C',
-	        astral: '�[�-�]|[�-�][�-�]|�[�-�]'
-	    }, {
-	        name: 'InCJK_Unified_Ideographs_Extension_D',
-	        astral: '�[�-�]|�[�-�]'
-	    }, {
-	        name: 'InCJK_Unified_Ideographs_Extension_E',
-	        astral: '[�-�][�-�]|�[�-�]|�[�-�]'
-	    }, {
-	        name: 'InCarian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InCaucasian_Albanian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InChakma',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InCham',
-	        bmp: 'ꨀ-꩟'
-	    }, {
-	        name: 'InCherokee',
-	        bmp: 'Ꭰ-᏿'
-	    }, {
-	        name: 'InCherokee_Supplement',
-	        bmp: 'ꭰ-ꮿ'
-	    }, {
-	        name: 'InCombining_Diacritical_Marks',
-	        bmp: '̀-ͯ'
-	    }, {
-	        name: 'InCombining_Diacritical_Marks_Extended',
-	        bmp: '᪰-᫿'
-	    }, {
-	        name: 'InCombining_Diacritical_Marks_Supplement',
-	        bmp: '᷀-᷿'
-	    }, {
-	        name: 'InCombining_Diacritical_Marks_for_Symbols',
-	        bmp: '⃐-⃿'
-	    }, {
-	        name: 'InCombining_Half_Marks',
-	        bmp: '︠-︯'
-	    }, {
-	        name: 'InCommon_Indic_Number_Forms',
-	        bmp: '꠰-꠿'
-	    }, {
-	        name: 'InControl_Pictures',
-	        bmp: '␀-␿'
-	    }, {
-	        name: 'InCoptic',
-	        bmp: 'Ⲁ-⳿'
-	    }, {
-	        name: 'InCoptic_Epact_Numbers',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InCounting_Rod_Numerals',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InCuneiform',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InCuneiform_Numbers_and_Punctuation',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InCurrency_Symbols',
-	        bmp: '₠-⃏'
-	    }, {
-	        name: 'InCypriot_Syllabary',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InCyrillic',
-	        bmp: 'Ѐ-ӿ'
-	    }, {
-	        name: 'InCyrillic_Extended_A',
-	        bmp: 'ⷠ-ⷿ'
-	    }, {
-	        name: 'InCyrillic_Extended_B',
-	        bmp: 'Ꙁ-ꚟ'
-	    }, {
-	        name: 'InCyrillic_Supplement',
-	        bmp: 'Ԁ-ԯ'
-	    }, {
-	        name: 'InDeseret',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InDevanagari',
-	        bmp: 'ऀ-ॿ'
-	    }, {
-	        name: 'InDevanagari_Extended',
-	        bmp: '꣠-ꣿ'
-	    }, {
-	        name: 'InDingbats',
-	        bmp: '✀-➿'
-	    }, {
-	        name: 'InDomino_Tiles',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InDuployan',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InEarly_Dynastic_Cuneiform',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InEgyptian_Hieroglyphs',
-	        astral: '�[�-�]|�[�-�]'
-	    }, {
-	        name: 'InElbasan',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InEmoticons',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InEnclosed_Alphanumeric_Supplement',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InEnclosed_Alphanumerics',
-	        bmp: '①-⓿'
-	    }, {
-	        name: 'InEnclosed_CJK_Letters_and_Months',
-	        bmp: '㈀-㋿'
-	    }, {
-	        name: 'InEnclosed_Ideographic_Supplement',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InEthiopic',
-	        bmp: 'ሀ-፿'
-	    }, {
-	        name: 'InEthiopic_Extended',
-	        bmp: 'ⶀ-⷟'
-	    }, {
-	        name: 'InEthiopic_Extended_A',
-	        bmp: '꬀-꬯'
-	    }, {
-	        name: 'InEthiopic_Supplement',
-	        bmp: 'ᎀ-᎟'
-	    }, {
-	        name: 'InGeneral_Punctuation',
-	        bmp: ' -⁯'
-	    }, {
-	        name: 'InGeometric_Shapes',
-	        bmp: '■-◿'
-	    }, {
-	        name: 'InGeometric_Shapes_Extended',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InGeorgian',
-	        bmp: 'Ⴀ-ჿ'
-	    }, {
-	        name: 'InGeorgian_Supplement',
-	        bmp: 'ⴀ-⴯'
-	    }, {
-	        name: 'InGlagolitic',
-	        bmp: 'Ⰰ-ⱟ'
-	    }, {
-	        name: 'InGothic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InGrantha',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InGreek_Extended',
-	        bmp: 'ἀ-῿'
-	    }, {
-	        name: 'InGreek_and_Coptic',
-	        bmp: 'Ͱ-Ͽ'
-	    }, {
-	        name: 'InGujarati',
-	        bmp: '઀-૿'
-	    }, {
-	        name: 'InGurmukhi',
-	        bmp: '਀-੿'
-	    }, {
-	        name: 'InHalfwidth_and_Fullwidth_Forms',
-	        bmp: '＀-￯'
-	    }, {
-	        name: 'InHangul_Compatibility_Jamo',
-	        bmp: '㄰-㆏'
-	    }, {
-	        name: 'InHangul_Jamo',
-	        bmp: 'ᄀ-ᇿ'
-	    }, {
-	        name: 'InHangul_Jamo_Extended_A',
-	        bmp: 'ꥠ-꥿'
-	    }, {
-	        name: 'InHangul_Jamo_Extended_B',
-	        bmp: 'ힰ-퟿'
-	    }, {
-	        name: 'InHangul_Syllables',
-	        bmp: '가-힯'
-	    }, {
-	        name: 'InHanunoo',
-	        bmp: 'ᜠ-᜿'
-	    }, {
-	        name: 'InHatran',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InHebrew',
-	        bmp: '֐-׿'
-	    }, {
-	        name: 'InHigh_Private_Use_Surrogates',
-	        bmp: '�-�'
-	    }, {
-	        name: 'InHigh_Surrogates',
-	        bmp: '�-�'
-	    }, {
-	        name: 'InHiragana',
-	        bmp: '぀-ゟ'
-	    }, {
-	        name: 'InIPA_Extensions',
-	        bmp: 'ɐ-ʯ'
-	    }, {
-	        name: 'InIdeographic_Description_Characters',
-	        bmp: '⿰-⿿'
-	    }, {
-	        name: 'InImperial_Aramaic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InInscriptional_Pahlavi',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InInscriptional_Parthian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InJavanese',
-	        bmp: 'ꦀ-꧟'
-	    }, {
-	        name: 'InKaithi',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InKana_Supplement',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InKanbun',
-	        bmp: '㆐-㆟'
-	    }, {
-	        name: 'InKangxi_Radicals',
-	        bmp: '⼀-⿟'
-	    }, {
-	        name: 'InKannada',
-	        bmp: 'ಀ-೿'
-	    }, {
-	        name: 'InKatakana',
-	        bmp: '゠-ヿ'
-	    }, {
-	        name: 'InKatakana_Phonetic_Extensions',
-	        bmp: 'ㇰ-ㇿ'
-	    }, {
-	        name: 'InKayah_Li',
-	        bmp: '꤀-꤯'
-	    }, {
-	        name: 'InKharoshthi',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InKhmer',
-	        bmp: 'ក-៿'
-	    }, {
-	        name: 'InKhmer_Symbols',
-	        bmp: '᧠-᧿'
-	    }, {
-	        name: 'InKhojki',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InKhudawadi',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InLao',
-	        bmp: '຀-໿'
-	    }, {
-	        name: 'InLatin_Extended_Additional',
-	        bmp: 'Ḁ-ỿ'
-	    }, {
-	        name: 'InLatin_Extended_A',
-	        bmp: 'Ā-ſ'
-	    }, {
-	        name: 'InLatin_Extended_B',
-	        bmp: 'ƀ-ɏ'
-	    }, {
-	        name: 'InLatin_Extended_C',
-	        bmp: 'Ⱡ-Ɀ'
-	    }, {
-	        name: 'InLatin_Extended_D',
-	        bmp: '꜠-ꟿ'
-	    }, {
-	        name: 'InLatin_Extended_E',
-	        bmp: 'ꬰ-꭯'
-	    }, {
-	        name: 'InLatin_1_Supplement',
-	        bmp: '\x80-\xFF'
-	    }, {
-	        name: 'InLepcha',
-	        bmp: 'ᰀ-ᱏ'
-	    }, {
-	        name: 'InLetterlike_Symbols',
-	        bmp: '℀-⅏'
-	    }, {
-	        name: 'InLimbu',
-	        bmp: 'ᤀ-᥏'
-	    }, {
-	        name: 'InLinear_A',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InLinear_B_Ideograms',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InLinear_B_Syllabary',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InLisu',
-	        bmp: 'ꓐ-꓿'
-	    }, {
-	        name: 'InLow_Surrogates',
-	        bmp: '�-�'
-	    }, {
-	        name: 'InLycian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InLydian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMahajani',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMahjong_Tiles',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMalayalam',
-	        bmp: 'ഀ-ൿ'
-	    }, {
-	        name: 'InMandaic',
-	        bmp: 'ࡀ-࡟'
-	    }, {
-	        name: 'InManichaean',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMathematical_Alphanumeric_Symbols',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMathematical_Operators',
-	        bmp: '∀-⋿'
-	    }, {
-	        name: 'InMeetei_Mayek',
-	        bmp: 'ꯀ-꯿'
-	    }, {
-	        name: 'InMeetei_Mayek_Extensions',
-	        bmp: 'ꫠ-꫿'
-	    }, {
-	        name: 'InMende_Kikakui',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMeroitic_Cursive',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMeroitic_Hieroglyphs',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMiao',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMiscellaneous_Mathematical_Symbols_A',
-	        bmp: '⟀-⟯'
-	    }, {
-	        name: 'InMiscellaneous_Mathematical_Symbols_B',
-	        bmp: '⦀-⧿'
-	    }, {
-	        name: 'InMiscellaneous_Symbols',
-	        bmp: '☀-⛿'
-	    }, {
-	        name: 'InMiscellaneous_Symbols_and_Arrows',
-	        bmp: '⬀-⯿'
-	    }, {
-	        name: 'InMiscellaneous_Symbols_and_Pictographs',
-	        astral: '�[�-�]|�[�-�]'
-	    }, {
-	        name: 'InMiscellaneous_Technical',
-	        bmp: '⌀-⏿'
-	    }, {
-	        name: 'InModi',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InModifier_Tone_Letters',
-	        bmp: '꜀-ꜟ'
-	    }, {
-	        name: 'InMongolian',
-	        bmp: '᠀-᢯'
-	    }, {
-	        name: 'InMro',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMultani',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMusical_Symbols',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InMyanmar',
-	        bmp: 'က-႟'
-	    }, {
-	        name: 'InMyanmar_Extended_A',
-	        bmp: 'ꩠ-ꩿ'
-	    }, {
-	        name: 'InMyanmar_Extended_B',
-	        bmp: 'ꧠ-꧿'
-	    }, {
-	        name: 'InNKo',
-	        bmp: '߀-߿'
-	    }, {
-	        name: 'InNabataean',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InNew_Tai_Lue',
-	        bmp: 'ᦀ-᧟'
-	    }, {
-	        name: 'InNumber_Forms',
-	        bmp: '⅐-↏'
-	    }, {
-	        name: 'InOgham',
-	        bmp: ' -᚟'
-	    }, {
-	        name: 'InOl_Chiki',
-	        bmp: '᱐-᱿'
-	    }, {
-	        name: 'InOld_Hungarian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InOld_Italic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InOld_North_Arabian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InOld_Permic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InOld_Persian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InOld_South_Arabian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InOld_Turkic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InOptical_Character_Recognition',
-	        bmp: '⑀-⑟'
-	    }, {
-	        name: 'InOriya',
-	        bmp: '଀-୿'
-	    }, {
-	        name: 'InOrnamental_Dingbats',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InOsmanya',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InPahawh_Hmong',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InPalmyrene',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InPau_Cin_Hau',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InPhags_pa',
-	        bmp: 'ꡀ-꡿'
-	    }, {
-	        name: 'InPhaistos_Disc',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InPhoenician',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InPhonetic_Extensions',
-	        bmp: 'ᴀ-ᵿ'
-	    }, {
-	        name: 'InPhonetic_Extensions_Supplement',
-	        bmp: 'ᶀ-ᶿ'
-	    }, {
-	        name: 'InPlaying_Cards',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InPrivate_Use_Area',
-	        bmp: '-'
-	    }, {
-	        name: 'InPsalter_Pahlavi',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InRejang',
-	        bmp: 'ꤰ-꥟'
-	    }, {
-	        name: 'InRumi_Numeral_Symbols',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InRunic',
-	        bmp: 'ᚠ-᛿'
-	    }, {
-	        name: 'InSamaritan',
-	        bmp: 'ࠀ-࠿'
-	    }, {
-	        name: 'InSaurashtra',
-	        bmp: 'ꢀ-꣟'
-	    }, {
-	        name: 'InSharada',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InShavian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InShorthand_Format_Controls',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InSiddham',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InSinhala',
-	        bmp: '඀-෿'
-	    }, {
-	        name: 'InSinhala_Archaic_Numbers',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InSmall_Form_Variants',
-	        bmp: '﹐-﹯'
-	    }, {
-	        name: 'InSora_Sompeng',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InSpacing_Modifier_Letters',
-	        bmp: 'ʰ-˿'
-	    }, {
-	        name: 'InSpecials',
-	        bmp: '￰-￿'
-	    }, {
-	        name: 'InSundanese',
-	        bmp: 'ᮀ-ᮿ'
-	    }, {
-	        name: 'InSundanese_Supplement',
-	        bmp: '᳀-᳏'
-	    }, {
-	        name: 'InSuperscripts_and_Subscripts',
-	        bmp: '⁰-₟'
-	    }, {
-	        name: 'InSupplemental_Arrows_A',
-	        bmp: '⟰-⟿'
-	    }, {
-	        name: 'InSupplemental_Arrows_B',
-	        bmp: '⤀-⥿'
-	    }, {
-	        name: 'InSupplemental_Arrows_C',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InSupplemental_Mathematical_Operators',
-	        bmp: '⨀-⫿'
-	    }, {
-	        name: 'InSupplemental_Punctuation',
-	        bmp: '⸀-⹿'
-	    }, {
-	        name: 'InSupplemental_Symbols_and_Pictographs',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InSupplementary_Private_Use_Area_A',
-	        astral: '[�-�][�-�]'
-	    }, {
-	        name: 'InSupplementary_Private_Use_Area_B',
-	        astral: '[�-�][�-�]'
-	    }, {
-	        name: 'InSutton_SignWriting',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InSyloti_Nagri',
-	        bmp: 'ꠀ-꠯'
-	    }, {
-	        name: 'InSyriac',
-	        bmp: '܀-ݏ'
-	    }, {
-	        name: 'InTagalog',
-	        bmp: 'ᜀ-ᜟ'
-	    }, {
-	        name: 'InTagbanwa',
-	        bmp: 'ᝠ-᝿'
-	    }, {
-	        name: 'InTags',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InTai_Le',
-	        bmp: 'ᥐ-᥿'
-	    }, {
-	        name: 'InTai_Tham',
-	        bmp: 'ᨠ-᪯'
-	    }, {
-	        name: 'InTai_Viet',
-	        bmp: 'ꪀ-꫟'
-	    }, {
-	        name: 'InTai_Xuan_Jing_Symbols',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InTakri',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InTamil',
-	        bmp: '஀-௿'
-	    }, {
-	        name: 'InTelugu',
-	        bmp: 'ఀ-౿'
-	    }, {
-	        name: 'InThaana',
-	        bmp: 'ހ-޿'
-	    }, {
-	        name: 'InThai',
-	        bmp: '฀-๿'
-	    }, {
-	        name: 'InTibetan',
-	        bmp: 'ༀ-࿿'
-	    }, {
-	        name: 'InTifinagh',
-	        bmp: 'ⴰ-⵿'
-	    }, {
-	        name: 'InTirhuta',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InTransport_and_Map_Symbols',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InUgaritic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InUnified_Canadian_Aboriginal_Syllabics',
-	        bmp: '᐀-ᙿ'
-	    }, {
-	        name: 'InUnified_Canadian_Aboriginal_Syllabics_Extended',
-	        bmp: 'ᢰ-᣿'
-	    }, {
-	        name: 'InVai',
-	        bmp: 'ꔀ-꘿'
-	    }, {
-	        name: 'InVariation_Selectors',
-	        bmp: '︀-️'
-	    }, {
-	        name: 'InVariation_Selectors_Supplement',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InVedic_Extensions',
-	        bmp: '᳐-᳿'
-	    }, {
-	        name: 'InVertical_Forms',
-	        bmp: '︐-︟'
-	    }, {
-	        name: 'InWarang_Citi',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'InYi_Radicals',
-	        bmp: '꒐-꓏'
-	    }, {
-	        name: 'InYi_Syllables',
-	        bmp: 'ꀀ-꒏'
-	    }, {
-	        name: 'InYijing_Hexagram_Symbols',
-	        bmp: '䷀-䷿'
-	    }]);
+	    XRegExp.addUnicodeData([
+	        {
+	            name: 'InAegean_Numbers',
+	            astral: '\uD800[\uDD00-\uDD3F]'
+	        },
+	        {
+	            name: 'InAhom',
+	            astral: '\uD805[\uDF00-\uDF3F]'
+	        },
+	        {
+	            name: 'InAlchemical_Symbols',
+	            astral: '\uD83D[\uDF00-\uDF7F]'
+	        },
+	        {
+	            name: 'InAlphabetic_Presentation_Forms',
+	            bmp: '\uFB00-\uFB4F'
+	        },
+	        {
+	            name: 'InAnatolian_Hieroglyphs',
+	            astral: '\uD811[\uDC00-\uDE7F]'
+	        },
+	        {
+	            name: 'InAncient_Greek_Musical_Notation',
+	            astral: '\uD834[\uDE00-\uDE4F]'
+	        },
+	        {
+	            name: 'InAncient_Greek_Numbers',
+	            astral: '\uD800[\uDD40-\uDD8F]'
+	        },
+	        {
+	            name: 'InAncient_Symbols',
+	            astral: '\uD800[\uDD90-\uDDCF]'
+	        },
+	        {
+	            name: 'InArabic',
+	            bmp: '\u0600-\u06FF'
+	        },
+	        {
+	            name: 'InArabic_Extended_A',
+	            bmp: '\u08A0-\u08FF'
+	        },
+	        {
+	            name: 'InArabic_Mathematical_Alphabetic_Symbols',
+	            astral: '\uD83B[\uDE00-\uDEFF]'
+	        },
+	        {
+	            name: 'InArabic_Presentation_Forms_A',
+	            bmp: '\uFB50-\uFDFF'
+	        },
+	        {
+	            name: 'InArabic_Presentation_Forms_B',
+	            bmp: '\uFE70-\uFEFF'
+	        },
+	        {
+	            name: 'InArabic_Supplement',
+	            bmp: '\u0750-\u077F'
+	        },
+	        {
+	            name: 'InArmenian',
+	            bmp: '\u0530-\u058F'
+	        },
+	        {
+	            name: 'InArrows',
+	            bmp: '\u2190-\u21FF'
+	        },
+	        {
+	            name: 'InAvestan',
+	            astral: '\uD802[\uDF00-\uDF3F]'
+	        },
+	        {
+	            name: 'InBalinese',
+	            bmp: '\u1B00-\u1B7F'
+	        },
+	        {
+	            name: 'InBamum',
+	            bmp: '\uA6A0-\uA6FF'
+	        },
+	        {
+	            name: 'InBamum_Supplement',
+	            astral: '\uD81A[\uDC00-\uDE3F]'
+	        },
+	        {
+	            name: 'InBasic_Latin',
+	            bmp: '\0-\x7F'
+	        },
+	        {
+	            name: 'InBassa_Vah',
+	            astral: '\uD81A[\uDED0-\uDEFF]'
+	        },
+	        {
+	            name: 'InBatak',
+	            bmp: '\u1BC0-\u1BFF'
+	        },
+	        {
+	            name: 'InBengali',
+	            bmp: '\u0980-\u09FF'
+	        },
+	        {
+	            name: 'InBlock_Elements',
+	            bmp: '\u2580-\u259F'
+	        },
+	        {
+	            name: 'InBopomofo',
+	            bmp: '\u3100-\u312F'
+	        },
+	        {
+	            name: 'InBopomofo_Extended',
+	            bmp: '\u31A0-\u31BF'
+	        },
+	        {
+	            name: 'InBox_Drawing',
+	            bmp: '\u2500-\u257F'
+	        },
+	        {
+	            name: 'InBrahmi',
+	            astral: '\uD804[\uDC00-\uDC7F]'
+	        },
+	        {
+	            name: 'InBraille_Patterns',
+	            bmp: '\u2800-\u28FF'
+	        },
+	        {
+	            name: 'InBuginese',
+	            bmp: '\u1A00-\u1A1F'
+	        },
+	        {
+	            name: 'InBuhid',
+	            bmp: '\u1740-\u175F'
+	        },
+	        {
+	            name: 'InByzantine_Musical_Symbols',
+	            astral: '\uD834[\uDC00-\uDCFF]'
+	        },
+	        {
+	            name: 'InCJK_Compatibility',
+	            bmp: '\u3300-\u33FF'
+	        },
+	        {
+	            name: 'InCJK_Compatibility_Forms',
+	            bmp: '\uFE30-\uFE4F'
+	        },
+	        {
+	            name: 'InCJK_Compatibility_Ideographs',
+	            bmp: '\uF900-\uFAFF'
+	        },
+	        {
+	            name: 'InCJK_Compatibility_Ideographs_Supplement',
+	            astral: '\uD87E[\uDC00-\uDE1F]'
+	        },
+	        {
+	            name: 'InCJK_Radicals_Supplement',
+	            bmp: '\u2E80-\u2EFF'
+	        },
+	        {
+	            name: 'InCJK_Strokes',
+	            bmp: '\u31C0-\u31EF'
+	        },
+	        {
+	            name: 'InCJK_Symbols_and_Punctuation',
+	            bmp: '\u3000-\u303F'
+	        },
+	        {
+	            name: 'InCJK_Unified_Ideographs',
+	            bmp: '\u4E00-\u9FFF'
+	        },
+	        {
+	            name: 'InCJK_Unified_Ideographs_Extension_A',
+	            bmp: '\u3400-\u4DBF'
+	        },
+	        {
+	            name: 'InCJK_Unified_Ideographs_Extension_B',
+	            astral: '[\uD840-\uD868][\uDC00-\uDFFF]|\uD869[\uDC00-\uDEDF]'
+	        },
+	        {
+	            name: 'InCJK_Unified_Ideographs_Extension_C',
+	            astral: '\uD86D[\uDC00-\uDF3F]|[\uD86A-\uD86C][\uDC00-\uDFFF]|\uD869[\uDF00-\uDFFF]'
+	        },
+	        {
+	            name: 'InCJK_Unified_Ideographs_Extension_D',
+	            astral: '\uD86D[\uDF40-\uDFFF]|\uD86E[\uDC00-\uDC1F]'
+	        },
+	        {
+	            name: 'InCJK_Unified_Ideographs_Extension_E',
+	            astral: '[\uD86F-\uD872][\uDC00-\uDFFF]|\uD873[\uDC00-\uDEAF]|\uD86E[\uDC20-\uDFFF]'
+	        },
+	        {
+	            name: 'InCarian',
+	            astral: '\uD800[\uDEA0-\uDEDF]'
+	        },
+	        {
+	            name: 'InCaucasian_Albanian',
+	            astral: '\uD801[\uDD30-\uDD6F]'
+	        },
+	        {
+	            name: 'InChakma',
+	            astral: '\uD804[\uDD00-\uDD4F]'
+	        },
+	        {
+	            name: 'InCham',
+	            bmp: '\uAA00-\uAA5F'
+	        },
+	        {
+	            name: 'InCherokee',
+	            bmp: '\u13A0-\u13FF'
+	        },
+	        {
+	            name: 'InCherokee_Supplement',
+	            bmp: '\uAB70-\uABBF'
+	        },
+	        {
+	            name: 'InCombining_Diacritical_Marks',
+	            bmp: '\u0300-\u036F'
+	        },
+	        {
+	            name: 'InCombining_Diacritical_Marks_Extended',
+	            bmp: '\u1AB0-\u1AFF'
+	        },
+	        {
+	            name: 'InCombining_Diacritical_Marks_Supplement',
+	            bmp: '\u1DC0-\u1DFF'
+	        },
+	        {
+	            name: 'InCombining_Diacritical_Marks_for_Symbols',
+	            bmp: '\u20D0-\u20FF'
+	        },
+	        {
+	            name: 'InCombining_Half_Marks',
+	            bmp: '\uFE20-\uFE2F'
+	        },
+	        {
+	            name: 'InCommon_Indic_Number_Forms',
+	            bmp: '\uA830-\uA83F'
+	        },
+	        {
+	            name: 'InControl_Pictures',
+	            bmp: '\u2400-\u243F'
+	        },
+	        {
+	            name: 'InCoptic',
+	            bmp: '\u2C80-\u2CFF'
+	        },
+	        {
+	            name: 'InCoptic_Epact_Numbers',
+	            astral: '\uD800[\uDEE0-\uDEFF]'
+	        },
+	        {
+	            name: 'InCounting_Rod_Numerals',
+	            astral: '\uD834[\uDF60-\uDF7F]'
+	        },
+	        {
+	            name: 'InCuneiform',
+	            astral: '\uD808[\uDC00-\uDFFF]'
+	        },
+	        {
+	            name: 'InCuneiform_Numbers_and_Punctuation',
+	            astral: '\uD809[\uDC00-\uDC7F]'
+	        },
+	        {
+	            name: 'InCurrency_Symbols',
+	            bmp: '\u20A0-\u20CF'
+	        },
+	        {
+	            name: 'InCypriot_Syllabary',
+	            astral: '\uD802[\uDC00-\uDC3F]'
+	        },
+	        {
+	            name: 'InCyrillic',
+	            bmp: '\u0400-\u04FF'
+	        },
+	        {
+	            name: 'InCyrillic_Extended_A',
+	            bmp: '\u2DE0-\u2DFF'
+	        },
+	        {
+	            name: 'InCyrillic_Extended_B',
+	            bmp: '\uA640-\uA69F'
+	        },
+	        {
+	            name: 'InCyrillic_Supplement',
+	            bmp: '\u0500-\u052F'
+	        },
+	        {
+	            name: 'InDeseret',
+	            astral: '\uD801[\uDC00-\uDC4F]'
+	        },
+	        {
+	            name: 'InDevanagari',
+	            bmp: '\u0900-\u097F'
+	        },
+	        {
+	            name: 'InDevanagari_Extended',
+	            bmp: '\uA8E0-\uA8FF'
+	        },
+	        {
+	            name: 'InDingbats',
+	            bmp: '\u2700-\u27BF'
+	        },
+	        {
+	            name: 'InDomino_Tiles',
+	            astral: '\uD83C[\uDC30-\uDC9F]'
+	        },
+	        {
+	            name: 'InDuployan',
+	            astral: '\uD82F[\uDC00-\uDC9F]'
+	        },
+	        {
+	            name: 'InEarly_Dynastic_Cuneiform',
+	            astral: '\uD809[\uDC80-\uDD4F]'
+	        },
+	        {
+	            name: 'InEgyptian_Hieroglyphs',
+	            astral: '\uD80C[\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2F]'
+	        },
+	        {
+	            name: 'InElbasan',
+	            astral: '\uD801[\uDD00-\uDD2F]'
+	        },
+	        {
+	            name: 'InEmoticons',
+	            astral: '\uD83D[\uDE00-\uDE4F]'
+	        },
+	        {
+	            name: 'InEnclosed_Alphanumeric_Supplement',
+	            astral: '\uD83C[\uDD00-\uDDFF]'
+	        },
+	        {
+	            name: 'InEnclosed_Alphanumerics',
+	            bmp: '\u2460-\u24FF'
+	        },
+	        {
+	            name: 'InEnclosed_CJK_Letters_and_Months',
+	            bmp: '\u3200-\u32FF'
+	        },
+	        {
+	            name: 'InEnclosed_Ideographic_Supplement',
+	            astral: '\uD83C[\uDE00-\uDEFF]'
+	        },
+	        {
+	            name: 'InEthiopic',
+	            bmp: '\u1200-\u137F'
+	        },
+	        {
+	            name: 'InEthiopic_Extended',
+	            bmp: '\u2D80-\u2DDF'
+	        },
+	        {
+	            name: 'InEthiopic_Extended_A',
+	            bmp: '\uAB00-\uAB2F'
+	        },
+	        {
+	            name: 'InEthiopic_Supplement',
+	            bmp: '\u1380-\u139F'
+	        },
+	        {
+	            name: 'InGeneral_Punctuation',
+	            bmp: '\u2000-\u206F'
+	        },
+	        {
+	            name: 'InGeometric_Shapes',
+	            bmp: '\u25A0-\u25FF'
+	        },
+	        {
+	            name: 'InGeometric_Shapes_Extended',
+	            astral: '\uD83D[\uDF80-\uDFFF]'
+	        },
+	        {
+	            name: 'InGeorgian',
+	            bmp: '\u10A0-\u10FF'
+	        },
+	        {
+	            name: 'InGeorgian_Supplement',
+	            bmp: '\u2D00-\u2D2F'
+	        },
+	        {
+	            name: 'InGlagolitic',
+	            bmp: '\u2C00-\u2C5F'
+	        },
+	        {
+	            name: 'InGothic',
+	            astral: '\uD800[\uDF30-\uDF4F]'
+	        },
+	        {
+	            name: 'InGrantha',
+	            astral: '\uD804[\uDF00-\uDF7F]'
+	        },
+	        {
+	            name: 'InGreek_Extended',
+	            bmp: '\u1F00-\u1FFF'
+	        },
+	        {
+	            name: 'InGreek_and_Coptic',
+	            bmp: '\u0370-\u03FF'
+	        },
+	        {
+	            name: 'InGujarati',
+	            bmp: '\u0A80-\u0AFF'
+	        },
+	        {
+	            name: 'InGurmukhi',
+	            bmp: '\u0A00-\u0A7F'
+	        },
+	        {
+	            name: 'InHalfwidth_and_Fullwidth_Forms',
+	            bmp: '\uFF00-\uFFEF'
+	        },
+	        {
+	            name: 'InHangul_Compatibility_Jamo',
+	            bmp: '\u3130-\u318F'
+	        },
+	        {
+	            name: 'InHangul_Jamo',
+	            bmp: '\u1100-\u11FF'
+	        },
+	        {
+	            name: 'InHangul_Jamo_Extended_A',
+	            bmp: '\uA960-\uA97F'
+	        },
+	        {
+	            name: 'InHangul_Jamo_Extended_B',
+	            bmp: '\uD7B0-\uD7FF'
+	        },
+	        {
+	            name: 'InHangul_Syllables',
+	            bmp: '\uAC00-\uD7AF'
+	        },
+	        {
+	            name: 'InHanunoo',
+	            bmp: '\u1720-\u173F'
+	        },
+	        {
+	            name: 'InHatran',
+	            astral: '\uD802[\uDCE0-\uDCFF]'
+	        },
+	        {
+	            name: 'InHebrew',
+	            bmp: '\u0590-\u05FF'
+	        },
+	        {
+	            name: 'InHigh_Private_Use_Surrogates',
+	            bmp: '\uDB80-\uDBFF'
+	        },
+	        {
+	            name: 'InHigh_Surrogates',
+	            bmp: '\uD800-\uDB7F'
+	        },
+	        {
+	            name: 'InHiragana',
+	            bmp: '\u3040-\u309F'
+	        },
+	        {
+	            name: 'InIPA_Extensions',
+	            bmp: '\u0250-\u02AF'
+	        },
+	        {
+	            name: 'InIdeographic_Description_Characters',
+	            bmp: '\u2FF0-\u2FFF'
+	        },
+	        {
+	            name: 'InImperial_Aramaic',
+	            astral: '\uD802[\uDC40-\uDC5F]'
+	        },
+	        {
+	            name: 'InInscriptional_Pahlavi',
+	            astral: '\uD802[\uDF60-\uDF7F]'
+	        },
+	        {
+	            name: 'InInscriptional_Parthian',
+	            astral: '\uD802[\uDF40-\uDF5F]'
+	        },
+	        {
+	            name: 'InJavanese',
+	            bmp: '\uA980-\uA9DF'
+	        },
+	        {
+	            name: 'InKaithi',
+	            astral: '\uD804[\uDC80-\uDCCF]'
+	        },
+	        {
+	            name: 'InKana_Supplement',
+	            astral: '\uD82C[\uDC00-\uDCFF]'
+	        },
+	        {
+	            name: 'InKanbun',
+	            bmp: '\u3190-\u319F'
+	        },
+	        {
+	            name: 'InKangxi_Radicals',
+	            bmp: '\u2F00-\u2FDF'
+	        },
+	        {
+	            name: 'InKannada',
+	            bmp: '\u0C80-\u0CFF'
+	        },
+	        {
+	            name: 'InKatakana',
+	            bmp: '\u30A0-\u30FF'
+	        },
+	        {
+	            name: 'InKatakana_Phonetic_Extensions',
+	            bmp: '\u31F0-\u31FF'
+	        },
+	        {
+	            name: 'InKayah_Li',
+	            bmp: '\uA900-\uA92F'
+	        },
+	        {
+	            name: 'InKharoshthi',
+	            astral: '\uD802[\uDE00-\uDE5F]'
+	        },
+	        {
+	            name: 'InKhmer',
+	            bmp: '\u1780-\u17FF'
+	        },
+	        {
+	            name: 'InKhmer_Symbols',
+	            bmp: '\u19E0-\u19FF'
+	        },
+	        {
+	            name: 'InKhojki',
+	            astral: '\uD804[\uDE00-\uDE4F]'
+	        },
+	        {
+	            name: 'InKhudawadi',
+	            astral: '\uD804[\uDEB0-\uDEFF]'
+	        },
+	        {
+	            name: 'InLao',
+	            bmp: '\u0E80-\u0EFF'
+	        },
+	        {
+	            name: 'InLatin_Extended_Additional',
+	            bmp: '\u1E00-\u1EFF'
+	        },
+	        {
+	            name: 'InLatin_Extended_A',
+	            bmp: '\u0100-\u017F'
+	        },
+	        {
+	            name: 'InLatin_Extended_B',
+	            bmp: '\u0180-\u024F'
+	        },
+	        {
+	            name: 'InLatin_Extended_C',
+	            bmp: '\u2C60-\u2C7F'
+	        },
+	        {
+	            name: 'InLatin_Extended_D',
+	            bmp: '\uA720-\uA7FF'
+	        },
+	        {
+	            name: 'InLatin_Extended_E',
+	            bmp: '\uAB30-\uAB6F'
+	        },
+	        {
+	            name: 'InLatin_1_Supplement',
+	            bmp: '\x80-\xFF'
+	        },
+	        {
+	            name: 'InLepcha',
+	            bmp: '\u1C00-\u1C4F'
+	        },
+	        {
+	            name: 'InLetterlike_Symbols',
+	            bmp: '\u2100-\u214F'
+	        },
+	        {
+	            name: 'InLimbu',
+	            bmp: '\u1900-\u194F'
+	        },
+	        {
+	            name: 'InLinear_A',
+	            astral: '\uD801[\uDE00-\uDF7F]'
+	        },
+	        {
+	            name: 'InLinear_B_Ideograms',
+	            astral: '\uD800[\uDC80-\uDCFF]'
+	        },
+	        {
+	            name: 'InLinear_B_Syllabary',
+	            astral: '\uD800[\uDC00-\uDC7F]'
+	        },
+	        {
+	            name: 'InLisu',
+	            bmp: '\uA4D0-\uA4FF'
+	        },
+	        {
+	            name: 'InLow_Surrogates',
+	            bmp: '\uDC00-\uDFFF'
+	        },
+	        {
+	            name: 'InLycian',
+	            astral: '\uD800[\uDE80-\uDE9F]'
+	        },
+	        {
+	            name: 'InLydian',
+	            astral: '\uD802[\uDD20-\uDD3F]'
+	        },
+	        {
+	            name: 'InMahajani',
+	            astral: '\uD804[\uDD50-\uDD7F]'
+	        },
+	        {
+	            name: 'InMahjong_Tiles',
+	            astral: '\uD83C[\uDC00-\uDC2F]'
+	        },
+	        {
+	            name: 'InMalayalam',
+	            bmp: '\u0D00-\u0D7F'
+	        },
+	        {
+	            name: 'InMandaic',
+	            bmp: '\u0840-\u085F'
+	        },
+	        {
+	            name: 'InManichaean',
+	            astral: '\uD802[\uDEC0-\uDEFF]'
+	        },
+	        {
+	            name: 'InMathematical_Alphanumeric_Symbols',
+	            astral: '\uD835[\uDC00-\uDFFF]'
+	        },
+	        {
+	            name: 'InMathematical_Operators',
+	            bmp: '\u2200-\u22FF'
+	        },
+	        {
+	            name: 'InMeetei_Mayek',
+	            bmp: '\uABC0-\uABFF'
+	        },
+	        {
+	            name: 'InMeetei_Mayek_Extensions',
+	            bmp: '\uAAE0-\uAAFF'
+	        },
+	        {
+	            name: 'InMende_Kikakui',
+	            astral: '\uD83A[\uDC00-\uDCDF]'
+	        },
+	        {
+	            name: 'InMeroitic_Cursive',
+	            astral: '\uD802[\uDDA0-\uDDFF]'
+	        },
+	        {
+	            name: 'InMeroitic_Hieroglyphs',
+	            astral: '\uD802[\uDD80-\uDD9F]'
+	        },
+	        {
+	            name: 'InMiao',
+	            astral: '\uD81B[\uDF00-\uDF9F]'
+	        },
+	        {
+	            name: 'InMiscellaneous_Mathematical_Symbols_A',
+	            bmp: '\u27C0-\u27EF'
+	        },
+	        {
+	            name: 'InMiscellaneous_Mathematical_Symbols_B',
+	            bmp: '\u2980-\u29FF'
+	        },
+	        {
+	            name: 'InMiscellaneous_Symbols',
+	            bmp: '\u2600-\u26FF'
+	        },
+	        {
+	            name: 'InMiscellaneous_Symbols_and_Arrows',
+	            bmp: '\u2B00-\u2BFF'
+	        },
+	        {
+	            name: 'InMiscellaneous_Symbols_and_Pictographs',
+	            astral: '\uD83D[\uDC00-\uDDFF]|\uD83C[\uDF00-\uDFFF]'
+	        },
+	        {
+	            name: 'InMiscellaneous_Technical',
+	            bmp: '\u2300-\u23FF'
+	        },
+	        {
+	            name: 'InModi',
+	            astral: '\uD805[\uDE00-\uDE5F]'
+	        },
+	        {
+	            name: 'InModifier_Tone_Letters',
+	            bmp: '\uA700-\uA71F'
+	        },
+	        {
+	            name: 'InMongolian',
+	            bmp: '\u1800-\u18AF'
+	        },
+	        {
+	            name: 'InMro',
+	            astral: '\uD81A[\uDE40-\uDE6F]'
+	        },
+	        {
+	            name: 'InMultani',
+	            astral: '\uD804[\uDE80-\uDEAF]'
+	        },
+	        {
+	            name: 'InMusical_Symbols',
+	            astral: '\uD834[\uDD00-\uDDFF]'
+	        },
+	        {
+	            name: 'InMyanmar',
+	            bmp: '\u1000-\u109F'
+	        },
+	        {
+	            name: 'InMyanmar_Extended_A',
+	            bmp: '\uAA60-\uAA7F'
+	        },
+	        {
+	            name: 'InMyanmar_Extended_B',
+	            bmp: '\uA9E0-\uA9FF'
+	        },
+	        {
+	            name: 'InNKo',
+	            bmp: '\u07C0-\u07FF'
+	        },
+	        {
+	            name: 'InNabataean',
+	            astral: '\uD802[\uDC80-\uDCAF]'
+	        },
+	        {
+	            name: 'InNew_Tai_Lue',
+	            bmp: '\u1980-\u19DF'
+	        },
+	        {
+	            name: 'InNumber_Forms',
+	            bmp: '\u2150-\u218F'
+	        },
+	        {
+	            name: 'InOgham',
+	            bmp: '\u1680-\u169F'
+	        },
+	        {
+	            name: 'InOl_Chiki',
+	            bmp: '\u1C50-\u1C7F'
+	        },
+	        {
+	            name: 'InOld_Hungarian',
+	            astral: '\uD803[\uDC80-\uDCFF]'
+	        },
+	        {
+	            name: 'InOld_Italic',
+	            astral: '\uD800[\uDF00-\uDF2F]'
+	        },
+	        {
+	            name: 'InOld_North_Arabian',
+	            astral: '\uD802[\uDE80-\uDE9F]'
+	        },
+	        {
+	            name: 'InOld_Permic',
+	            astral: '\uD800[\uDF50-\uDF7F]'
+	        },
+	        {
+	            name: 'InOld_Persian',
+	            astral: '\uD800[\uDFA0-\uDFDF]'
+	        },
+	        {
+	            name: 'InOld_South_Arabian',
+	            astral: '\uD802[\uDE60-\uDE7F]'
+	        },
+	        {
+	            name: 'InOld_Turkic',
+	            astral: '\uD803[\uDC00-\uDC4F]'
+	        },
+	        {
+	            name: 'InOptical_Character_Recognition',
+	            bmp: '\u2440-\u245F'
+	        },
+	        {
+	            name: 'InOriya',
+	            bmp: '\u0B00-\u0B7F'
+	        },
+	        {
+	            name: 'InOrnamental_Dingbats',
+	            astral: '\uD83D[\uDE50-\uDE7F]'
+	        },
+	        {
+	            name: 'InOsmanya',
+	            astral: '\uD801[\uDC80-\uDCAF]'
+	        },
+	        {
+	            name: 'InPahawh_Hmong',
+	            astral: '\uD81A[\uDF00-\uDF8F]'
+	        },
+	        {
+	            name: 'InPalmyrene',
+	            astral: '\uD802[\uDC60-\uDC7F]'
+	        },
+	        {
+	            name: 'InPau_Cin_Hau',
+	            astral: '\uD806[\uDEC0-\uDEFF]'
+	        },
+	        {
+	            name: 'InPhags_pa',
+	            bmp: '\uA840-\uA87F'
+	        },
+	        {
+	            name: 'InPhaistos_Disc',
+	            astral: '\uD800[\uDDD0-\uDDFF]'
+	        },
+	        {
+	            name: 'InPhoenician',
+	            astral: '\uD802[\uDD00-\uDD1F]'
+	        },
+	        {
+	            name: 'InPhonetic_Extensions',
+	            bmp: '\u1D00-\u1D7F'
+	        },
+	        {
+	            name: 'InPhonetic_Extensions_Supplement',
+	            bmp: '\u1D80-\u1DBF'
+	        },
+	        {
+	            name: 'InPlaying_Cards',
+	            astral: '\uD83C[\uDCA0-\uDCFF]'
+	        },
+	        {
+	            name: 'InPrivate_Use_Area',
+	            bmp: '\uE000-\uF8FF'
+	        },
+	        {
+	            name: 'InPsalter_Pahlavi',
+	            astral: '\uD802[\uDF80-\uDFAF]'
+	        },
+	        {
+	            name: 'InRejang',
+	            bmp: '\uA930-\uA95F'
+	        },
+	        {
+	            name: 'InRumi_Numeral_Symbols',
+	            astral: '\uD803[\uDE60-\uDE7F]'
+	        },
+	        {
+	            name: 'InRunic',
+	            bmp: '\u16A0-\u16FF'
+	        },
+	        {
+	            name: 'InSamaritan',
+	            bmp: '\u0800-\u083F'
+	        },
+	        {
+	            name: 'InSaurashtra',
+	            bmp: '\uA880-\uA8DF'
+	        },
+	        {
+	            name: 'InSharada',
+	            astral: '\uD804[\uDD80-\uDDDF]'
+	        },
+	        {
+	            name: 'InShavian',
+	            astral: '\uD801[\uDC50-\uDC7F]'
+	        },
+	        {
+	            name: 'InShorthand_Format_Controls',
+	            astral: '\uD82F[\uDCA0-\uDCAF]'
+	        },
+	        {
+	            name: 'InSiddham',
+	            astral: '\uD805[\uDD80-\uDDFF]'
+	        },
+	        {
+	            name: 'InSinhala',
+	            bmp: '\u0D80-\u0DFF'
+	        },
+	        {
+	            name: 'InSinhala_Archaic_Numbers',
+	            astral: '\uD804[\uDDE0-\uDDFF]'
+	        },
+	        {
+	            name: 'InSmall_Form_Variants',
+	            bmp: '\uFE50-\uFE6F'
+	        },
+	        {
+	            name: 'InSora_Sompeng',
+	            astral: '\uD804[\uDCD0-\uDCFF]'
+	        },
+	        {
+	            name: 'InSpacing_Modifier_Letters',
+	            bmp: '\u02B0-\u02FF'
+	        },
+	        {
+	            name: 'InSpecials',
+	            bmp: '\uFFF0-\uFFFF'
+	        },
+	        {
+	            name: 'InSundanese',
+	            bmp: '\u1B80-\u1BBF'
+	        },
+	        {
+	            name: 'InSundanese_Supplement',
+	            bmp: '\u1CC0-\u1CCF'
+	        },
+	        {
+	            name: 'InSuperscripts_and_Subscripts',
+	            bmp: '\u2070-\u209F'
+	        },
+	        {
+	            name: 'InSupplemental_Arrows_A',
+	            bmp: '\u27F0-\u27FF'
+	        },
+	        {
+	            name: 'InSupplemental_Arrows_B',
+	            bmp: '\u2900-\u297F'
+	        },
+	        {
+	            name: 'InSupplemental_Arrows_C',
+	            astral: '\uD83E[\uDC00-\uDCFF]'
+	        },
+	        {
+	            name: 'InSupplemental_Mathematical_Operators',
+	            bmp: '\u2A00-\u2AFF'
+	        },
+	        {
+	            name: 'InSupplemental_Punctuation',
+	            bmp: '\u2E00-\u2E7F'
+	        },
+	        {
+	            name: 'InSupplemental_Symbols_and_Pictographs',
+	            astral: '\uD83E[\uDD00-\uDDFF]'
+	        },
+	        {
+	            name: 'InSupplementary_Private_Use_Area_A',
+	            astral: '[\uDB80-\uDBBF][\uDC00-\uDFFF]'
+	        },
+	        {
+	            name: 'InSupplementary_Private_Use_Area_B',
+	            astral: '[\uDBC0-\uDBFF][\uDC00-\uDFFF]'
+	        },
+	        {
+	            name: 'InSutton_SignWriting',
+	            astral: '\uD836[\uDC00-\uDEAF]'
+	        },
+	        {
+	            name: 'InSyloti_Nagri',
+	            bmp: '\uA800-\uA82F'
+	        },
+	        {
+	            name: 'InSyriac',
+	            bmp: '\u0700-\u074F'
+	        },
+	        {
+	            name: 'InTagalog',
+	            bmp: '\u1700-\u171F'
+	        },
+	        {
+	            name: 'InTagbanwa',
+	            bmp: '\u1760-\u177F'
+	        },
+	        {
+	            name: 'InTags',
+	            astral: '\uDB40[\uDC00-\uDC7F]'
+	        },
+	        {
+	            name: 'InTai_Le',
+	            bmp: '\u1950-\u197F'
+	        },
+	        {
+	            name: 'InTai_Tham',
+	            bmp: '\u1A20-\u1AAF'
+	        },
+	        {
+	            name: 'InTai_Viet',
+	            bmp: '\uAA80-\uAADF'
+	        },
+	        {
+	            name: 'InTai_Xuan_Jing_Symbols',
+	            astral: '\uD834[\uDF00-\uDF5F]'
+	        },
+	        {
+	            name: 'InTakri',
+	            astral: '\uD805[\uDE80-\uDECF]'
+	        },
+	        {
+	            name: 'InTamil',
+	            bmp: '\u0B80-\u0BFF'
+	        },
+	        {
+	            name: 'InTelugu',
+	            bmp: '\u0C00-\u0C7F'
+	        },
+	        {
+	            name: 'InThaana',
+	            bmp: '\u0780-\u07BF'
+	        },
+	        {
+	            name: 'InThai',
+	            bmp: '\u0E00-\u0E7F'
+	        },
+	        {
+	            name: 'InTibetan',
+	            bmp: '\u0F00-\u0FFF'
+	        },
+	        {
+	            name: 'InTifinagh',
+	            bmp: '\u2D30-\u2D7F'
+	        },
+	        {
+	            name: 'InTirhuta',
+	            astral: '\uD805[\uDC80-\uDCDF]'
+	        },
+	        {
+	            name: 'InTransport_and_Map_Symbols',
+	            astral: '\uD83D[\uDE80-\uDEFF]'
+	        },
+	        {
+	            name: 'InUgaritic',
+	            astral: '\uD800[\uDF80-\uDF9F]'
+	        },
+	        {
+	            name: 'InUnified_Canadian_Aboriginal_Syllabics',
+	            bmp: '\u1400-\u167F'
+	        },
+	        {
+	            name: 'InUnified_Canadian_Aboriginal_Syllabics_Extended',
+	            bmp: '\u18B0-\u18FF'
+	        },
+	        {
+	            name: 'InVai',
+	            bmp: '\uA500-\uA63F'
+	        },
+	        {
+	            name: 'InVariation_Selectors',
+	            bmp: '\uFE00-\uFE0F'
+	        },
+	        {
+	            name: 'InVariation_Selectors_Supplement',
+	            astral: '\uDB40[\uDD00-\uDDEF]'
+	        },
+	        {
+	            name: 'InVedic_Extensions',
+	            bmp: '\u1CD0-\u1CFF'
+	        },
+	        {
+	            name: 'InVertical_Forms',
+	            bmp: '\uFE10-\uFE1F'
+	        },
+	        {
+	            name: 'InWarang_Citi',
+	            astral: '\uD806[\uDCA0-\uDCFF]'
+	        },
+	        {
+	            name: 'InYi_Radicals',
+	            bmp: '\uA490-\uA4CF'
+	        },
+	        {
+	            name: 'InYi_Syllables',
+	            bmp: '\uA000-\uA48F'
+	        },
+	        {
+	            name: 'InYijing_Hexagram_Symbols',
+	            bmp: '\u4DC0-\u4DFF'
+	        }
+	    ]);
+
 	};
 
-/***/ },
-/* 15 */
-/***/ function(module, exports) {
 
-	'use strict';
+/***/ },
+/* 43 */
+/***/ function(module, exports) {
 
 	/*!
 	 * XRegExp Unicode Categories 3.1.1
@@ -4691,7 +7750,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Unicode data by Mathias Bynens <mathiasbynens.be>
 	 */
 
-	module.exports = function (XRegExp) {
+	module.exports = function(XRegExp) {
 	    'use strict';
 
 	    /**
@@ -4708,185 +7767,223 @@ return /******/ (function(modules) { // webpackBootstrap
 	        throw new ReferenceError('Unicode Base must be loaded before Unicode Categories');
 	    }
 
-	    XRegExp.addUnicodeData([{
-	        name: 'C',
-	        alias: 'Other',
-	        isBmpLast: true,
-	        bmp: '\u0000-\u001f-­͸͹΀-΃΋΍΢԰՗՘ՠֈ֋֌֐׈-׏׫-ׯ׵-؅؜؝۝܎܏݋݌޲-޿߻-߿࠮࠯࠿࡜࡝࡟-࢟ࢵ-࣢঄঍঎঑঒঩঱঳-঵঺঻৅৆৉৊৏-৖৘-৛৞৤৥ৼ-਀਄਋-਎਑਒਩਱਴਷਺਻਽੃-੆੉੊੎-੐੒-੘੝੟-੥੶-઀઄઎઒઩઱઴઺઻૆૊૎૏૑-૟૤૥૲-૸ૺ-଀଄଍଎଑଒଩଱଴଺଻୅୆୉୊୎-୕୘-୛୞୤୥୸-஁஄஋-஍஑஖-஘஛஝஠-஢஥-஧஫-஭஺-஽௃-௅௉௎௏௑-௖௘-௥௻-௿ఄ఍఑఩఺-఼౅౉౎-౔౗౛-౟౤౥౰-౷ಀ಄಍಑಩಴಺಻೅೉೎-೔೗-ೝ೟೤೥೰ೳ-ഀഄ഍഑഻഼൅൉൏-ൖ൘-൞൤൥൶-൸඀ඁ඄඗-඙඲඼඾඿෇-෉෋-෎෕෗෠-෥෰෱෵-฀฻-฾๜-຀຃຅ຆຉ຋ຌຎ-ຓຘຠ຤຦ຨຩຬ຺຾຿໅໇໎໏໚໛໠-໿཈཭-཰྘྽࿍࿛-࿿჆჈-჌჎჏቉቎቏቗቙቞቟኉኎኏኱኶኷኿዁዆዇዗጑጖጗፛፜፽-፿᎚-᎟᏶᏷᏾᏿᚝-᚟᛹-᛿ᜍ᜕-ᜟ᜷-᜿᝔-᝟᝭᝱᝴-᝿៞៟៪-៯៺-៿᠎᠏᠚-᠟ᡸ-᡿᢫-᢯᣶-᣿᤟᤬-᤯᤼-᤿᥁-᥃᥮᥯᥵-᥿᦬-᦯᧊-᧏᧛-᧝᨜᨝᩟᩽᩾᪊-᪏᪚-᪟᪮᪯ᪿ-᫿ᭌ-᭏᭽-᭿᯴-᯻᰸-᰺᱊-᱌ᲀ-Ჿ᳈-᳏᳷ᳺ-᳿᷶-᷻἖἗἞἟὆὇὎὏὘὚὜὞὾὿᾵῅῔῕῜῰῱῵῿​-‏‪-‮⁠-⁯⁲⁳₏₝-₟₿-⃏⃱-⃿↌-↏⏻-⏿␧-␿⑋-⑟⭴⭵⮖⮗⮺-⮼⯉⯒-⯫⯰-⯿Ⱟⱟ⳴-⳸⴦⴨-⴬⴮⴯⵨-⵮⵱-⵾⶗-⶟⶧⶯⶷⶿⷇⷏⷗⷟⹃-⹿⺚⻴-⻿⿖-⿯⿼-⿿぀゗゘㄀-㄄ㄮ-㄰㆏ㆻ-ㆿ㇤-㇯㈟㋿䶶-䶿鿖-鿿꒍-꒏꓇-꓏꘬-꘿꛸-꛿ꞮꞯꞸ-ꟶ꠬-꠯꠺-꠿꡸-꡿ꣅ-꣍꣚-꣟ꣾꣿ꥔-꥞꥽-꥿꧎꧚-꧝꧿꨷-꨿꩎꩏꩚꩛꫃-꫚꫷-꬀꬇꬈꬏꬐꬗-꬟꬧꬯ꭦ-꭯꯮꯯꯺-꯿힤-힯퟇-퟊퟼-﩮﩯﫚-﫿﬇-﬒﬘-﬜﬷﬽﬿﭂﭅﯂-﯒﵀-﵏﶐﶑﷈-﷯﷾﷿︚-︟﹓﹧﹬-﹯﹵﻽-＀﾿-￁￈￉￐￑￘￙￝-￟￧￯-￻￾￿',
-	        astral: '�[�-����-��-��-��-��-�]|�[�-���-�]|�[�-��-������-��-���-��-��-��-��-��-�]|�[�-���-��-����-��-����-��-�]|�[��-��-�]|�[�-��-��-��-�]|�[��]|�[���-��-��-��-��-�]|�[���-��-��-��-��-��-��-�]|�[�������-��-��-��-��-��-��-��-��-��-��-��-��-��-���-��-�]|�[�-�]|�[�-�����������-��-�����������������������-����-��-�]|�[�-�]|�[�-��-�]|�[�-��-���-��-��-���-��-�����-���-������-��-��-������������������-��-����-��-�]|�[���-�]|�[�-�]|�[�-�]|[����-��-��-����-��-���-��-��-�][�-�]|�[�-��-��-��-�]|�[�-��-��-��-��-�]|�[���������������������-������]|�[�-��-��-����-��-��-��-��-��-��-��-�]|�[�����-�����-��-���-��-��-��-��-�����-����-��-��-��-��-��-��-��-����-��-��-��-�]|�[�-�]|�[�-��-��-����-�]|�[�-�]|�[�-�]|�[�-��-��-��-��-��-��-��-�]|�[�-�]'
-	    }, {
-	        name: 'Cc',
-	        alias: 'Control',
-	        bmp: '\0-\x1F\x7F-\x9F'
-	    }, {
-	        name: 'Cf',
-	        alias: 'Format',
-	        bmp: '­؀-؅؜۝܏᠎​-‏‪-‮⁠-⁤⁦-⁯﻿￹-￻',
-	        astral: '�[��-�]|�[�-�]|�[�-�]|𑂽'
-	    }, {
-	        name: 'Cn',
-	        alias: 'Unassigned',
-	        bmp: '͸͹΀-΃΋΍΢԰՗՘ՠֈ֋֌֐׈-׏׫-ׯ׵-׿؝܎݋݌޲-޿߻-߿࠮࠯࠿࡜࡝࡟-࢟ࢵ-࣢঄঍঎঑঒঩঱঳-঵঺঻৅৆৉৊৏-৖৘-৛৞৤৥ৼ-਀਄਋-਎਑਒਩਱਴਷਺਻਽੃-੆੉੊੎-੐੒-੘੝੟-੥੶-઀઄઎઒઩઱઴઺઻૆૊૎૏૑-૟૤૥૲-૸ૺ-଀଄଍଎଑଒଩଱଴଺଻୅୆୉୊୎-୕୘-୛୞୤୥୸-஁஄஋-஍஑஖-஘஛஝஠-஢஥-஧஫-஭஺-஽௃-௅௉௎௏௑-௖௘-௥௻-௿ఄ఍఑఩఺-఼౅౉౎-౔౗౛-౟౤౥౰-౷ಀ಄಍಑಩಴಺಻೅೉೎-೔೗-ೝ೟೤೥೰ೳ-ഀഄ഍഑഻഼൅൉൏-ൖ൘-൞൤൥൶-൸඀ඁ඄඗-඙඲඼඾඿෇-෉෋-෎෕෗෠-෥෰෱෵-฀฻-฾๜-຀຃຅ຆຉ຋ຌຎ-ຓຘຠ຤຦ຨຩຬ຺຾຿໅໇໎໏໚໛໠-໿཈཭-཰྘྽࿍࿛-࿿჆჈-჌჎჏቉቎቏቗቙቞቟኉኎኏኱኶኷኿዁዆዇዗጑጖጗፛፜፽-፿᎚-᎟᏶᏷᏾᏿᚝-᚟᛹-᛿ᜍ᜕-ᜟ᜷-᜿᝔-᝟᝭᝱᝴-᝿៞៟៪-៯៺-៿᠏᠚-᠟ᡸ-᡿᢫-᢯᣶-᣿᤟᤬-᤯᤼-᤿᥁-᥃᥮᥯᥵-᥿᦬-᦯᧊-᧏᧛-᧝᨜᨝᩟᩽᩾᪊-᪏᪚-᪟᪮᪯ᪿ-᫿ᭌ-᭏᭽-᭿᯴-᯻᰸-᰺᱊-᱌ᲀ-Ჿ᳈-᳏᳷ᳺ-᳿᷶-᷻἖἗἞἟὆὇὎὏὘὚὜὞὾὿᾵῅῔῕῜῰῱῵῿⁥⁲⁳₏₝-₟₿-⃏⃱-⃿↌-↏⏻-⏿␧-␿⑋-⑟⭴⭵⮖⮗⮺-⮼⯉⯒-⯫⯰-⯿Ⱟⱟ⳴-⳸⴦⴨-⴬⴮⴯⵨-⵮⵱-⵾⶗-⶟⶧⶯⶷⶿⷇⷏⷗⷟⹃-⹿⺚⻴-⻿⿖-⿯⿼-⿿぀゗゘㄀-㄄ㄮ-㄰㆏ㆻ-ㆿ㇤-㇯㈟㋿䶶-䶿鿖-鿿꒍-꒏꓇-꓏꘬-꘿꛸-꛿ꞮꞯꞸ-ꟶ꠬-꠯꠺-꠿꡸-꡿ꣅ-꣍꣚-꣟ꣾꣿ꥔-꥞꥽-꥿꧎꧚-꧝꧿꨷-꨿꩎꩏꩚꩛꫃-꫚꫷-꬀꬇꬈꬏꬐꬗-꬟꬧꬯ꭦ-꭯꯮꯯꯺-꯿힤-힯퟇-퟊퟼-퟿﩮﩯﫚-﫿﬇-﬒﬘-﬜﬷﬽﬿﭂﭅﯂-﯒﵀-﵏﶐﶑﷈-﷯﷾﷿︚-︟﹓﹧﹬-﹯﹵﻽﻾＀﾿-￁￈￉￐￑￘￙￝-￟￧￯-￸￾￿',
-	        astral: '�[��-��-��-�]|�[�-����-��-��-��-�]|�[�-��-������-��-���-��-��-��-��-��-�]|�[�-���-��-����-��-����-��-�]|�[��-��-�]|�[�-��-��-��-�]|�[��]|�[���-��-��-��-��-�]|�[���-��-��-��-��-��-��-�]|�[�������-��-��-��-��-��-��-��-��-��-��-��-��-��-���-��-�]|�[�-�]|�[�-�����������-��-�����������������������-����-��-�]|[��][��]|�[�-�]|�[�-��-��-����-�]|�[���-�]|�[�-�]|�[�-�]|[����-��-��-����-��-���-��-��-�][�-�]|�[�-��-��-��-�]|�[�-��-��-��-��-�]|�[���������������������-������]|�[�-���-�]|�[�-��-��-����-��-��-��-��-��-��-��-�]|�[�����-�����-��-���-��-��-��-��-�����-����-��-��-��-��-��-��-��-����-��-��-��-�]|�[�-�]|�[�-��-��-��-��-���-��-�����-���-������-��-��-������������������-��-����-��-�]|�[�-�]|�[�-�]|�[�-��-��-��-��-��-��-��-�]|�[�-�]'
-	    }, {
-	        name: 'Co',
-	        alias: 'Private_Use',
-	        bmp: '-',
-	        astral: '[�-��-�][�-�]|[��][�-�]'
-	    }, {
-	        name: 'Cs',
-	        alias: 'Surrogate',
-	        bmp: '�-�'
-	    }, {
-	        name: 'L',
-	        alias: 'Letter',
-	        bmp: 'A-Za-zªµºÀ-ÖØ-öø-ˁˆ-ˑˠ-ˤˬˮͰ-ʹͶͷͺ-ͽͿΆΈ-ΊΌΎ-ΡΣ-ϵϷ-ҁҊ-ԯԱ-Ֆՙա-ևא-תװ-ײؠ-يٮٯٱ-ۓەۥۦۮۯۺ-ۼۿܐܒ-ܯݍ-ޥޱߊ-ߪߴߵߺࠀ-ࠕࠚࠤࠨࡀ-ࡘࢠ-ࢴऄ-हऽॐक़-ॡॱ-ঀঅ-ঌএঐও-নপ-রলশ-হঽৎড়ঢ়য়-ৡৰৱਅ-ਊਏਐਓ-ਨਪ-ਰਲਲ਼ਵਸ਼ਸਹਖ਼-ੜਫ਼ੲ-ੴઅ-ઍએ-ઑઓ-નપ-રલળવ-હઽૐૠૡૹଅ-ଌଏଐଓ-ନପ-ରଲଳଵ-ହଽଡ଼ଢ଼ୟ-ୡୱஃஅ-ஊஎ-ஐஒ-கஙசஜஞடணதந-பம-ஹௐఅ-ఌఎ-ఐఒ-నప-హఽౘ-ౚౠౡಅ-ಌಎ-ಐಒ-ನಪ-ಳವ-ಹಽೞೠೡೱೲഅ-ഌഎ-ഐഒ-ഺഽൎൟ-ൡൺ-ൿඅ-ඖක-නඳ-රලව-ෆก-ะาำเ-ๆກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ະາຳຽເ-ໄໆໜ-ໟༀཀ-ཇཉ-ཬྈ-ྌက-ဪဿၐ-ၕၚ-ၝၡၥၦၮ-ၰၵ-ႁႎႠ-ჅჇჍა-ჺჼ-ቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኈኊ-ኍነ-ኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዖዘ-ጐጒ-ጕጘ-ፚᎀ-ᎏᎠ-Ᏽᏸ-ᏽᐁ-ᙬᙯ-ᙿᚁ-ᚚᚠ-ᛪᛱ-ᛸᜀ-ᜌᜎ-ᜑᜠ-ᜱᝀ-ᝑᝠ-ᝬᝮ-ᝰក-ឳៗៜᠠ-ᡷᢀ-ᢨᢪᢰ-ᣵᤀ-ᤞᥐ-ᥭᥰ-ᥴᦀ-ᦫᦰ-ᧉᨀ-ᨖᨠ-ᩔᪧᬅ-ᬳᭅ-ᭋᮃ-ᮠᮮᮯᮺ-ᯥᰀ-ᰣᱍ-ᱏᱚ-ᱽᳩ-ᳬᳮ-ᳱᳵᳶᴀ-ᶿḀ-ἕἘ-Ἕἠ-ὅὈ-Ὅὐ-ὗὙὛὝὟ-ώᾀ-ᾴᾶ-ᾼιῂ-ῄῆ-ῌῐ-ΐῖ-Ίῠ-Ῥῲ-ῴῶ-ῼⁱⁿₐ-ₜℂℇℊ-ℓℕℙ-ℝℤΩℨK-ℭℯ-ℹℼ-ℿⅅ-ⅉⅎↃↄⰀ-Ⱞⰰ-ⱞⱠ-ⳤⳫ-ⳮⳲⳳⴀ-ⴥⴧⴭⴰ-ⵧⵯⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞⸯ々〆〱-〵〻〼ぁ-ゖゝ-ゟァ-ヺー-ヿㄅ-ㄭㄱ-ㆎㆠ-ㆺㇰ-ㇿ㐀-䶵一-鿕ꀀ-ꒌꓐ-ꓽꔀ-ꘌꘐ-ꘟꘪꘫꙀ-ꙮꙿ-ꚝꚠ-ꛥꜗ-ꜟꜢ-ꞈꞋ-ꞭꞰ-ꞷꟷ-ꠁꠃ-ꠅꠇ-ꠊꠌ-ꠢꡀ-ꡳꢂ-ꢳꣲ-ꣷꣻꣽꤊ-ꤥꤰ-ꥆꥠ-ꥼꦄ-ꦲꧏꧠ-ꧤꧦ-ꧯꧺ-ꧾꨀ-ꨨꩀ-ꩂꩄ-ꩋꩠ-ꩶꩺꩾ-ꪯꪱꪵꪶꪹ-ꪽꫀꫂꫛ-ꫝꫠ-ꫪꫲ-ꫴꬁ-ꬆꬉ-ꬎꬑ-ꬖꬠ-ꬦꬨ-ꬮꬰ-ꭚꭜ-ꭥꭰ-ꯢ가-힣ힰ-ퟆퟋ-ퟻ豈-舘並-龎ﬀ-ﬆﬓ-ﬗיִײַ-ﬨשׁ-זּטּ-לּמּנּסּףּפּצּ-ﮱﯓ-ﴽﵐ-ﶏﶒ-ﷇﷰ-ﷻﹰ-ﹴﹶ-ﻼＡ-Ｚａ-ｚｦ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ',
-	        astral: '�[�-��-�]|�[�-��-�]|�[�-��-�]|�[�-��-��-�]|�[�-�]|�[�-��-��-��-��-��-�]|�[�-��-��-����-��-��-��-��-��-��-��-��-��-��-��-�]|�[�-�]|�[�-�]|�[�-���-�]|[��-��-��-�][�-�]|�[�-�����-��-��-���-��-�]|�[�-��-��-��-��-��-��-�]|�[�-�]|�[�-���-�����-��-��-��-����-��-��-�����-��-��-��-��-��-��-��-��-��-��-�]|�[�-��-�������-��-���-��-��-��-��-��-��-��-���-��-��-��-��-��-��-��-��-��-��-��-��-�]|�[�-��-��-��-��-���-��-����-��-��-���-��-��-��-��-����-��-����-����-�]|�[�-�]|�[�-��-������-��-��������-�������������-��-��-��-���-��-��-��-��-�]|�[�-���-�]|�[�-�]|�[�-��-��-��-�]|�[��]|�[�-�]'
-	    }, {
-	        name: 'Ll',
-	        alias: 'Lowercase_Letter',
-	        bmp: 'a-zµß-öø-ÿāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįıĳĵķĸĺļľŀłńņňŉŋōŏőœŕŗřśŝşšţťŧũūŭůűųŵŷźżž-ƀƃƅƈƌƍƒƕƙ-ƛƞơƣƥƨƪƫƭưƴƶƹƺƽ-ƿǆǉǌǎǐǒǔǖǘǚǜǝǟǡǣǥǧǩǫǭǯǰǳǵǹǻǽǿȁȃȅȇȉȋȍȏȑȓȕȗșțȝȟȡȣȥȧȩȫȭȯȱȳ-ȹȼȿɀɂɇɉɋɍɏ-ʓʕ-ʯͱͳͷͻ-ͽΐά-ώϐϑϕ-ϗϙϛϝϟϡϣϥϧϩϫϭϯ-ϳϵϸϻϼа-џѡѣѥѧѩѫѭѯѱѳѵѷѹѻѽѿҁҋҍҏґғҕҗҙқҝҟҡңҥҧҩҫҭүұҳҵҷҹһҽҿӂӄӆӈӊӌӎӏӑӓӕӗәӛӝӟӡӣӥӧөӫӭӯӱӳӵӷӹӻӽӿԁԃԅԇԉԋԍԏԑԓԕԗԙԛԝԟԡԣԥԧԩԫԭԯա-ևᏸ-ᏽᴀ-ᴫᵫ-ᵷᵹ-ᶚḁḃḅḇḉḋḍḏḑḓḕḗḙḛḝḟḡḣḥḧḩḫḭḯḱḳḵḷḹḻḽḿṁṃṅṇṉṋṍṏṑṓṕṗṙṛṝṟṡṣṥṧṩṫṭṯṱṳṵṷṹṻṽṿẁẃẅẇẉẋẍẏẑẓẕ-ẝẟạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹỻỽỿ-ἇἐ-ἕἠ-ἧἰ-ἷὀ-ὅὐ-ὗὠ-ὧὰ-ώᾀ-ᾇᾐ-ᾗᾠ-ᾧᾰ-ᾴᾶᾷιῂ-ῄῆῇῐ-ΐῖῗῠ-ῧῲ-ῴῶῷℊℎℏℓℯℴℹℼℽⅆ-ⅉⅎↄⰰ-ⱞⱡⱥⱦⱨⱪⱬⱱⱳⱴⱶ-ⱻⲁⲃⲅⲇⲉⲋⲍⲏⲑⲓⲕⲗⲙⲛⲝⲟⲡⲣⲥⲧⲩⲫⲭⲯⲱⲳⲵⲷⲹⲻⲽⲿⳁⳃⳅⳇⳉⳋⳍⳏⳑⳓⳕⳗⳙⳛⳝⳟⳡⳣⳤⳬⳮⳳⴀ-ⴥⴧⴭꙁꙃꙅꙇꙉꙋꙍꙏꙑꙓꙕꙗꙙꙛꙝꙟꙡꙣꙥꙧꙩꙫꙭꚁꚃꚅꚇꚉꚋꚍꚏꚑꚓꚕꚗꚙꚛꜣꜥꜧꜩꜫꜭꜯ-ꜱꜳꜵꜷꜹꜻꜽꜿꝁꝃꝅꝇꝉꝋꝍꝏꝑꝓꝕꝗꝙꝛꝝꝟꝡꝣꝥꝧꝩꝫꝭꝯꝱ-ꝸꝺꝼꝿꞁꞃꞅꞇꞌꞎꞑꞓ-ꞕꞗꞙꞛꞝꞟꞡꞣꞥꞧꞩꞵꞷꟺꬰ-ꭚꭠ-ꭥꭰ-ꮿﬀ-ﬆﬓ-ﬗａ-ｚ',
-	        astral: '�[�-�]|�[�-��-��-��-��-���-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��]|�[�-�]|�[�-�]'
-	    }, {
-	        name: 'Lm',
-	        alias: 'Modifier_Letter',
-	        bmp: 'ʰ-ˁˆ-ˑˠ-ˤˬˮʹͺՙـۥۦߴߵߺࠚࠤࠨॱๆໆჼៗᡃᪧᱸ-ᱽᴬ-ᵪᵸᶛ-ᶿⁱⁿₐ-ₜⱼⱽⵯⸯ々〱-〵〻ゝゞー-ヾꀕꓸ-ꓽꘌꙿꚜꚝꜗ-ꜟꝰꞈꟸꟹꧏꧦꩰꫝꫳꫴꭜ-ꭟｰﾞﾟ',
-	        astral: '�[�-�]|�[�-�]'
-	    }, {
-	        name: 'Lo',
-	        alias: 'Other_Letter',
-	        bmp: 'ªºƻǀ-ǃʔא-תװ-ײؠ-ؿف-يٮٯٱ-ۓەۮۯۺ-ۼۿܐܒ-ܯݍ-ޥޱߊ-ߪࠀ-ࠕࡀ-ࡘࢠ-ࢴऄ-हऽॐक़-ॡॲ-ঀঅ-ঌএঐও-নপ-রলশ-হঽৎড়ঢ়য়-ৡৰৱਅ-ਊਏਐਓ-ਨਪ-ਰਲਲ਼ਵਸ਼ਸਹਖ਼-ੜਫ਼ੲ-ੴઅ-ઍએ-ઑઓ-નપ-રલળવ-હઽૐૠૡૹଅ-ଌଏଐଓ-ନପ-ରଲଳଵ-ହଽଡ଼ଢ଼ୟ-ୡୱஃஅ-ஊஎ-ஐஒ-கஙசஜஞடணதந-பம-ஹௐఅ-ఌఎ-ఐఒ-నప-హఽౘ-ౚౠౡಅ-ಌಎ-ಐಒ-ನಪ-ಳವ-ಹಽೞೠೡೱೲഅ-ഌഎ-ഐഒ-ഺഽൎൟ-ൡൺ-ൿඅ-ඖක-නඳ-රලව-ෆก-ะาำเ-ๅກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ະາຳຽເ-ໄໜ-ໟༀཀ-ཇཉ-ཬྈ-ྌက-ဪဿၐ-ၕၚ-ၝၡၥၦၮ-ၰၵ-ႁႎა-ჺჽ-ቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኈኊ-ኍነ-ኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዖዘ-ጐጒ-ጕጘ-ፚᎀ-ᎏᐁ-ᙬᙯ-ᙿᚁ-ᚚᚠ-ᛪᛱ-ᛸᜀ-ᜌᜎ-ᜑᜠ-ᜱᝀ-ᝑᝠ-ᝬᝮ-ᝰក-ឳៜᠠ-ᡂᡄ-ᡷᢀ-ᢨᢪᢰ-ᣵᤀ-ᤞᥐ-ᥭᥰ-ᥴᦀ-ᦫᦰ-ᧉᨀ-ᨖᨠ-ᩔᬅ-ᬳᭅ-ᭋᮃ-ᮠᮮᮯᮺ-ᯥᰀ-ᰣᱍ-ᱏᱚ-ᱷᳩ-ᳬᳮ-ᳱᳵᳶℵ-ℸⴰ-ⵧⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞ〆〼ぁ-ゖゟァ-ヺヿㄅ-ㄭㄱ-ㆎㆠ-ㆺㇰ-ㇿ㐀-䶵一-鿕ꀀ-ꀔꀖ-ꒌꓐ-ꓷꔀ-ꘋꘐ-ꘟꘪꘫꙮꚠ-ꛥꞏꟷꟻ-ꠁꠃ-ꠅꠇ-ꠊꠌ-ꠢꡀ-ꡳꢂ-ꢳꣲ-ꣷꣻꣽꤊ-ꤥꤰ-ꥆꥠ-ꥼꦄ-ꦲꧠ-ꧤꧧ-ꧯꧺ-ꧾꨀ-ꨨꩀ-ꩂꩄ-ꩋꩠ-ꩯꩱ-ꩶꩺꩾ-ꪯꪱꪵꪶꪹ-ꪽꫀꫂꫛꫜꫠ-ꫪꫲꬁ-ꬆꬉ-ꬎꬑ-ꬖꬠ-ꬦꬨ-ꬮꯀ-ꯢ가-힣ힰ-ퟆퟋ-ퟻ豈-舘並-龎יִײַ-ﬨשׁ-זּטּ-לּמּנּסּףּפּצּ-ﮱﯓ-ﴽﵐ-ﶏﶒ-ﷇﷰ-ﷻﹰ-ﹴﹶ-ﻼｦ-ｯｱ-ﾝﾠ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ',
-	        astral: '�[�-��-�]|�[�-��-�]|�[�-��-�]|�[�-�]|�[�-�]|�[�-��-��-����-��-��-��-��-��-��-��-��-��-��-��-�]|�[�-�]|�[�-�]|�[�-��]|[��-��-��-�][�-�]|�[�-�����-��-��-���-��-�]|�[��-�]|�[�-�]|�[�-���-�����-��-��-��-����-��-��-�����-��-��-��-��-��-��-��-��-��-��-�]|�[�-��-��-��-��-���-��-����-��-��-���-��-��-��-��-����-��-����-����-�]|�[�-�]|�[�-��-������-��-��������-�������������-��-��-��-���-��-��-��-��-�]|�[�-��-��-��-��-��-�]|�[�-��-��-��-��-��-�]|�[�-�]|�[�-��-��-��-�]|�[��]|�[�-�]'
-	    }, {
-	        name: 'Lt',
-	        alias: 'Titlecase_Letter',
-	        bmp: 'ǅǈǋǲᾈ-ᾏᾘ-ᾟᾨ-ᾯᾼῌῼ'
-	    }, {
-	        name: 'Lu',
-	        alias: 'Uppercase_Letter',
-	        bmp: 'A-ZÀ-ÖØ-ÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮİĲĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŦŨŪŬŮŰŲŴŶŸŹŻŽƁƂƄƆƇƉ-ƋƎ-ƑƓƔƖ-ƘƜƝƟƠƢƤƦƧƩƬƮƯƱ-ƳƵƷƸƼǄǇǊǍǏǑǓǕǗǙǛǞǠǢǤǦǨǪǬǮǱǴǶ-ǸǺǼǾȀȂȄȆȈȊȌȎȐȒȔȖȘȚȜȞȠȢȤȦȨȪȬȮȰȲȺȻȽȾɁɃ-ɆɈɊɌɎͰͲͶͿΆΈ-ΊΌΎΏΑ-ΡΣ-ΫϏϒ-ϔϘϚϜϞϠϢϤϦϨϪϬϮϴϷϹϺϽ-ЯѠѢѤѦѨѪѬѮѰѲѴѶѸѺѼѾҀҊҌҎҐҒҔҖҘҚҜҞҠҢҤҦҨҪҬҮҰҲҴҶҸҺҼҾӀӁӃӅӇӉӋӍӐӒӔӖӘӚӜӞӠӢӤӦӨӪӬӮӰӲӴӶӸӺӼӾԀԂԄԆԈԊԌԎԐԒԔԖԘԚԜԞԠԢԤԦԨԪԬԮԱ-ՖႠ-ჅჇჍᎠ-ᏵḀḂḄḆḈḊḌḎḐḒḔḖḘḚḜḞḠḢḤḦḨḪḬḮḰḲḴḶḸḺḼḾṀṂṄṆṈṊṌṎṐṒṔṖṘṚṜṞṠṢṤṦṨṪṬṮṰṲṴṶṸṺṼṾẀẂẄẆẈẊẌẎẐẒẔẞẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸỺỼỾἈ-ἏἘ-ἝἨ-ἯἸ-ἿὈ-ὍὙὛὝὟὨ-ὯᾸ-ΆῈ-ΉῘ-ΊῨ-ῬῸ-Ώℂℇℋ-ℍℐ-ℒℕℙ-ℝℤΩℨK-ℭℰ-ℳℾℿⅅↃⰀ-ⰮⱠⱢ-ⱤⱧⱩⱫⱭ-ⱰⱲⱵⱾ-ⲀⲂⲄⲆⲈⲊⲌⲎⲐⲒⲔⲖⲘⲚⲜⲞⲠⲢⲤⲦⲨⲪⲬⲮⲰⲲⲴⲶⲸⲺⲼⲾⳀⳂⳄⳆⳈⳊⳌⳎⳐⳒⳔⳖⳘⳚⳜⳞⳠⳢⳫⳭⳲꙀꙂꙄꙆꙈꙊꙌꙎꙐꙒꙔꙖꙘꙚꙜꙞꙠꙢꙤꙦꙨꙪꙬꚀꚂꚄꚆꚈꚊꚌꚎꚐꚒꚔꚖꚘꚚꜢꜤꜦꜨꜪꜬꜮꜲꜴꜶꜸꜺꜼꜾꝀꝂꝄꝆꝈꝊꝌꝎꝐꝒꝔꝖꝘꝚꝜꝞꝠꝢꝤꝦꝨꝪꝬꝮꝹꝻꝽꝾꞀꞂꞄꞆꞋꞍꞐꞒꞖꞘꞚꞜꞞꞠꞢꞤꞦꞨꞪ-ꞭꞰ-ꞴꞶＡ-Ｚ',
-	        astral: '�[�-�]|�[�-�]|�[�-�]|�[�-��-��-��������-��-��-����-��-��-����-��-���-��-��-��-��-��-��-��-��-��-��-��-��]'
-	    }, {
-	        name: 'M',
-	        alias: 'Mark',
-	        bmp: '̀-ͯ҃-҉֑-ׇֽֿׁׂׅׄؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۤۧۨ-ܑۭܰ-݊ަ-ް߫-߳ࠖ-࠙ࠛ-ࠣࠥ-ࠧࠩ-࡙࠭-࡛ࣣ-ःऺ-़ा-ॏ॑-ॗॢॣঁ-ঃ়া-ৄেৈো-্ৗৢৣਁ-ਃ਼ਾ-ੂੇੈੋ-੍ੑੰੱੵઁ-ઃ઼ા-ૅે-ૉો-્ૢૣଁ-ଃ଼ା-ୄେୈୋ-୍ୖୗୢୣஂா-ூெ-ைொ-்ௗఀ-ఃా-ౄె-ైొ-్ౕౖౢౣಁ-ಃ಼ಾ-ೄೆ-ೈೊ-್ೕೖೢೣഁ-ഃാ-ൄെ-ൈൊ-്ൗൢൣංඃ්ා-ුූෘ-ෟෲෳัิ-ฺ็-๎ັິ-ູົຼ່-ໍ༹༘༙༵༷༾༿ཱ-྄྆྇ྍ-ྗྙ-ྼ࿆ါ-ှၖ-ၙၞ-ၠၢ-ၤၧ-ၭၱ-ၴႂ-ႍႏႚ-ႝ፝-፟ᜒ-᜔ᜲ-᜴ᝒᝓᝲᝳ឴-៓៝᠋-᠍ᢩᤠ-ᤫᤰ-᤻ᨗ-ᨛᩕ-ᩞ᩠-᩿᩼᪰-᪾ᬀ-ᬄ᬴-᭄᭫-᭳ᮀ-ᮂᮡ-ᮭ᯦-᯳ᰤ-᰷᳐-᳔᳒-᳨᳭ᳲ-᳴᳸᳹᷀-᷵᷼-᷿⃐-⃰⳯-⵿⳱ⷠ-〪ⷿ-゙゚〯꙯-꙲ꙴ-꙽ꚞꚟ꛰꛱ꠂ꠆ꠋꠣ-ꠧꢀꢁꢴ-꣄꣠-꣱ꤦ-꤭ꥇ-꥓ꦀ-ꦃ꦳-꧀ꧥꨩ-ꨶꩃꩌꩍꩻ-ꩽꪰꪲ-ꪴꪷꪸꪾ꪿꫁ꫫ-ꫯꫵ꫶ꯣ-ꯪ꯬꯭ﬞ︀-️︠-︯',
-	        astral: '�[�-��-��-����-��-��-�]|�[�-��-��-��-��-��-�]|�[�-��-��-��-��-��-���-��-��-��-��-��-���-����-�����-��-�]|�[�-��-�]|�[�-��-�]|�[��]|�[���-�]|�[�-��-����-��-�]|�[�-����-��-����]|�[�-�]|�[�-�]'
-	    }, {
-	        name: 'Mc',
-	        alias: 'Spacing_Mark',
-	        bmp: 'ःऻा-ीॉ-ौॎॏংঃা-ীেৈোৌৗਃਾ-ੀઃા-ીૉોૌଂଃାୀେୈୋୌୗாிுூெ-ைொ-ௌௗఁ-ఃు-ౄಂಃಾೀ-ೄೇೈೊೋೕೖംഃാ-ീെ-ൈൊ-ൌൗංඃා-ෑෘ-ෟෲෳ༾༿ཿါာေးျြၖၗၢ-ၤၧ-ၭႃႄႇ-ႌႏႚ-ႜាើ-ៅះៈᤣ-ᤦᤩ-ᤫᤰᤱᤳ-ᤸᨙᨚᩕᩗᩡᩣᩤᩭ-ᩲᬄᬵᬻᬽ-ᭁᭃ᭄ᮂᮡᮦᮧ᮪ᯧᯪ-ᯬᯮ᯲᯳ᰤ-ᰫᰴᰵ᳡ᳲᳳ〮〯ꠣꠤꠧꢀꢁꢴ-ꣃꥒ꥓ꦃꦴꦵꦺꦻꦽ-꧀ꨯꨰꨳꨴꩍꩻꩽꫫꫮꫯꫵꯣꯤꯦꯧꯩꯪ꯬',
-	        astral: '�[���-�]|�[����-������-����-�����-������-����-����]|�[�-���-���-��-���-�����������]|�[�-�]'
-	    }, {
-	        name: 'Me',
-	        alias: 'Enclosing_Mark',
-	        bmp: '҈҉᪾⃝-⃠⃢-⃤꙰-꙲'
-	    }, {
-	        name: 'Mn',
-	        alias: 'Nonspacing_Mark',
-	        bmp: '̀-ͯ҃-֑҇-ׇֽֿׁׂׅׄؐ-ًؚ-ٰٟۖ-ۜ۟-۪ۤۧۨ-ܑۭܰ-݊ަ-ް߫-߳ࠖ-࠙ࠛ-ࠣࠥ-ࠧࠩ-࡙࠭-࡛ࣣ-ंऺ़ु-ै्॑-ॗॢॣঁ়ু-ৄ্ৢৣਁਂ਼ੁੂੇੈੋ-੍ੑੰੱੵઁં઼ુ-ૅેૈ્ૢૣଁ଼ିୁ-ୄ୍ୖୢୣஂீ்ఀా-ీె-ైొ-్ౕౖౢౣಁ಼ಿೆೌ್ೢೣഁു-ൄ്ൢൣ්ි-ුූัิ-ฺ็-๎ັິ-ູົຼ່-ໍཱ༹༘༙༵༷-ཾྀ-྄྆྇ྍ-ྗྙ-ྼ࿆ိ-ူဲ-့္်ွှၘၙၞ-ၠၱ-ၴႂႅႆႍႝ፝-፟ᜒ-᜔ᜲ-᜴ᝒᝓᝲᝳ឴឵ិ-ួំ៉-៓៝᠋-᠍ᢩᤠ-ᤢᤧᤨᤲ᤹-᤻ᨘᨗᨛᩖᩘ-ᩞ᩠ᩢᩥ-ᩬᩳ-᩿᩼᪰-᪽ᬀ-ᬃ᬴ᬶ-ᬺᬼᭂ᭫-᭳ᮀᮁᮢ-ᮥᮨᮩ᮫-ᮭ᯦ᯨᯩᯭᯯ-ᯱᰬ-ᰳᰶ᰷᳐-᳔᳒-᳢᳠-᳨᳭᳴᳸᳹᷀-᷵᷼-᷿⃐-⃥⃜⃡-⃰⳯-⵿⳱ⷠ-〪ⷿ-゙゚〭꙯ꙴ-꙽ꚞꚟ꛰꛱ꠂ꠆ꠋꠥꠦ꣄꣠-꣱ꤦ-꤭ꥇ-ꥑꦀ-ꦂ꦳ꦶ-ꦹꦼꧥꨩ-ꨮꨱꨲꨵꨶꩃꩌꩼꪰꪲ-ꪴꪷꪸꪾ꪿꫁ꫬꫭ꫶ꯥꯨ꯭ﬞ︀-️︠-︯',
-	        astral: '�[�-�������-��������-�������-���-��-��-�]|�[�-��-��-��-��-�]|�[�-��-�]|�[�-�]|�[��]|�[���-�]|�[�-��-����-��-�]|�[�-����-��-����]|�[��-��-��-����-��-��-�����-��-��-������-������-��-�]|�[�-�]|�[�-�]'
-	    }, {
-	        name: 'N',
-	        alias: 'Number',
-	        bmp: '0-9²³¹¼-¾٠-٩۰-۹߀-߉०-९০-৯৴-৹੦-੯૦-૯୦-୯୲-୷௦-௲౦-౯౸-౾೦-೯൦-൵෦-෯๐-๙໐-໙༠-༳၀-၉႐-႙፩-፼ᛮ-ᛰ០-៩៰-៹᠐-᠙᥆-᥏᧐-᧚᪀-᪉᪐-᪙᭐-᭙᮰-᮹᱀-᱉᱐-᱙⁰⁴-⁹₀-₉⅐-ↂↅ-↉①-⒛⓪-⓿❶-➓⳽〇〡-〩〸-〺㆒-㆕㈠-㈩㉈-㉏㉑-㉟㊀-㊉㊱-㊿꘠-꘩ꛦ-ꛯ꠰-꠵꣐-꣙꤀-꤉꧐-꧙꧰-꧹꩐-꩙꯰-꯹０-９',
-	        astral: '�[�-��-����-��-����-�]|�[�-�]|�[�-��-�]|�[�-�]|�[�-�]|�[�-��-��-�]|�[�-�]|�[�-��-��-��-��-��-�]|�[�-�]|�[�-�]|�[�-�]|�[�-��-��-��-��-����-��-��-����-��-��-��-��-�]|�[�-��-��-��-�]'
-	    }, {
-	        name: 'Nd',
-	        alias: 'Decimal_Number',
-	        bmp: '0-9٠-٩۰-۹߀-߉०-९০-৯੦-੯૦-૯୦-୯௦-௯౦-౯೦-೯൦-൯෦-෯๐-๙໐-໙༠-༩၀-၉႐-႙០-៩᠐-᠙᥆-᥏᧐-᧙᪀-᪉᪐-᪙᭐-᭙᮰-᮹᱀-᱉᱐-᱙꘠-꘩꣐-꣙꤀-꤉꧐-꧙꧰-꧹꩐-꩙꯰-꯹０-９',
-	        astral: '�[�-�]|�[�-�]|�[�-��-��-��-�]|�[�-�]|�[�-��-��-��-��-�]|�[�-��-�]'
-	    }, {
-	        name: 'Nl',
-	        alias: 'Letter_Number',
-	        bmp: 'ᛮ-ᛰⅠ-ↂↅ-ↈ〇〡-〩〸-〺ꛦ-ꛯ',
-	        astral: '�[�-�]|�[�-����-�]'
-	    }, {
-	        name: 'No',
-	        alias: 'Other_Number',
-	        bmp: '²³¹¼-¾৴-৹୲-୷௰-௲౸-౾൰-൵༪-༳፩-፼៰-៹᧚⁰⁴-⁹₀-₉⅐-⅟↉①-⒛⓪-⓿❶-➓⳽㆒-㆕㈠-㈩㉈-㉏㉑-㉟㊀-㊉㊱-㊿꠰-꠵',
-	        astral: '�[�-��-�]|�[�-��-�]|�[�-�]|�[�-�]|�[�-�]|�[�-��-��-��-��-����-��-��-����-��-��-��-��-�]|�[��]|�[�-�]|�[�-�]|�[�-��-����-��-�]'
-	    }, {
-	        name: 'P',
-	        alias: 'Punctuation',
-	        bmp: '!-#%-\\x2A,-/:;\\x3F@\\x5B-\\x5D_\\x7B}¡§«¶·»¿;·՚-՟։֊־׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔༺-༽྅࿐-࿔࿙࿚၊-၏჻፠-፨᐀᙭᙮᚛᚜᛫-᛭᜵᜶។-៖៘-៚᠀-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‐-‧‰-⁃⁅-⁑⁓-⁞⁽⁾₍₎⌈-⌋〈〉❨-❵⟅⟆⟦-⟯⦃-⦘⧘-⧛⧼⧽⳹-⳼⳾⳿⵰⸀-⸮⸰-⹂、-〃〈-】〔-〟〰〽゠・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫﴾﴿︐-︙︰-﹒﹔-﹡﹣﹨﹪﹫！-＃％-＊，-／：；？＠［-］＿｛｝｟-･',
-	        astral: '�[����-���-��-��-�]|�[�-�]|�[��-��-��-�]|�[�-�]|𐕯|𛲟|�[�-����-��-����-����-��-��]|�[�-���]|�[����-��]'
-	    }, {
-	        name: 'Pc',
-	        alias: 'Connector_Punctuation',
-	        bmp: '_‿⁀⁔︳︴﹍-﹏＿'
-	    }, {
-	        name: 'Pd',
-	        alias: 'Dash_Punctuation',
-	        bmp: '\\x2D֊־᐀᠆‐-―⸗⸚⸺⸻⹀〜〰゠︱︲﹘﹣－'
-	    }, {
-	        name: 'Pe',
-	        alias: 'Close_Punctuation',
-	        bmp: '\\x29\\x5D}༻༽᚜⁆⁾₎⌉⌋〉❩❫❭❯❱❳❵⟆⟧⟩⟫⟭⟯⦄⦆⦈⦊⦌⦎⦐⦒⦔⦖⦘⧙⧛⧽⸣⸥⸧⸩〉》」』】〕〗〙〛〞〟﴾︘︶︸︺︼︾﹀﹂﹄﹈﹚﹜﹞）］｝｠｣'
-	    }, {
-	        name: 'Pf',
-	        alias: 'Final_Punctuation',
-	        bmp: '»’”›⸃⸅⸊⸍⸝⸡'
-	    }, {
-	        name: 'Pi',
-	        alias: 'Initial_Punctuation',
-	        bmp: '«‘‛“‟‹⸂⸄⸉⸌⸜⸠'
-	    }, {
-	        name: 'Po',
-	        alias: 'Other_Punctuation',
-	        bmp: '!-#%-\'\\x2A,\\x2E/:;\\x3F@\\x5C¡§¶·¿;·՚-՟։׀׃׆׳״؉؊،؍؛؞؟٪-٭۔܀-܍߷-߹࠰-࠾࡞।॥॰૰෴๏๚๛༄-༒༔྅࿐-࿔࿙࿚၊-၏჻፠-፨᙭᙮᛫-᛭᜵᜶។-៖៘-៚᠀-᠅᠇-᠊᥄᥅᨞᨟᪠-᪦᪨-᪭᭚-᭠᯼-᯿᰻-᰿᱾᱿᳀-᳇᳓‖‗†-‧‰-‸※-‾⁁-⁃⁇-⁑⁓⁕-⁞⳹-⳼⳾⳿⵰⸀⸁⸆-⸈⸋⸎-⸖⸘⸙⸛⸞⸟⸪-⸮⸰-⸹⸼-⸿⹁、-〃〽・꓾꓿꘍-꘏꙳꙾꛲-꛷꡴-꡷꣎꣏꣸-꣺꣼꤮꤯꥟꧁-꧍꧞꧟꩜-꩟꫞꫟꫰꫱꯫︐-︖︙︰﹅﹆﹉-﹌﹐-﹒﹔-﹗﹟-﹡﹨﹪﹫！-＃％-＇＊，．／：；？＠＼｡､･',
-	        astral: '�[����-���-��-��-�]|�[�-�]|�[��-��-��-�]|�[�-�]|𐕯|𛲟|�[�-����-��-����-����-��-��]|�[�-���]|�[����-��]'
-	    }, {
-	        name: 'Ps',
-	        alias: 'Open_Punctuation',
-	        bmp: '\\x28\\x5B\\x7B༺༼᚛‚„⁅⁽₍⌈⌊〈❨❪❬❮❰❲❴⟅⟦⟨⟪⟬⟮⦃⦅⦇⦉⦋⦍⦏⦑⦓⦕⦗⧘⧚⧼⸢⸤⸦⸨⹂〈《「『【〔〖〘〚〝﴿︗︵︷︹︻︽︿﹁﹃﹇﹙﹛﹝（［｛｟｢'
-	    }, {
-	        name: 'S',
-	        alias: 'Symbol',
-	        bmp: '\\x24\\x2B<->\\x5E`\\x7C~¢-¦¨©¬®-±´¸×÷˂-˅˒-˟˥-˫˭˯-˿͵΄΅϶҂֍-֏؆-؈؋؎؏۞۩۽۾߶৲৳৺৻૱୰௳-௺౿൹฿༁-༃༓༕-༗༚-༟༴༶༸྾-࿅࿇-࿌࿎࿏࿕-࿘႞႟᎐-᎙៛᥀᧞-᧿᭡-᭪᭴-᭼᾽᾿-῁῍-῏῝-῟῭-`´῾⁄⁒⁺-⁼₊-₌₠-₾℀℁℃-℆℈℉℔№-℘℞-℣℥℧℩℮℺℻⅀-⅄⅊-⅍⅏↊↋←-⌇⌌-⌨⌫-⏺␀-␦⑀-⑊⒜-ⓩ─-❧➔-⟄⟇-⟥⟰-⦂⦙-⧗⧜-⧻⧾-⭳⭶-⮕⮘-⮹⮽-⯈⯊-⯑⯬-⯯⳥-⳪⺀-⺙⺛-⻳⼀-⿕⿰-⿻〄〒〓〠〶〷〾〿゛゜㆐㆑㆖-㆟㇀-㇣㈀-㈞㈪-㉇㉐㉠-㉿㊊-㊰㋀-㋾㌀-㏿䷀-䷿꒐-꓆꜀-꜖꜠꜡꞉꞊꠨-꠫꠶-꠹꩷-꩹꭛﬩﮲-﯁﷼﷽﹢﹤-﹦﹩＄＋＜-＞＾｀｜～￠-￦￨-￮￼�',
-	        astral: '�[�-��-��-��-��-��-��-��]|�[�-��-��-��-��-��-��-��-��-��-��-��-����-�]|�[�-��-��-��-��-��-��-�]|�[����������]|�[�-��-���-���-�]|𛲜|𑜿|�[���]|�[�-��]|�[�-��-��-��-���]|�[�-��-��-��-����-��-��-���-�]|�[��]'
-	    }, {
-	        name: 'Sc',
-	        alias: 'Currency_Symbol',
-	        bmp: '\\x24¢-¥֏؋৲৳৻૱௹฿៛₠-₾꠸﷼﹩＄￠￡￥￦'
-	    }, {
-	        name: 'Sk',
-	        alias: 'Modifier_Symbol',
-	        bmp: '\\x5E`¨¯´¸˂-˅˒-˟˥-˫˭˯-˿͵΄΅᾽᾿-῁῍-῏῝-῟῭-`´῾゛゜꜀-꜖꜠꜡꞉꞊꭛﮲-﯁＾｀￣',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Sm',
-	        alias: 'Math_Symbol',
-	        bmp: '\\x2B<->\\x7C~¬±×÷϶؆-؈⁄⁒⁺-⁼₊-₌℘⅀-⅄⅋←-↔↚↛↠↣↦↮⇎⇏⇒⇔⇴-⋿⌠⌡⍼⎛-⎳⏜-⏡▷◁◸-◿♯⟀-⟄⟇-⟥⟰-⟿⤀-⦂⦙-⧗⧜-⧻⧾-⫿⬰-⭄⭇-⭌﬩﹢﹤-﹦＋＜-＞｜～￢￩-￬',
-	        astral: '�[��]|�[����������]'
-	    }, {
-	        name: 'So',
-	        alias: 'Other_Symbol',
-	        bmp: '¦©®°҂֍֎؎؏۞۩۽۾߶৺୰௳-௸௺౿൹༁-༃༓༕-༗༚-༟༴༶༸྾-࿅࿇-࿌࿎࿏࿕-࿘႞႟᎐-᎙᥀᧞-᧿᭡-᭪᭴-᭼℀℁℃-℆℈℉℔№℗℞-℣℥℧℩℮℺℻⅊⅌⅍⅏↊↋↕-↙↜-↟↡↢↤↥↧-↭↯-⇍⇐⇑⇓⇕-⇳⌀-⌇⌌-⌟⌢-⌨⌫-⍻⍽-⎚⎴-⏛⏢-⏺␀-␦⑀-⑊⒜-ⓩ─-▶▸-◀◂-◷☀-♮♰-❧➔-➿⠀-⣿⬀-⬯⭅⭆⭍-⭳⭶-⮕⮘-⮹⮽-⯈⯊-⯑⯬-⯯⳥-⳪⺀-⺙⺛-⻳⼀-⿕⿰-⿻〄〒〓〠〶〷〾〿㆐㆑㆖-㆟㇀-㇣㈀-㈞㈪-㉇㉐㉠-㉿㊊-㊰㋀-㋾㌀-㏿䷀-䷿꒐-꓆꠨-꠫꠶꠷꠹꩷-꩹﷽￤￨￭￮￼�',
-	        astral: '�[�-��-��-��-��-��-��-��]|�[�-��-��-��-��-��-��-�]|�[�-��-��-��-��-��-��-��-��-��-��-��-����-�]|�[�-��-���-���-�]|𛲜|𑜿|�[���]|�[�-��]|�[�-��-��-��-���]|�[�-��-��-��-����-��-��-���-�]'
-	    }, {
-	        name: 'Z',
-	        alias: 'Separator',
-	        bmp: '    - \u2028\u2029  　'
-	    }, {
-	        name: 'Zl',
-	        alias: 'Line_Separator',
-	        bmp: '\u2028'
-	    }, {
-	        name: 'Zp',
-	        alias: 'Paragraph_Separator',
-	        bmp: '\u2029'
-	    }, {
-	        name: 'Zs',
-	        alias: 'Space_Separator',
-	        bmp: '    -   　'
-	    }]);
+	    XRegExp.addUnicodeData([
+	        {
+	            name: 'C',
+	            alias: 'Other',
+	            isBmpLast: true,
+	            bmp: '\0-\x1F\x7F-\x9F\xAD\u0378\u0379\u0380-\u0383\u038B\u038D\u03A2\u0530\u0557\u0558\u0560\u0588\u058B\u058C\u0590\u05C8-\u05CF\u05EB-\u05EF\u05F5-\u0605\u061C\u061D\u06DD\u070E\u070F\u074B\u074C\u07B2-\u07BF\u07FB-\u07FF\u082E\u082F\u083F\u085C\u085D\u085F-\u089F\u08B5-\u08E2\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA\u09BB\u09C5\u09C6\u09C9\u09CA\u09CF-\u09D6\u09D8-\u09DB\u09DE\u09E4\u09E5\u09FC-\u0A00\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A\u0A3B\u0A3D\u0A43-\u0A46\u0A49\u0A4A\u0A4E-\u0A50\u0A52-\u0A58\u0A5D\u0A5F-\u0A65\u0A76-\u0A80\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA\u0ABB\u0AC6\u0ACA\u0ACE\u0ACF\u0AD1-\u0ADF\u0AE4\u0AE5\u0AF2-\u0AF8\u0AFA-\u0B00\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A\u0B3B\u0B45\u0B46\u0B49\u0B4A\u0B4E-\u0B55\u0B58-\u0B5B\u0B5E\u0B64\u0B65\u0B78-\u0B81\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BBD\u0BC3-\u0BC5\u0BC9\u0BCE\u0BCF\u0BD1-\u0BD6\u0BD8-\u0BE5\u0BFB-\u0BFF\u0C04\u0C0D\u0C11\u0C29\u0C3A-\u0C3C\u0C45\u0C49\u0C4E-\u0C54\u0C57\u0C5B-\u0C5F\u0C64\u0C65\u0C70-\u0C77\u0C80\u0C84\u0C8D\u0C91\u0CA9\u0CB4\u0CBA\u0CBB\u0CC5\u0CC9\u0CCE-\u0CD4\u0CD7-\u0CDD\u0CDF\u0CE4\u0CE5\u0CF0\u0CF3-\u0D00\u0D04\u0D0D\u0D11\u0D3B\u0D3C\u0D45\u0D49\u0D4F-\u0D56\u0D58-\u0D5E\u0D64\u0D65\u0D76-\u0D78\u0D80\u0D81\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DC9\u0DCB-\u0DCE\u0DD5\u0DD7\u0DE0-\u0DE5\u0DF0\u0DF1\u0DF5-\u0E00\u0E3B-\u0E3E\u0E5C-\u0E80\u0E83\u0E85\u0E86\u0E89\u0E8B\u0E8C\u0E8E-\u0E93\u0E98\u0EA0\u0EA4\u0EA6\u0EA8\u0EA9\u0EAC\u0EBA\u0EBE\u0EBF\u0EC5\u0EC7\u0ECE\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F48\u0F6D-\u0F70\u0F98\u0FBD\u0FCD\u0FDB-\u0FFF\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B\u135C\u137D-\u137F\u139A-\u139F\u13F6\u13F7\u13FE\u13FF\u169D-\u169F\u16F9-\u16FF\u170D\u1715-\u171F\u1737-\u173F\u1754-\u175F\u176D\u1771\u1774-\u177F\u17DE\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180E\u180F\u181A-\u181F\u1878-\u187F\u18AB-\u18AF\u18F6-\u18FF\u191F\u192C-\u192F\u193C-\u193F\u1941-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19DD\u1A1C\u1A1D\u1A5F\u1A7D\u1A7E\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE\u1AAF\u1ABF-\u1AFF\u1B4C-\u1B4F\u1B7D-\u1B7F\u1BF4-\u1BFB\u1C38-\u1C3A\u1C4A-\u1C4C\u1C80-\u1CBF\u1CC8-\u1CCF\u1CF7\u1CFA-\u1CFF\u1DF6-\u1DFB\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FC5\u1FD4\u1FD5\u1FDC\u1FF0\u1FF1\u1FF5\u1FFF\u200B-\u200F\u202A-\u202E\u2060-\u206F\u2072\u2073\u208F\u209D-\u209F\u20BF-\u20CF\u20F1-\u20FF\u218C-\u218F\u23FB-\u23FF\u2427-\u243F\u244B-\u245F\u2B74\u2B75\u2B96\u2B97\u2BBA-\u2BBC\u2BC9\u2BD2-\u2BEB\u2BF0-\u2BFF\u2C2F\u2C5F\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7E\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF\u2E43-\u2E7F\u2E9A\u2EF4-\u2EFF\u2FD6-\u2FEF\u2FFC-\u2FFF\u3040\u3097\u3098\u3100-\u3104\u312E-\u3130\u318F\u31BB-\u31BF\u31E4-\u31EF\u321F\u32FF\u4DB6-\u4DBF\u9FD6-\u9FFF\uA48D-\uA48F\uA4C7-\uA4CF\uA62C-\uA63F\uA6F8-\uA6FF\uA7AE\uA7AF\uA7B8-\uA7F6\uA82C-\uA82F\uA83A-\uA83F\uA878-\uA87F\uA8C5-\uA8CD\uA8DA-\uA8DF\uA8FE\uA8FF\uA954-\uA95E\uA97D-\uA97F\uA9CE\uA9DA-\uA9DD\uA9FF\uAA37-\uAA3F\uAA4E\uAA4F\uAA5A\uAA5B\uAAC3-\uAADA\uAAF7-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F\uAB66-\uAB6F\uABEE\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uF8FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBC2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFE\uFDFF\uFE1A-\uFE1F\uFE53\uFE67\uFE6C-\uFE6F\uFE75\uFEFD-\uFF00\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFDF\uFFE7\uFFEF-\uFFFB\uFFFE\uFFFF',
+	            astral: '\uD834[\uDCF6-\uDCFF\uDD27\uDD28\uDD73-\uDD7A\uDDE9-\uDDFF\uDE46-\uDEFF\uDF57-\uDF5F\uDF72-\uDFFF]|\uD836[\uDE8C-\uDE9A\uDEA0\uDEB0-\uDFFF]|\uD83C[\uDC2C-\uDC2F\uDC94-\uDC9F\uDCAF\uDCB0\uDCC0\uDCD0\uDCF6-\uDCFF\uDD0D-\uDD0F\uDD2F\uDD6C-\uDD6F\uDD9B-\uDDE5\uDE03-\uDE0F\uDE3B-\uDE3F\uDE49-\uDE4F\uDE52-\uDEFF]|\uD81A[\uDE39-\uDE3F\uDE5F\uDE6A-\uDE6D\uDE70-\uDECF\uDEEE\uDEEF\uDEF6-\uDEFF\uDF46-\uDF4F\uDF5A\uDF62\uDF78-\uDF7C\uDF90-\uDFFF]|\uD809[\uDC6F\uDC75-\uDC7F\uDD44-\uDFFF]|\uD81B[\uDC00-\uDEFF\uDF45-\uDF4F\uDF7F-\uDF8E\uDFA0-\uDFFF]|\uD86E[\uDC1E\uDC1F]|\uD83D[\uDD7A\uDDA4\uDED1-\uDEDF\uDEED-\uDEEF\uDEF4-\uDEFF\uDF74-\uDF7F\uDFD5-\uDFFF]|\uD801[\uDC9E\uDC9F\uDCAA-\uDCFF\uDD28-\uDD2F\uDD64-\uDD6E\uDD70-\uDDFF\uDF37-\uDF3F\uDF56-\uDF5F\uDF68-\uDFFF]|\uD800[\uDC0C\uDC27\uDC3B\uDC3E\uDC4E\uDC4F\uDC5E-\uDC7F\uDCFB-\uDCFF\uDD03-\uDD06\uDD34-\uDD36\uDD8D-\uDD8F\uDD9C-\uDD9F\uDDA1-\uDDCF\uDDFE-\uDE7F\uDE9D-\uDE9F\uDED1-\uDEDF\uDEFC-\uDEFF\uDF24-\uDF2F\uDF4B-\uDF4F\uDF7B-\uDF7F\uDF9E\uDFC4-\uDFC7\uDFD6-\uDFFF]|\uD869[\uDED7-\uDEFF]|\uD83B[\uDC00-\uDDFF\uDE04\uDE20\uDE23\uDE25\uDE26\uDE28\uDE33\uDE38\uDE3A\uDE3C-\uDE41\uDE43-\uDE46\uDE48\uDE4A\uDE4C\uDE50\uDE53\uDE55\uDE56\uDE58\uDE5A\uDE5C\uDE5E\uDE60\uDE63\uDE65\uDE66\uDE6B\uDE73\uDE78\uDE7D\uDE7F\uDE8A\uDE9C-\uDEA0\uDEA4\uDEAA\uDEBC-\uDEEF\uDEF2-\uDFFF]|\uD87E[\uDE1E-\uDFFF]|\uDB40[\uDC00-\uDCFF\uDDF0-\uDFFF]|\uD804[\uDC4E-\uDC51\uDC70-\uDC7E\uDCBD\uDCC2-\uDCCF\uDCE9-\uDCEF\uDCFA-\uDCFF\uDD35\uDD44-\uDD4F\uDD77-\uDD7F\uDDCE\uDDCF\uDDE0\uDDF5-\uDDFF\uDE12\uDE3E-\uDE7F\uDE87\uDE89\uDE8E\uDE9E\uDEAA-\uDEAF\uDEEB-\uDEEF\uDEFA-\uDEFF\uDF04\uDF0D\uDF0E\uDF11\uDF12\uDF29\uDF31\uDF34\uDF3A\uDF3B\uDF45\uDF46\uDF49\uDF4A\uDF4E\uDF4F\uDF51-\uDF56\uDF58-\uDF5C\uDF64\uDF65\uDF6D-\uDF6F\uDF75-\uDFFF]|\uD83A[\uDCC5\uDCC6\uDCD7-\uDFFF]|\uD80D[\uDC2F-\uDFFF]|\uD86D[\uDF35-\uDF3F]|[\uD807\uD80A\uD80B\uD80E-\uD810\uD812-\uD819\uD81C-\uD82B\uD82D\uD82E\uD830-\uD833\uD837-\uD839\uD83F\uD874-\uD87D\uD87F-\uDB3F\uDB41-\uDBFF][\uDC00-\uDFFF]|\uD806[\uDC00-\uDC9F\uDCF3-\uDCFE\uDD00-\uDEBF\uDEF9-\uDFFF]|\uD803[\uDC49-\uDC7F\uDCB3-\uDCBF\uDCF3-\uDCF9\uDD00-\uDE5F\uDE7F-\uDFFF]|\uD835[\uDC55\uDC9D\uDCA0\uDCA1\uDCA3\uDCA4\uDCA7\uDCA8\uDCAD\uDCBA\uDCBC\uDCC4\uDD06\uDD0B\uDD0C\uDD15\uDD1D\uDD3A\uDD3F\uDD45\uDD47-\uDD49\uDD51\uDEA6\uDEA7\uDFCC\uDFCD]|\uD805[\uDC00-\uDC7F\uDCC8-\uDCCF\uDCDA-\uDD7F\uDDB6\uDDB7\uDDDE-\uDDFF\uDE45-\uDE4F\uDE5A-\uDE7F\uDEB8-\uDEBF\uDECA-\uDEFF\uDF1A-\uDF1C\uDF2C-\uDF2F\uDF40-\uDFFF]|\uD802[\uDC06\uDC07\uDC09\uDC36\uDC39-\uDC3B\uDC3D\uDC3E\uDC56\uDC9F-\uDCA6\uDCB0-\uDCDF\uDCF3\uDCF6-\uDCFA\uDD1C-\uDD1E\uDD3A-\uDD3E\uDD40-\uDD7F\uDDB8-\uDDBB\uDDD0\uDDD1\uDE04\uDE07-\uDE0B\uDE14\uDE18\uDE34-\uDE37\uDE3B-\uDE3E\uDE48-\uDE4F\uDE59-\uDE5F\uDEA0-\uDEBF\uDEE7-\uDEEA\uDEF7-\uDEFF\uDF36-\uDF38\uDF56\uDF57\uDF73-\uDF77\uDF92-\uDF98\uDF9D-\uDFA8\uDFB0-\uDFFF]|\uD808[\uDF9A-\uDFFF]|\uD82F[\uDC6B-\uDC6F\uDC7D-\uDC7F\uDC89-\uDC8F\uDC9A\uDC9B\uDCA0-\uDFFF]|\uD82C[\uDC02-\uDFFF]|\uD811[\uDE47-\uDFFF]|\uD83E[\uDC0C-\uDC0F\uDC48-\uDC4F\uDC5A-\uDC5F\uDC88-\uDC8F\uDCAE-\uDD0F\uDD19-\uDD7F\uDD85-\uDDBF\uDDC1-\uDFFF]|\uD873[\uDEA2-\uDFFF]'
+	        },
+	        {
+	            name: 'Cc',
+	            alias: 'Control',
+	            bmp: '\0-\x1F\x7F-\x9F'
+	        },
+	        {
+	            name: 'Cf',
+	            alias: 'Format',
+	            bmp: '\xAD\u0600-\u0605\u061C\u06DD\u070F\u180E\u200B-\u200F\u202A-\u202E\u2060-\u2064\u2066-\u206F\uFEFF\uFFF9-\uFFFB',
+	            astral: '\uDB40[\uDC01\uDC20-\uDC7F]|\uD82F[\uDCA0-\uDCA3]|\uD834[\uDD73-\uDD7A]|\uD804\uDCBD'
+	        },
+	        {
+	            name: 'Cn',
+	            alias: 'Unassigned',
+	            bmp: '\u0378\u0379\u0380-\u0383\u038B\u038D\u03A2\u0530\u0557\u0558\u0560\u0588\u058B\u058C\u0590\u05C8-\u05CF\u05EB-\u05EF\u05F5-\u05FF\u061D\u070E\u074B\u074C\u07B2-\u07BF\u07FB-\u07FF\u082E\u082F\u083F\u085C\u085D\u085F-\u089F\u08B5-\u08E2\u0984\u098D\u098E\u0991\u0992\u09A9\u09B1\u09B3-\u09B5\u09BA\u09BB\u09C5\u09C6\u09C9\u09CA\u09CF-\u09D6\u09D8-\u09DB\u09DE\u09E4\u09E5\u09FC-\u0A00\u0A04\u0A0B-\u0A0E\u0A11\u0A12\u0A29\u0A31\u0A34\u0A37\u0A3A\u0A3B\u0A3D\u0A43-\u0A46\u0A49\u0A4A\u0A4E-\u0A50\u0A52-\u0A58\u0A5D\u0A5F-\u0A65\u0A76-\u0A80\u0A84\u0A8E\u0A92\u0AA9\u0AB1\u0AB4\u0ABA\u0ABB\u0AC6\u0ACA\u0ACE\u0ACF\u0AD1-\u0ADF\u0AE4\u0AE5\u0AF2-\u0AF8\u0AFA-\u0B00\u0B04\u0B0D\u0B0E\u0B11\u0B12\u0B29\u0B31\u0B34\u0B3A\u0B3B\u0B45\u0B46\u0B49\u0B4A\u0B4E-\u0B55\u0B58-\u0B5B\u0B5E\u0B64\u0B65\u0B78-\u0B81\u0B84\u0B8B-\u0B8D\u0B91\u0B96-\u0B98\u0B9B\u0B9D\u0BA0-\u0BA2\u0BA5-\u0BA7\u0BAB-\u0BAD\u0BBA-\u0BBD\u0BC3-\u0BC5\u0BC9\u0BCE\u0BCF\u0BD1-\u0BD6\u0BD8-\u0BE5\u0BFB-\u0BFF\u0C04\u0C0D\u0C11\u0C29\u0C3A-\u0C3C\u0C45\u0C49\u0C4E-\u0C54\u0C57\u0C5B-\u0C5F\u0C64\u0C65\u0C70-\u0C77\u0C80\u0C84\u0C8D\u0C91\u0CA9\u0CB4\u0CBA\u0CBB\u0CC5\u0CC9\u0CCE-\u0CD4\u0CD7-\u0CDD\u0CDF\u0CE4\u0CE5\u0CF0\u0CF3-\u0D00\u0D04\u0D0D\u0D11\u0D3B\u0D3C\u0D45\u0D49\u0D4F-\u0D56\u0D58-\u0D5E\u0D64\u0D65\u0D76-\u0D78\u0D80\u0D81\u0D84\u0D97-\u0D99\u0DB2\u0DBC\u0DBE\u0DBF\u0DC7-\u0DC9\u0DCB-\u0DCE\u0DD5\u0DD7\u0DE0-\u0DE5\u0DF0\u0DF1\u0DF5-\u0E00\u0E3B-\u0E3E\u0E5C-\u0E80\u0E83\u0E85\u0E86\u0E89\u0E8B\u0E8C\u0E8E-\u0E93\u0E98\u0EA0\u0EA4\u0EA6\u0EA8\u0EA9\u0EAC\u0EBA\u0EBE\u0EBF\u0EC5\u0EC7\u0ECE\u0ECF\u0EDA\u0EDB\u0EE0-\u0EFF\u0F48\u0F6D-\u0F70\u0F98\u0FBD\u0FCD\u0FDB-\u0FFF\u10C6\u10C8-\u10CC\u10CE\u10CF\u1249\u124E\u124F\u1257\u1259\u125E\u125F\u1289\u128E\u128F\u12B1\u12B6\u12B7\u12BF\u12C1\u12C6\u12C7\u12D7\u1311\u1316\u1317\u135B\u135C\u137D-\u137F\u139A-\u139F\u13F6\u13F7\u13FE\u13FF\u169D-\u169F\u16F9-\u16FF\u170D\u1715-\u171F\u1737-\u173F\u1754-\u175F\u176D\u1771\u1774-\u177F\u17DE\u17DF\u17EA-\u17EF\u17FA-\u17FF\u180F\u181A-\u181F\u1878-\u187F\u18AB-\u18AF\u18F6-\u18FF\u191F\u192C-\u192F\u193C-\u193F\u1941-\u1943\u196E\u196F\u1975-\u197F\u19AC-\u19AF\u19CA-\u19CF\u19DB-\u19DD\u1A1C\u1A1D\u1A5F\u1A7D\u1A7E\u1A8A-\u1A8F\u1A9A-\u1A9F\u1AAE\u1AAF\u1ABF-\u1AFF\u1B4C-\u1B4F\u1B7D-\u1B7F\u1BF4-\u1BFB\u1C38-\u1C3A\u1C4A-\u1C4C\u1C80-\u1CBF\u1CC8-\u1CCF\u1CF7\u1CFA-\u1CFF\u1DF6-\u1DFB\u1F16\u1F17\u1F1E\u1F1F\u1F46\u1F47\u1F4E\u1F4F\u1F58\u1F5A\u1F5C\u1F5E\u1F7E\u1F7F\u1FB5\u1FC5\u1FD4\u1FD5\u1FDC\u1FF0\u1FF1\u1FF5\u1FFF\u2065\u2072\u2073\u208F\u209D-\u209F\u20BF-\u20CF\u20F1-\u20FF\u218C-\u218F\u23FB-\u23FF\u2427-\u243F\u244B-\u245F\u2B74\u2B75\u2B96\u2B97\u2BBA-\u2BBC\u2BC9\u2BD2-\u2BEB\u2BF0-\u2BFF\u2C2F\u2C5F\u2CF4-\u2CF8\u2D26\u2D28-\u2D2C\u2D2E\u2D2F\u2D68-\u2D6E\u2D71-\u2D7E\u2D97-\u2D9F\u2DA7\u2DAF\u2DB7\u2DBF\u2DC7\u2DCF\u2DD7\u2DDF\u2E43-\u2E7F\u2E9A\u2EF4-\u2EFF\u2FD6-\u2FEF\u2FFC-\u2FFF\u3040\u3097\u3098\u3100-\u3104\u312E-\u3130\u318F\u31BB-\u31BF\u31E4-\u31EF\u321F\u32FF\u4DB6-\u4DBF\u9FD6-\u9FFF\uA48D-\uA48F\uA4C7-\uA4CF\uA62C-\uA63F\uA6F8-\uA6FF\uA7AE\uA7AF\uA7B8-\uA7F6\uA82C-\uA82F\uA83A-\uA83F\uA878-\uA87F\uA8C5-\uA8CD\uA8DA-\uA8DF\uA8FE\uA8FF\uA954-\uA95E\uA97D-\uA97F\uA9CE\uA9DA-\uA9DD\uA9FF\uAA37-\uAA3F\uAA4E\uAA4F\uAA5A\uAA5B\uAAC3-\uAADA\uAAF7-\uAB00\uAB07\uAB08\uAB0F\uAB10\uAB17-\uAB1F\uAB27\uAB2F\uAB66-\uAB6F\uABEE\uABEF\uABFA-\uABFF\uD7A4-\uD7AF\uD7C7-\uD7CA\uD7FC-\uD7FF\uFA6E\uFA6F\uFADA-\uFAFF\uFB07-\uFB12\uFB18-\uFB1C\uFB37\uFB3D\uFB3F\uFB42\uFB45\uFBC2-\uFBD2\uFD40-\uFD4F\uFD90\uFD91\uFDC8-\uFDEF\uFDFE\uFDFF\uFE1A-\uFE1F\uFE53\uFE67\uFE6C-\uFE6F\uFE75\uFEFD\uFEFE\uFF00\uFFBF-\uFFC1\uFFC8\uFFC9\uFFD0\uFFD1\uFFD8\uFFD9\uFFDD-\uFFDF\uFFE7\uFFEF-\uFFF8\uFFFE\uFFFF',
+	            astral: '\uDB40[\uDC00\uDC02-\uDC1F\uDC80-\uDCFF\uDDF0-\uDFFF]|\uD834[\uDCF6-\uDCFF\uDD27\uDD28\uDDE9-\uDDFF\uDE46-\uDEFF\uDF57-\uDF5F\uDF72-\uDFFF]|\uD83C[\uDC2C-\uDC2F\uDC94-\uDC9F\uDCAF\uDCB0\uDCC0\uDCD0\uDCF6-\uDCFF\uDD0D-\uDD0F\uDD2F\uDD6C-\uDD6F\uDD9B-\uDDE5\uDE03-\uDE0F\uDE3B-\uDE3F\uDE49-\uDE4F\uDE52-\uDEFF]|\uD81A[\uDE39-\uDE3F\uDE5F\uDE6A-\uDE6D\uDE70-\uDECF\uDEEE\uDEEF\uDEF6-\uDEFF\uDF46-\uDF4F\uDF5A\uDF62\uDF78-\uDF7C\uDF90-\uDFFF]|\uD809[\uDC6F\uDC75-\uDC7F\uDD44-\uDFFF]|\uD81B[\uDC00-\uDEFF\uDF45-\uDF4F\uDF7F-\uDF8E\uDFA0-\uDFFF]|\uD86E[\uDC1E\uDC1F]|\uD83D[\uDD7A\uDDA4\uDED1-\uDEDF\uDEED-\uDEEF\uDEF4-\uDEFF\uDF74-\uDF7F\uDFD5-\uDFFF]|\uD801[\uDC9E\uDC9F\uDCAA-\uDCFF\uDD28-\uDD2F\uDD64-\uDD6E\uDD70-\uDDFF\uDF37-\uDF3F\uDF56-\uDF5F\uDF68-\uDFFF]|\uD800[\uDC0C\uDC27\uDC3B\uDC3E\uDC4E\uDC4F\uDC5E-\uDC7F\uDCFB-\uDCFF\uDD03-\uDD06\uDD34-\uDD36\uDD8D-\uDD8F\uDD9C-\uDD9F\uDDA1-\uDDCF\uDDFE-\uDE7F\uDE9D-\uDE9F\uDED1-\uDEDF\uDEFC-\uDEFF\uDF24-\uDF2F\uDF4B-\uDF4F\uDF7B-\uDF7F\uDF9E\uDFC4-\uDFC7\uDFD6-\uDFFF]|\uD869[\uDED7-\uDEFF]|\uD83B[\uDC00-\uDDFF\uDE04\uDE20\uDE23\uDE25\uDE26\uDE28\uDE33\uDE38\uDE3A\uDE3C-\uDE41\uDE43-\uDE46\uDE48\uDE4A\uDE4C\uDE50\uDE53\uDE55\uDE56\uDE58\uDE5A\uDE5C\uDE5E\uDE60\uDE63\uDE65\uDE66\uDE6B\uDE73\uDE78\uDE7D\uDE7F\uDE8A\uDE9C-\uDEA0\uDEA4\uDEAA\uDEBC-\uDEEF\uDEF2-\uDFFF]|[\uDBBF\uDBFF][\uDFFE\uDFFF]|\uD87E[\uDE1E-\uDFFF]|\uD82F[\uDC6B-\uDC6F\uDC7D-\uDC7F\uDC89-\uDC8F\uDC9A\uDC9B\uDCA4-\uDFFF]|\uD83A[\uDCC5\uDCC6\uDCD7-\uDFFF]|\uD80D[\uDC2F-\uDFFF]|\uD86D[\uDF35-\uDF3F]|[\uD807\uD80A\uD80B\uD80E-\uD810\uD812-\uD819\uD81C-\uD82B\uD82D\uD82E\uD830-\uD833\uD837-\uD839\uD83F\uD874-\uD87D\uD87F-\uDB3F\uDB41-\uDB7F][\uDC00-\uDFFF]|\uD806[\uDC00-\uDC9F\uDCF3-\uDCFE\uDD00-\uDEBF\uDEF9-\uDFFF]|\uD803[\uDC49-\uDC7F\uDCB3-\uDCBF\uDCF3-\uDCF9\uDD00-\uDE5F\uDE7F-\uDFFF]|\uD835[\uDC55\uDC9D\uDCA0\uDCA1\uDCA3\uDCA4\uDCA7\uDCA8\uDCAD\uDCBA\uDCBC\uDCC4\uDD06\uDD0B\uDD0C\uDD15\uDD1D\uDD3A\uDD3F\uDD45\uDD47-\uDD49\uDD51\uDEA6\uDEA7\uDFCC\uDFCD]|\uD836[\uDE8C-\uDE9A\uDEA0\uDEB0-\uDFFF]|\uD805[\uDC00-\uDC7F\uDCC8-\uDCCF\uDCDA-\uDD7F\uDDB6\uDDB7\uDDDE-\uDDFF\uDE45-\uDE4F\uDE5A-\uDE7F\uDEB8-\uDEBF\uDECA-\uDEFF\uDF1A-\uDF1C\uDF2C-\uDF2F\uDF40-\uDFFF]|\uD802[\uDC06\uDC07\uDC09\uDC36\uDC39-\uDC3B\uDC3D\uDC3E\uDC56\uDC9F-\uDCA6\uDCB0-\uDCDF\uDCF3\uDCF6-\uDCFA\uDD1C-\uDD1E\uDD3A-\uDD3E\uDD40-\uDD7F\uDDB8-\uDDBB\uDDD0\uDDD1\uDE04\uDE07-\uDE0B\uDE14\uDE18\uDE34-\uDE37\uDE3B-\uDE3E\uDE48-\uDE4F\uDE59-\uDE5F\uDEA0-\uDEBF\uDEE7-\uDEEA\uDEF7-\uDEFF\uDF36-\uDF38\uDF56\uDF57\uDF73-\uDF77\uDF92-\uDF98\uDF9D-\uDFA8\uDFB0-\uDFFF]|\uD808[\uDF9A-\uDFFF]|\uD804[\uDC4E-\uDC51\uDC70-\uDC7E\uDCC2-\uDCCF\uDCE9-\uDCEF\uDCFA-\uDCFF\uDD35\uDD44-\uDD4F\uDD77-\uDD7F\uDDCE\uDDCF\uDDE0\uDDF5-\uDDFF\uDE12\uDE3E-\uDE7F\uDE87\uDE89\uDE8E\uDE9E\uDEAA-\uDEAF\uDEEB-\uDEEF\uDEFA-\uDEFF\uDF04\uDF0D\uDF0E\uDF11\uDF12\uDF29\uDF31\uDF34\uDF3A\uDF3B\uDF45\uDF46\uDF49\uDF4A\uDF4E\uDF4F\uDF51-\uDF56\uDF58-\uDF5C\uDF64\uDF65\uDF6D-\uDF6F\uDF75-\uDFFF]|\uD82C[\uDC02-\uDFFF]|\uD811[\uDE47-\uDFFF]|\uD83E[\uDC0C-\uDC0F\uDC48-\uDC4F\uDC5A-\uDC5F\uDC88-\uDC8F\uDCAE-\uDD0F\uDD19-\uDD7F\uDD85-\uDDBF\uDDC1-\uDFFF]|\uD873[\uDEA2-\uDFFF]'
+	        },
+	        {
+	            name: 'Co',
+	            alias: 'Private_Use',
+	            bmp: '\uE000-\uF8FF',
+	            astral: '[\uDB80-\uDBBE\uDBC0-\uDBFE][\uDC00-\uDFFF]|[\uDBBF\uDBFF][\uDC00-\uDFFD]'
+	        },
+	        {
+	            name: 'Cs',
+	            alias: 'Surrogate',
+	            bmp: '\uD800-\uDFFF'
+	        },
+	        {
+	            name: 'L',
+	            alias: 'Letter',
+	            bmp: 'A-Za-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0561-\u0587\u05D0-\u05EA\u05F0-\u05F2\u0620-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06E5\u06E6\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0815\u081A\u0824\u0828\u0840-\u0858\u08A0-\u08B4\u0904-\u0939\u093D\u0950\u0958-\u0961\u0971-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C60\u0C61\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E46\u0E81\u0E82\u0E84\u0E87\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA\u0EAB\u0EAD-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EC6\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u170C\u170E-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17D7\u17DC\u1820-\u1877\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1AA7\u1B05-\u1B33\u1B45-\u1B4B\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C7D\u1CE9-\u1CEC\u1CEE-\u1CF1\u1CF5\u1CF6\u1D00-\u1DBF\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2183\u2184\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2E2F\u3005\u3006\u3031-\u3035\u303B\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312D\u3131-\u318E\u31A0-\u31BA\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FD5\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA67F-\uA69D\uA6A0-\uA6E5\uA717-\uA71F\uA722-\uA788\uA78B-\uA7AD\uA7B0-\uA7B7\uA7F7-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEA\uAAF2-\uAAF4\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB65\uAB70-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC',
+	            astral: '\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD86D[\uDC00-\uDF34\uDF40-\uDFFF]|\uD869[\uDC00-\uDED6\uDF00-\uDFFF]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2]|\uD83A[\uDC00-\uDCC4]|\uD801[\uDC00-\uDC9D\uDD00-\uDD27\uDD30-\uDD63\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF30-\uDF40\uDF42-\uDF49\uDF50-\uDF75\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF]|\uD80D[\uDC00-\uDC2E]|\uD87E[\uDC00-\uDE1D]|\uD81B[\uDF00-\uDF44\uDF50\uDF93-\uDF9F]|[\uD80C\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872][\uDC00-\uDFFF]|\uD805[\uDC80-\uDCAF\uDCC4\uDCC5\uDCC7\uDD80-\uDDAE\uDDD8-\uDDDB\uDE00-\uDE2F\uDE44\uDE80-\uDEAA\uDF00-\uDF19]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDED0-\uDEED\uDF00-\uDF2F\uDF40-\uDF43\uDF63-\uDF77\uDF7D-\uDF8F]|\uD809[\uDC80-\uDD43]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00\uDE10-\uDE13\uDE15-\uDE17\uDE19-\uDE33\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB]|\uD804[\uDC03-\uDC37\uDC83-\uDCAF\uDCD0-\uDCE8\uDD03-\uDD26\uDD50-\uDD72\uDD76\uDD83-\uDDB2\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE2B\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEDE\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D\uDF50\uDF5D-\uDF61]|\uD808[\uDC00-\uDF99]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD806[\uDCA0-\uDCDF\uDCFF\uDEC0-\uDEF8]|\uD811[\uDC00-\uDE46]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99]|\uD82C[\uDC00\uDC01]|\uD873[\uDC00-\uDEA1]'
+	        },
+	        {
+	            name: 'Ll',
+	            alias: 'Lowercase_Letter',
+	            bmp: 'a-z\xB5\xDF-\xF6\xF8-\xFF\u0101\u0103\u0105\u0107\u0109\u010B\u010D\u010F\u0111\u0113\u0115\u0117\u0119\u011B\u011D\u011F\u0121\u0123\u0125\u0127\u0129\u012B\u012D\u012F\u0131\u0133\u0135\u0137\u0138\u013A\u013C\u013E\u0140\u0142\u0144\u0146\u0148\u0149\u014B\u014D\u014F\u0151\u0153\u0155\u0157\u0159\u015B\u015D\u015F\u0161\u0163\u0165\u0167\u0169\u016B\u016D\u016F\u0171\u0173\u0175\u0177\u017A\u017C\u017E-\u0180\u0183\u0185\u0188\u018C\u018D\u0192\u0195\u0199-\u019B\u019E\u01A1\u01A3\u01A5\u01A8\u01AA\u01AB\u01AD\u01B0\u01B4\u01B6\u01B9\u01BA\u01BD-\u01BF\u01C6\u01C9\u01CC\u01CE\u01D0\u01D2\u01D4\u01D6\u01D8\u01DA\u01DC\u01DD\u01DF\u01E1\u01E3\u01E5\u01E7\u01E9\u01EB\u01ED\u01EF\u01F0\u01F3\u01F5\u01F9\u01FB\u01FD\u01FF\u0201\u0203\u0205\u0207\u0209\u020B\u020D\u020F\u0211\u0213\u0215\u0217\u0219\u021B\u021D\u021F\u0221\u0223\u0225\u0227\u0229\u022B\u022D\u022F\u0231\u0233-\u0239\u023C\u023F\u0240\u0242\u0247\u0249\u024B\u024D\u024F-\u0293\u0295-\u02AF\u0371\u0373\u0377\u037B-\u037D\u0390\u03AC-\u03CE\u03D0\u03D1\u03D5-\u03D7\u03D9\u03DB\u03DD\u03DF\u03E1\u03E3\u03E5\u03E7\u03E9\u03EB\u03ED\u03EF-\u03F3\u03F5\u03F8\u03FB\u03FC\u0430-\u045F\u0461\u0463\u0465\u0467\u0469\u046B\u046D\u046F\u0471\u0473\u0475\u0477\u0479\u047B\u047D\u047F\u0481\u048B\u048D\u048F\u0491\u0493\u0495\u0497\u0499\u049B\u049D\u049F\u04A1\u04A3\u04A5\u04A7\u04A9\u04AB\u04AD\u04AF\u04B1\u04B3\u04B5\u04B7\u04B9\u04BB\u04BD\u04BF\u04C2\u04C4\u04C6\u04C8\u04CA\u04CC\u04CE\u04CF\u04D1\u04D3\u04D5\u04D7\u04D9\u04DB\u04DD\u04DF\u04E1\u04E3\u04E5\u04E7\u04E9\u04EB\u04ED\u04EF\u04F1\u04F3\u04F5\u04F7\u04F9\u04FB\u04FD\u04FF\u0501\u0503\u0505\u0507\u0509\u050B\u050D\u050F\u0511\u0513\u0515\u0517\u0519\u051B\u051D\u051F\u0521\u0523\u0525\u0527\u0529\u052B\u052D\u052F\u0561-\u0587\u13F8-\u13FD\u1D00-\u1D2B\u1D6B-\u1D77\u1D79-\u1D9A\u1E01\u1E03\u1E05\u1E07\u1E09\u1E0B\u1E0D\u1E0F\u1E11\u1E13\u1E15\u1E17\u1E19\u1E1B\u1E1D\u1E1F\u1E21\u1E23\u1E25\u1E27\u1E29\u1E2B\u1E2D\u1E2F\u1E31\u1E33\u1E35\u1E37\u1E39\u1E3B\u1E3D\u1E3F\u1E41\u1E43\u1E45\u1E47\u1E49\u1E4B\u1E4D\u1E4F\u1E51\u1E53\u1E55\u1E57\u1E59\u1E5B\u1E5D\u1E5F\u1E61\u1E63\u1E65\u1E67\u1E69\u1E6B\u1E6D\u1E6F\u1E71\u1E73\u1E75\u1E77\u1E79\u1E7B\u1E7D\u1E7F\u1E81\u1E83\u1E85\u1E87\u1E89\u1E8B\u1E8D\u1E8F\u1E91\u1E93\u1E95-\u1E9D\u1E9F\u1EA1\u1EA3\u1EA5\u1EA7\u1EA9\u1EAB\u1EAD\u1EAF\u1EB1\u1EB3\u1EB5\u1EB7\u1EB9\u1EBB\u1EBD\u1EBF\u1EC1\u1EC3\u1EC5\u1EC7\u1EC9\u1ECB\u1ECD\u1ECF\u1ED1\u1ED3\u1ED5\u1ED7\u1ED9\u1EDB\u1EDD\u1EDF\u1EE1\u1EE3\u1EE5\u1EE7\u1EE9\u1EEB\u1EED\u1EEF\u1EF1\u1EF3\u1EF5\u1EF7\u1EF9\u1EFB\u1EFD\u1EFF-\u1F07\u1F10-\u1F15\u1F20-\u1F27\u1F30-\u1F37\u1F40-\u1F45\u1F50-\u1F57\u1F60-\u1F67\u1F70-\u1F7D\u1F80-\u1F87\u1F90-\u1F97\u1FA0-\u1FA7\u1FB0-\u1FB4\u1FB6\u1FB7\u1FBE\u1FC2-\u1FC4\u1FC6\u1FC7\u1FD0-\u1FD3\u1FD6\u1FD7\u1FE0-\u1FE7\u1FF2-\u1FF4\u1FF6\u1FF7\u210A\u210E\u210F\u2113\u212F\u2134\u2139\u213C\u213D\u2146-\u2149\u214E\u2184\u2C30-\u2C5E\u2C61\u2C65\u2C66\u2C68\u2C6A\u2C6C\u2C71\u2C73\u2C74\u2C76-\u2C7B\u2C81\u2C83\u2C85\u2C87\u2C89\u2C8B\u2C8D\u2C8F\u2C91\u2C93\u2C95\u2C97\u2C99\u2C9B\u2C9D\u2C9F\u2CA1\u2CA3\u2CA5\u2CA7\u2CA9\u2CAB\u2CAD\u2CAF\u2CB1\u2CB3\u2CB5\u2CB7\u2CB9\u2CBB\u2CBD\u2CBF\u2CC1\u2CC3\u2CC5\u2CC7\u2CC9\u2CCB\u2CCD\u2CCF\u2CD1\u2CD3\u2CD5\u2CD7\u2CD9\u2CDB\u2CDD\u2CDF\u2CE1\u2CE3\u2CE4\u2CEC\u2CEE\u2CF3\u2D00-\u2D25\u2D27\u2D2D\uA641\uA643\uA645\uA647\uA649\uA64B\uA64D\uA64F\uA651\uA653\uA655\uA657\uA659\uA65B\uA65D\uA65F\uA661\uA663\uA665\uA667\uA669\uA66B\uA66D\uA681\uA683\uA685\uA687\uA689\uA68B\uA68D\uA68F\uA691\uA693\uA695\uA697\uA699\uA69B\uA723\uA725\uA727\uA729\uA72B\uA72D\uA72F-\uA731\uA733\uA735\uA737\uA739\uA73B\uA73D\uA73F\uA741\uA743\uA745\uA747\uA749\uA74B\uA74D\uA74F\uA751\uA753\uA755\uA757\uA759\uA75B\uA75D\uA75F\uA761\uA763\uA765\uA767\uA769\uA76B\uA76D\uA76F\uA771-\uA778\uA77A\uA77C\uA77F\uA781\uA783\uA785\uA787\uA78C\uA78E\uA791\uA793-\uA795\uA797\uA799\uA79B\uA79D\uA79F\uA7A1\uA7A3\uA7A5\uA7A7\uA7A9\uA7B5\uA7B7\uA7FA\uAB30-\uAB5A\uAB60-\uAB65\uAB70-\uABBF\uFB00-\uFB06\uFB13-\uFB17\uFF41-\uFF5A',
+	            astral: '\uD803[\uDCC0-\uDCF2]|\uD835[\uDC1A-\uDC33\uDC4E-\uDC54\uDC56-\uDC67\uDC82-\uDC9B\uDCB6-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDCCF\uDCEA-\uDD03\uDD1E-\uDD37\uDD52-\uDD6B\uDD86-\uDD9F\uDDBA-\uDDD3\uDDEE-\uDE07\uDE22-\uDE3B\uDE56-\uDE6F\uDE8A-\uDEA5\uDEC2-\uDEDA\uDEDC-\uDEE1\uDEFC-\uDF14\uDF16-\uDF1B\uDF36-\uDF4E\uDF50-\uDF55\uDF70-\uDF88\uDF8A-\uDF8F\uDFAA-\uDFC2\uDFC4-\uDFC9\uDFCB]|\uD801[\uDC28-\uDC4F]|\uD806[\uDCC0-\uDCDF]'
+	        },
+	        {
+	            name: 'Lm',
+	            alias: 'Modifier_Letter',
+	            bmp: '\u02B0-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0374\u037A\u0559\u0640\u06E5\u06E6\u07F4\u07F5\u07FA\u081A\u0824\u0828\u0971\u0E46\u0EC6\u10FC\u17D7\u1843\u1AA7\u1C78-\u1C7D\u1D2C-\u1D6A\u1D78\u1D9B-\u1DBF\u2071\u207F\u2090-\u209C\u2C7C\u2C7D\u2D6F\u2E2F\u3005\u3031-\u3035\u303B\u309D\u309E\u30FC-\u30FE\uA015\uA4F8-\uA4FD\uA60C\uA67F\uA69C\uA69D\uA717-\uA71F\uA770\uA788\uA7F8\uA7F9\uA9CF\uA9E6\uAA70\uAADD\uAAF3\uAAF4\uAB5C-\uAB5F\uFF70\uFF9E\uFF9F',
+	            astral: '\uD81A[\uDF40-\uDF43]|\uD81B[\uDF93-\uDF9F]'
+	        },
+	        {
+	            name: 'Lo',
+	            alias: 'Other_Letter',
+	            bmp: '\xAA\xBA\u01BB\u01C0-\u01C3\u0294\u05D0-\u05EA\u05F0-\u05F2\u0620-\u063F\u0641-\u064A\u066E\u066F\u0671-\u06D3\u06D5\u06EE\u06EF\u06FA-\u06FC\u06FF\u0710\u0712-\u072F\u074D-\u07A5\u07B1\u07CA-\u07EA\u0800-\u0815\u0840-\u0858\u08A0-\u08B4\u0904-\u0939\u093D\u0950\u0958-\u0961\u0972-\u0980\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD\u09CE\u09DC\u09DD\u09DF-\u09E1\u09F0\u09F1\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A59-\u0A5C\u0A5E\u0A72-\u0A74\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD\u0AD0\u0AE0\u0AE1\u0AF9\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D\u0B5C\u0B5D\u0B5F-\u0B61\u0B71\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BD0\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D\u0C58-\u0C5A\u0C60\u0C61\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD\u0CDE\u0CE0\u0CE1\u0CF1\u0CF2\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D\u0D4E\u0D5F-\u0D61\u0D7A-\u0D7F\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0E01-\u0E30\u0E32\u0E33\u0E40-\u0E45\u0E81\u0E82\u0E84\u0E87\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA\u0EAB\u0EAD-\u0EB0\u0EB2\u0EB3\u0EBD\u0EC0-\u0EC4\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F88-\u0F8C\u1000-\u102A\u103F\u1050-\u1055\u105A-\u105D\u1061\u1065\u1066\u106E-\u1070\u1075-\u1081\u108E\u10D0-\u10FA\u10FD-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u1380-\u138F\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16F1-\u16F8\u1700-\u170C\u170E-\u1711\u1720-\u1731\u1740-\u1751\u1760-\u176C\u176E-\u1770\u1780-\u17B3\u17DC\u1820-\u1842\u1844-\u1877\u1880-\u18A8\u18AA\u18B0-\u18F5\u1900-\u191E\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A16\u1A20-\u1A54\u1B05-\u1B33\u1B45-\u1B4B\u1B83-\u1BA0\u1BAE\u1BAF\u1BBA-\u1BE5\u1C00-\u1C23\u1C4D-\u1C4F\u1C5A-\u1C77\u1CE9-\u1CEC\u1CEE-\u1CF1\u1CF5\u1CF6\u2135-\u2138\u2D30-\u2D67\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u3006\u303C\u3041-\u3096\u309F\u30A1-\u30FA\u30FF\u3105-\u312D\u3131-\u318E\u31A0-\u31BA\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FD5\uA000-\uA014\uA016-\uA48C\uA4D0-\uA4F7\uA500-\uA60B\uA610-\uA61F\uA62A\uA62B\uA66E\uA6A0-\uA6E5\uA78F\uA7F7\uA7FB-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA822\uA840-\uA873\uA882-\uA8B3\uA8F2-\uA8F7\uA8FB\uA8FD\uA90A-\uA925\uA930-\uA946\uA960-\uA97C\uA984-\uA9B2\uA9E0-\uA9E4\uA9E7-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA28\uAA40-\uAA42\uAA44-\uAA4B\uAA60-\uAA6F\uAA71-\uAA76\uAA7A\uAA7E-\uAAAF\uAAB1\uAAB5\uAAB6\uAAB9-\uAABD\uAAC0\uAAC2\uAADB\uAADC\uAAE0-\uAAEA\uAAF2\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uABC0-\uABE2\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB1D\uFB1F-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF66-\uFF6F\uFF71-\uFF9D\uFFA0-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC',
+	            astral: '\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD86D[\uDC00-\uDF34\uDF40-\uDFFF]|\uD869[\uDC00-\uDED6\uDF00-\uDFFF]|\uD83A[\uDC00-\uDCC4]|\uD803[\uDC00-\uDC48]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF30-\uDF40\uDF42-\uDF49\uDF50-\uDF75\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF]|\uD80D[\uDC00-\uDC2E]|\uD87E[\uDC00-\uDE1D]|\uD81B[\uDF00-\uDF44\uDF50]|[\uD80C\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872][\uDC00-\uDFFF]|\uD805[\uDC80-\uDCAF\uDCC4\uDCC5\uDCC7\uDD80-\uDDAE\uDDD8-\uDDDB\uDE00-\uDE2F\uDE44\uDE80-\uDEAA\uDF00-\uDF19]|\uD806[\uDCFF\uDEC0-\uDEF8]|\uD809[\uDC80-\uDD43]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00\uDE10-\uDE13\uDE15-\uDE17\uDE19-\uDE33\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD804[\uDC03-\uDC37\uDC83-\uDCAF\uDCD0-\uDCE8\uDD03-\uDD26\uDD50-\uDD72\uDD76\uDD83-\uDDB2\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE2B\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEDE\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D\uDF50\uDF5D-\uDF61]|\uD808[\uDC00-\uDF99]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDED0-\uDEED\uDF00-\uDF2F\uDF63-\uDF77\uDF7D-\uDF8F]|\uD801[\uDC50-\uDC9D\uDD00-\uDD27\uDD30-\uDD63\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67]|\uD811[\uDC00-\uDE46]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99]|\uD82C[\uDC00\uDC01]|\uD873[\uDC00-\uDEA1]'
+	        },
+	        {
+	            name: 'Lt',
+	            alias: 'Titlecase_Letter',
+	            bmp: '\u01C5\u01C8\u01CB\u01F2\u1F88-\u1F8F\u1F98-\u1F9F\u1FA8-\u1FAF\u1FBC\u1FCC\u1FFC'
+	        },
+	        {
+	            name: 'Lu',
+	            alias: 'Uppercase_Letter',
+	            bmp: 'A-Z\xC0-\xD6\xD8-\xDE\u0100\u0102\u0104\u0106\u0108\u010A\u010C\u010E\u0110\u0112\u0114\u0116\u0118\u011A\u011C\u011E\u0120\u0122\u0124\u0126\u0128\u012A\u012C\u012E\u0130\u0132\u0134\u0136\u0139\u013B\u013D\u013F\u0141\u0143\u0145\u0147\u014A\u014C\u014E\u0150\u0152\u0154\u0156\u0158\u015A\u015C\u015E\u0160\u0162\u0164\u0166\u0168\u016A\u016C\u016E\u0170\u0172\u0174\u0176\u0178\u0179\u017B\u017D\u0181\u0182\u0184\u0186\u0187\u0189-\u018B\u018E-\u0191\u0193\u0194\u0196-\u0198\u019C\u019D\u019F\u01A0\u01A2\u01A4\u01A6\u01A7\u01A9\u01AC\u01AE\u01AF\u01B1-\u01B3\u01B5\u01B7\u01B8\u01BC\u01C4\u01C7\u01CA\u01CD\u01CF\u01D1\u01D3\u01D5\u01D7\u01D9\u01DB\u01DE\u01E0\u01E2\u01E4\u01E6\u01E8\u01EA\u01EC\u01EE\u01F1\u01F4\u01F6-\u01F8\u01FA\u01FC\u01FE\u0200\u0202\u0204\u0206\u0208\u020A\u020C\u020E\u0210\u0212\u0214\u0216\u0218\u021A\u021C\u021E\u0220\u0222\u0224\u0226\u0228\u022A\u022C\u022E\u0230\u0232\u023A\u023B\u023D\u023E\u0241\u0243-\u0246\u0248\u024A\u024C\u024E\u0370\u0372\u0376\u037F\u0386\u0388-\u038A\u038C\u038E\u038F\u0391-\u03A1\u03A3-\u03AB\u03CF\u03D2-\u03D4\u03D8\u03DA\u03DC\u03DE\u03E0\u03E2\u03E4\u03E6\u03E8\u03EA\u03EC\u03EE\u03F4\u03F7\u03F9\u03FA\u03FD-\u042F\u0460\u0462\u0464\u0466\u0468\u046A\u046C\u046E\u0470\u0472\u0474\u0476\u0478\u047A\u047C\u047E\u0480\u048A\u048C\u048E\u0490\u0492\u0494\u0496\u0498\u049A\u049C\u049E\u04A0\u04A2\u04A4\u04A6\u04A8\u04AA\u04AC\u04AE\u04B0\u04B2\u04B4\u04B6\u04B8\u04BA\u04BC\u04BE\u04C0\u04C1\u04C3\u04C5\u04C7\u04C9\u04CB\u04CD\u04D0\u04D2\u04D4\u04D6\u04D8\u04DA\u04DC\u04DE\u04E0\u04E2\u04E4\u04E6\u04E8\u04EA\u04EC\u04EE\u04F0\u04F2\u04F4\u04F6\u04F8\u04FA\u04FC\u04FE\u0500\u0502\u0504\u0506\u0508\u050A\u050C\u050E\u0510\u0512\u0514\u0516\u0518\u051A\u051C\u051E\u0520\u0522\u0524\u0526\u0528\u052A\u052C\u052E\u0531-\u0556\u10A0-\u10C5\u10C7\u10CD\u13A0-\u13F5\u1E00\u1E02\u1E04\u1E06\u1E08\u1E0A\u1E0C\u1E0E\u1E10\u1E12\u1E14\u1E16\u1E18\u1E1A\u1E1C\u1E1E\u1E20\u1E22\u1E24\u1E26\u1E28\u1E2A\u1E2C\u1E2E\u1E30\u1E32\u1E34\u1E36\u1E38\u1E3A\u1E3C\u1E3E\u1E40\u1E42\u1E44\u1E46\u1E48\u1E4A\u1E4C\u1E4E\u1E50\u1E52\u1E54\u1E56\u1E58\u1E5A\u1E5C\u1E5E\u1E60\u1E62\u1E64\u1E66\u1E68\u1E6A\u1E6C\u1E6E\u1E70\u1E72\u1E74\u1E76\u1E78\u1E7A\u1E7C\u1E7E\u1E80\u1E82\u1E84\u1E86\u1E88\u1E8A\u1E8C\u1E8E\u1E90\u1E92\u1E94\u1E9E\u1EA0\u1EA2\u1EA4\u1EA6\u1EA8\u1EAA\u1EAC\u1EAE\u1EB0\u1EB2\u1EB4\u1EB6\u1EB8\u1EBA\u1EBC\u1EBE\u1EC0\u1EC2\u1EC4\u1EC6\u1EC8\u1ECA\u1ECC\u1ECE\u1ED0\u1ED2\u1ED4\u1ED6\u1ED8\u1EDA\u1EDC\u1EDE\u1EE0\u1EE2\u1EE4\u1EE6\u1EE8\u1EEA\u1EEC\u1EEE\u1EF0\u1EF2\u1EF4\u1EF6\u1EF8\u1EFA\u1EFC\u1EFE\u1F08-\u1F0F\u1F18-\u1F1D\u1F28-\u1F2F\u1F38-\u1F3F\u1F48-\u1F4D\u1F59\u1F5B\u1F5D\u1F5F\u1F68-\u1F6F\u1FB8-\u1FBB\u1FC8-\u1FCB\u1FD8-\u1FDB\u1FE8-\u1FEC\u1FF8-\u1FFB\u2102\u2107\u210B-\u210D\u2110-\u2112\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u2130-\u2133\u213E\u213F\u2145\u2183\u2C00-\u2C2E\u2C60\u2C62-\u2C64\u2C67\u2C69\u2C6B\u2C6D-\u2C70\u2C72\u2C75\u2C7E-\u2C80\u2C82\u2C84\u2C86\u2C88\u2C8A\u2C8C\u2C8E\u2C90\u2C92\u2C94\u2C96\u2C98\u2C9A\u2C9C\u2C9E\u2CA0\u2CA2\u2CA4\u2CA6\u2CA8\u2CAA\u2CAC\u2CAE\u2CB0\u2CB2\u2CB4\u2CB6\u2CB8\u2CBA\u2CBC\u2CBE\u2CC0\u2CC2\u2CC4\u2CC6\u2CC8\u2CCA\u2CCC\u2CCE\u2CD0\u2CD2\u2CD4\u2CD6\u2CD8\u2CDA\u2CDC\u2CDE\u2CE0\u2CE2\u2CEB\u2CED\u2CF2\uA640\uA642\uA644\uA646\uA648\uA64A\uA64C\uA64E\uA650\uA652\uA654\uA656\uA658\uA65A\uA65C\uA65E\uA660\uA662\uA664\uA666\uA668\uA66A\uA66C\uA680\uA682\uA684\uA686\uA688\uA68A\uA68C\uA68E\uA690\uA692\uA694\uA696\uA698\uA69A\uA722\uA724\uA726\uA728\uA72A\uA72C\uA72E\uA732\uA734\uA736\uA738\uA73A\uA73C\uA73E\uA740\uA742\uA744\uA746\uA748\uA74A\uA74C\uA74E\uA750\uA752\uA754\uA756\uA758\uA75A\uA75C\uA75E\uA760\uA762\uA764\uA766\uA768\uA76A\uA76C\uA76E\uA779\uA77B\uA77D\uA77E\uA780\uA782\uA784\uA786\uA78B\uA78D\uA790\uA792\uA796\uA798\uA79A\uA79C\uA79E\uA7A0\uA7A2\uA7A4\uA7A6\uA7A8\uA7AA-\uA7AD\uA7B0-\uA7B4\uA7B6\uFF21-\uFF3A',
+	            astral: '\uD806[\uDCA0-\uDCBF]|\uD803[\uDC80-\uDCB2]|\uD801[\uDC00-\uDC27]|\uD835[\uDC00-\uDC19\uDC34-\uDC4D\uDC68-\uDC81\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB5\uDCD0-\uDCE9\uDD04\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD38\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD6C-\uDD85\uDDA0-\uDDB9\uDDD4-\uDDED\uDE08-\uDE21\uDE3C-\uDE55\uDE70-\uDE89\uDEA8-\uDEC0\uDEE2-\uDEFA\uDF1C-\uDF34\uDF56-\uDF6E\uDF90-\uDFA8\uDFCA]'
+	        },
+	        {
+	            name: 'M',
+	            alias: 'Mark',
+	            bmp: '\u0300-\u036F\u0483-\u0489\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u0711\u0730-\u074A\u07A6-\u07B0\u07EB-\u07F3\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0859-\u085B\u08E3-\u0903\u093A-\u093C\u093E-\u094F\u0951-\u0957\u0962\u0963\u0981-\u0983\u09BC\u09BE-\u09C4\u09C7\u09C8\u09CB-\u09CD\u09D7\u09E2\u09E3\u0A01-\u0A03\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A70\u0A71\u0A75\u0A81-\u0A83\u0ABC\u0ABE-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AE2\u0AE3\u0B01-\u0B03\u0B3C\u0B3E-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B56\u0B57\u0B62\u0B63\u0B82\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD7\u0C00-\u0C03\u0C3E-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62\u0C63\u0C81-\u0C83\u0CBC\u0CBE-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CE2\u0CE3\u0D01-\u0D03\u0D3E-\u0D44\u0D46-\u0D48\u0D4A-\u0D4D\u0D57\u0D62\u0D63\u0D82\u0D83\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DF2\u0DF3\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\u0EB1\u0EB4-\u0EB9\u0EBB\u0EBC\u0EC8-\u0ECD\u0F18\u0F19\u0F35\u0F37\u0F39\u0F3E\u0F3F\u0F71-\u0F84\u0F86\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u102B-\u103E\u1056-\u1059\u105E-\u1060\u1062-\u1064\u1067-\u106D\u1071-\u1074\u1082-\u108D\u108F\u109A-\u109D\u135D-\u135F\u1712-\u1714\u1732-\u1734\u1752\u1753\u1772\u1773\u17B4-\u17D3\u17DD\u180B-\u180D\u18A9\u1920-\u192B\u1930-\u193B\u1A17-\u1A1B\u1A55-\u1A5E\u1A60-\u1A7C\u1A7F\u1AB0-\u1ABE\u1B00-\u1B04\u1B34-\u1B44\u1B6B-\u1B73\u1B80-\u1B82\u1BA1-\u1BAD\u1BE6-\u1BF3\u1C24-\u1C37\u1CD0-\u1CD2\u1CD4-\u1CE8\u1CED\u1CF2-\u1CF4\u1CF8\u1CF9\u1DC0-\u1DF5\u1DFC-\u1DFF\u20D0-\u20F0\u2CEF-\u2CF1\u2D7F\u2DE0-\u2DFF\u302A-\u302F\u3099\u309A\uA66F-\uA672\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA802\uA806\uA80B\uA823-\uA827\uA880\uA881\uA8B4-\uA8C4\uA8E0-\uA8F1\uA926-\uA92D\uA947-\uA953\uA980-\uA983\uA9B3-\uA9C0\uA9E5\uAA29-\uAA36\uAA43\uAA4C\uAA4D\uAA7B-\uAA7D\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAEB-\uAAEF\uAAF5\uAAF6\uABE3-\uABEA\uABEC\uABED\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F',
+	            astral: '\uD805[\uDCB0-\uDCC3\uDDAF-\uDDB5\uDDB8-\uDDC0\uDDDC\uDDDD\uDE30-\uDE40\uDEAB-\uDEB7\uDF1D-\uDF2B]|\uD834[\uDD65-\uDD69\uDD6D-\uDD72\uDD7B-\uDD82\uDD85-\uDD8B\uDDAA-\uDDAD\uDE42-\uDE44]|\uD804[\uDC00-\uDC02\uDC38-\uDC46\uDC7F-\uDC82\uDCB0-\uDCBA\uDD00-\uDD02\uDD27-\uDD34\uDD73\uDD80-\uDD82\uDDB3-\uDDC0\uDDCA-\uDDCC\uDE2C-\uDE37\uDEDF-\uDEEA\uDF00-\uDF03\uDF3C\uDF3E-\uDF44\uDF47\uDF48\uDF4B-\uDF4D\uDF57\uDF62\uDF63\uDF66-\uDF6C\uDF70-\uDF74]|\uD81B[\uDF51-\uDF7E\uDF8F-\uDF92]|\uD81A[\uDEF0-\uDEF4\uDF30-\uDF36]|\uD82F[\uDC9D\uDC9E]|\uD800[\uDDFD\uDEE0\uDF76-\uDF7A]|\uD836[\uDE00-\uDE36\uDE3B-\uDE6C\uDE75\uDE84\uDE9B-\uDE9F\uDEA1-\uDEAF]|\uD802[\uDE01-\uDE03\uDE05\uDE06\uDE0C-\uDE0F\uDE38-\uDE3A\uDE3F\uDEE5\uDEE6]|\uD83A[\uDCD0-\uDCD6]|\uDB40[\uDD00-\uDDEF]'
+	        },
+	        {
+	            name: 'Mc',
+	            alias: 'Spacing_Mark',
+	            bmp: '\u0903\u093B\u093E-\u0940\u0949-\u094C\u094E\u094F\u0982\u0983\u09BE-\u09C0\u09C7\u09C8\u09CB\u09CC\u09D7\u0A03\u0A3E-\u0A40\u0A83\u0ABE-\u0AC0\u0AC9\u0ACB\u0ACC\u0B02\u0B03\u0B3E\u0B40\u0B47\u0B48\u0B4B\u0B4C\u0B57\u0BBE\u0BBF\u0BC1\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCC\u0BD7\u0C01-\u0C03\u0C41-\u0C44\u0C82\u0C83\u0CBE\u0CC0-\u0CC4\u0CC7\u0CC8\u0CCA\u0CCB\u0CD5\u0CD6\u0D02\u0D03\u0D3E-\u0D40\u0D46-\u0D48\u0D4A-\u0D4C\u0D57\u0D82\u0D83\u0DCF-\u0DD1\u0DD8-\u0DDF\u0DF2\u0DF3\u0F3E\u0F3F\u0F7F\u102B\u102C\u1031\u1038\u103B\u103C\u1056\u1057\u1062-\u1064\u1067-\u106D\u1083\u1084\u1087-\u108C\u108F\u109A-\u109C\u17B6\u17BE-\u17C5\u17C7\u17C8\u1923-\u1926\u1929-\u192B\u1930\u1931\u1933-\u1938\u1A19\u1A1A\u1A55\u1A57\u1A61\u1A63\u1A64\u1A6D-\u1A72\u1B04\u1B35\u1B3B\u1B3D-\u1B41\u1B43\u1B44\u1B82\u1BA1\u1BA6\u1BA7\u1BAA\u1BE7\u1BEA-\u1BEC\u1BEE\u1BF2\u1BF3\u1C24-\u1C2B\u1C34\u1C35\u1CE1\u1CF2\u1CF3\u302E\u302F\uA823\uA824\uA827\uA880\uA881\uA8B4-\uA8C3\uA952\uA953\uA983\uA9B4\uA9B5\uA9BA\uA9BB\uA9BD-\uA9C0\uAA2F\uAA30\uAA33\uAA34\uAA4D\uAA7B\uAA7D\uAAEB\uAAEE\uAAEF\uAAF5\uABE3\uABE4\uABE6\uABE7\uABE9\uABEA\uABEC',
+	            astral: '\uD834[\uDD65\uDD66\uDD6D-\uDD72]|\uD804[\uDC00\uDC02\uDC82\uDCB0-\uDCB2\uDCB7\uDCB8\uDD2C\uDD82\uDDB3-\uDDB5\uDDBF\uDDC0\uDE2C-\uDE2E\uDE32\uDE33\uDE35\uDEE0-\uDEE2\uDF02\uDF03\uDF3E\uDF3F\uDF41-\uDF44\uDF47\uDF48\uDF4B-\uDF4D\uDF57\uDF62\uDF63]|\uD805[\uDCB0-\uDCB2\uDCB9\uDCBB-\uDCBE\uDCC1\uDDAF-\uDDB1\uDDB8-\uDDBB\uDDBE\uDE30-\uDE32\uDE3B\uDE3C\uDE3E\uDEAC\uDEAE\uDEAF\uDEB6\uDF20\uDF21\uDF26]|\uD81B[\uDF51-\uDF7E]'
+	        },
+	        {
+	            name: 'Me',
+	            alias: 'Enclosing_Mark',
+	            bmp: '\u0488\u0489\u1ABE\u20DD-\u20E0\u20E2-\u20E4\uA670-\uA672'
+	        },
+	        {
+	            name: 'Mn',
+	            alias: 'Nonspacing_Mark',
+	            bmp: '\u0300-\u036F\u0483-\u0487\u0591-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u0610-\u061A\u064B-\u065F\u0670\u06D6-\u06DC\u06DF-\u06E4\u06E7\u06E8\u06EA-\u06ED\u0711\u0730-\u074A\u07A6-\u07B0\u07EB-\u07F3\u0816-\u0819\u081B-\u0823\u0825-\u0827\u0829-\u082D\u0859-\u085B\u08E3-\u0902\u093A\u093C\u0941-\u0948\u094D\u0951-\u0957\u0962\u0963\u0981\u09BC\u09C1-\u09C4\u09CD\u09E2\u09E3\u0A01\u0A02\u0A3C\u0A41\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A70\u0A71\u0A75\u0A81\u0A82\u0ABC\u0AC1-\u0AC5\u0AC7\u0AC8\u0ACD\u0AE2\u0AE3\u0B01\u0B3C\u0B3F\u0B41-\u0B44\u0B4D\u0B56\u0B62\u0B63\u0B82\u0BC0\u0BCD\u0C00\u0C3E-\u0C40\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C62\u0C63\u0C81\u0CBC\u0CBF\u0CC6\u0CCC\u0CCD\u0CE2\u0CE3\u0D01\u0D41-\u0D44\u0D4D\u0D62\u0D63\u0DCA\u0DD2-\u0DD4\u0DD6\u0E31\u0E34-\u0E3A\u0E47-\u0E4E\u0EB1\u0EB4-\u0EB9\u0EBB\u0EBC\u0EC8-\u0ECD\u0F18\u0F19\u0F35\u0F37\u0F39\u0F71-\u0F7E\u0F80-\u0F84\u0F86\u0F87\u0F8D-\u0F97\u0F99-\u0FBC\u0FC6\u102D-\u1030\u1032-\u1037\u1039\u103A\u103D\u103E\u1058\u1059\u105E-\u1060\u1071-\u1074\u1082\u1085\u1086\u108D\u109D\u135D-\u135F\u1712-\u1714\u1732-\u1734\u1752\u1753\u1772\u1773\u17B4\u17B5\u17B7-\u17BD\u17C6\u17C9-\u17D3\u17DD\u180B-\u180D\u18A9\u1920-\u1922\u1927\u1928\u1932\u1939-\u193B\u1A17\u1A18\u1A1B\u1A56\u1A58-\u1A5E\u1A60\u1A62\u1A65-\u1A6C\u1A73-\u1A7C\u1A7F\u1AB0-\u1ABD\u1B00-\u1B03\u1B34\u1B36-\u1B3A\u1B3C\u1B42\u1B6B-\u1B73\u1B80\u1B81\u1BA2-\u1BA5\u1BA8\u1BA9\u1BAB-\u1BAD\u1BE6\u1BE8\u1BE9\u1BED\u1BEF-\u1BF1\u1C2C-\u1C33\u1C36\u1C37\u1CD0-\u1CD2\u1CD4-\u1CE0\u1CE2-\u1CE8\u1CED\u1CF4\u1CF8\u1CF9\u1DC0-\u1DF5\u1DFC-\u1DFF\u20D0-\u20DC\u20E1\u20E5-\u20F0\u2CEF-\u2CF1\u2D7F\u2DE0-\u2DFF\u302A-\u302D\u3099\u309A\uA66F\uA674-\uA67D\uA69E\uA69F\uA6F0\uA6F1\uA802\uA806\uA80B\uA825\uA826\uA8C4\uA8E0-\uA8F1\uA926-\uA92D\uA947-\uA951\uA980-\uA982\uA9B3\uA9B6-\uA9B9\uA9BC\uA9E5\uAA29-\uAA2E\uAA31\uAA32\uAA35\uAA36\uAA43\uAA4C\uAA7C\uAAB0\uAAB2-\uAAB4\uAAB7\uAAB8\uAABE\uAABF\uAAC1\uAAEC\uAAED\uAAF6\uABE5\uABE8\uABED\uFB1E\uFE00-\uFE0F\uFE20-\uFE2F',
+	            astral: '\uD805[\uDCB3-\uDCB8\uDCBA\uDCBF\uDCC0\uDCC2\uDCC3\uDDB2-\uDDB5\uDDBC\uDDBD\uDDBF\uDDC0\uDDDC\uDDDD\uDE33-\uDE3A\uDE3D\uDE3F\uDE40\uDEAB\uDEAD\uDEB0-\uDEB5\uDEB7\uDF1D-\uDF1F\uDF22-\uDF25\uDF27-\uDF2B]|\uD834[\uDD67-\uDD69\uDD7B-\uDD82\uDD85-\uDD8B\uDDAA-\uDDAD\uDE42-\uDE44]|\uD81A[\uDEF0-\uDEF4\uDF30-\uDF36]|\uD81B[\uDF8F-\uDF92]|\uD82F[\uDC9D\uDC9E]|\uD800[\uDDFD\uDEE0\uDF76-\uDF7A]|\uD836[\uDE00-\uDE36\uDE3B-\uDE6C\uDE75\uDE84\uDE9B-\uDE9F\uDEA1-\uDEAF]|\uD802[\uDE01-\uDE03\uDE05\uDE06\uDE0C-\uDE0F\uDE38-\uDE3A\uDE3F\uDEE5\uDEE6]|\uD804[\uDC01\uDC38-\uDC46\uDC7F-\uDC81\uDCB3-\uDCB6\uDCB9\uDCBA\uDD00-\uDD02\uDD27-\uDD2B\uDD2D-\uDD34\uDD73\uDD80\uDD81\uDDB6-\uDDBE\uDDCA-\uDDCC\uDE2F-\uDE31\uDE34\uDE36\uDE37\uDEDF\uDEE3-\uDEEA\uDF00\uDF01\uDF3C\uDF40\uDF66-\uDF6C\uDF70-\uDF74]|\uD83A[\uDCD0-\uDCD6]|\uDB40[\uDD00-\uDDEF]'
+	        },
+	        {
+	            name: 'N',
+	            alias: 'Number',
+	            bmp: '0-9\xB2\xB3\xB9\xBC-\xBE\u0660-\u0669\u06F0-\u06F9\u07C0-\u07C9\u0966-\u096F\u09E6-\u09EF\u09F4-\u09F9\u0A66-\u0A6F\u0AE6-\u0AEF\u0B66-\u0B6F\u0B72-\u0B77\u0BE6-\u0BF2\u0C66-\u0C6F\u0C78-\u0C7E\u0CE6-\u0CEF\u0D66-\u0D75\u0DE6-\u0DEF\u0E50-\u0E59\u0ED0-\u0ED9\u0F20-\u0F33\u1040-\u1049\u1090-\u1099\u1369-\u137C\u16EE-\u16F0\u17E0-\u17E9\u17F0-\u17F9\u1810-\u1819\u1946-\u194F\u19D0-\u19DA\u1A80-\u1A89\u1A90-\u1A99\u1B50-\u1B59\u1BB0-\u1BB9\u1C40-\u1C49\u1C50-\u1C59\u2070\u2074-\u2079\u2080-\u2089\u2150-\u2182\u2185-\u2189\u2460-\u249B\u24EA-\u24FF\u2776-\u2793\u2CFD\u3007\u3021-\u3029\u3038-\u303A\u3192-\u3195\u3220-\u3229\u3248-\u324F\u3251-\u325F\u3280-\u3289\u32B1-\u32BF\uA620-\uA629\uA6E6-\uA6EF\uA830-\uA835\uA8D0-\uA8D9\uA900-\uA909\uA9D0-\uA9D9\uA9F0-\uA9F9\uAA50-\uAA59\uABF0-\uABF9\uFF10-\uFF19',
+	            astral: '\uD800[\uDD07-\uDD33\uDD40-\uDD78\uDD8A\uDD8B\uDEE1-\uDEFB\uDF20-\uDF23\uDF41\uDF4A\uDFD1-\uDFD5]|\uD801[\uDCA0-\uDCA9]|\uD803[\uDCFA-\uDCFF\uDE60-\uDE7E]|\uD835[\uDFCE-\uDFFF]|\uD83A[\uDCC7-\uDCCF]|\uD81A[\uDE60-\uDE69\uDF50-\uDF59\uDF5B-\uDF61]|\uD806[\uDCE0-\uDCF2]|\uD804[\uDC52-\uDC6F\uDCF0-\uDCF9\uDD36-\uDD3F\uDDD0-\uDDD9\uDDE1-\uDDF4\uDEF0-\uDEF9]|\uD834[\uDF60-\uDF71]|\uD83C[\uDD00-\uDD0C]|\uD809[\uDC00-\uDC6E]|\uD802[\uDC58-\uDC5F\uDC79-\uDC7F\uDCA7-\uDCAF\uDCFB-\uDCFF\uDD16-\uDD1B\uDDBC\uDDBD\uDDC0-\uDDCF\uDDD2-\uDDFF\uDE40-\uDE47\uDE7D\uDE7E\uDE9D-\uDE9F\uDEEB-\uDEEF\uDF58-\uDF5F\uDF78-\uDF7F\uDFA9-\uDFAF]|\uD805[\uDCD0-\uDCD9\uDE50-\uDE59\uDEC0-\uDEC9\uDF30-\uDF3B]'
+	        },
+	        {
+	            name: 'Nd',
+	            alias: 'Decimal_Number',
+	            bmp: '0-9\u0660-\u0669\u06F0-\u06F9\u07C0-\u07C9\u0966-\u096F\u09E6-\u09EF\u0A66-\u0A6F\u0AE6-\u0AEF\u0B66-\u0B6F\u0BE6-\u0BEF\u0C66-\u0C6F\u0CE6-\u0CEF\u0D66-\u0D6F\u0DE6-\u0DEF\u0E50-\u0E59\u0ED0-\u0ED9\u0F20-\u0F29\u1040-\u1049\u1090-\u1099\u17E0-\u17E9\u1810-\u1819\u1946-\u194F\u19D0-\u19D9\u1A80-\u1A89\u1A90-\u1A99\u1B50-\u1B59\u1BB0-\u1BB9\u1C40-\u1C49\u1C50-\u1C59\uA620-\uA629\uA8D0-\uA8D9\uA900-\uA909\uA9D0-\uA9D9\uA9F0-\uA9F9\uAA50-\uAA59\uABF0-\uABF9\uFF10-\uFF19',
+	            astral: '\uD801[\uDCA0-\uDCA9]|\uD835[\uDFCE-\uDFFF]|\uD805[\uDCD0-\uDCD9\uDE50-\uDE59\uDEC0-\uDEC9\uDF30-\uDF39]|\uD806[\uDCE0-\uDCE9]|\uD804[\uDC66-\uDC6F\uDCF0-\uDCF9\uDD36-\uDD3F\uDDD0-\uDDD9\uDEF0-\uDEF9]|\uD81A[\uDE60-\uDE69\uDF50-\uDF59]'
+	        },
+	        {
+	            name: 'Nl',
+	            alias: 'Letter_Number',
+	            bmp: '\u16EE-\u16F0\u2160-\u2182\u2185-\u2188\u3007\u3021-\u3029\u3038-\u303A\uA6E6-\uA6EF',
+	            astral: '\uD809[\uDC00-\uDC6E]|\uD800[\uDD40-\uDD74\uDF41\uDF4A\uDFD1-\uDFD5]'
+	        },
+	        {
+	            name: 'No',
+	            alias: 'Other_Number',
+	            bmp: '\xB2\xB3\xB9\xBC-\xBE\u09F4-\u09F9\u0B72-\u0B77\u0BF0-\u0BF2\u0C78-\u0C7E\u0D70-\u0D75\u0F2A-\u0F33\u1369-\u137C\u17F0-\u17F9\u19DA\u2070\u2074-\u2079\u2080-\u2089\u2150-\u215F\u2189\u2460-\u249B\u24EA-\u24FF\u2776-\u2793\u2CFD\u3192-\u3195\u3220-\u3229\u3248-\u324F\u3251-\u325F\u3280-\u3289\u32B1-\u32BF\uA830-\uA835',
+	            astral: '\uD804[\uDC52-\uDC65\uDDE1-\uDDF4]|\uD803[\uDCFA-\uDCFF\uDE60-\uDE7E]|\uD83C[\uDD00-\uDD0C]|\uD806[\uDCEA-\uDCF2]|\uD83A[\uDCC7-\uDCCF]|\uD802[\uDC58-\uDC5F\uDC79-\uDC7F\uDCA7-\uDCAF\uDCFB-\uDCFF\uDD16-\uDD1B\uDDBC\uDDBD\uDDC0-\uDDCF\uDDD2-\uDDFF\uDE40-\uDE47\uDE7D\uDE7E\uDE9D-\uDE9F\uDEEB-\uDEEF\uDF58-\uDF5F\uDF78-\uDF7F\uDFA9-\uDFAF]|\uD805[\uDF3A\uDF3B]|\uD81A[\uDF5B-\uDF61]|\uD834[\uDF60-\uDF71]|\uD800[\uDD07-\uDD33\uDD75-\uDD78\uDD8A\uDD8B\uDEE1-\uDEFB\uDF20-\uDF23]'
+	        },
+	        {
+	            name: 'P',
+	            alias: 'Punctuation',
+	            bmp: '\x21-\x23\x25-\\x2A\x2C-\x2F\x3A\x3B\\x3F\x40\\x5B-\\x5D\x5F\\x7B\x7D\xA1\xA7\xAB\xB6\xB7\xBB\xBF\u037E\u0387\u055A-\u055F\u0589\u058A\u05BE\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u0AF0\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F3A-\u0F3D\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u1400\u166D\u166E\u169B\u169C\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2010-\u2027\u2030-\u2043\u2045-\u2051\u2053-\u205E\u207D\u207E\u208D\u208E\u2308-\u230B\u2329\u232A\u2768-\u2775\u27C5\u27C6\u27E6-\u27EF\u2983-\u2998\u29D8-\u29DB\u29FC\u29FD\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00-\u2E2E\u2E30-\u2E42\u3001-\u3003\u3008-\u3011\u3014-\u301F\u3030\u303D\u30A0\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE61\uFE63\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF0A\uFF0C-\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3B-\uFF3D\uFF3F\uFF5B\uFF5D\uFF5F-\uFF65',
+	            astral: '\uD802[\uDC57\uDD1F\uDD3F\uDE50-\uDE58\uDE7F\uDEF0-\uDEF6\uDF39-\uDF3F\uDF99-\uDF9C]|\uD809[\uDC70-\uDC74]|\uD805[\uDCC6\uDDC1-\uDDD7\uDE41-\uDE43\uDF3C-\uDF3E]|\uD836[\uDE87-\uDE8B]|\uD801\uDD6F|\uD82F\uDC9F|\uD804[\uDC47-\uDC4D\uDCBB\uDCBC\uDCBE-\uDCC1\uDD40-\uDD43\uDD74\uDD75\uDDC5-\uDDC9\uDDCD\uDDDB\uDDDD-\uDDDF\uDE38-\uDE3D\uDEA9]|\uD800[\uDD00-\uDD02\uDF9F\uDFD0]|\uD81A[\uDE6E\uDE6F\uDEF5\uDF37-\uDF3B\uDF44]'
+	        },
+	        {
+	            name: 'Pc',
+	            alias: 'Connector_Punctuation',
+	            bmp: '\x5F\u203F\u2040\u2054\uFE33\uFE34\uFE4D-\uFE4F\uFF3F'
+	        },
+	        {
+	            name: 'Pd',
+	            alias: 'Dash_Punctuation',
+	            bmp: '\\x2D\u058A\u05BE\u1400\u1806\u2010-\u2015\u2E17\u2E1A\u2E3A\u2E3B\u2E40\u301C\u3030\u30A0\uFE31\uFE32\uFE58\uFE63\uFF0D'
+	        },
+	        {
+	            name: 'Pe',
+	            alias: 'Close_Punctuation',
+	            bmp: '\\x29\\x5D\x7D\u0F3B\u0F3D\u169C\u2046\u207E\u208E\u2309\u230B\u232A\u2769\u276B\u276D\u276F\u2771\u2773\u2775\u27C6\u27E7\u27E9\u27EB\u27ED\u27EF\u2984\u2986\u2988\u298A\u298C\u298E\u2990\u2992\u2994\u2996\u2998\u29D9\u29DB\u29FD\u2E23\u2E25\u2E27\u2E29\u3009\u300B\u300D\u300F\u3011\u3015\u3017\u3019\u301B\u301E\u301F\uFD3E\uFE18\uFE36\uFE38\uFE3A\uFE3C\uFE3E\uFE40\uFE42\uFE44\uFE48\uFE5A\uFE5C\uFE5E\uFF09\uFF3D\uFF5D\uFF60\uFF63'
+	        },
+	        {
+	            name: 'Pf',
+	            alias: 'Final_Punctuation',
+	            bmp: '\xBB\u2019\u201D\u203A\u2E03\u2E05\u2E0A\u2E0D\u2E1D\u2E21'
+	        },
+	        {
+	            name: 'Pi',
+	            alias: 'Initial_Punctuation',
+	            bmp: '\xAB\u2018\u201B\u201C\u201F\u2039\u2E02\u2E04\u2E09\u2E0C\u2E1C\u2E20'
+	        },
+	        {
+	            name: 'Po',
+	            alias: 'Other_Punctuation',
+	            bmp: '\x21-\x23\x25-\x27\\x2A\x2C\\x2E\x2F\x3A\x3B\\x3F\x40\\x5C\xA1\xA7\xB6\xB7\xBF\u037E\u0387\u055A-\u055F\u0589\u05C0\u05C3\u05C6\u05F3\u05F4\u0609\u060A\u060C\u060D\u061B\u061E\u061F\u066A-\u066D\u06D4\u0700-\u070D\u07F7-\u07F9\u0830-\u083E\u085E\u0964\u0965\u0970\u0AF0\u0DF4\u0E4F\u0E5A\u0E5B\u0F04-\u0F12\u0F14\u0F85\u0FD0-\u0FD4\u0FD9\u0FDA\u104A-\u104F\u10FB\u1360-\u1368\u166D\u166E\u16EB-\u16ED\u1735\u1736\u17D4-\u17D6\u17D8-\u17DA\u1800-\u1805\u1807-\u180A\u1944\u1945\u1A1E\u1A1F\u1AA0-\u1AA6\u1AA8-\u1AAD\u1B5A-\u1B60\u1BFC-\u1BFF\u1C3B-\u1C3F\u1C7E\u1C7F\u1CC0-\u1CC7\u1CD3\u2016\u2017\u2020-\u2027\u2030-\u2038\u203B-\u203E\u2041-\u2043\u2047-\u2051\u2053\u2055-\u205E\u2CF9-\u2CFC\u2CFE\u2CFF\u2D70\u2E00\u2E01\u2E06-\u2E08\u2E0B\u2E0E-\u2E16\u2E18\u2E19\u2E1B\u2E1E\u2E1F\u2E2A-\u2E2E\u2E30-\u2E39\u2E3C-\u2E3F\u2E41\u3001-\u3003\u303D\u30FB\uA4FE\uA4FF\uA60D-\uA60F\uA673\uA67E\uA6F2-\uA6F7\uA874-\uA877\uA8CE\uA8CF\uA8F8-\uA8FA\uA8FC\uA92E\uA92F\uA95F\uA9C1-\uA9CD\uA9DE\uA9DF\uAA5C-\uAA5F\uAADE\uAADF\uAAF0\uAAF1\uABEB\uFE10-\uFE16\uFE19\uFE30\uFE45\uFE46\uFE49-\uFE4C\uFE50-\uFE52\uFE54-\uFE57\uFE5F-\uFE61\uFE68\uFE6A\uFE6B\uFF01-\uFF03\uFF05-\uFF07\uFF0A\uFF0C\uFF0E\uFF0F\uFF1A\uFF1B\uFF1F\uFF20\uFF3C\uFF61\uFF64\uFF65',
+	            astral: '\uD802[\uDC57\uDD1F\uDD3F\uDE50-\uDE58\uDE7F\uDEF0-\uDEF6\uDF39-\uDF3F\uDF99-\uDF9C]|\uD809[\uDC70-\uDC74]|\uD805[\uDCC6\uDDC1-\uDDD7\uDE41-\uDE43\uDF3C-\uDF3E]|\uD836[\uDE87-\uDE8B]|\uD801\uDD6F|\uD82F\uDC9F|\uD804[\uDC47-\uDC4D\uDCBB\uDCBC\uDCBE-\uDCC1\uDD40-\uDD43\uDD74\uDD75\uDDC5-\uDDC9\uDDCD\uDDDB\uDDDD-\uDDDF\uDE38-\uDE3D\uDEA9]|\uD800[\uDD00-\uDD02\uDF9F\uDFD0]|\uD81A[\uDE6E\uDE6F\uDEF5\uDF37-\uDF3B\uDF44]'
+	        },
+	        {
+	            name: 'Ps',
+	            alias: 'Open_Punctuation',
+	            bmp: '\\x28\\x5B\\x7B\u0F3A\u0F3C\u169B\u201A\u201E\u2045\u207D\u208D\u2308\u230A\u2329\u2768\u276A\u276C\u276E\u2770\u2772\u2774\u27C5\u27E6\u27E8\u27EA\u27EC\u27EE\u2983\u2985\u2987\u2989\u298B\u298D\u298F\u2991\u2993\u2995\u2997\u29D8\u29DA\u29FC\u2E22\u2E24\u2E26\u2E28\u2E42\u3008\u300A\u300C\u300E\u3010\u3014\u3016\u3018\u301A\u301D\uFD3F\uFE17\uFE35\uFE37\uFE39\uFE3B\uFE3D\uFE3F\uFE41\uFE43\uFE47\uFE59\uFE5B\uFE5D\uFF08\uFF3B\uFF5B\uFF5F\uFF62'
+	        },
+	        {
+	            name: 'S',
+	            alias: 'Symbol',
+	            bmp: '\\x24\\x2B\x3C-\x3E\\x5E\x60\\x7C\x7E\xA2-\xA6\xA8\xA9\xAC\xAE-\xB1\xB4\xB8\xD7\xF7\u02C2-\u02C5\u02D2-\u02DF\u02E5-\u02EB\u02ED\u02EF-\u02FF\u0375\u0384\u0385\u03F6\u0482\u058D-\u058F\u0606-\u0608\u060B\u060E\u060F\u06DE\u06E9\u06FD\u06FE\u07F6\u09F2\u09F3\u09FA\u09FB\u0AF1\u0B70\u0BF3-\u0BFA\u0C7F\u0D79\u0E3F\u0F01-\u0F03\u0F13\u0F15-\u0F17\u0F1A-\u0F1F\u0F34\u0F36\u0F38\u0FBE-\u0FC5\u0FC7-\u0FCC\u0FCE\u0FCF\u0FD5-\u0FD8\u109E\u109F\u1390-\u1399\u17DB\u1940\u19DE-\u19FF\u1B61-\u1B6A\u1B74-\u1B7C\u1FBD\u1FBF-\u1FC1\u1FCD-\u1FCF\u1FDD-\u1FDF\u1FED-\u1FEF\u1FFD\u1FFE\u2044\u2052\u207A-\u207C\u208A-\u208C\u20A0-\u20BE\u2100\u2101\u2103-\u2106\u2108\u2109\u2114\u2116-\u2118\u211E-\u2123\u2125\u2127\u2129\u212E\u213A\u213B\u2140-\u2144\u214A-\u214D\u214F\u218A\u218B\u2190-\u2307\u230C-\u2328\u232B-\u23FA\u2400-\u2426\u2440-\u244A\u249C-\u24E9\u2500-\u2767\u2794-\u27C4\u27C7-\u27E5\u27F0-\u2982\u2999-\u29D7\u29DC-\u29FB\u29FE-\u2B73\u2B76-\u2B95\u2B98-\u2BB9\u2BBD-\u2BC8\u2BCA-\u2BD1\u2BEC-\u2BEF\u2CE5-\u2CEA\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u2FF0-\u2FFB\u3004\u3012\u3013\u3020\u3036\u3037\u303E\u303F\u309B\u309C\u3190\u3191\u3196-\u319F\u31C0-\u31E3\u3200-\u321E\u322A-\u3247\u3250\u3260-\u327F\u328A-\u32B0\u32C0-\u32FE\u3300-\u33FF\u4DC0-\u4DFF\uA490-\uA4C6\uA700-\uA716\uA720\uA721\uA789\uA78A\uA828-\uA82B\uA836-\uA839\uAA77-\uAA79\uAB5B\uFB29\uFBB2-\uFBC1\uFDFC\uFDFD\uFE62\uFE64-\uFE66\uFE69\uFF04\uFF0B\uFF1C-\uFF1E\uFF3E\uFF40\uFF5C\uFF5E\uFFE0-\uFFE6\uFFE8-\uFFEE\uFFFC\uFFFD',
+	            astral: '\uD83E[\uDC00-\uDC0B\uDC10-\uDC47\uDC50-\uDC59\uDC60-\uDC87\uDC90-\uDCAD\uDD10-\uDD18\uDD80-\uDD84\uDDC0]|\uD83C[\uDC00-\uDC2B\uDC30-\uDC93\uDCA0-\uDCAE\uDCB1-\uDCBF\uDCC1-\uDCCF\uDCD1-\uDCF5\uDD10-\uDD2E\uDD30-\uDD6B\uDD70-\uDD9A\uDDE6-\uDE02\uDE10-\uDE3A\uDE40-\uDE48\uDE50\uDE51\uDF00-\uDFFF]|\uD83D[\uDC00-\uDD79\uDD7B-\uDDA3\uDDA5-\uDED0\uDEE0-\uDEEC\uDEF0-\uDEF3\uDF00-\uDF73\uDF80-\uDFD4]|\uD835[\uDEC1\uDEDB\uDEFB\uDF15\uDF35\uDF4F\uDF6F\uDF89\uDFA9\uDFC3]|\uD800[\uDD37-\uDD3F\uDD79-\uDD89\uDD8C\uDD90-\uDD9B\uDDA0\uDDD0-\uDDFC]|\uD82F\uDC9C|\uD805\uDF3F|\uD802[\uDC77\uDC78\uDEC8]|\uD81A[\uDF3C-\uDF3F\uDF45]|\uD836[\uDC00-\uDDFF\uDE37-\uDE3A\uDE6D-\uDE74\uDE76-\uDE83\uDE85\uDE86]|\uD834[\uDC00-\uDCF5\uDD00-\uDD26\uDD29-\uDD64\uDD6A-\uDD6C\uDD83\uDD84\uDD8C-\uDDA9\uDDAE-\uDDE8\uDE00-\uDE41\uDE45\uDF00-\uDF56]|\uD83B[\uDEF0\uDEF1]'
+	        },
+	        {
+	            name: 'Sc',
+	            alias: 'Currency_Symbol',
+	            bmp: '\\x24\xA2-\xA5\u058F\u060B\u09F2\u09F3\u09FB\u0AF1\u0BF9\u0E3F\u17DB\u20A0-\u20BE\uA838\uFDFC\uFE69\uFF04\uFFE0\uFFE1\uFFE5\uFFE6'
+	        },
+	        {
+	            name: 'Sk',
+	            alias: 'Modifier_Symbol',
+	            bmp: '\\x5E\x60\xA8\xAF\xB4\xB8\u02C2-\u02C5\u02D2-\u02DF\u02E5-\u02EB\u02ED\u02EF-\u02FF\u0375\u0384\u0385\u1FBD\u1FBF-\u1FC1\u1FCD-\u1FCF\u1FDD-\u1FDF\u1FED-\u1FEF\u1FFD\u1FFE\u309B\u309C\uA700-\uA716\uA720\uA721\uA789\uA78A\uAB5B\uFBB2-\uFBC1\uFF3E\uFF40\uFFE3',
+	            astral: '\uD83C[\uDFFB-\uDFFF]'
+	        },
+	        {
+	            name: 'Sm',
+	            alias: 'Math_Symbol',
+	            bmp: '\\x2B\x3C-\x3E\\x7C\x7E\xAC\xB1\xD7\xF7\u03F6\u0606-\u0608\u2044\u2052\u207A-\u207C\u208A-\u208C\u2118\u2140-\u2144\u214B\u2190-\u2194\u219A\u219B\u21A0\u21A3\u21A6\u21AE\u21CE\u21CF\u21D2\u21D4\u21F4-\u22FF\u2320\u2321\u237C\u239B-\u23B3\u23DC-\u23E1\u25B7\u25C1\u25F8-\u25FF\u266F\u27C0-\u27C4\u27C7-\u27E5\u27F0-\u27FF\u2900-\u2982\u2999-\u29D7\u29DC-\u29FB\u29FE-\u2AFF\u2B30-\u2B44\u2B47-\u2B4C\uFB29\uFE62\uFE64-\uFE66\uFF0B\uFF1C-\uFF1E\uFF5C\uFF5E\uFFE2\uFFE9-\uFFEC',
+	            astral: '\uD83B[\uDEF0\uDEF1]|\uD835[\uDEC1\uDEDB\uDEFB\uDF15\uDF35\uDF4F\uDF6F\uDF89\uDFA9\uDFC3]'
+	        },
+	        {
+	            name: 'So',
+	            alias: 'Other_Symbol',
+	            bmp: '\xA6\xA9\xAE\xB0\u0482\u058D\u058E\u060E\u060F\u06DE\u06E9\u06FD\u06FE\u07F6\u09FA\u0B70\u0BF3-\u0BF8\u0BFA\u0C7F\u0D79\u0F01-\u0F03\u0F13\u0F15-\u0F17\u0F1A-\u0F1F\u0F34\u0F36\u0F38\u0FBE-\u0FC5\u0FC7-\u0FCC\u0FCE\u0FCF\u0FD5-\u0FD8\u109E\u109F\u1390-\u1399\u1940\u19DE-\u19FF\u1B61-\u1B6A\u1B74-\u1B7C\u2100\u2101\u2103-\u2106\u2108\u2109\u2114\u2116\u2117\u211E-\u2123\u2125\u2127\u2129\u212E\u213A\u213B\u214A\u214C\u214D\u214F\u218A\u218B\u2195-\u2199\u219C-\u219F\u21A1\u21A2\u21A4\u21A5\u21A7-\u21AD\u21AF-\u21CD\u21D0\u21D1\u21D3\u21D5-\u21F3\u2300-\u2307\u230C-\u231F\u2322-\u2328\u232B-\u237B\u237D-\u239A\u23B4-\u23DB\u23E2-\u23FA\u2400-\u2426\u2440-\u244A\u249C-\u24E9\u2500-\u25B6\u25B8-\u25C0\u25C2-\u25F7\u2600-\u266E\u2670-\u2767\u2794-\u27BF\u2800-\u28FF\u2B00-\u2B2F\u2B45\u2B46\u2B4D-\u2B73\u2B76-\u2B95\u2B98-\u2BB9\u2BBD-\u2BC8\u2BCA-\u2BD1\u2BEC-\u2BEF\u2CE5-\u2CEA\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u2FF0-\u2FFB\u3004\u3012\u3013\u3020\u3036\u3037\u303E\u303F\u3190\u3191\u3196-\u319F\u31C0-\u31E3\u3200-\u321E\u322A-\u3247\u3250\u3260-\u327F\u328A-\u32B0\u32C0-\u32FE\u3300-\u33FF\u4DC0-\u4DFF\uA490-\uA4C6\uA828-\uA82B\uA836\uA837\uA839\uAA77-\uAA79\uFDFD\uFFE4\uFFE8\uFFED\uFFEE\uFFFC\uFFFD',
+	            astral: '\uD83E[\uDC00-\uDC0B\uDC10-\uDC47\uDC50-\uDC59\uDC60-\uDC87\uDC90-\uDCAD\uDD10-\uDD18\uDD80-\uDD84\uDDC0]|\uD83D[\uDC00-\uDD79\uDD7B-\uDDA3\uDDA5-\uDED0\uDEE0-\uDEEC\uDEF0-\uDEF3\uDF00-\uDF73\uDF80-\uDFD4]|\uD83C[\uDC00-\uDC2B\uDC30-\uDC93\uDCA0-\uDCAE\uDCB1-\uDCBF\uDCC1-\uDCCF\uDCD1-\uDCF5\uDD10-\uDD2E\uDD30-\uDD6B\uDD70-\uDD9A\uDDE6-\uDE02\uDE10-\uDE3A\uDE40-\uDE48\uDE50\uDE51\uDF00-\uDFFA]|\uD800[\uDD37-\uDD3F\uDD79-\uDD89\uDD8C\uDD90-\uDD9B\uDDA0\uDDD0-\uDDFC]|\uD82F\uDC9C|\uD805\uDF3F|\uD802[\uDC77\uDC78\uDEC8]|\uD81A[\uDF3C-\uDF3F\uDF45]|\uD836[\uDC00-\uDDFF\uDE37-\uDE3A\uDE6D-\uDE74\uDE76-\uDE83\uDE85\uDE86]|\uD834[\uDC00-\uDCF5\uDD00-\uDD26\uDD29-\uDD64\uDD6A-\uDD6C\uDD83\uDD84\uDD8C-\uDDA9\uDDAE-\uDDE8\uDE00-\uDE41\uDE45\uDF00-\uDF56]'
+	        },
+	        {
+	            name: 'Z',
+	            alias: 'Separator',
+	            bmp: '\x20\xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000'
+	        },
+	        {
+	            name: 'Zl',
+	            alias: 'Line_Separator',
+	            bmp: '\u2028'
+	        },
+	        {
+	            name: 'Zp',
+	            alias: 'Paragraph_Separator',
+	            bmp: '\u2029'
+	        },
+	        {
+	            name: 'Zs',
+	            alias: 'Space_Separator',
+	            bmp: '\x20\xA0\u1680\u2000-\u200A\u202F\u205F\u3000'
+	        }
+	    ]);
+
 	};
 
-/***/ },
-/* 16 */
-/***/ function(module, exports) {
 
-	'use strict';
+/***/ },
+/* 44 */
+/***/ function(module, exports) {
 
 	/*!
 	 * XRegExp Unicode Properties 3.1.1
@@ -4895,7 +7992,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Unicode data by Mathias Bynens <mathiasbynens.be>
 	 */
 
-	module.exports = function (XRegExp) {
+	module.exports = function(XRegExp) {
 	    'use strict';
 
 	    /**
@@ -4941,38 +8038,47 @@ return /******/ (function(modules) { // webpackBootstrap
 	        throw new ReferenceError('Unicode Base must be loaded before Unicode Properties');
 	    }
 
-	    var unicodeData = [{
-	        name: 'ASCII',
-	        bmp: '\0-\x7F'
-	    }, {
-	        name: 'Alphabetic',
-	        bmp: 'A-Za-zªµºÀ-ÖØ-öø-ˁˆ-ˑˠ-ˤˬˮͅͰ-ʹͶͷͺ-ͽͿΆΈ-ΊΌΎ-ΡΣ-ϵϷ-ҁҊ-ԯԱ-Ֆՙա-ևְ-ׇֽֿׁׂׅׄא-תװ-ײؐ-ؚؠ-ٗٙ-ٟٮ-ۓە-ۜۡ-ۭۨ-ۯۺ-ۼۿܐ-ܿݍ-ޱߊ-ߪߴߵߺࠀ-ࠗࠚ-ࠬࡀ-ࡘࢠ-ࢴࣣ-ࣰࣩ-ऻऽ-ौॎ-ॐॕ-ॣॱ-ঃঅ-ঌএঐও-নপ-রলশ-হঽ-ৄেৈোৌৎৗড়ঢ়য়-ৣৰৱਁ-ਃਅ-ਊਏਐਓ-ਨਪ-ਰਲਲ਼ਵਸ਼ਸਹਾ-ੂੇੈੋੌੑਖ਼-ੜਫ਼ੰ-ੵઁ-ઃઅ-ઍએ-ઑઓ-નપ-રલળવ-હઽ-ૅે-ૉોૌૐૠ-ૣૹଁ-ଃଅ-ଌଏଐଓ-ନପ-ରଲଳଵ-ହଽ-ୄେୈୋୌୖୗଡ଼ଢ଼ୟ-ୣୱஂஃஅ-ஊஎ-ஐஒ-கஙசஜஞடணதந-பம-ஹா-ூெ-ைொ-ௌௐௗఀ-ఃఅ-ఌఎ-ఐఒ-నప-హఽ-ౄె-ైొ-ౌౕౖౘ-ౚౠ-ౣಁ-ಃಅ-ಌಎ-ಐಒ-ನಪ-ಳವ-ಹಽ-ೄೆ-ೈೊ-ೌೕೖೞೠ-ೣೱೲഁ-ഃഅ-ഌഎ-ഐഒ-ഺഽ-ൄെ-ൈൊ-ൌൎൗൟ-ൣൺ-ൿංඃඅ-ඖක-නඳ-රලව-ෆා-ුූෘ-ෟෲෳก-ฺเ-ๆํກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ູົ-ຽເ-ໄໆໍໜ-ໟༀཀ-ཇཉ-ཬཱ-ཱྀྈ-ྗྙ-ྼက-ံးျ-ဿၐ-ၢၥ-ၨၮ-ႆႎႜႝႠ-ჅჇჍა-ჺჼ-ቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኈኊ-ኍነ-ኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዖዘ-ጐጒ-ጕጘ-ፚ፟ᎀ-ᎏᎠ-Ᏽᏸ-ᏽᐁ-ᙬᙯ-ᙿᚁ-ᚚᚠ-ᛪᛮ-ᛸᜀ-ᜌᜎ-ᜓᜠ-ᜳᝀ-ᝓᝠ-ᝬᝮ-ᝰᝲᝳក-ឳា-ៈៗៜᠠ-ᡷᢀ-ᢪᢰ-ᣵᤀ-ᤞᤠ-ᤫᤰ-ᤸᥐ-ᥭᥰ-ᥴᦀ-ᦫᦰ-ᧉᨀ-ᨛᨠ-ᩞᩡ-ᩴᪧᬀ-ᬳᬵ-ᭃᭅ-ᭋᮀ-ᮩᮬ-ᮯᮺ-ᯥᯧ-ᯱᰀ-ᰵᱍ-ᱏᱚ-ᱽᳩ-ᳬᳮ-ᳳᳵᳶᴀ-ᶿᷧ-ᷴḀ-ἕἘ-Ἕἠ-ὅὈ-Ὅὐ-ὗὙὛὝὟ-ώᾀ-ᾴᾶ-ᾼιῂ-ῄῆ-ῌῐ-ΐῖ-Ίῠ-Ῥῲ-ῴῶ-ῼⁱⁿₐ-ₜℂℇℊ-ℓℕℙ-ℝℤΩℨK-ℭℯ-ℹℼ-ℿⅅ-ⅉⅎⅠ-ↈⒶ-ⓩⰀ-Ⱞⰰ-ⱞⱠ-ⳤⳫ-ⳮⳲⳳⴀ-ⴥⴧⴭⴰ-ⵧⵯⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞⷠ-ⷿⸯ々-〇〡-〩〱-〵〸-〼ぁ-ゖゝ-ゟァ-ヺー-ヿㄅ-ㄭㄱ-ㆎㆠ-ㆺㇰ-ㇿ㐀-䶵一-鿕ꀀ-ꒌꓐ-ꓽꔀ-ꘌꘐ-ꘟꘪꘫꙀ-ꙮꙴ-ꙻꙿ-ꛯꜗ-ꜟꜢ-ꞈꞋ-ꞭꞰ-ꞷꟷ-ꠁꠃ-ꠅꠇ-ꠊꠌ-ꠧꡀ-ꡳꢀ-ꣃꣲ-ꣷꣻꣽꤊ-ꤪꤰ-ꥒꥠ-ꥼꦀ-ꦲꦴ-ꦿꧏꧠ-ꧤꧦ-ꧯꧺ-ꧾꨀ-ꨶꩀ-ꩍꩠ-ꩶꩺꩾ-ꪾꫀꫂꫛ-ꫝꫠ-ꫯꫲ-ꫵꬁ-ꬆꬉ-ꬎꬑ-ꬖꬠ-ꬦꬨ-ꬮꬰ-ꭚꭜ-ꭥꭰ-ꯪ가-힣ힰ-ퟆퟋ-ퟻ豈-舘並-龎ﬀ-ﬆﬓ-ﬗיִ-ﬨשׁ-זּטּ-לּמּנּסּףּפּצּ-ﮱﯓ-ﴽﵐ-ﶏﶒ-ﷇﷰ-ﷻﹰ-ﹴﹶ-ﻼＡ-Ｚａ-ｚｦ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ',
-	        astral: '�[�-��-�]|�[�-��-��-��-��-���-��-����-��-���-���-��-��-��-��-��-����-��-����-��-��������-�]|�[�-��-�]|�[�-��-�]|�[�-��-��-�]|�[�-�]|�[�-��-��-��-��-��-��-�]|�[�-��-��-��-��-��-�]|�[�-��-��-�]|�[�-�]|�[�-�]|[��-��-��-�][�-�]|�[�-��-�������-��-���-��-��-��-��-��-��-��-���-��-��-��-��-��-��-��-��-��-��-��-��-�]|�[�-��-��-��-��]|�[�-�]|�[�-��-������-��-��������-�������������-��-��-��-���-��-��-��-��-�]|�[�-�����-��-��-��-����-��-��-�]|�[�-��-�]|�[�-���-�]|�[�-��-��-����-��-��-��-��-��-��-��-��-��-��-��-��-�]|�[�-���-�����-��-��-��-����-��-��-����-����-��-��-��-��-��-��-��-��-��-��-�]|�[�-�]|�[��]|�[�-��-��-�]|�[�-�]'
-	    }, {
-	        name: 'Any',
-	        isBmpLast: true,
-	        bmp: '\u0000-￿',
-	        astral: '[�-�][�-�]'
-	    }, {
-	        name: 'Default_Ignorable_Code_Point',
-	        bmp: '­͏؜ᅟᅠ឴឵᠋-᠎​-‏‪-‮⁠-⁯ㅤ︀-️﻿ﾠ￰-￸',
-	        astral: '[�-�][�-�]|�[�-�]|�[�-�]'
-	    }, {
-	        name: 'Lowercase',
-	        bmp: 'a-zªµºß-öø-ÿāăąćĉċčďđēĕėęěĝğġģĥħĩīĭįıĳĵķĸĺļľŀłńņňŉŋōŏőœŕŗřśŝşšţťŧũūŭůűųŵŷźżž-ƀƃƅƈƌƍƒƕƙ-ƛƞơƣƥƨƪƫƭưƴƶƹƺƽ-ƿǆǉǌǎǐǒǔǖǘǚǜǝǟǡǣǥǧǩǫǭǯǰǳǵǹǻǽǿȁȃȅȇȉȋȍȏȑȓȕȗșțȝȟȡȣȥȧȩȫȭȯȱȳ-ȹȼȿɀɂɇɉɋɍɏ-ʓʕ-ʸˀˁˠ-ˤͅͱͳͷͺ-ͽΐά-ώϐϑϕ-ϗϙϛϝϟϡϣϥϧϩϫϭϯ-ϳϵϸϻϼа-џѡѣѥѧѩѫѭѯѱѳѵѷѹѻѽѿҁҋҍҏґғҕҗҙқҝҟҡңҥҧҩҫҭүұҳҵҷҹһҽҿӂӄӆӈӊӌӎӏӑӓӕӗәӛӝӟӡӣӥӧөӫӭӯӱӳӵӷӹӻӽӿԁԃԅԇԉԋԍԏԑԓԕԗԙԛԝԟԡԣԥԧԩԫԭԯա-ևᏸ-ᏽᴀ-ᶿḁḃḅḇḉḋḍḏḑḓḕḗḙḛḝḟḡḣḥḧḩḫḭḯḱḳḵḷḹḻḽḿṁṃṅṇṉṋṍṏṑṓṕṗṙṛṝṟṡṣṥṧṩṫṭṯṱṳṵṷṹṻṽṿẁẃẅẇẉẋẍẏẑẓẕ-ẝẟạảấầẩẫậắằẳẵặẹẻẽếềểễệỉịọỏốồổỗộớờởỡợụủứừửữựỳỵỷỹỻỽỿ-ἇἐ-ἕἠ-ἧἰ-ἷὀ-ὅὐ-ὗὠ-ὧὰ-ώᾀ-ᾇᾐ-ᾗᾠ-ᾧᾰ-ᾴᾶᾷιῂ-ῄῆῇῐ-ΐῖῗῠ-ῧῲ-ῴῶῷⁱⁿₐ-ₜℊℎℏℓℯℴℹℼℽⅆ-ⅉⅎⅰ-ⅿↄⓐ-ⓩⰰ-ⱞⱡⱥⱦⱨⱪⱬⱱⱳⱴⱶ-ⱽⲁⲃⲅⲇⲉⲋⲍⲏⲑⲓⲕⲗⲙⲛⲝⲟⲡⲣⲥⲧⲩⲫⲭⲯⲱⲳⲵⲷⲹⲻⲽⲿⳁⳃⳅⳇⳉⳋⳍⳏⳑⳓⳕⳗⳙⳛⳝⳟⳡⳣⳤⳬⳮⳳⴀ-ⴥⴧⴭꙁꙃꙅꙇꙉꙋꙍꙏꙑꙓꙕꙗꙙꙛꙝꙟꙡꙣꙥꙧꙩꙫꙭꚁꚃꚅꚇꚉꚋꚍꚏꚑꚓꚕꚗꚙꚛ-ꚝꜣꜥꜧꜩꜫꜭꜯ-ꜱꜳꜵꜷꜹꜻꜽꜿꝁꝃꝅꝇꝉꝋꝍꝏꝑꝓꝕꝗꝙꝛꝝꝟꝡꝣꝥꝧꝩꝫꝭꝯ-ꝸꝺꝼꝿꞁꞃꞅꞇꞌꞎꞑꞓ-ꞕꞗꞙꞛꞝꞟꞡꞣꞥꞧꞩꞵꞷꟸ-ꟺꬰ-ꭚꭜ-ꭥꭰ-ꮿﬀ-ﬆﬓ-ﬗａ-ｚ',
-	        astral: '�[�-�]|�[�-��-��-��-��-���-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��-��]|�[�-�]|�[�-�]'
-	    }, {
-	        name: 'Noncharacter_Code_Point',
-	        bmp: '﷐-﷯￾￿',
-	        astral: '[����������������][��]'
-	    }, {
-	        name: 'Uppercase',
-	        bmp: 'A-ZÀ-ÖØ-ÞĀĂĄĆĈĊČĎĐĒĔĖĘĚĜĞĠĢĤĦĨĪĬĮİĲĴĶĹĻĽĿŁŃŅŇŊŌŎŐŒŔŖŘŚŜŞŠŢŤŦŨŪŬŮŰŲŴŶŸŹŻŽƁƂƄƆƇƉ-ƋƎ-ƑƓƔƖ-ƘƜƝƟƠƢƤƦƧƩƬƮƯƱ-ƳƵƷƸƼǄǇǊǍǏǑǓǕǗǙǛǞǠǢǤǦǨǪǬǮǱǴǶ-ǸǺǼǾȀȂȄȆȈȊȌȎȐȒȔȖȘȚȜȞȠȢȤȦȨȪȬȮȰȲȺȻȽȾɁɃ-ɆɈɊɌɎͰͲͶͿΆΈ-ΊΌΎΏΑ-ΡΣ-ΫϏϒ-ϔϘϚϜϞϠϢϤϦϨϪϬϮϴϷϹϺϽ-ЯѠѢѤѦѨѪѬѮѰѲѴѶѸѺѼѾҀҊҌҎҐҒҔҖҘҚҜҞҠҢҤҦҨҪҬҮҰҲҴҶҸҺҼҾӀӁӃӅӇӉӋӍӐӒӔӖӘӚӜӞӠӢӤӦӨӪӬӮӰӲӴӶӸӺӼӾԀԂԄԆԈԊԌԎԐԒԔԖԘԚԜԞԠԢԤԦԨԪԬԮԱ-ՖႠ-ჅჇჍᎠ-ᏵḀḂḄḆḈḊḌḎḐḒḔḖḘḚḜḞḠḢḤḦḨḪḬḮḰḲḴḶḸḺḼḾṀṂṄṆṈṊṌṎṐṒṔṖṘṚṜṞṠṢṤṦṨṪṬṮṰṲṴṶṸṺṼṾẀẂẄẆẈẊẌẎẐẒẔẞẠẢẤẦẨẪẬẮẰẲẴẶẸẺẼẾỀỂỄỆỈỊỌỎỐỒỔỖỘỚỜỞỠỢỤỦỨỪỬỮỰỲỴỶỸỺỼỾἈ-ἏἘ-ἝἨ-ἯἸ-ἿὈ-ὍὙὛὝὟὨ-ὯᾸ-ΆῈ-ΉῘ-ΊῨ-ῬῸ-Ώℂℇℋ-ℍℐ-ℒℕℙ-ℝℤΩℨK-ℭℰ-ℳℾℿⅅⅠ-ⅯↃⒶ-ⓏⰀ-ⰮⱠⱢ-ⱤⱧⱩⱫⱭ-ⱰⱲⱵⱾ-ⲀⲂⲄⲆⲈⲊⲌⲎⲐⲒⲔⲖⲘⲚⲜⲞⲠⲢⲤⲦⲨⲪⲬⲮⲰⲲⲴⲶⲸⲺⲼⲾⳀⳂⳄⳆⳈⳊⳌⳎⳐⳒⳔⳖⳘⳚⳜⳞⳠⳢⳫⳭⳲꙀꙂꙄꙆꙈꙊꙌꙎꙐꙒꙔꙖꙘꙚꙜꙞꙠꙢꙤꙦꙨꙪꙬꚀꚂꚄꚆꚈꚊꚌꚎꚐꚒꚔꚖꚘꚚꜢꜤꜦꜨꜪꜬꜮꜲꜴꜶꜸꜺꜼꜾꝀꝂꝄꝆꝈꝊꝌꝎꝐꝒꝔꝖꝘꝚꝜꝞꝠꝢꝤꝦꝨꝪꝬꝮꝹꝻꝽꝾꞀꞂꞄꞆꞋꞍꞐꞒꞖꞘꞚꞜꞞꞠꞢꞤꞦꞨꞪ-ꞭꞰ-ꞴꞶＡ-Ｚ',
-	        astral: '�[�-�]|�[�-�]|�[�-��-��-��������-��-��-����-��-��-����-��-���-��-��-��-��-��-��-��-��-��-��-��-��]|�[�-�]|�[�-��-��-�]'
-	    }, {
-	        name: 'White_Space',
-	        bmp: '\t-\r    - \u2028\u2029  　'
-	    }];
+	    var unicodeData = [
+	        {
+	            name: 'ASCII',
+	            bmp: '\0-\x7F'
+	        },
+	        {
+	            name: 'Alphabetic',
+	            bmp: 'A-Za-z\xAA\xB5\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02C1\u02C6-\u02D1\u02E0-\u02E4\u02EC\u02EE\u0345\u0370-\u0374\u0376\u0377\u037A-\u037D\u037F\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03F5\u03F7-\u0481\u048A-\u052F\u0531-\u0556\u0559\u0561-\u0587\u05B0-\u05BD\u05BF\u05C1\u05C2\u05C4\u05C5\u05C7\u05D0-\u05EA\u05F0-\u05F2\u0610-\u061A\u0620-\u0657\u0659-\u065F\u066E-\u06D3\u06D5-\u06DC\u06E1-\u06E8\u06ED-\u06EF\u06FA-\u06FC\u06FF\u0710-\u073F\u074D-\u07B1\u07CA-\u07EA\u07F4\u07F5\u07FA\u0800-\u0817\u081A-\u082C\u0840-\u0858\u08A0-\u08B4\u08E3-\u08E9\u08F0-\u093B\u093D-\u094C\u094E-\u0950\u0955-\u0963\u0971-\u0983\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BD-\u09C4\u09C7\u09C8\u09CB\u09CC\u09CE\u09D7\u09DC\u09DD\u09DF-\u09E3\u09F0\u09F1\u0A01-\u0A03\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A3E-\u0A42\u0A47\u0A48\u0A4B\u0A4C\u0A51\u0A59-\u0A5C\u0A5E\u0A70-\u0A75\u0A81-\u0A83\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABD-\u0AC5\u0AC7-\u0AC9\u0ACB\u0ACC\u0AD0\u0AE0-\u0AE3\u0AF9\u0B01-\u0B03\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3D-\u0B44\u0B47\u0B48\u0B4B\u0B4C\u0B56\u0B57\u0B5C\u0B5D\u0B5F-\u0B63\u0B71\u0B82\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCC\u0BD0\u0BD7\u0C00-\u0C03\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D-\u0C44\u0C46-\u0C48\u0C4A-\u0C4C\u0C55\u0C56\u0C58-\u0C5A\u0C60-\u0C63\u0C81-\u0C83\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBD-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCC\u0CD5\u0CD6\u0CDE\u0CE0-\u0CE3\u0CF1\u0CF2\u0D01-\u0D03\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D-\u0D44\u0D46-\u0D48\u0D4A-\u0D4C\u0D4E\u0D57\u0D5F-\u0D63\u0D7A-\u0D7F\u0D82\u0D83\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DF2\u0DF3\u0E01-\u0E3A\u0E40-\u0E46\u0E4D\u0E81\u0E82\u0E84\u0E87\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA\u0EAB\u0EAD-\u0EB9\u0EBB-\u0EBD\u0EC0-\u0EC4\u0EC6\u0ECD\u0EDC-\u0EDF\u0F00\u0F40-\u0F47\u0F49-\u0F6C\u0F71-\u0F81\u0F88-\u0F97\u0F99-\u0FBC\u1000-\u1036\u1038\u103B-\u103F\u1050-\u1062\u1065-\u1068\u106E-\u1086\u108E\u109C\u109D\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u135F\u1380-\u138F\u13A0-\u13F5\u13F8-\u13FD\u1401-\u166C\u166F-\u167F\u1681-\u169A\u16A0-\u16EA\u16EE-\u16F8\u1700-\u170C\u170E-\u1713\u1720-\u1733\u1740-\u1753\u1760-\u176C\u176E-\u1770\u1772\u1773\u1780-\u17B3\u17B6-\u17C8\u17D7\u17DC\u1820-\u1877\u1880-\u18AA\u18B0-\u18F5\u1900-\u191E\u1920-\u192B\u1930-\u1938\u1950-\u196D\u1970-\u1974\u1980-\u19AB\u19B0-\u19C9\u1A00-\u1A1B\u1A20-\u1A5E\u1A61-\u1A74\u1AA7\u1B00-\u1B33\u1B35-\u1B43\u1B45-\u1B4B\u1B80-\u1BA9\u1BAC-\u1BAF\u1BBA-\u1BE5\u1BE7-\u1BF1\u1C00-\u1C35\u1C4D-\u1C4F\u1C5A-\u1C7D\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u1D00-\u1DBF\u1DE7-\u1DF4\u1E00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FBC\u1FBE\u1FC2-\u1FC4\u1FC6-\u1FCC\u1FD0-\u1FD3\u1FD6-\u1FDB\u1FE0-\u1FEC\u1FF2-\u1FF4\u1FF6-\u1FFC\u2071\u207F\u2090-\u209C\u2102\u2107\u210A-\u2113\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u212F-\u2139\u213C-\u213F\u2145-\u2149\u214E\u2160-\u2188\u24B6-\u24E9\u2C00-\u2C2E\u2C30-\u2C5E\u2C60-\u2CE4\u2CEB-\u2CEE\u2CF2\u2CF3\u2D00-\u2D25\u2D27\u2D2D\u2D30-\u2D67\u2D6F\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\u2DE0-\u2DFF\u2E2F\u3005-\u3007\u3021-\u3029\u3031-\u3035\u3038-\u303C\u3041-\u3096\u309D-\u309F\u30A1-\u30FA\u30FC-\u30FF\u3105-\u312D\u3131-\u318E\u31A0-\u31BA\u31F0-\u31FF\u3400-\u4DB5\u4E00-\u9FD5\uA000-\uA48C\uA4D0-\uA4FD\uA500-\uA60C\uA610-\uA61F\uA62A\uA62B\uA640-\uA66E\uA674-\uA67B\uA67F-\uA6EF\uA717-\uA71F\uA722-\uA788\uA78B-\uA7AD\uA7B0-\uA7B7\uA7F7-\uA801\uA803-\uA805\uA807-\uA80A\uA80C-\uA827\uA840-\uA873\uA880-\uA8C3\uA8F2-\uA8F7\uA8FB\uA8FD\uA90A-\uA92A\uA930-\uA952\uA960-\uA97C\uA980-\uA9B2\uA9B4-\uA9BF\uA9CF\uA9E0-\uA9E4\uA9E6-\uA9EF\uA9FA-\uA9FE\uAA00-\uAA36\uAA40-\uAA4D\uAA60-\uAA76\uAA7A\uAA7E-\uAABE\uAAC0\uAAC2\uAADB-\uAADD\uAAE0-\uAAEF\uAAF2-\uAAF5\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E\uAB30-\uAB5A\uAB5C-\uAB65\uAB70-\uABEA\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uF900-\uFA6D\uFA70-\uFAD9\uFB00-\uFB06\uFB13-\uFB17\uFB1D-\uFB28\uFB2A-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFBB1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFB\uFE70-\uFE74\uFE76-\uFEFC\uFF21-\uFF3A\uFF41-\uFF5A\uFF66-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC',
+	            astral: '\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|\uD804[\uDC00-\uDC45\uDC82-\uDCB8\uDCD0-\uDCE8\uDD00-\uDD32\uDD50-\uDD72\uDD76\uDD80-\uDDBF\uDDC1-\uDDC4\uDDDA\uDDDC\uDE00-\uDE11\uDE13-\uDE34\uDE37\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA8\uDEB0-\uDEE8\uDF00-\uDF03\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3D-\uDF44\uDF47\uDF48\uDF4B\uDF4C\uDF50\uDF57\uDF5D-\uDF63]|\uD86D[\uDC00-\uDF34\uDF40-\uDFFF]|\uD869[\uDC00-\uDED6\uDF00-\uDFFF]|\uD803[\uDC00-\uDC48\uDC80-\uDCB2\uDCC0-\uDCF2]|\uD83A[\uDC00-\uDCC4]|\uD81A[\uDC00-\uDE38\uDE40-\uDE5E\uDED0-\uDEED\uDF00-\uDF36\uDF40-\uDF43\uDF63-\uDF77\uDF7D-\uDF8F]|\uD801[\uDC00-\uDC9D\uDD00-\uDD27\uDD30-\uDD63\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67]|\uD83C[\uDD30-\uDD49\uDD50-\uDD69\uDD70-\uDD89]|\uD80D[\uDC00-\uDC2E]|\uD87E[\uDC00-\uDE1D]|[\uD80C\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872][\uDC00-\uDFFF]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDEC0\uDEC2-\uDEDA\uDEDC-\uDEFA\uDEFC-\uDF14\uDF16-\uDF34\uDF36-\uDF4E\uDF50-\uDF6E\uDF70-\uDF88\uDF8A-\uDFA8\uDFAA-\uDFC2\uDFC4-\uDFCB]|\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99\uDC9E]|\uD808[\uDC00-\uDF99]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB]|\uD805[\uDC80-\uDCC1\uDCC4\uDCC5\uDCC7\uDD80-\uDDB5\uDDB8-\uDDBE\uDDD8-\uDDDD\uDE00-\uDE3E\uDE40\uDE44\uDE80-\uDEB5\uDF00-\uDF19\uDF1D-\uDF2A]|\uD809[\uDC00-\uDC6E\uDC80-\uDD43]|\uD806[\uDCA0-\uDCDF\uDCFF\uDEC0-\uDEF8]|\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA\uDD40-\uDD74\uDE80-\uDE9C\uDEA0-\uDED0\uDF00-\uDF1F\uDF30-\uDF4A\uDF50-\uDF7A\uDF80-\uDF9D\uDFA0-\uDFC3\uDFC8-\uDFCF\uDFD1-\uDFD5]|\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F-\uDC55\uDC60-\uDC76\uDC80-\uDC9E\uDCE0-\uDCF2\uDCF4\uDCF5\uDD00-\uDD15\uDD20-\uDD39\uDD80-\uDDB7\uDDBE\uDDBF\uDE00-\uDE03\uDE05\uDE06\uDE0C-\uDE13\uDE15-\uDE17\uDE19-\uDE33\uDE60-\uDE7C\uDE80-\uDE9C\uDEC0-\uDEC7\uDEC9-\uDEE4\uDF00-\uDF35\uDF40-\uDF55\uDF60-\uDF72\uDF80-\uDF91]|\uD811[\uDC00-\uDE46]|\uD82C[\uDC00\uDC01]|\uD81B[\uDF00-\uDF44\uDF50-\uDF7E\uDF93-\uDF9F]|\uD873[\uDC00-\uDEA1]'
+	        },
+	        {
+	            name: 'Any',
+	            isBmpLast: true,
+	            bmp: '\0-\uFFFF',
+	            astral: '[\uD800-\uDBFF][\uDC00-\uDFFF]'
+	        },
+	        {
+	            name: 'Default_Ignorable_Code_Point',
+	            bmp: '\xAD\u034F\u061C\u115F\u1160\u17B4\u17B5\u180B-\u180E\u200B-\u200F\u202A-\u202E\u2060-\u206F\u3164\uFE00-\uFE0F\uFEFF\uFFA0\uFFF0-\uFFF8',
+	            astral: '[\uDB40-\uDB43][\uDC00-\uDFFF]|\uD834[\uDD73-\uDD7A]|\uD82F[\uDCA0-\uDCA3]'
+	        },
+	        {
+	            name: 'Lowercase',
+	            bmp: 'a-z\xAA\xB5\xBA\xDF-\xF6\xF8-\xFF\u0101\u0103\u0105\u0107\u0109\u010B\u010D\u010F\u0111\u0113\u0115\u0117\u0119\u011B\u011D\u011F\u0121\u0123\u0125\u0127\u0129\u012B\u012D\u012F\u0131\u0133\u0135\u0137\u0138\u013A\u013C\u013E\u0140\u0142\u0144\u0146\u0148\u0149\u014B\u014D\u014F\u0151\u0153\u0155\u0157\u0159\u015B\u015D\u015F\u0161\u0163\u0165\u0167\u0169\u016B\u016D\u016F\u0171\u0173\u0175\u0177\u017A\u017C\u017E-\u0180\u0183\u0185\u0188\u018C\u018D\u0192\u0195\u0199-\u019B\u019E\u01A1\u01A3\u01A5\u01A8\u01AA\u01AB\u01AD\u01B0\u01B4\u01B6\u01B9\u01BA\u01BD-\u01BF\u01C6\u01C9\u01CC\u01CE\u01D0\u01D2\u01D4\u01D6\u01D8\u01DA\u01DC\u01DD\u01DF\u01E1\u01E3\u01E5\u01E7\u01E9\u01EB\u01ED\u01EF\u01F0\u01F3\u01F5\u01F9\u01FB\u01FD\u01FF\u0201\u0203\u0205\u0207\u0209\u020B\u020D\u020F\u0211\u0213\u0215\u0217\u0219\u021B\u021D\u021F\u0221\u0223\u0225\u0227\u0229\u022B\u022D\u022F\u0231\u0233-\u0239\u023C\u023F\u0240\u0242\u0247\u0249\u024B\u024D\u024F-\u0293\u0295-\u02B8\u02C0\u02C1\u02E0-\u02E4\u0345\u0371\u0373\u0377\u037A-\u037D\u0390\u03AC-\u03CE\u03D0\u03D1\u03D5-\u03D7\u03D9\u03DB\u03DD\u03DF\u03E1\u03E3\u03E5\u03E7\u03E9\u03EB\u03ED\u03EF-\u03F3\u03F5\u03F8\u03FB\u03FC\u0430-\u045F\u0461\u0463\u0465\u0467\u0469\u046B\u046D\u046F\u0471\u0473\u0475\u0477\u0479\u047B\u047D\u047F\u0481\u048B\u048D\u048F\u0491\u0493\u0495\u0497\u0499\u049B\u049D\u049F\u04A1\u04A3\u04A5\u04A7\u04A9\u04AB\u04AD\u04AF\u04B1\u04B3\u04B5\u04B7\u04B9\u04BB\u04BD\u04BF\u04C2\u04C4\u04C6\u04C8\u04CA\u04CC\u04CE\u04CF\u04D1\u04D3\u04D5\u04D7\u04D9\u04DB\u04DD\u04DF\u04E1\u04E3\u04E5\u04E7\u04E9\u04EB\u04ED\u04EF\u04F1\u04F3\u04F5\u04F7\u04F9\u04FB\u04FD\u04FF\u0501\u0503\u0505\u0507\u0509\u050B\u050D\u050F\u0511\u0513\u0515\u0517\u0519\u051B\u051D\u051F\u0521\u0523\u0525\u0527\u0529\u052B\u052D\u052F\u0561-\u0587\u13F8-\u13FD\u1D00-\u1DBF\u1E01\u1E03\u1E05\u1E07\u1E09\u1E0B\u1E0D\u1E0F\u1E11\u1E13\u1E15\u1E17\u1E19\u1E1B\u1E1D\u1E1F\u1E21\u1E23\u1E25\u1E27\u1E29\u1E2B\u1E2D\u1E2F\u1E31\u1E33\u1E35\u1E37\u1E39\u1E3B\u1E3D\u1E3F\u1E41\u1E43\u1E45\u1E47\u1E49\u1E4B\u1E4D\u1E4F\u1E51\u1E53\u1E55\u1E57\u1E59\u1E5B\u1E5D\u1E5F\u1E61\u1E63\u1E65\u1E67\u1E69\u1E6B\u1E6D\u1E6F\u1E71\u1E73\u1E75\u1E77\u1E79\u1E7B\u1E7D\u1E7F\u1E81\u1E83\u1E85\u1E87\u1E89\u1E8B\u1E8D\u1E8F\u1E91\u1E93\u1E95-\u1E9D\u1E9F\u1EA1\u1EA3\u1EA5\u1EA7\u1EA9\u1EAB\u1EAD\u1EAF\u1EB1\u1EB3\u1EB5\u1EB7\u1EB9\u1EBB\u1EBD\u1EBF\u1EC1\u1EC3\u1EC5\u1EC7\u1EC9\u1ECB\u1ECD\u1ECF\u1ED1\u1ED3\u1ED5\u1ED7\u1ED9\u1EDB\u1EDD\u1EDF\u1EE1\u1EE3\u1EE5\u1EE7\u1EE9\u1EEB\u1EED\u1EEF\u1EF1\u1EF3\u1EF5\u1EF7\u1EF9\u1EFB\u1EFD\u1EFF-\u1F07\u1F10-\u1F15\u1F20-\u1F27\u1F30-\u1F37\u1F40-\u1F45\u1F50-\u1F57\u1F60-\u1F67\u1F70-\u1F7D\u1F80-\u1F87\u1F90-\u1F97\u1FA0-\u1FA7\u1FB0-\u1FB4\u1FB6\u1FB7\u1FBE\u1FC2-\u1FC4\u1FC6\u1FC7\u1FD0-\u1FD3\u1FD6\u1FD7\u1FE0-\u1FE7\u1FF2-\u1FF4\u1FF6\u1FF7\u2071\u207F\u2090-\u209C\u210A\u210E\u210F\u2113\u212F\u2134\u2139\u213C\u213D\u2146-\u2149\u214E\u2170-\u217F\u2184\u24D0-\u24E9\u2C30-\u2C5E\u2C61\u2C65\u2C66\u2C68\u2C6A\u2C6C\u2C71\u2C73\u2C74\u2C76-\u2C7D\u2C81\u2C83\u2C85\u2C87\u2C89\u2C8B\u2C8D\u2C8F\u2C91\u2C93\u2C95\u2C97\u2C99\u2C9B\u2C9D\u2C9F\u2CA1\u2CA3\u2CA5\u2CA7\u2CA9\u2CAB\u2CAD\u2CAF\u2CB1\u2CB3\u2CB5\u2CB7\u2CB9\u2CBB\u2CBD\u2CBF\u2CC1\u2CC3\u2CC5\u2CC7\u2CC9\u2CCB\u2CCD\u2CCF\u2CD1\u2CD3\u2CD5\u2CD7\u2CD9\u2CDB\u2CDD\u2CDF\u2CE1\u2CE3\u2CE4\u2CEC\u2CEE\u2CF3\u2D00-\u2D25\u2D27\u2D2D\uA641\uA643\uA645\uA647\uA649\uA64B\uA64D\uA64F\uA651\uA653\uA655\uA657\uA659\uA65B\uA65D\uA65F\uA661\uA663\uA665\uA667\uA669\uA66B\uA66D\uA681\uA683\uA685\uA687\uA689\uA68B\uA68D\uA68F\uA691\uA693\uA695\uA697\uA699\uA69B-\uA69D\uA723\uA725\uA727\uA729\uA72B\uA72D\uA72F-\uA731\uA733\uA735\uA737\uA739\uA73B\uA73D\uA73F\uA741\uA743\uA745\uA747\uA749\uA74B\uA74D\uA74F\uA751\uA753\uA755\uA757\uA759\uA75B\uA75D\uA75F\uA761\uA763\uA765\uA767\uA769\uA76B\uA76D\uA76F-\uA778\uA77A\uA77C\uA77F\uA781\uA783\uA785\uA787\uA78C\uA78E\uA791\uA793-\uA795\uA797\uA799\uA79B\uA79D\uA79F\uA7A1\uA7A3\uA7A5\uA7A7\uA7A9\uA7B5\uA7B7\uA7F8-\uA7FA\uAB30-\uAB5A\uAB5C-\uAB65\uAB70-\uABBF\uFB00-\uFB06\uFB13-\uFB17\uFF41-\uFF5A',
+	            astral: '\uD803[\uDCC0-\uDCF2]|\uD835[\uDC1A-\uDC33\uDC4E-\uDC54\uDC56-\uDC67\uDC82-\uDC9B\uDCB6-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDCCF\uDCEA-\uDD03\uDD1E-\uDD37\uDD52-\uDD6B\uDD86-\uDD9F\uDDBA-\uDDD3\uDDEE-\uDE07\uDE22-\uDE3B\uDE56-\uDE6F\uDE8A-\uDEA5\uDEC2-\uDEDA\uDEDC-\uDEE1\uDEFC-\uDF14\uDF16-\uDF1B\uDF36-\uDF4E\uDF50-\uDF55\uDF70-\uDF88\uDF8A-\uDF8F\uDFAA-\uDFC2\uDFC4-\uDFC9\uDFCB]|\uD801[\uDC28-\uDC4F]|\uD806[\uDCC0-\uDCDF]'
+	        },
+	        {
+	            name: 'Noncharacter_Code_Point',
+	            bmp: '\uFDD0-\uFDEF\uFFFE\uFFFF',
+	            astral: '[\uDB3F\uDB7F\uDBBF\uDBFF\uD83F\uD87F\uD8BF\uDAFF\uD97F\uD9BF\uD9FF\uDA3F\uD8FF\uDABF\uDA7F\uD93F][\uDFFE\uDFFF]'
+	        },
+	        {
+	            name: 'Uppercase',
+	            bmp: 'A-Z\xC0-\xD6\xD8-\xDE\u0100\u0102\u0104\u0106\u0108\u010A\u010C\u010E\u0110\u0112\u0114\u0116\u0118\u011A\u011C\u011E\u0120\u0122\u0124\u0126\u0128\u012A\u012C\u012E\u0130\u0132\u0134\u0136\u0139\u013B\u013D\u013F\u0141\u0143\u0145\u0147\u014A\u014C\u014E\u0150\u0152\u0154\u0156\u0158\u015A\u015C\u015E\u0160\u0162\u0164\u0166\u0168\u016A\u016C\u016E\u0170\u0172\u0174\u0176\u0178\u0179\u017B\u017D\u0181\u0182\u0184\u0186\u0187\u0189-\u018B\u018E-\u0191\u0193\u0194\u0196-\u0198\u019C\u019D\u019F\u01A0\u01A2\u01A4\u01A6\u01A7\u01A9\u01AC\u01AE\u01AF\u01B1-\u01B3\u01B5\u01B7\u01B8\u01BC\u01C4\u01C7\u01CA\u01CD\u01CF\u01D1\u01D3\u01D5\u01D7\u01D9\u01DB\u01DE\u01E0\u01E2\u01E4\u01E6\u01E8\u01EA\u01EC\u01EE\u01F1\u01F4\u01F6-\u01F8\u01FA\u01FC\u01FE\u0200\u0202\u0204\u0206\u0208\u020A\u020C\u020E\u0210\u0212\u0214\u0216\u0218\u021A\u021C\u021E\u0220\u0222\u0224\u0226\u0228\u022A\u022C\u022E\u0230\u0232\u023A\u023B\u023D\u023E\u0241\u0243-\u0246\u0248\u024A\u024C\u024E\u0370\u0372\u0376\u037F\u0386\u0388-\u038A\u038C\u038E\u038F\u0391-\u03A1\u03A3-\u03AB\u03CF\u03D2-\u03D4\u03D8\u03DA\u03DC\u03DE\u03E0\u03E2\u03E4\u03E6\u03E8\u03EA\u03EC\u03EE\u03F4\u03F7\u03F9\u03FA\u03FD-\u042F\u0460\u0462\u0464\u0466\u0468\u046A\u046C\u046E\u0470\u0472\u0474\u0476\u0478\u047A\u047C\u047E\u0480\u048A\u048C\u048E\u0490\u0492\u0494\u0496\u0498\u049A\u049C\u049E\u04A0\u04A2\u04A4\u04A6\u04A8\u04AA\u04AC\u04AE\u04B0\u04B2\u04B4\u04B6\u04B8\u04BA\u04BC\u04BE\u04C0\u04C1\u04C3\u04C5\u04C7\u04C9\u04CB\u04CD\u04D0\u04D2\u04D4\u04D6\u04D8\u04DA\u04DC\u04DE\u04E0\u04E2\u04E4\u04E6\u04E8\u04EA\u04EC\u04EE\u04F0\u04F2\u04F4\u04F6\u04F8\u04FA\u04FC\u04FE\u0500\u0502\u0504\u0506\u0508\u050A\u050C\u050E\u0510\u0512\u0514\u0516\u0518\u051A\u051C\u051E\u0520\u0522\u0524\u0526\u0528\u052A\u052C\u052E\u0531-\u0556\u10A0-\u10C5\u10C7\u10CD\u13A0-\u13F5\u1E00\u1E02\u1E04\u1E06\u1E08\u1E0A\u1E0C\u1E0E\u1E10\u1E12\u1E14\u1E16\u1E18\u1E1A\u1E1C\u1E1E\u1E20\u1E22\u1E24\u1E26\u1E28\u1E2A\u1E2C\u1E2E\u1E30\u1E32\u1E34\u1E36\u1E38\u1E3A\u1E3C\u1E3E\u1E40\u1E42\u1E44\u1E46\u1E48\u1E4A\u1E4C\u1E4E\u1E50\u1E52\u1E54\u1E56\u1E58\u1E5A\u1E5C\u1E5E\u1E60\u1E62\u1E64\u1E66\u1E68\u1E6A\u1E6C\u1E6E\u1E70\u1E72\u1E74\u1E76\u1E78\u1E7A\u1E7C\u1E7E\u1E80\u1E82\u1E84\u1E86\u1E88\u1E8A\u1E8C\u1E8E\u1E90\u1E92\u1E94\u1E9E\u1EA0\u1EA2\u1EA4\u1EA6\u1EA8\u1EAA\u1EAC\u1EAE\u1EB0\u1EB2\u1EB4\u1EB6\u1EB8\u1EBA\u1EBC\u1EBE\u1EC0\u1EC2\u1EC4\u1EC6\u1EC8\u1ECA\u1ECC\u1ECE\u1ED0\u1ED2\u1ED4\u1ED6\u1ED8\u1EDA\u1EDC\u1EDE\u1EE0\u1EE2\u1EE4\u1EE6\u1EE8\u1EEA\u1EEC\u1EEE\u1EF0\u1EF2\u1EF4\u1EF6\u1EF8\u1EFA\u1EFC\u1EFE\u1F08-\u1F0F\u1F18-\u1F1D\u1F28-\u1F2F\u1F38-\u1F3F\u1F48-\u1F4D\u1F59\u1F5B\u1F5D\u1F5F\u1F68-\u1F6F\u1FB8-\u1FBB\u1FC8-\u1FCB\u1FD8-\u1FDB\u1FE8-\u1FEC\u1FF8-\u1FFB\u2102\u2107\u210B-\u210D\u2110-\u2112\u2115\u2119-\u211D\u2124\u2126\u2128\u212A-\u212D\u2130-\u2133\u213E\u213F\u2145\u2160-\u216F\u2183\u24B6-\u24CF\u2C00-\u2C2E\u2C60\u2C62-\u2C64\u2C67\u2C69\u2C6B\u2C6D-\u2C70\u2C72\u2C75\u2C7E-\u2C80\u2C82\u2C84\u2C86\u2C88\u2C8A\u2C8C\u2C8E\u2C90\u2C92\u2C94\u2C96\u2C98\u2C9A\u2C9C\u2C9E\u2CA0\u2CA2\u2CA4\u2CA6\u2CA8\u2CAA\u2CAC\u2CAE\u2CB0\u2CB2\u2CB4\u2CB6\u2CB8\u2CBA\u2CBC\u2CBE\u2CC0\u2CC2\u2CC4\u2CC6\u2CC8\u2CCA\u2CCC\u2CCE\u2CD0\u2CD2\u2CD4\u2CD6\u2CD8\u2CDA\u2CDC\u2CDE\u2CE0\u2CE2\u2CEB\u2CED\u2CF2\uA640\uA642\uA644\uA646\uA648\uA64A\uA64C\uA64E\uA650\uA652\uA654\uA656\uA658\uA65A\uA65C\uA65E\uA660\uA662\uA664\uA666\uA668\uA66A\uA66C\uA680\uA682\uA684\uA686\uA688\uA68A\uA68C\uA68E\uA690\uA692\uA694\uA696\uA698\uA69A\uA722\uA724\uA726\uA728\uA72A\uA72C\uA72E\uA732\uA734\uA736\uA738\uA73A\uA73C\uA73E\uA740\uA742\uA744\uA746\uA748\uA74A\uA74C\uA74E\uA750\uA752\uA754\uA756\uA758\uA75A\uA75C\uA75E\uA760\uA762\uA764\uA766\uA768\uA76A\uA76C\uA76E\uA779\uA77B\uA77D\uA77E\uA780\uA782\uA784\uA786\uA78B\uA78D\uA790\uA792\uA796\uA798\uA79A\uA79C\uA79E\uA7A0\uA7A2\uA7A4\uA7A6\uA7A8\uA7AA-\uA7AD\uA7B0-\uA7B4\uA7B6\uFF21-\uFF3A',
+	            astral: '\uD806[\uDCA0-\uDCBF]|\uD803[\uDC80-\uDCB2]|\uD835[\uDC00-\uDC19\uDC34-\uDC4D\uDC68-\uDC81\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB5\uDCD0-\uDCE9\uDD04\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD38\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD6C-\uDD85\uDDA0-\uDDB9\uDDD4-\uDDED\uDE08-\uDE21\uDE3C-\uDE55\uDE70-\uDE89\uDEA8-\uDEC0\uDEE2-\uDEFA\uDF1C-\uDF34\uDF56-\uDF6E\uDF90-\uDFA8\uDFCA]|\uD801[\uDC00-\uDC27]|\uD83C[\uDD30-\uDD49\uDD50-\uDD69\uDD70-\uDD89]'
+	        },
+	        {
+	            name: 'White_Space',
+	            bmp: '\x09-\x0D\x20\x85\xA0\u1680\u2000-\u200A\u2028\u2029\u202F\u205F\u3000'
+	        }
+	    ];
 
 	    // Add non-generated data
 	    unicodeData.push({
@@ -4983,13 +8089,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	    });
 
 	    XRegExp.addUnicodeData(unicodeData);
+
 	};
 
-/***/ },
-/* 17 */
-/***/ function(module, exports) {
 
-	'use strict';
+/***/ },
+/* 45 */
+/***/ function(module, exports) {
 
 	/*!
 	 * XRegExp Unicode Scripts 3.1.1
@@ -4998,7 +8104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * Unicode data by Mathias Bynens <mathiasbynens.be>
 	 */
 
-	module.exports = function (XRegExp) {
+	module.exports = function(XRegExp) {
 	    'use strict';
 
 	    /**
@@ -5014,410 +8120,1488 @@ return /******/ (function(modules) { // webpackBootstrap
 	        throw new ReferenceError('Unicode Base must be loaded before Unicode Scripts');
 	    }
 
-	    XRegExp.addUnicodeData([{
-	        name: 'Ahom',
-	        astral: '�[�-��-��-�]'
-	    }, {
-	        name: 'Anatolian_Hieroglyphs',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Arabic',
-	        bmp: '؀-؄؆-؋؍-ؚ؞ؠ-ؿف-يٖ-ٯٱ-ۜ۞-ۿݐ-ݿࢠ-ࢴࣣ-ࣿﭐ-﯁ﯓ-ﴽﵐ-ﶏﶒ-ﷇﷰ-﷽ﹰ-ﹴﹶ-ﻼ',
-	        astral: '�[�-�]|�[�-��-������-��-��������-�������������-��-��-��-���-��-��-��-��-���]'
-	    }, {
-	        name: 'Armenian',
-	        bmp: 'Ա-Ֆՙ-՟ա-և֊֍-֏ﬓ-ﬗ'
-	    }, {
-	        name: 'Avestan',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Balinese',
-	        bmp: 'ᬀ-ᭋ᭐-᭼'
-	    }, {
-	        name: 'Bamum',
-	        bmp: 'ꚠ-꛷',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Bassa_Vah',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Batak',
-	        bmp: 'ᯀ-᯳᯼-᯿'
-	    }, {
-	        name: 'Bengali',
-	        bmp: 'ঀ-ঃঅ-ঌএঐও-নপ-রলশ-হ়-ৄেৈো-ৎৗড়ঢ়য়-ৣ০-৻'
-	    }, {
-	        name: 'Bopomofo',
-	        bmp: '˪˫ㄅ-ㄭㆠ-ㆺ'
-	    }, {
-	        name: 'Brahmi',
-	        astral: '�[�-��-��]'
-	    }, {
-	        name: 'Braille',
-	        bmp: '⠀-⣿'
-	    }, {
-	        name: 'Buginese',
-	        bmp: 'ᨀ-ᨛ᨞᨟'
-	    }, {
-	        name: 'Buhid',
-	        bmp: 'ᝀ-ᝓ'
-	    }, {
-	        name: 'Canadian_Aboriginal',
-	        bmp: '᐀-ᙿᢰ-ᣵ'
-	    }, {
-	        name: 'Carian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Caucasian_Albanian',
-	        astral: '�[�-��]'
-	    }, {
-	        name: 'Chakma',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Cham',
-	        bmp: 'ꨀ-ꨶꩀ-ꩍ꩐-꩙꩜-꩟'
-	    }, {
-	        name: 'Cherokee',
-	        bmp: 'Ꭰ-Ᏽᏸ-ᏽꭰ-ꮿ'
-	    }, {
-	        name: 'Common',
-	        bmp: '\u0000-@\\x5B-`\\x7B-©«-¹»-¿×÷ʹ-˟˥-˩ˬ-˿ʹ;΅·։؅،؛؜؟ـ۝।॥฿࿕-࿘჻᛫-᛭᜵᜶᠂᠃᠅᳓᳡ᳩ-ᳬᳮ-ᳳᳵᳶ -​‎-⁤⁦-⁰⁴-⁾₀-₎₠-₾℀-℥℧-℩ℬ-ℱℳ-⅍⅏-⅟↉-↋←-⏺␀-␦⑀-⑊①-⟿⤀-⭳⭶-⮕⮘-⮹⮽-⯈⯊-⯑⯬-⯯⸀-⹂⿰-⿻　-〄〆〈-〠〰-〷〼-〿゛゜゠・ー㆐-㆟㇀-㇣㈠-㉟㉿-㋏㍘-㏿䷀-䷿꜀-꜡ꞈ-꞊꠰-꠹꤮ꧏ꭛﴾﴿︐-︙︰-﹒﹔-﹦﹨-﹫﻿！-＠［-｀｛-･ｰﾞﾟ￠-￦￨-￮￹-�',
-	        astral: '�[�-��-��-��-��-��-��-��]|�[�-�]|�[�-��-�������-��-���-��-��-��-��-��-��-��-���-��-��-��-�]|�[��-�]|�[�-��-��-��-��-��-��-�]|�[�-��-��-��-��-��-�]|�[�-��-��-��-����-��-��-��-�]|�[�-��-��-��-��-��-��-��-��-��-��-����-��-����-�]'
-	    }, {
-	        name: 'Coptic',
-	        bmp: 'Ϣ-ϯⲀ-ⳳ⳹-⳿'
-	    }, {
-	        name: 'Cuneiform',
-	        astral: '�[�-��-��-�]|�[�-�]'
-	    }, {
-	        name: 'Cypriot',
-	        astral: '�[�-���-�����]'
-	    }, {
-	        name: 'Cyrillic',
-	        bmp: 'Ѐ-҄҇-ԯᴫᵸⷠ-ⷿꙀ-ꚟ︮︯'
-	    }, {
-	        name: 'Deseret',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Devanagari',
-	        bmp: 'ऀ-ॐ॓-ॣ०-ॿ꣠-ꣽ'
-	    }, {
-	        name: 'Duployan',
-	        astral: '�[�-��-��-��-��-�]'
-	    }, {
-	        name: 'Egyptian_Hieroglyphs',
-	        astral: '�[�-�]|�[�-�]'
-	    }, {
-	        name: 'Elbasan',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Ethiopic',
-	        bmp: 'ሀ-ቈቊ-ቍቐ-ቖቘቚ-ቝበ-ኈኊ-ኍነ-ኰኲ-ኵኸ-ኾዀዂ-ዅወ-ዖዘ-ጐጒ-ጕጘ-ፚ፝-፼ᎀ-᎙ⶀ-ⶖⶠ-ⶦⶨ-ⶮⶰ-ⶶⶸ-ⶾⷀ-ⷆⷈ-ⷎⷐ-ⷖⷘ-ⷞꬁ-ꬆꬉ-ꬎꬑ-ꬖꬠ-ꬦꬨ-ꬮ'
-	    }, {
-	        name: 'Georgian',
-	        bmp: 'Ⴀ-ჅჇჍა-ჺჼ-ჿⴀ-ⴥⴧⴭ'
-	    }, {
-	        name: 'Glagolitic',
-	        bmp: 'Ⰰ-Ⱞⰰ-ⱞ'
-	    }, {
-	        name: 'Gothic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Grantha',
-	        astral: '�[�-��-����-��-����-��-����-����-��-��-�]'
-	    }, {
-	        name: 'Greek',
-	        bmp: 'Ͱ-ͳ͵-ͷͺ-ͽͿ΄ΆΈ-ΊΌΎ-ΡΣ-ϡϰ-Ͽᴦ-ᴪᵝ-ᵡᵦ-ᵪᶿἀ-ἕἘ-Ἕἠ-ὅὈ-Ὅὐ-ὗὙὛὝὟ-ώᾀ-ᾴᾶ-ῄῆ-ΐῖ-Ί῝-`ῲ-ῴῶ-῾Ωꭥ',
-	        astral: '�[�-��]|�[�-�]'
-	    }, {
-	        name: 'Gujarati',
-	        bmp: 'ઁ-ઃઅ-ઍએ-ઑઓ-નપ-રલળવ-હ઼-ૅે-ૉો-્ૐૠ-ૣ૦-૱ૹ'
-	    }, {
-	        name: 'Gurmukhi',
-	        bmp: 'ਁ-ਃਅ-ਊਏਐਓ-ਨਪ-ਰਲਲ਼ਵਸ਼ਸਹ਼ਾ-ੂੇੈੋ-੍ੑਖ਼-ੜਫ਼੦-ੵ'
-	    }, {
-	        name: 'Han',
-	        bmp: '⺀-⺙⺛-⻳⼀-⿕々〇〡-〩〸-〻㐀-䶵一-鿕豈-舘並-龎',
-	        astral: '�[�-��-�]|[�-��-��-�][�-�]|�[�-��-�]|�[�-�]|�[�-��-�]|�[�-�]'
-	    }, {
-	        name: 'Hangul',
-	        bmp: 'ᄀ-ᇿ〮〯ㄱ-ㆎ㈀-㈞㉠-㉾ꥠ-ꥼ가-힣ힰ-ퟆퟋ-ퟻﾠ-ﾾￂ-ￇￊ-ￏￒ-ￗￚ-ￜ'
-	    }, {
-	        name: 'Hanunoo',
-	        bmp: 'ᜠ-᜴'
-	    }, {
-	        name: 'Hatran',
-	        astral: '�[�-����-�]'
-	    }, {
-	        name: 'Hebrew',
-	        bmp: '֑-ׇא-תװ-״יִ-זּטּ-לּמּנּסּףּפּצּ-ﭏ'
-	    }, {
-	        name: 'Hiragana',
-	        bmp: 'ぁ-ゖゝ-ゟ',
-	        astral: '𛀁|🈀'
-	    }, {
-	        name: 'Imperial_Aramaic',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Inherited',
-	        bmp: '̀-ًͯ҅҆-ٰٕ॒॑᪰-᪾᳐-᳔᳒-᳢᳠-᳨᳭᳴᳸᳹᷀-᷵᷼-᷿‌‍⃐-〪⃰-゙゚〭︀-️︠-︭',
-	        astral: '�[�-��-��-��-�]|�[��]|�[�-�]'
-	    }, {
-	        name: 'Inscriptional_Pahlavi',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Inscriptional_Parthian',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Javanese',
-	        bmp: 'ꦀ-꧍꧐-꧙꧞꧟'
-	    }, {
-	        name: 'Kaithi',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Kannada',
-	        bmp: 'ಁ-ಃಅ-ಌಎ-ಐಒ-ನಪ-ಳವ-ಹ಼-ೄೆ-ೈೊ-್ೕೖೞೠ-ೣ೦-೯ೱೲ'
-	    }, {
-	        name: 'Katakana',
-	        bmp: 'ァ-ヺヽ-ヿㇰ-ㇿ㋐-㋾㌀-㍗ｦ-ｯｱ-ﾝ',
-	        astral: '𛀀'
-	    }, {
-	        name: 'Kayah_Li',
-	        bmp: '꤀-꤭꤯'
-	    }, {
-	        name: 'Kharoshthi',
-	        astral: '�[�-����-��-��-��-��-��-�]'
-	    }, {
-	        name: 'Khmer',
-	        bmp: 'ក-៝០-៩៰-៹᧠-᧿'
-	    }, {
-	        name: 'Khojki',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Khudawadi',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Lao',
-	        bmp: 'ກຂຄງຈຊຍດ-ທນ-ຟມ-ຣລວສຫອ-ູົ-ຽເ-ໄໆ່-ໍ໐-໙ໜ-ໟ'
-	    }, {
-	        name: 'Latin',
-	        bmp: 'A-Za-zªºÀ-ÖØ-öø-ʸˠ-ˤᴀ-ᴥᴬ-ᵜᵢ-ᵥᵫ-ᵷᵹ-ᶾḀ-ỿⁱⁿₐ-ₜKÅℲⅎⅠ-ↈⱠ-ⱿꜢ-ꞇꞋ-ꞭꞰ-ꞷꟷ-ꟿꬰ-ꭚꭜ-ꭤﬀ-ﬆＡ-Ｚａ-ｚ'
-	    }, {
-	        name: 'Lepcha',
-	        bmp: 'ᰀ-᰷᰻-᱉ᱍ-ᱏ'
-	    }, {
-	        name: 'Limbu',
-	        bmp: 'ᤀ-ᤞᤠ-ᤫᤰ-᤻᥀᥄-᥏'
-	    }, {
-	        name: 'Linear_A',
-	        astral: '�[�-��-��-�]'
-	    }, {
-	        name: 'Linear_B',
-	        astral: '�[�-��-��-����-��-��-�]'
-	    }, {
-	        name: 'Lisu',
-	        bmp: 'ꓐ-꓿'
-	    }, {
-	        name: 'Lycian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Lydian',
-	        astral: '�[�-��]'
-	    }, {
-	        name: 'Mahajani',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Malayalam',
-	        bmp: 'ഁ-ഃഅ-ഌഎ-ഐഒ-ഺഽ-ൄെ-ൈൊ-ൎൗൟ-ൣ൦-൵൹-ൿ'
-	    }, {
-	        name: 'Mandaic',
-	        bmp: 'ࡀ-࡛࡞'
-	    }, {
-	        name: 'Manichaean',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Meetei_Mayek',
-	        bmp: 'ꫠ-꫶ꯀ-꯭꯰-꯹'
-	    }, {
-	        name: 'Mende_Kikakui',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Meroitic_Cursive',
-	        astral: '�[�-��-��-�]'
-	    }, {
-	        name: 'Meroitic_Hieroglyphs',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Miao',
-	        astral: '�[�-��-��-�]'
-	    }, {
-	        name: 'Modi',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Mongolian',
-	        bmp: '᠀᠁᠄᠆-᠎᠐-᠙ᠠ-ᡷᢀ-ᢪ'
-	    }, {
-	        name: 'Mro',
-	        astral: '�[�-��-���]'
-	    }, {
-	        name: 'Multani',
-	        astral: '�[�-���-��-��-�]'
-	    }, {
-	        name: 'Myanmar',
-	        bmp: 'က-႟ꧠ-ꧾꩠ-ꩿ'
-	    }, {
-	        name: 'Nabataean',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'New_Tai_Lue',
-	        bmp: 'ᦀ-ᦫᦰ-ᧉ᧐-᧚᧞᧟'
-	    }, {
-	        name: 'Nko',
-	        bmp: '߀-ߺ'
-	    }, {
-	        name: 'Ogham',
-	        bmp: ' -᚜'
-	    }, {
-	        name: 'Ol_Chiki',
-	        bmp: '᱐-᱿'
-	    }, {
-	        name: 'Old_Hungarian',
-	        astral: '�[�-��-��-�]'
-	    }, {
-	        name: 'Old_Italic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Old_North_Arabian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Old_Permic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Old_Persian',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Old_South_Arabian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Old_Turkic',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Oriya',
-	        bmp: 'ଁ-ଃଅ-ଌଏଐଓ-ନପ-ରଲଳଵ-ହ଼-ୄେୈୋ-୍ୖୗଡ଼ଢ଼ୟ-ୣ୦-୷'
-	    }, {
-	        name: 'Osmanya',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Pahawh_Hmong',
-	        astral: '�[�-��-��-��-��-�]'
-	    }, {
-	        name: 'Palmyrene',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Pau_Cin_Hau',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Phags_Pa',
-	        bmp: 'ꡀ-꡷'
-	    }, {
-	        name: 'Phoenician',
-	        astral: '�[�-��]'
-	    }, {
-	        name: 'Psalter_Pahlavi',
-	        astral: '�[�-��-��-�]'
-	    }, {
-	        name: 'Rejang',
-	        bmp: 'ꤰ-꥓꥟'
-	    }, {
-	        name: 'Runic',
-	        bmp: 'ᚠ-ᛪᛮ-ᛸ'
-	    }, {
-	        name: 'Samaritan',
-	        bmp: 'ࠀ-࠭࠰-࠾'
-	    }, {
-	        name: 'Saurashtra',
-	        bmp: 'ꢀ-꣄꣎-꣙'
-	    }, {
-	        name: 'Sharada',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Shavian',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Siddham',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'SignWriting',
-	        astral: '�[�-��-��-�]'
-	    }, {
-	        name: 'Sinhala',
-	        bmp: 'ංඃඅ-ඖක-නඳ-රලව-ෆ්ා-ුූෘ-ෟ෦-෯ෲ-෴',
-	        astral: '�[�-�]'
-	    }, {
-	        name: 'Sora_Sompeng',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Sundanese',
-	        bmp: 'ᮀ-ᮿ᳀-᳇'
-	    }, {
-	        name: 'Syloti_Nagri',
-	        bmp: 'ꠀ-꠫'
-	    }, {
-	        name: 'Syriac',
-	        bmp: '܀-܍܏-݊ݍ-ݏ'
-	    }, {
-	        name: 'Tagalog',
-	        bmp: 'ᜀ-ᜌᜎ-᜔'
-	    }, {
-	        name: 'Tagbanwa',
-	        bmp: 'ᝠ-ᝬᝮ-ᝰᝲᝳ'
-	    }, {
-	        name: 'Tai_Le',
-	        bmp: 'ᥐ-ᥭᥰ-ᥴ'
-	    }, {
-	        name: 'Tai_Tham',
-	        bmp: 'ᨠ-ᩞ᩠-᩿᩼-᪉᪐-᪙᪠-᪭'
-	    }, {
-	        name: 'Tai_Viet',
-	        bmp: 'ꪀ-ꫂꫛ-꫟'
-	    }, {
-	        name: 'Takri',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Tamil',
-	        bmp: 'ஂஃஅ-ஊஎ-ஐஒ-கஙசஜஞடணதந-பம-ஹா-ூெ-ைொ-்ௐௗ௦-௺'
-	    }, {
-	        name: 'Telugu',
-	        bmp: 'ఀ-ఃఅ-ఌఎ-ఐఒ-నప-హఽ-ౄె-ైొ-్ౕౖౘ-ౚౠ-ౣ౦-౯౸-౿'
-	    }, {
-	        name: 'Thaana',
-	        bmp: 'ހ-ޱ'
-	    }, {
-	        name: 'Thai',
-	        bmp: 'ก-ฺเ-๛'
-	    }, {
-	        name: 'Tibetan',
-	        bmp: 'ༀ-ཇཉ-ཬཱ-ྗྙ-ྼ྾-࿌࿎-࿔࿙࿚'
-	    }, {
-	        name: 'Tifinagh',
-	        bmp: 'ⴰ-ⵧⵯ⵰⵿'
-	    }, {
-	        name: 'Tirhuta',
-	        astral: '�[�-��-�]'
-	    }, {
-	        name: 'Ugaritic',
-	        astral: '�[�-��]'
-	    }, {
-	        name: 'Vai',
-	        bmp: 'ꔀ-ꘫ'
-	    }, {
-	        name: 'Warang_Citi',
-	        astral: '�[�-��]'
-	    }, {
-	        name: 'Yi',
-	        bmp: 'ꀀ-ꒌ꒐-꓆'
-	    }]);
+	    XRegExp.addUnicodeData([
+	        {
+	            name: 'Ahom',
+	            astral: '\uD805[\uDF00-\uDF19\uDF1D-\uDF2B\uDF30-\uDF3F]'
+	        },
+	        {
+	            name: 'Anatolian_Hieroglyphs',
+	            astral: '\uD811[\uDC00-\uDE46]'
+	        },
+	        {
+	            name: 'Arabic',
+	            bmp: '\u0600-\u0604\u0606-\u060B\u060D-\u061A\u061E\u0620-\u063F\u0641-\u064A\u0656-\u066F\u0671-\u06DC\u06DE-\u06FF\u0750-\u077F\u08A0-\u08B4\u08E3-\u08FF\uFB50-\uFBC1\uFBD3-\uFD3D\uFD50-\uFD8F\uFD92-\uFDC7\uFDF0-\uFDFD\uFE70-\uFE74\uFE76-\uFEFC',
+	            astral: '\uD803[\uDE60-\uDE7E]|\uD83B[\uDE00-\uDE03\uDE05-\uDE1F\uDE21\uDE22\uDE24\uDE27\uDE29-\uDE32\uDE34-\uDE37\uDE39\uDE3B\uDE42\uDE47\uDE49\uDE4B\uDE4D-\uDE4F\uDE51\uDE52\uDE54\uDE57\uDE59\uDE5B\uDE5D\uDE5F\uDE61\uDE62\uDE64\uDE67-\uDE6A\uDE6C-\uDE72\uDE74-\uDE77\uDE79-\uDE7C\uDE7E\uDE80-\uDE89\uDE8B-\uDE9B\uDEA1-\uDEA3\uDEA5-\uDEA9\uDEAB-\uDEBB\uDEF0\uDEF1]'
+	        },
+	        {
+	            name: 'Armenian',
+	            bmp: '\u0531-\u0556\u0559-\u055F\u0561-\u0587\u058A\u058D-\u058F\uFB13-\uFB17'
+	        },
+	        {
+	            name: 'Avestan',
+	            astral: '\uD802[\uDF00-\uDF35\uDF39-\uDF3F]'
+	        },
+	        {
+	            name: 'Balinese',
+	            bmp: '\u1B00-\u1B4B\u1B50-\u1B7C'
+	        },
+	        {
+	            name: 'Bamum',
+	            bmp: '\uA6A0-\uA6F7',
+	            astral: '\uD81A[\uDC00-\uDE38]'
+	        },
+	        {
+	            name: 'Bassa_Vah',
+	            astral: '\uD81A[\uDED0-\uDEED\uDEF0-\uDEF5]'
+	        },
+	        {
+	            name: 'Batak',
+	            bmp: '\u1BC0-\u1BF3\u1BFC-\u1BFF'
+	        },
+	        {
+	            name: 'Bengali',
+	            bmp: '\u0980-\u0983\u0985-\u098C\u098F\u0990\u0993-\u09A8\u09AA-\u09B0\u09B2\u09B6-\u09B9\u09BC-\u09C4\u09C7\u09C8\u09CB-\u09CE\u09D7\u09DC\u09DD\u09DF-\u09E3\u09E6-\u09FB'
+	        },
+	        {
+	            name: 'Bopomofo',
+	            bmp: '\u02EA\u02EB\u3105-\u312D\u31A0-\u31BA'
+	        },
+	        {
+	            name: 'Brahmi',
+	            astral: '\uD804[\uDC00-\uDC4D\uDC52-\uDC6F\uDC7F]'
+	        },
+	        {
+	            name: 'Braille',
+	            bmp: '\u2800-\u28FF'
+	        },
+	        {
+	            name: 'Buginese',
+	            bmp: '\u1A00-\u1A1B\u1A1E\u1A1F'
+	        },
+	        {
+	            name: 'Buhid',
+	            bmp: '\u1740-\u1753'
+	        },
+	        {
+	            name: 'Canadian_Aboriginal',
+	            bmp: '\u1400-\u167F\u18B0-\u18F5'
+	        },
+	        {
+	            name: 'Carian',
+	            astral: '\uD800[\uDEA0-\uDED0]'
+	        },
+	        {
+	            name: 'Caucasian_Albanian',
+	            astral: '\uD801[\uDD30-\uDD63\uDD6F]'
+	        },
+	        {
+	            name: 'Chakma',
+	            astral: '\uD804[\uDD00-\uDD34\uDD36-\uDD43]'
+	        },
+	        {
+	            name: 'Cham',
+	            bmp: '\uAA00-\uAA36\uAA40-\uAA4D\uAA50-\uAA59\uAA5C-\uAA5F'
+	        },
+	        {
+	            name: 'Cherokee',
+	            bmp: '\u13A0-\u13F5\u13F8-\u13FD\uAB70-\uABBF'
+	        },
+	        {
+	            name: 'Common',
+	            bmp: '\0-\x40\\x5B-\x60\\x7B-\xA9\xAB-\xB9\xBB-\xBF\xD7\xF7\u02B9-\u02DF\u02E5-\u02E9\u02EC-\u02FF\u0374\u037E\u0385\u0387\u0589\u0605\u060C\u061B\u061C\u061F\u0640\u06DD\u0964\u0965\u0E3F\u0FD5-\u0FD8\u10FB\u16EB-\u16ED\u1735\u1736\u1802\u1803\u1805\u1CD3\u1CE1\u1CE9-\u1CEC\u1CEE-\u1CF3\u1CF5\u1CF6\u2000-\u200B\u200E-\u2064\u2066-\u2070\u2074-\u207E\u2080-\u208E\u20A0-\u20BE\u2100-\u2125\u2127-\u2129\u212C-\u2131\u2133-\u214D\u214F-\u215F\u2189-\u218B\u2190-\u23FA\u2400-\u2426\u2440-\u244A\u2460-\u27FF\u2900-\u2B73\u2B76-\u2B95\u2B98-\u2BB9\u2BBD-\u2BC8\u2BCA-\u2BD1\u2BEC-\u2BEF\u2E00-\u2E42\u2FF0-\u2FFB\u3000-\u3004\u3006\u3008-\u3020\u3030-\u3037\u303C-\u303F\u309B\u309C\u30A0\u30FB\u30FC\u3190-\u319F\u31C0-\u31E3\u3220-\u325F\u327F-\u32CF\u3358-\u33FF\u4DC0-\u4DFF\uA700-\uA721\uA788-\uA78A\uA830-\uA839\uA92E\uA9CF\uAB5B\uFD3E\uFD3F\uFE10-\uFE19\uFE30-\uFE52\uFE54-\uFE66\uFE68-\uFE6B\uFEFF\uFF01-\uFF20\uFF3B-\uFF40\uFF5B-\uFF65\uFF70\uFF9E\uFF9F\uFFE0-\uFFE6\uFFE8-\uFFEE\uFFF9-\uFFFD',
+	            astral: '\uD83E[\uDC00-\uDC0B\uDC10-\uDC47\uDC50-\uDC59\uDC60-\uDC87\uDC90-\uDCAD\uDD10-\uDD18\uDD80-\uDD84\uDDC0]|\uD82F[\uDCA0-\uDCA3]|\uD835[\uDC00-\uDC54\uDC56-\uDC9C\uDC9E\uDC9F\uDCA2\uDCA5\uDCA6\uDCA9-\uDCAC\uDCAE-\uDCB9\uDCBB\uDCBD-\uDCC3\uDCC5-\uDD05\uDD07-\uDD0A\uDD0D-\uDD14\uDD16-\uDD1C\uDD1E-\uDD39\uDD3B-\uDD3E\uDD40-\uDD44\uDD46\uDD4A-\uDD50\uDD52-\uDEA5\uDEA8-\uDFCB\uDFCE-\uDFFF]|\uDB40[\uDC01\uDC20-\uDC7F]|\uD83D[\uDC00-\uDD79\uDD7B-\uDDA3\uDDA5-\uDED0\uDEE0-\uDEEC\uDEF0-\uDEF3\uDF00-\uDF73\uDF80-\uDFD4]|\uD800[\uDD00-\uDD02\uDD07-\uDD33\uDD37-\uDD3F\uDD90-\uDD9B\uDDD0-\uDDFC\uDEE1-\uDEFB]|\uD834[\uDC00-\uDCF5\uDD00-\uDD26\uDD29-\uDD66\uDD6A-\uDD7A\uDD83\uDD84\uDD8C-\uDDA9\uDDAE-\uDDE8\uDF00-\uDF56\uDF60-\uDF71]|\uD83C[\uDC00-\uDC2B\uDC30-\uDC93\uDCA0-\uDCAE\uDCB1-\uDCBF\uDCC1-\uDCCF\uDCD1-\uDCF5\uDD00-\uDD0C\uDD10-\uDD2E\uDD30-\uDD6B\uDD70-\uDD9A\uDDE6-\uDDFF\uDE01\uDE02\uDE10-\uDE3A\uDE40-\uDE48\uDE50\uDE51\uDF00-\uDFFF]'
+	        },
+	        {
+	            name: 'Coptic',
+	            bmp: '\u03E2-\u03EF\u2C80-\u2CF3\u2CF9-\u2CFF'
+	        },
+	        {
+	            name: 'Cuneiform',
+	            astral: '\uD809[\uDC00-\uDC6E\uDC70-\uDC74\uDC80-\uDD43]|\uD808[\uDC00-\uDF99]'
+	        },
+	        {
+	            name: 'Cypriot',
+	            astral: '\uD802[\uDC00-\uDC05\uDC08\uDC0A-\uDC35\uDC37\uDC38\uDC3C\uDC3F]'
+	        },
+	        {
+	            name: 'Cyrillic',
+	            bmp: '\u0400-\u0484\u0487-\u052F\u1D2B\u1D78\u2DE0-\u2DFF\uA640-\uA69F\uFE2E\uFE2F'
+	        },
+	        {
+	            name: 'Deseret',
+	            astral: '\uD801[\uDC00-\uDC4F]'
+	        },
+	        {
+	            name: 'Devanagari',
+	            bmp: '\u0900-\u0950\u0953-\u0963\u0966-\u097F\uA8E0-\uA8FD'
+	        },
+	        {
+	            name: 'Duployan',
+	            astral: '\uD82F[\uDC00-\uDC6A\uDC70-\uDC7C\uDC80-\uDC88\uDC90-\uDC99\uDC9C-\uDC9F]'
+	        },
+	        {
+	            name: 'Egyptian_Hieroglyphs',
+	            astral: '\uD80C[\uDC00-\uDFFF]|\uD80D[\uDC00-\uDC2E]'
+	        },
+	        {
+	            name: 'Elbasan',
+	            astral: '\uD801[\uDD00-\uDD27]'
+	        },
+	        {
+	            name: 'Ethiopic',
+	            bmp: '\u1200-\u1248\u124A-\u124D\u1250-\u1256\u1258\u125A-\u125D\u1260-\u1288\u128A-\u128D\u1290-\u12B0\u12B2-\u12B5\u12B8-\u12BE\u12C0\u12C2-\u12C5\u12C8-\u12D6\u12D8-\u1310\u1312-\u1315\u1318-\u135A\u135D-\u137C\u1380-\u1399\u2D80-\u2D96\u2DA0-\u2DA6\u2DA8-\u2DAE\u2DB0-\u2DB6\u2DB8-\u2DBE\u2DC0-\u2DC6\u2DC8-\u2DCE\u2DD0-\u2DD6\u2DD8-\u2DDE\uAB01-\uAB06\uAB09-\uAB0E\uAB11-\uAB16\uAB20-\uAB26\uAB28-\uAB2E'
+	        },
+	        {
+	            name: 'Georgian',
+	            bmp: '\u10A0-\u10C5\u10C7\u10CD\u10D0-\u10FA\u10FC-\u10FF\u2D00-\u2D25\u2D27\u2D2D'
+	        },
+	        {
+	            name: 'Glagolitic',
+	            bmp: '\u2C00-\u2C2E\u2C30-\u2C5E'
+	        },
+	        {
+	            name: 'Gothic',
+	            astral: '\uD800[\uDF30-\uDF4A]'
+	        },
+	        {
+	            name: 'Grantha',
+	            astral: '\uD804[\uDF00-\uDF03\uDF05-\uDF0C\uDF0F\uDF10\uDF13-\uDF28\uDF2A-\uDF30\uDF32\uDF33\uDF35-\uDF39\uDF3C-\uDF44\uDF47\uDF48\uDF4B-\uDF4D\uDF50\uDF57\uDF5D-\uDF63\uDF66-\uDF6C\uDF70-\uDF74]'
+	        },
+	        {
+	            name: 'Greek',
+	            bmp: '\u0370-\u0373\u0375-\u0377\u037A-\u037D\u037F\u0384\u0386\u0388-\u038A\u038C\u038E-\u03A1\u03A3-\u03E1\u03F0-\u03FF\u1D26-\u1D2A\u1D5D-\u1D61\u1D66-\u1D6A\u1DBF\u1F00-\u1F15\u1F18-\u1F1D\u1F20-\u1F45\u1F48-\u1F4D\u1F50-\u1F57\u1F59\u1F5B\u1F5D\u1F5F-\u1F7D\u1F80-\u1FB4\u1FB6-\u1FC4\u1FC6-\u1FD3\u1FD6-\u1FDB\u1FDD-\u1FEF\u1FF2-\u1FF4\u1FF6-\u1FFE\u2126\uAB65',
+	            astral: '\uD800[\uDD40-\uDD8C\uDDA0]|\uD834[\uDE00-\uDE45]'
+	        },
+	        {
+	            name: 'Gujarati',
+	            bmp: '\u0A81-\u0A83\u0A85-\u0A8D\u0A8F-\u0A91\u0A93-\u0AA8\u0AAA-\u0AB0\u0AB2\u0AB3\u0AB5-\u0AB9\u0ABC-\u0AC5\u0AC7-\u0AC9\u0ACB-\u0ACD\u0AD0\u0AE0-\u0AE3\u0AE6-\u0AF1\u0AF9'
+	        },
+	        {
+	            name: 'Gurmukhi',
+	            bmp: '\u0A01-\u0A03\u0A05-\u0A0A\u0A0F\u0A10\u0A13-\u0A28\u0A2A-\u0A30\u0A32\u0A33\u0A35\u0A36\u0A38\u0A39\u0A3C\u0A3E-\u0A42\u0A47\u0A48\u0A4B-\u0A4D\u0A51\u0A59-\u0A5C\u0A5E\u0A66-\u0A75'
+	        },
+	        {
+	            name: 'Han',
+	            bmp: '\u2E80-\u2E99\u2E9B-\u2EF3\u2F00-\u2FD5\u3005\u3007\u3021-\u3029\u3038-\u303B\u3400-\u4DB5\u4E00-\u9FD5\uF900-\uFA6D\uFA70-\uFAD9',
+	            astral: '\uD86E[\uDC00-\uDC1D\uDC20-\uDFFF]|[\uD840-\uD868\uD86A-\uD86C\uD86F-\uD872][\uDC00-\uDFFF]|\uD86D[\uDC00-\uDF34\uDF40-\uDFFF]|\uD87E[\uDC00-\uDE1D]|\uD869[\uDC00-\uDED6\uDF00-\uDFFF]|\uD873[\uDC00-\uDEA1]'
+	        },
+	        {
+	            name: 'Hangul',
+	            bmp: '\u1100-\u11FF\u302E\u302F\u3131-\u318E\u3200-\u321E\u3260-\u327E\uA960-\uA97C\uAC00-\uD7A3\uD7B0-\uD7C6\uD7CB-\uD7FB\uFFA0-\uFFBE\uFFC2-\uFFC7\uFFCA-\uFFCF\uFFD2-\uFFD7\uFFDA-\uFFDC'
+	        },
+	        {
+	            name: 'Hanunoo',
+	            bmp: '\u1720-\u1734'
+	        },
+	        {
+	            name: 'Hatran',
+	            astral: '\uD802[\uDCE0-\uDCF2\uDCF4\uDCF5\uDCFB-\uDCFF]'
+	        },
+	        {
+	            name: 'Hebrew',
+	            bmp: '\u0591-\u05C7\u05D0-\u05EA\u05F0-\u05F4\uFB1D-\uFB36\uFB38-\uFB3C\uFB3E\uFB40\uFB41\uFB43\uFB44\uFB46-\uFB4F'
+	        },
+	        {
+	            name: 'Hiragana',
+	            bmp: '\u3041-\u3096\u309D-\u309F',
+	            astral: '\uD82C\uDC01|\uD83C\uDE00'
+	        },
+	        {
+	            name: 'Imperial_Aramaic',
+	            astral: '\uD802[\uDC40-\uDC55\uDC57-\uDC5F]'
+	        },
+	        {
+	            name: 'Inherited',
+	            bmp: '\u0300-\u036F\u0485\u0486\u064B-\u0655\u0670\u0951\u0952\u1AB0-\u1ABE\u1CD0-\u1CD2\u1CD4-\u1CE0\u1CE2-\u1CE8\u1CED\u1CF4\u1CF8\u1CF9\u1DC0-\u1DF5\u1DFC-\u1DFF\u200C\u200D\u20D0-\u20F0\u302A-\u302D\u3099\u309A\uFE00-\uFE0F\uFE20-\uFE2D',
+	            astral: '\uD834[\uDD67-\uDD69\uDD7B-\uDD82\uDD85-\uDD8B\uDDAA-\uDDAD]|\uD800[\uDDFD\uDEE0]|\uDB40[\uDD00-\uDDEF]'
+	        },
+	        {
+	            name: 'Inscriptional_Pahlavi',
+	            astral: '\uD802[\uDF60-\uDF72\uDF78-\uDF7F]'
+	        },
+	        {
+	            name: 'Inscriptional_Parthian',
+	            astral: '\uD802[\uDF40-\uDF55\uDF58-\uDF5F]'
+	        },
+	        {
+	            name: 'Javanese',
+	            bmp: '\uA980-\uA9CD\uA9D0-\uA9D9\uA9DE\uA9DF'
+	        },
+	        {
+	            name: 'Kaithi',
+	            astral: '\uD804[\uDC80-\uDCC1]'
+	        },
+	        {
+	            name: 'Kannada',
+	            bmp: '\u0C81-\u0C83\u0C85-\u0C8C\u0C8E-\u0C90\u0C92-\u0CA8\u0CAA-\u0CB3\u0CB5-\u0CB9\u0CBC-\u0CC4\u0CC6-\u0CC8\u0CCA-\u0CCD\u0CD5\u0CD6\u0CDE\u0CE0-\u0CE3\u0CE6-\u0CEF\u0CF1\u0CF2'
+	        },
+	        {
+	            name: 'Katakana',
+	            bmp: '\u30A1-\u30FA\u30FD-\u30FF\u31F0-\u31FF\u32D0-\u32FE\u3300-\u3357\uFF66-\uFF6F\uFF71-\uFF9D',
+	            astral: '\uD82C\uDC00'
+	        },
+	        {
+	            name: 'Kayah_Li',
+	            bmp: '\uA900-\uA92D\uA92F'
+	        },
+	        {
+	            name: 'Kharoshthi',
+	            astral: '\uD802[\uDE00-\uDE03\uDE05\uDE06\uDE0C-\uDE13\uDE15-\uDE17\uDE19-\uDE33\uDE38-\uDE3A\uDE3F-\uDE47\uDE50-\uDE58]'
+	        },
+	        {
+	            name: 'Khmer',
+	            bmp: '\u1780-\u17DD\u17E0-\u17E9\u17F0-\u17F9\u19E0-\u19FF'
+	        },
+	        {
+	            name: 'Khojki',
+	            astral: '\uD804[\uDE00-\uDE11\uDE13-\uDE3D]'
+	        },
+	        {
+	            name: 'Khudawadi',
+	            astral: '\uD804[\uDEB0-\uDEEA\uDEF0-\uDEF9]'
+	        },
+	        {
+	            name: 'Lao',
+	            bmp: '\u0E81\u0E82\u0E84\u0E87\u0E88\u0E8A\u0E8D\u0E94-\u0E97\u0E99-\u0E9F\u0EA1-\u0EA3\u0EA5\u0EA7\u0EAA\u0EAB\u0EAD-\u0EB9\u0EBB-\u0EBD\u0EC0-\u0EC4\u0EC6\u0EC8-\u0ECD\u0ED0-\u0ED9\u0EDC-\u0EDF'
+	        },
+	        {
+	            name: 'Latin',
+	            bmp: 'A-Za-z\xAA\xBA\xC0-\xD6\xD8-\xF6\xF8-\u02B8\u02E0-\u02E4\u1D00-\u1D25\u1D2C-\u1D5C\u1D62-\u1D65\u1D6B-\u1D77\u1D79-\u1DBE\u1E00-\u1EFF\u2071\u207F\u2090-\u209C\u212A\u212B\u2132\u214E\u2160-\u2188\u2C60-\u2C7F\uA722-\uA787\uA78B-\uA7AD\uA7B0-\uA7B7\uA7F7-\uA7FF\uAB30-\uAB5A\uAB5C-\uAB64\uFB00-\uFB06\uFF21-\uFF3A\uFF41-\uFF5A'
+	        },
+	        {
+	            name: 'Lepcha',
+	            bmp: '\u1C00-\u1C37\u1C3B-\u1C49\u1C4D-\u1C4F'
+	        },
+	        {
+	            name: 'Limbu',
+	            bmp: '\u1900-\u191E\u1920-\u192B\u1930-\u193B\u1940\u1944-\u194F'
+	        },
+	        {
+	            name: 'Linear_A',
+	            astral: '\uD801[\uDE00-\uDF36\uDF40-\uDF55\uDF60-\uDF67]'
+	        },
+	        {
+	            name: 'Linear_B',
+	            astral: '\uD800[\uDC00-\uDC0B\uDC0D-\uDC26\uDC28-\uDC3A\uDC3C\uDC3D\uDC3F-\uDC4D\uDC50-\uDC5D\uDC80-\uDCFA]'
+	        },
+	        {
+	            name: 'Lisu',
+	            bmp: '\uA4D0-\uA4FF'
+	        },
+	        {
+	            name: 'Lycian',
+	            astral: '\uD800[\uDE80-\uDE9C]'
+	        },
+	        {
+	            name: 'Lydian',
+	            astral: '\uD802[\uDD20-\uDD39\uDD3F]'
+	        },
+	        {
+	            name: 'Mahajani',
+	            astral: '\uD804[\uDD50-\uDD76]'
+	        },
+	        {
+	            name: 'Malayalam',
+	            bmp: '\u0D01-\u0D03\u0D05-\u0D0C\u0D0E-\u0D10\u0D12-\u0D3A\u0D3D-\u0D44\u0D46-\u0D48\u0D4A-\u0D4E\u0D57\u0D5F-\u0D63\u0D66-\u0D75\u0D79-\u0D7F'
+	        },
+	        {
+	            name: 'Mandaic',
+	            bmp: '\u0840-\u085B\u085E'
+	        },
+	        {
+	            name: 'Manichaean',
+	            astral: '\uD802[\uDEC0-\uDEE6\uDEEB-\uDEF6]'
+	        },
+	        {
+	            name: 'Meetei_Mayek',
+	            bmp: '\uAAE0-\uAAF6\uABC0-\uABED\uABF0-\uABF9'
+	        },
+	        {
+	            name: 'Mende_Kikakui',
+	            astral: '\uD83A[\uDC00-\uDCC4\uDCC7-\uDCD6]'
+	        },
+	        {
+	            name: 'Meroitic_Cursive',
+	            astral: '\uD802[\uDDA0-\uDDB7\uDDBC-\uDDCF\uDDD2-\uDDFF]'
+	        },
+	        {
+	            name: 'Meroitic_Hieroglyphs',
+	            astral: '\uD802[\uDD80-\uDD9F]'
+	        },
+	        {
+	            name: 'Miao',
+	            astral: '\uD81B[\uDF00-\uDF44\uDF50-\uDF7E\uDF8F-\uDF9F]'
+	        },
+	        {
+	            name: 'Modi',
+	            astral: '\uD805[\uDE00-\uDE44\uDE50-\uDE59]'
+	        },
+	        {
+	            name: 'Mongolian',
+	            bmp: '\u1800\u1801\u1804\u1806-\u180E\u1810-\u1819\u1820-\u1877\u1880-\u18AA'
+	        },
+	        {
+	            name: 'Mro',
+	            astral: '\uD81A[\uDE40-\uDE5E\uDE60-\uDE69\uDE6E\uDE6F]'
+	        },
+	        {
+	            name: 'Multani',
+	            astral: '\uD804[\uDE80-\uDE86\uDE88\uDE8A-\uDE8D\uDE8F-\uDE9D\uDE9F-\uDEA9]'
+	        },
+	        {
+	            name: 'Myanmar',
+	            bmp: '\u1000-\u109F\uA9E0-\uA9FE\uAA60-\uAA7F'
+	        },
+	        {
+	            name: 'Nabataean',
+	            astral: '\uD802[\uDC80-\uDC9E\uDCA7-\uDCAF]'
+	        },
+	        {
+	            name: 'New_Tai_Lue',
+	            bmp: '\u1980-\u19AB\u19B0-\u19C9\u19D0-\u19DA\u19DE\u19DF'
+	        },
+	        {
+	            name: 'Nko',
+	            bmp: '\u07C0-\u07FA'
+	        },
+	        {
+	            name: 'Ogham',
+	            bmp: '\u1680-\u169C'
+	        },
+	        {
+	            name: 'Ol_Chiki',
+	            bmp: '\u1C50-\u1C7F'
+	        },
+	        {
+	            name: 'Old_Hungarian',
+	            astral: '\uD803[\uDC80-\uDCB2\uDCC0-\uDCF2\uDCFA-\uDCFF]'
+	        },
+	        {
+	            name: 'Old_Italic',
+	            astral: '\uD800[\uDF00-\uDF23]'
+	        },
+	        {
+	            name: 'Old_North_Arabian',
+	            astral: '\uD802[\uDE80-\uDE9F]'
+	        },
+	        {
+	            name: 'Old_Permic',
+	            astral: '\uD800[\uDF50-\uDF7A]'
+	        },
+	        {
+	            name: 'Old_Persian',
+	            astral: '\uD800[\uDFA0-\uDFC3\uDFC8-\uDFD5]'
+	        },
+	        {
+	            name: 'Old_South_Arabian',
+	            astral: '\uD802[\uDE60-\uDE7F]'
+	        },
+	        {
+	            name: 'Old_Turkic',
+	            astral: '\uD803[\uDC00-\uDC48]'
+	        },
+	        {
+	            name: 'Oriya',
+	            bmp: '\u0B01-\u0B03\u0B05-\u0B0C\u0B0F\u0B10\u0B13-\u0B28\u0B2A-\u0B30\u0B32\u0B33\u0B35-\u0B39\u0B3C-\u0B44\u0B47\u0B48\u0B4B-\u0B4D\u0B56\u0B57\u0B5C\u0B5D\u0B5F-\u0B63\u0B66-\u0B77'
+	        },
+	        {
+	            name: 'Osmanya',
+	            astral: '\uD801[\uDC80-\uDC9D\uDCA0-\uDCA9]'
+	        },
+	        {
+	            name: 'Pahawh_Hmong',
+	            astral: '\uD81A[\uDF00-\uDF45\uDF50-\uDF59\uDF5B-\uDF61\uDF63-\uDF77\uDF7D-\uDF8F]'
+	        },
+	        {
+	            name: 'Palmyrene',
+	            astral: '\uD802[\uDC60-\uDC7F]'
+	        },
+	        {
+	            name: 'Pau_Cin_Hau',
+	            astral: '\uD806[\uDEC0-\uDEF8]'
+	        },
+	        {
+	            name: 'Phags_Pa',
+	            bmp: '\uA840-\uA877'
+	        },
+	        {
+	            name: 'Phoenician',
+	            astral: '\uD802[\uDD00-\uDD1B\uDD1F]'
+	        },
+	        {
+	            name: 'Psalter_Pahlavi',
+	            astral: '\uD802[\uDF80-\uDF91\uDF99-\uDF9C\uDFA9-\uDFAF]'
+	        },
+	        {
+	            name: 'Rejang',
+	            bmp: '\uA930-\uA953\uA95F'
+	        },
+	        {
+	            name: 'Runic',
+	            bmp: '\u16A0-\u16EA\u16EE-\u16F8'
+	        },
+	        {
+	            name: 'Samaritan',
+	            bmp: '\u0800-\u082D\u0830-\u083E'
+	        },
+	        {
+	            name: 'Saurashtra',
+	            bmp: '\uA880-\uA8C4\uA8CE-\uA8D9'
+	        },
+	        {
+	            name: 'Sharada',
+	            astral: '\uD804[\uDD80-\uDDCD\uDDD0-\uDDDF]'
+	        },
+	        {
+	            name: 'Shavian',
+	            astral: '\uD801[\uDC50-\uDC7F]'
+	        },
+	        {
+	            name: 'Siddham',
+	            astral: '\uD805[\uDD80-\uDDB5\uDDB8-\uDDDD]'
+	        },
+	        {
+	            name: 'SignWriting',
+	            astral: '\uD836[\uDC00-\uDE8B\uDE9B-\uDE9F\uDEA1-\uDEAF]'
+	        },
+	        {
+	            name: 'Sinhala',
+	            bmp: '\u0D82\u0D83\u0D85-\u0D96\u0D9A-\u0DB1\u0DB3-\u0DBB\u0DBD\u0DC0-\u0DC6\u0DCA\u0DCF-\u0DD4\u0DD6\u0DD8-\u0DDF\u0DE6-\u0DEF\u0DF2-\u0DF4',
+	            astral: '\uD804[\uDDE1-\uDDF4]'
+	        },
+	        {
+	            name: 'Sora_Sompeng',
+	            astral: '\uD804[\uDCD0-\uDCE8\uDCF0-\uDCF9]'
+	        },
+	        {
+	            name: 'Sundanese',
+	            bmp: '\u1B80-\u1BBF\u1CC0-\u1CC7'
+	        },
+	        {
+	            name: 'Syloti_Nagri',
+	            bmp: '\uA800-\uA82B'
+	        },
+	        {
+	            name: 'Syriac',
+	            bmp: '\u0700-\u070D\u070F-\u074A\u074D-\u074F'
+	        },
+	        {
+	            name: 'Tagalog',
+	            bmp: '\u1700-\u170C\u170E-\u1714'
+	        },
+	        {
+	            name: 'Tagbanwa',
+	            bmp: '\u1760-\u176C\u176E-\u1770\u1772\u1773'
+	        },
+	        {
+	            name: 'Tai_Le',
+	            bmp: '\u1950-\u196D\u1970-\u1974'
+	        },
+	        {
+	            name: 'Tai_Tham',
+	            bmp: '\u1A20-\u1A5E\u1A60-\u1A7C\u1A7F-\u1A89\u1A90-\u1A99\u1AA0-\u1AAD'
+	        },
+	        {
+	            name: 'Tai_Viet',
+	            bmp: '\uAA80-\uAAC2\uAADB-\uAADF'
+	        },
+	        {
+	            name: 'Takri',
+	            astral: '\uD805[\uDE80-\uDEB7\uDEC0-\uDEC9]'
+	        },
+	        {
+	            name: 'Tamil',
+	            bmp: '\u0B82\u0B83\u0B85-\u0B8A\u0B8E-\u0B90\u0B92-\u0B95\u0B99\u0B9A\u0B9C\u0B9E\u0B9F\u0BA3\u0BA4\u0BA8-\u0BAA\u0BAE-\u0BB9\u0BBE-\u0BC2\u0BC6-\u0BC8\u0BCA-\u0BCD\u0BD0\u0BD7\u0BE6-\u0BFA'
+	        },
+	        {
+	            name: 'Telugu',
+	            bmp: '\u0C00-\u0C03\u0C05-\u0C0C\u0C0E-\u0C10\u0C12-\u0C28\u0C2A-\u0C39\u0C3D-\u0C44\u0C46-\u0C48\u0C4A-\u0C4D\u0C55\u0C56\u0C58-\u0C5A\u0C60-\u0C63\u0C66-\u0C6F\u0C78-\u0C7F'
+	        },
+	        {
+	            name: 'Thaana',
+	            bmp: '\u0780-\u07B1'
+	        },
+	        {
+	            name: 'Thai',
+	            bmp: '\u0E01-\u0E3A\u0E40-\u0E5B'
+	        },
+	        {
+	            name: 'Tibetan',
+	            bmp: '\u0F00-\u0F47\u0F49-\u0F6C\u0F71-\u0F97\u0F99-\u0FBC\u0FBE-\u0FCC\u0FCE-\u0FD4\u0FD9\u0FDA'
+	        },
+	        {
+	            name: 'Tifinagh',
+	            bmp: '\u2D30-\u2D67\u2D6F\u2D70\u2D7F'
+	        },
+	        {
+	            name: 'Tirhuta',
+	            astral: '\uD805[\uDC80-\uDCC7\uDCD0-\uDCD9]'
+	        },
+	        {
+	            name: 'Ugaritic',
+	            astral: '\uD800[\uDF80-\uDF9D\uDF9F]'
+	        },
+	        {
+	            name: 'Vai',
+	            bmp: '\uA500-\uA62B'
+	        },
+	        {
+	            name: 'Warang_Citi',
+	            astral: '\uD806[\uDCA0-\uDCF2\uDCFF]'
+	        },
+	        {
+	            name: 'Yi',
+	            bmp: '\uA000-\uA48C\uA490-\uA4C6'
+	        }
+	    ]);
+
 	};
+
+
+/***/ },
+/* 46 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(29);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Action = __webpack_require__(47);
+
+	var _Action2 = _interopRequireDefault(_Action);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Routing
+	 */
+	var RouteMatch = function () {
+
+		/**
+	  * When a Request is matched by a Route, a RouteMatch is created,
+	  * containing all the information necessary to process the request. 
+	  * The Router will use the RouteMatch to execute all the actions defined
+	  * in the route(s).
+	  * 
+	  * @class Routing.RouteMatch
+	  *
+	  * @constructor
+	  * @param {Routing.Route} 		route 			The route that matched
+	  * @param {array}  				regExpMatch 	The result from the XRegExp.exec call
+	  * @param {Routing.Request}		request 		The request that made this RouteMatch possible
+	  */
+		function RouteMatch(route, regExpMatch, request) {
+			var _this = this;
+
+			_classCallCheck(this, RouteMatch);
+
+			/**
+	   * The Route that matched
+	   *
+	   * @property route
+	   * @type {Routing.Route}
+	   */
+			this.route = route;
+
+			/**
+	   * The result from the XRegExp.exec call when the Route was matched
+	   * 
+	   * @property regExpMatch
+	   * @type {array}
+	   */
+			this.regExpMatch = regExpMatch;
+
+			/**
+	   * The request that made this RouteMatch possible
+	   *
+	   * @property request
+	   * @type {Routing.Request}
+	   */
+			this.request = request;
+
+			/**
+	   * The actions that are part of this match,
+	   * keyed by the target ViewContainer
+	   * 
+	   * @property actions
+	   * @type {Map}	
+	   */
+			this.actions = new Map();
+
+			/**
+	   * The parameters from the Request and matched route
+	   *
+	   * @property parameters
+	   * @type {Map}
+	   */
+			this.parameters = new Map();
+
+			////////////////////
+			// Create actions //
+			////////////////////
+
+			// Read parameters from match
+			_underscore2.default.each(route.parameters, function (paramName) {
+				_this.parameters.set(paramName, regExpMatch[paramName]);
+			});
+
+			// Start with the matched route
+			this._readActionsFromRoute(route);
+		}
+
+		_createClass(RouteMatch, [{
+			key: '_readActionsFromRoute',
+			value: function _readActionsFromRoute(route) {
+				var _this2 = this;
+
+				// Collect parameters from route
+				var params = new Map();
+				var paramArray = [];
+				_underscore2.default.each(route.parameters, function (paramName) {
+					paramArray.push(_this2.parameters.get(paramName));
+					params.set(paramName, _this2.parameters.get(paramName));
+				});
+
+				// Get actions
+				var myActions = {};
+				_underscore2.default.each(route.getActions(), function (routeAction, targetViewContainer) {
+
+					// Is there already an action defined for this target
+					if (_this2.actions.has(targetViewContainer)) return;
+
+					// Make it.
+					var action = new _Action2.default(targetViewContainer, routeAction, _this2.request);
+
+					// Set routes
+					action.route = route;
+					action.matchedRoute = _this2.route;
+					action.routeMatch = _this2;
+
+					// Set parameters
+					action.parameters = params;
+					action.parameterArray = paramArray;
+
+					// Add it.
+					myActions[targetViewContainer] = action;
+				});
+
+				// Make any actions that are already there dependent on the new ones, 
+				// because these actions are the parent(s) of the existing actions.
+				this.actions.forEach(function (action) {
+					action.dependsOn.push(action);
+				});
+
+				// Add these actions
+				_underscore2.default.each(myActions, function (action, targetViewContainer) {
+					_this2.actions.set(targetViewContainer, action);
+				});
+
+				// Now look into the parent
+				if (route.parentRoute) {
+					this._readActionsFromRoute(route.parentRoute);
+				}
+
+				// We're done!
+				return this.actions;
+			}
+		}]);
+
+		return RouteMatch;
+	}();
+
+	module.exports = RouteMatch;
+
+/***/ },
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _xregexp = __webpack_require__(37);
+
+	var _xregexp2 = _interopRequireDefault(_xregexp);
+
+	var _Obj2 = __webpack_require__(30);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Routing
+	 */
+	var Action = function (_Obj) {
+		_inherits(Action, _Obj);
+
+		/**
+	  * @class Routing.Action
+	  * @extends Core.Obj
+	  */
+		function Action(targetViewContainer, controllerActionOrCallback, request) {
+			_classCallCheck(this, Action);
+
+			////////////////
+			// Attributes //
+			////////////////
+
+			/**
+	   * The name of the ViewContainer that this action is targeting.
+	   * 
+	   * @property targetViewContainer
+	   * @type {string}
+	   */
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Action).call(this));
+
+			_this.targetViewContainer = targetViewContainer;
+
+			/**
+	   * The Request instance that was used to create this action
+	   * 
+	   * @property request
+	   * @type {Routing.Request}
+	   */
+			_this.request = request;
+
+			/**
+	   * The Route that defined this action
+	   *
+	   * @property route
+	   * @type {Routing.Route}
+	   */
+			_this.route = null;
+
+			/**
+	   * The Route that matched the Request
+	   *
+	   * @property matchedRoute
+	   * @type {Routing.Route}
+	   */
+			_this.matchedRoute = null;
+
+			/**
+	   * The RouteMatch that this Action is a part
+	   *
+	   * @property routeMatch
+	   * @type {Routing.RouteMatch}
+	   */
+			_this.routeMatch = null;
+
+			/**
+	   * The instance of the Controller that has been created by 
+	   * this action.
+	   * 
+	   * @property controller
+	   * @type {Routing.Controller}
+	   */
+			_this.controller = null;
+
+			/**
+	   * The name of the Controller class used by this action
+	   * 
+	   * @property controllerClass
+	   * @type {string}
+	   */
+			_this.controllerClass = null;
+
+			/**
+	   * The name of the Controller method used by this action
+	   * 
+	   * @property controllerMethod
+	   * @type {string}
+	   */
+			_this.controllerMethod = null;
+
+			/**
+	   * A callback function, when the route did not configure
+	   * a Controller to be used, but an inline callback instead.
+	   * 
+	   * @property callback
+	   * @type {function}
+	   */
+			_this.callback = false;
+
+			/**
+	   * A map of request parameters that are supplied to this action.
+	   * 
+	   * @property parameters
+	   * @type {Map}
+	   */
+			_this.parameters = new Map();
+
+			/**
+	   * An array of request parameters, in the order of the route's
+	   * pattern definition
+	   *
+	   * @property parameterArray
+	   * @type {Array}
+	   */
+			_this.parameterArray = [];
+
+			/**
+	   * An array of other Actions that this Action depends on, 
+	   * meaning it will wait for them to finish, before executing.
+	   *
+	   * This is useful when you have a route where the second action
+	   * renders into a ViewContainer that is created by the first action.
+	   * Child routes will automatically wait for the parent route to finish
+	   * before running it's own actions.
+	   * 
+	   * @property dependsOn
+	   * @type {Array}
+	   */
+			_this.dependsOn = [];
+
+			///////////////////////////
+			// Check passed argument //
+			///////////////////////////
+
+			if (typeof controllerActionOrCallback === 'string') {
+
+				// Parse controller name
+				var match = _xregexp2.default.exec(controllerActionOrCallback, Action.controllerActionRegExp);
+				if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
+
+				// Store this
+				_this.controllerClass = match.class;
+				_this.controllerAction = match.action;
+			} else if (controllerActionOrCallback === 'function') {
+
+				// Store it
+				_this.callback = controllerActionOrCallback;
+			} else {
+
+				throw new TypeError('Unknown controllerActionOrCallback value');
+			}
+
+			return _this;
+		}
+
+		return Action;
+	}(_Obj3.default);
+
+	Action.controllerActionRegExp = (0, _xregexp2.default)('^(?<class>[A-Z][a-zA-Z0-9\-\.]+)@(?<action>[a-z][a-zA-Z0-9\_]+)$');
+
+	module.exports = Action;
+
+/***/ },
+/* 48 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _ClassMap = __webpack_require__(31);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Routing
+	 */
+	var Request =
+
+	/**
+	 * @class Routing.Request
+	 *
+	 * @constructor
+	 * @param {object} 			location 		The location received from the History library
+	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
+	 */
+	function Request(location) {
+		var application = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+		_classCallCheck(this, Request);
+
+		// Guess application if not given
+		if (!application) application = _ClassMap2.default.get('Application').getInstance();
+
+		// Parse the uri 
+		var uri = Request.cleanUri(location.pathname);
+
+		// Strip of base part
+		var baseUrl = Request.cleanUri(application.settings.get('baseUrl'));
+		if (uri.length >= baseUrl.length && uri.substr(0, baseUrl.length)) {
+			uri = uri.substr(baseUrl.length);
+		}
+
+		// Add the / back again
+		uri = '/' + uri;
+
+		/**
+	  * @property uri
+	  * @type {string}
+	  */
+		this.uri = uri;
+	};
+
+	Request.cleanUri = function (uri) {
+
+		if (/^\//.test(uri)) uri = uri.substr(1);
+		if (/\/$/.test(uri)) uri = uri.substr(0, uri.length - 1);
+		return uri;
+	};
+
+	module.exports = Request;
+
+/***/ },
+/* 49 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(29);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Obj2 = __webpack_require__(30);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	var _ClassMap = __webpack_require__(31);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Core
+	 */
+	var ObservableArray = function (_Obj) {
+		_inherits(ObservableArray, _Obj);
+
+		/**
+	  * An ObservableArray is a simple list that notifies listeners
+	  * of any changes in the list or any of it's observable items.
+	  *
+	  * @class Core.ObservableArray
+	  *
+	  * @constructor
+	  * @param  {Array}  [initValues=[]]        			 An array of values to initialize the object with
+	  * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
+	  */
+		function ObservableArray() {
+			var initValues = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+			var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
+			_classCallCheck(this, ObservableArray);
+
+			// Properties
+			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ObservableArray).call(this));
+
+			_this._items = [];
+
+			// Import start values
+			_this.import(initValues, convertToObservables, true);
+
+			return _this;
+		}
+
+		_createClass(ObservableArray, [{
+			key: 'import',
+			value: function _import(arr) {
+				var _this2 = this;
+
+				var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+				var doNotNotify = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+
+
+				// Go through to the object's first level
+				_underscore2.default.each(arr, function (value) {
+
+					// Is the value an array or object?
+					if ((Array.isArray(value) || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') && convertToObservables === true) {
+
+						// Array or object?
+						if (Array.isArray(value)) {
+
+							// Put a new observable array in there
+							_this2.items.push(new ObservableArray(value));
+						} else {
+
+							// Put a new observable in there
+							_this2.items.push(_ClassMap2.default.create('Observable', [value]));
+						}
+					} else {
+
+						// Just add the value (don't notify)
+						_this2.items.push(value);
+					}
+				});
+
+				// Trigger import
+				this.trigger(ObservableArray.Events.Import);
+
+				// Notify of change?
+				if (!doNotNotify) {
+					this.trigger('change');
+					this.trigger('added', arr);
+				}
+
+				return this;
+			}
+		}, {
+			key: 'get',
+			value: function get(key) {
+
+				// Split
+				var parts = Number.isInteger(key) ? [key] : key.split(/\./);
+				var currentPart = parts.shift();
+
+				// Is it a wildcard?
+				var value = undefined;
+				if (currentPart === '*') {
+
+					// We will return an array containg all the values we retrieve!
+					var restKey = parts.join('.');
+					return _underscore2.default.map(this._items, function (item) {
+						return item.get(restKey);
+					});
+				} else if (Number.isInteger(currentPart) || currentPart.match(/^\d+$/)) {
+
+					// Get the value
+					value = this._items[currentPart];
+				} else {
+
+					throw new TypeError('Invalid key');
+				}
+
+				// Value found?
+				if (value === undefined || parts.length === 0) {
+					return value;
+				}
+
+				// Check if the value is also an observable
+				if (ObservableArray.isObservable(value)) {
+
+					// Pass the rest along to go a level deeper
+					return value.get(parts.join('.'));
+				} else {
+
+					throw new Error('The found value for ' + key + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)));
+				}
+			}
+		}, {
+			key: 'set',
+			value: function set(key, value) {
+				var _this3 = this;
+
+				var convertToObservables = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+
+
+				// Convert?
+				if (convertToObservables === true && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.constructor === Object) {
+					value = _ClassMap2.default.create('Observable', value);
+				}
+
+				// Numeric?
+				if (Number.isInteger(key) || typeof key === 'string' && key.match(/^\d+$/)) {
+
+					// Set it
+					this._items[key] = value;
+					return this;
+				}
+
+				// Is there a dot in there?
+				if (typeof key === 'string' && key.match(/\.\w/)) {
+
+					////////////////////////
+					// Split and deep set //
+					////////////////////////
+
+					var parts = key.split(/\./);
+					var currentPart = parts.shift();
+
+					// Does the first key exist?
+					var item = this._items[currentPart];
+					if (item === undefined) {
+
+						// Should it be an array or an observable?
+						var newValue = void 0;
+						if (Number.isInteger(parts[0]) || typeof parts[0] === 'string' && parts[0].match(/^\d+$/)) {
+
+							// Create list (using classmap to prevent circular dependencies)
+							newValue = new ObservableArray();
+						} else {
+
+							// Create it
+							newValue = _ClassMap2.default.create('Observable');
+						}
+
+						// Study it
+						newValue.study(function () {
+							_this3.trigger(ObservableArray.Events.Change);
+						});
+
+						// Store it
+						this._items[currentPart] = newValue;
+					}
+
+					// Do deep setting
+					this.get(currentPart).set(parts.join('.'), value);
+
+					return this;
+				}
+
+				throw new TypeError('Invalid key');
+			}
+
+			/**
+	   * Add one or more items to the array
+	   *
+	   * @method add
+	   * @param {...[mixed]} values One or more values to add
+	   * @chainable
+	   */
+
+		}, {
+			key: 'add',
+			value: function add() {
+				var _this4 = this;
+
+				for (var _len = arguments.length, values = Array(_len), _key = 0; _key < _len; _key++) {
+					values[_key] = arguments[_key];
+				}
+
+				// Add items
+				_underscore2.default.each(values, function (value) {
+
+					// Add it.
+					_this4._items.push(value);
+
+					// Is it observable?
+					if (ObservableArray.isObservable(value)) {
+						value.on('change', function () {
+							_this4.trigger('change');
+						});
+					}
+				});
+
+				// Trigger events
+				this.trigger(ObservableArray.Events.Change);
+				this.trigger(ObservableArray.Events.Add, values);
+
+				return this;
+			}
+
+			/**
+	   * Delete one or more items from the array
+	   *
+	   * @method delete
+	   * @param  {...[mixed]} values One or more values to delete
+	   * @chainable
+	   */
+
+		}, {
+			key: 'delete',
+			value: function _delete() {
+				for (var _len2 = arguments.length, values = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+					values[_key2] = arguments[_key2];
+				}
+
+				this._items = _underscore2.default.difference(this._items, values);
+
+				// Trigger events
+				this.trigger('change');
+				this.trigger('delete', values);
+
+				return this;
+			}
+
+			/**
+	   * Remove all items from the array
+	   *
+	   * @method empty
+	   * @chainable
+	   */
+
+		}, {
+			key: 'empty',
+			value: function empty() {
+
+				// Values that are deleted
+				var deleted = _underscore2.default.difference(this._items, []);
+
+				// Now clear
+				this._items = [];
+
+				// Trigger events
+				this.trigger(ObservableArray.Events.Change);
+				this.trigger(ObservableArray.Events.Delete, deleted);
+				this.trigger(ObservableArray.Events.Empty);
+
+				return this;
+			}
+
+			/**
+	   * Listen for any changes in any of the object's attributes. 
+	   * The callback will receive an array containing the names of
+	   * all updates attributes. 
+	   *
+	   * Note: This is an alias of the 'changed' event, so calling
+	   * ```this.on('changed', callback)``` will achieve the same result.
+	   *
+	   * @example
+	   * 	// Initialize object
+	   * 	var obj = new Chicken.Core.Observable();
+	   * 	obj.set('foo', 'bar');
+	   * 	var childObj = new Chicken.Core.Observable();
+	   * 	childObj.set('free', 'willy');
+	   * 	obj.set('child', childObj);
+	   *
+	   * 	// Listen
+	   * 	obj.study((changedAttributes) {
+	   * 		console.log(changedAttributes);
+	   * 	});
+	   *
+	   * 	// Update attributes
+	   *	obj.set('foo', 'boo');                  // Will log ['foo']
+	   *	obj.get('child').set('free', 'tibet');  // Will log ['child']
+	   * 	childObj.set('foo', 'bee');             // Will log ['child']
+	   *
+	   * @method study
+	   * @param  {Function} callback
+	   * @chainable
+	   */
+
+		}, {
+			key: 'study',
+			value: function study(callback) {
+
+				// This is an alias of the 'changed' event
+				return this.on('change', callback);
+			}
+
+			/**
+	   * Stop listening for changes on the object's attributes.
+	   *
+	   * Note: This is an alias of the 'changed' event, so calling
+	   * ```this.off('changed', callback)``` will achieve the same result.
+	   *
+	   * @example
+	   * 
+	   * 
+	   * @method neglect
+	   * @param  {Function} callback 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'neglect',
+			value: function neglect(callback) {
+
+				// This is an alias of the 'changed' event
+				return this.off('change', callback);
+			}
+		}, {
+			key: 'toArray',
+			value: function toArray() {
+
+				return this.items.map(function (item) {
+
+					// Observable?
+					if (ObservableArray.isObservable(item)) {
+
+						// Array?
+						if (item instanceof ObservableArray) {
+							return item.toArray();
+						} else {
+							return item.toObject();
+						}
+					}
+
+					return item;
+				});
+			}
+
+			/**
+	   * The number of items in the array
+	   * 
+	   * @property length
+	   * @type {Number}
+	   */
+
+		}, {
+			key: 'isObservable',
+			value: function isObservable() {
+				return true;
+			}
+		}, {
+			key: 'length',
+			get: function get() {
+				return this._items.length;
+			}
+
+			/**
+	   * The native Javascript array containing the items
+	   * 
+	   * @property items
+	   * @type {Array}
+	   */
+
+		}, {
+			key: 'items',
+			get: function get() {
+				return this._items;
+			}
+		}]);
+
+		return ObservableArray;
+	}(_Obj3.default);
+
+	////////////
+	// Events //
+	////////////
+
+	ObservableArray.Events = {
+
+		/**
+	  * This event is fired whenever anything changes in the array
+	  * of one of its observable items.
+	  * 
+	  * @event change
+	  */
+		Change: 'change',
+
+		/**
+	  * This event is fired whenever one or more items are added
+	  * 
+	  * @event add
+	  * @param {Array} values		The item values that were added
+	  */
+		Add: 'add',
+
+		/**
+	  * This event is fired whenever one or more items are deleted
+	  * 
+	  * @event delete
+	  * @param {Array} values		The item values that were deleted
+	  */
+		Delete: 'delete',
+
+		/**
+	  * This event is fired when the array is emptied. Not that the `delete`
+	  * event is also triggered, right before the `empty` event.
+	  *
+	  * @event empty
+	  */
+		Empty: 'empty',
+
+		/**
+	  * This event is fired whenever an import is completed
+	  *
+	  * @event import
+	  */
+		Import: 'import'
+
+	};
+
+	ObservableArray.isObservable = function (obj) {
+
+		return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
+	};
+
+	_ClassMap2.default.register('ObservableArray', ObservableArray);
+
+	module.exports = ObservableArray;
+
+/***/ },
+/* 50 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _Obj2 = __webpack_require__(30);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Dom
+	 */
+	var View = function (_Obj) {
+		_inherits(View, _Obj);
+
+		function View() {
+			_classCallCheck(this, View);
+
+			return _possibleConstructorReturn(this, Object.getPrototypeOf(View).call(this));
+		}
+
+		return View;
+	}(_Obj3.default);
+
+	module.exports = View;
+
+/***/ },
+/* 51 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Routing
+	 */
+	var Controller =
+
+	/**
+	 * @class Routing.Controller
+	 * 
+	 * 
+	 */
+	function Controller() {
+		_classCallCheck(this, Controller);
+	};
+
+	var controllers = new Map();
+
+	Controller.register = function (name, controllerClass) {
+
+		// Does it extend?
+		if (!(controllerClass instanceof Controller)) {
+			throw 'Your controller needs to extend the Chicken.Routing.Controller class';
+		}
+
+		// Register
+		controllers.set(name, controllerClass);
+
+		return controllerClass;
+	};
+
+	module.exports = Controller;
 
 /***/ }
 /******/ ])

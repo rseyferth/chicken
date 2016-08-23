@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Core.Observable</title>
+    <title>Core.Application</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -41,7 +41,7 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Application.html">Application</a></li>
+                <li><a href="../classes/Core.Application.html">Core.Application</a></li>
             
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
@@ -112,19 +112,19 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Core.Observable Class</h1>
+                        <h1>Core.Application Class</h1>
 <div class="box meta">
     
 
     
         <div class="extends">
-            Extends Core.Object
+            Extends <a href="../classes/Core.Observable.html" class="crosslink">Core.Observable</a>
         </div>
     
 
     
         <div class="foundat">
-            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Core_Observable.js.html#l10"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;Observable.js:10</code></a>
+            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Application.js.html#l28"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Application.js:28</code></a>
         </div>
     
 
@@ -140,169 +140,10 @@
 
 
 <div class="box intro">
-    <p>The basic object class that notifies <strong>observers</strong> and <strong>students</strong> about 
-changes in its attributes. </p>
-<h2 id="observers">Observers</h2>
-<p>An observer is an object (in actuality a callback) that watches for changes on 
-a certain attribute or it&#39;s child attributes, in case of nested Observables. 
-An observer can <a href="../classes/Core.Observable.html#method_disregard" class="crosslink">disregard</a> the attribute to stop watching.</p>
-<pre class="code prettyprint"><code>// Initialize object and watch for changes
-var obj = new Chicken.Core.Observable();
-obj.set(&#39;foo&#39;, &#39;bar&#39;);
-var callback = () =&gt; {
-    alert(&#39;Changed: &#39; + obj.get(&#39;foo&#39;));
-};
-obj.observe(&#39;foo&#39;, callback);
-
-// Change
-obj.set(&#39;foo&#39;, &#39;boo&#39;); // Will alert &#39;Changed: boo&#39;
-
-// Stop watching
-obj.disregard(&#39;foo&#39;, callback);
-obj.set(&#39;foo&#39;, &#39;back-to-bar&#39;); // Will not alert anthing</code></pre>
-<h2 id="students">Students</h2>
-<p>A student is an object (in actuality a callback) that watches for changes in
-<strong>any attribute</strong> or any <strong>child attribute</strong>, in case of nested Observables.
-An observer can <strong>neglect</strong> their study to stop wachting.</p>
-<pre class="code prettyprint"><code>// Initialize object
-var obj = new Chicken.Core.Observable();
-obj.set(&#39;foo&#39;, &#39;bar&#39;);
-var childObj = new Chicken.Core.Observable();
-childObj.set(&#39;free&#39;, &#39;willy&#39;);
-obj.set(&#39;child&#39;, childObj);
-
-// Listen
-var callback = (changedAttributes) {
-    console.log(changedAttributes);
-};
-obj.study(callback);
-
-// Update attributes
-obj.set(&#39;foo&#39;, &#39;boo&#39;);                  // Will log [&#39;foo&#39;]
-obj.get(&#39;child&#39;).set(&#39;free&#39;, &#39;tibet&#39;);  // Will log [&#39;child&#39;]
-childObj.set(&#39;foo&#39;, &#39;bee&#39;);             // Will log [&#39;child&#39;]
-
-// Neglect my study
-obj.neglect(callback);
-obj.set(&#39;foo&#39;, &#39;back to bar&#39;);          // Will not log anything</code></pre>
+    <p>[constructor description]</p>
 
 </div>
 
-
-    <div class="constructor">
-        <h2>Constructor</h2>
-        <div id="method_Core.Observable" class="method item">
-    <h3 class="name"><code>Core.Observable</code></h3>
-
-    
-        <div class="args">
-            <span class="paren">(</span><ul class="args-list inline commas">
-            
-                <li class="arg">
-                    
-                        <code class="optional">[initValues={}]</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[convertToObservables=true]</code>
-                    
-                </li>
-            
-            </ul><span class="paren">)</span>
-        </div>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/_home_ruben_Websites_chicken_src_Core_Observable.js.html#l10"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;Observable.js:10</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        
-    </div>
-
-    
-        <div class="params">
-            <h4>Parameters:</h4>
-
-            <ul class="params-list">
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[initValues={}]</code>
-                        <span class="type">Object</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>A hash of key-value pairs to initialize the object with</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[convertToObservables=true]</code>
-                        <span class="type">Boolean</span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>Whether to convert any Object and Array values in the <code>initValues</code> parameter into Observable and ObservableArray instance</p>
-
-                    </div>
-
-                    
-                </li>
-            
-            </ul>
-        </div>
-    
-
-    
-
-    
-</div>
-
-    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -333,49 +174,49 @@ obj.set(&#39;foo&#39;, &#39;back to bar&#39;);          // Will not log anything
 
                     <ul class="index-list methods extends">
                         
-                            <li class="index-item method">
+                            <li class="index-item method inherited">
                                 <a href="#method_disregard">disregard</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method inherited">
                                 <a href="#method_get">get</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method inherited">
                                 <a href="#method_has">has</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method inherited">
                                 <a href="#method_neglect">neglect</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method inherited">
                                 <a href="#method_observe">observe</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method inherited">
                                 <a href="#method_set">set</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item method">
+                            <li class="index-item method inherited">
                                 <a href="#method_study">study</a>
 
                                 
@@ -393,7 +234,42 @@ obj.set(&#39;foo&#39;, &#39;back to bar&#39;);          // Will not log anything
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property">
+                                <a href="#property_$app">$app</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_history">history</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property inherited">
                                 <a href="#property_observers">observers</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_router">router</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_settings">settings</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_viewContainers">viewContainers</a>
 
                                 
                                 
@@ -409,7 +285,7 @@ obj.set(&#39;foo&#39;, &#39;back to bar&#39;);          // Will not log anything
 
                     <ul class="index-list attrs extends">
                         
-                            <li class="index-item attr">
+                            <li class="index-item attr inherited">
                                 <a href="#attr_attributes">attributes</a>
                             </li>
                         
@@ -423,14 +299,14 @@ obj.set(&#39;foo&#39;, &#39;back to bar&#39;);          // Will not log anything
 
                     <ul class="index-list events extends">
                         
-                            <li class="index-item event">
+                            <li class="index-item event inherited">
                                 <a href="#event_change">change</a>
 
                                 
                                 
                             </li>
                         
-                            <li class="index-item event">
+                            <li class="index-item event inherited">
                                 <a href="#event_import">import</a>
 
                                 
@@ -447,7 +323,7 @@ obj.set(&#39;foo&#39;, &#39;back to bar&#39;);          // Will not log anything
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_disregard" class="method item">
+                    <div id="method_disregard" class="method item inherited">
     <h3 class="name"><code>disregard</code></h3>
 
     
@@ -489,11 +365,8 @@ obj.set(&#39;foo&#39;, &#39;back to bar&#39;);          // Will not log anything
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#method_disregard">Core.Observable</a>:
             
         
         
@@ -544,7 +417,7 @@ child attributes.</p>
                     
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                     
@@ -560,7 +433,7 @@ child attributes.</p>
 </div>
 
                 
-                    <div id="method_get" class="method item">
+                    <div id="method_get" class="method item inherited">
     <h3 class="name"><code>get</code></h3>
 
     
@@ -598,11 +471,8 @@ child attributes.</p>
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#method_get">Core.Observable</a>:
             
         
         
@@ -665,7 +535,7 @@ child attributes.</p>
 </div>
 
                 
-                    <div id="method_has" class="method item">
+                    <div id="method_has" class="method item inherited">
     <h3 class="name"><code>has</code></h3>
 
     
@@ -703,11 +573,8 @@ child attributes.</p>
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#method_has">Core.Observable</a>:
             
         
         
@@ -772,7 +639,7 @@ child attributes.</p>
 </div>
 
                 
-                    <div id="method_neglect" class="method item">
+                    <div id="method_neglect" class="method item inherited">
     <h3 class="name"><code>neglect</code></h3>
 
     
@@ -808,11 +675,8 @@ child attributes.</p>
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#method_neglect">Core.Observable</a>:
             
         
         
@@ -848,7 +712,7 @@ child attributes.</p>
                     
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                     
@@ -872,7 +736,7 @@ child attributes.</p>
 </div>
 
                 
-                    <div id="method_observe" class="method item">
+                    <div id="method_observe" class="method item inherited">
     <h3 class="name"><code>observe</code></h3>
 
     
@@ -914,11 +778,8 @@ child attributes.</p>
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#method_observe">Core.Observable</a>:
             
         
         
@@ -979,7 +840,7 @@ obj.set(&#39;foo&#39;, &#39;boo&#39;); // Will alert &#39;Changed: boo&#39;</cod
                     
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                     
@@ -995,7 +856,7 @@ obj.set(&#39;foo&#39;, &#39;boo&#39;); // Will alert &#39;Changed: boo&#39;</cod
 </div>
 
                 
-                    <div id="method_set" class="method item">
+                    <div id="method_set" class="method item inherited">
     <h3 class="name"><code>set</code></h3>
 
     
@@ -1049,11 +910,8 @@ obj.set(&#39;foo&#39;, &#39;boo&#39;); // Will alert &#39;Changed: boo&#39;</cod
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#method_set">Core.Observable</a>:
             
         
         
@@ -1155,7 +1013,7 @@ obj.set(&#39;foo&#39;, &#39;boo&#39;); // Will alert &#39;Changed: boo&#39;</cod
 </div>
 
                 
-                    <div id="method_study" class="method item">
+                    <div id="method_study" class="method item inherited">
     <h3 class="name"><code>study</code></h3>
 
     
@@ -1191,11 +1049,8 @@ obj.set(&#39;foo&#39;, &#39;boo&#39;); // Will alert &#39;Changed: boo&#39;</cod
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#method_study">Core.Observable</a>:
             
         
         
@@ -1233,7 +1088,7 @@ all updates attributes. </p>
                     
 
                     <div class="param-description">
-                        
+                         
                     </div>
 
                     
@@ -1281,9 +1136,9 @@ childObj.set(&#39;foo&#39;, &#39;bee&#39;);             // Will log [&#39;child&
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_observers" class="property item">
-    <h3 class="name"><code>observers</code></h3>
-    <span class="type">Map</span>
+                    <div id="property_$app" class="property item">
+    <h3 class="name"><code>$app</code></h3>
+    <span class="type">JQuery</span>
 
     
 
@@ -1301,6 +1156,92 @@ childObj.set(&#39;foo&#39;, &#39;bee&#39;);             // Will log [&#39;child&
                 
                 Defined in
                 
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Application.js.html#l44"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Application.js:44</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The jQuery element that is the Application</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_history" class="property item">
+    <h3 class="name"><code>history</code></h3>
+    <span class="type">History</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Application.js.html#l81"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Application.js:81</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_observers" class="property item inherited">
+    <h3 class="name"><code>observers</code></h3>
+    <span class="type">Map</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#property_observers">Core.Observable</a>:
             
         
         
@@ -1325,6 +1266,140 @@ childObj.set(&#39;foo&#39;, &#39;bee&#39;);             // Will log [&#39;child&
 </div>
 
                 
+                    <div id="property_router" class="property item">
+    <h3 class="name"><code>router</code></h3>
+    <span class="type"><a href="../classes/Routing.Router.html" class="crosslink">Routing.Router</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Application.js.html#l63"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Application.js:63</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_settings" class="property item">
+    <h3 class="name"><code>settings</code></h3>
+    <span class="type"><a href="../classes/Core.SettingsObject.html" class="crosslink">Core.SettingsObject</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Application.js.html#l71"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Application.js:71</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_viewContainers" class="property item">
+    <h3 class="name"><code>viewContainers</code></h3>
+    <span class="type">Map</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Application.js.html#l52"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Application.js:52</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>All ViewContainers in the application. This is automatically
+kept up to date to contain all and only still existing containers.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
             </div>
         
 
@@ -1333,7 +1408,7 @@ childObj.set(&#39;foo&#39;, &#39;bee&#39;);             // Will log [&#39;child&
                 <h2 class="off-left">Attributes</h2>
 
                 
-                    <div id="attr_attributes" class="attr item">
+                    <div id="attr_attributes" class="attr item inherited">
     <a name="config_attributes"></a> 
     <h3 class="name"><code>attributes</code></h3>
     <span class="type">Map</span>
@@ -1355,11 +1430,8 @@ childObj.set(&#39;foo&#39;, &#39;bee&#39;);             // Will log [&#39;child&
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#attr_attributes">Core.Observable</a>:
             
         
         
@@ -1392,7 +1464,7 @@ childObj.set(&#39;foo&#39;, &#39;bee&#39;);             // Will log [&#39;child&
                 <h2 class="off-left">Events</h2>
 
                 
-                    <div id="event_change" class="events item">
+                    <div id="event_change" class="events item inherited">
     <h3 class="name"><code>change</code></h3>
     <span class="type"></span>
 
@@ -1407,11 +1479,8 @@ childObj.set(&#39;foo&#39;, &#39;bee&#39;);             // Will log [&#39;child&
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#event_change">Core.Observable</a>:
             
         
         
@@ -1437,7 +1506,7 @@ of one of its observable items.</p>
 </div>
 
                 
-                    <div id="event_import" class="events item">
+                    <div id="event_import" class="events item inherited">
     <h3 class="name"><code>import</code></h3>
     <span class="type"></span>
 
@@ -1452,11 +1521,8 @@ of one of its observable items.</p>
     <div class="meta">
         
             
-                
-                <p>
-                
-                Defined in
-                
+                <p>Inherited from
+                <a href="../classes/Core.Observable.html#event_import">Core.Observable</a>:
             
         
         

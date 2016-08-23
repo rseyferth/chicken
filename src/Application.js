@@ -2,32 +2,39 @@
 // Vendor libraries //
 //////////////////////
 
-import _ from 'underscore';
-
+import { createHistory } from 'history';
+import $ from 'jquery';
 
 /////////////////////
 // Chicken classes //
 /////////////////////
 
 import Observable from '~/Core/Observable';
+import SettingsObject from '~/Core/SettingsObject';
+import ViewContainer from '~/Dom/ViewContainer';
+import ClassMap from '~/Helpers/ClassMap';
 import Router from '~/Routing/Router';
+
 
 //////////////////////
 // Class definitino //
 //////////////////////
 
-class Chicken_Application extends Observable {
+var __instance = undefined;
+
+class Application extends Observable {
 
 	/**
-	 * [constructor description]
+	 * The Application class is 
 	 *
 	 * @class Application
+	 * @extend Core.Observable
 	 */
-	constructor($app, settings) {
+	constructor($app, settings, history) {
 
 		// Basics
 		super();
-
+		__instance = this;
 
 		////////////////
 		// Properties //
@@ -52,14 +59,46 @@ class Chicken_Application extends Observable {
 
 
 
+		/**
+		 * @property router
+		 * @type {Routing.Router}
+		 */
+		this.router = new Router(this);
 
-		this.router = new Router();
+
+
+		/**
+		 * @property settings
+		 * @type {Core.SettingsObject}
+		 */
+		this.settings = SettingsObject.create({
+			baseUrl: '/'
+		}, [ 'baseUrl' ]).apply(settings);
 
 
 
-		this.settings = new Observable(_.defaults(settings, {
-			
-		}));
+		/**
+		 * @property history
+		 * @type {History}
+		 */
+		this.history = history ? history : createHistory();
+
+
+
+
+	}
+
+	findViewContainers($element = null) {
+
+		// No element to look in?
+		if (!$element) $element = $;
+
+		// Find view containers
+		var $vcs = $element.find(ViewContainer.ElementSelector);
+		console.log($vcs);
+
+
+
 
 	}
 
@@ -72,6 +111,31 @@ class Chicken_Application extends Observable {
 
 	}
 
+
+	start() {
+
+		// Find initial view containers
+		this.findViewContainers();
+
+		// Listen to browser's address bar
+		this.history.listen((location) => {
+			this.router.handle(location);
+		});
+
+		// Start with current location
+		this.router.handle(this.history.getCurrentLocation());
+
+
+	}
+
+
 }
 
-module.exports = Chicken_Application;
+
+Application.getInstance = () => {
+	return __instance;
+};
+ClassMap.register('Application', Application);
+
+
+module.exports = Application;

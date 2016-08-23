@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Routing/Router.js</title>
+    <title>/home/ruben/Websites/chicken/src/Core/Application.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -41,7 +41,7 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Application.html">Application</a></li>
+                <li><a href="../classes/Core.Application.html">Core.Application</a></li>
             
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
@@ -112,180 +112,121 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Routing/Router.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Core/Application.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-/* eslint no-console: [&quot;error&quot;, { allow: [&quot;table&quot;] }] */
+//////////////////////
+// Vendor libraries //
+//////////////////////
 
-import _ from &#x27;underscore&#x27;;
+import { createHistory } from &#x27;history&#x27;;
 
-import Obj from &#x27;~/Core/Obj&#x27;;
+
+/////////////////////
+// Chicken classes //
+/////////////////////
+
+import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
+import Observable from &#x27;~/Core/Observable&#x27;;
+import Router from &#x27;~/Routing/Router&#x27;;
 import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
-import Route from &#x27;~/Routing/Route&#x27;;
-import Request from &#x27;~/Routing/Request&#x27;;
 
+//////////////////////
+// Class definitino //
+//////////////////////
+
+var __instance = undefined;
 
 /**
- * @module Routing
+ * @module Core
  */
-class Router extends Obj
-{
-	
+class Application extends Observable {
+
 	/**
-	 * 
-	 * 
-	 * @class Routing.Router
-	 * @extends Core.Object
+	 * [constructor description]
+	 *
+	 * @class Core.Application
+	 * @extend Core.Observable
 	 */
-	constructor() {
+	constructor($app, settings, history) {
+
+		// Basics
 		super();
-		
+		__instance = this;
+
 		////////////////
 		// Properties //
 		////////////////
 
 		/**
-		 * @property routes
-		 * @type {Array}
+		 * The jQuery element that is the Application
+		 * 
+		 * @property $app
+		 * @type {jQuery}
 		 */
-		this.routes = [];
-
-
-		///////////////////////////////////////////
-		// Grouped configuration state variables //
-		///////////////////////////////////////////
-
-		this._currentConfig = SettingsObject.create({
-
-			parentRoute: null,
-			viewContainer: &#x27;main&#x27;
-
-		}, [&#x27;parentRoute&#x27;, &#x27;viewContainer&#x27;]);
-
-
-
-
-	}	
-
-
-	////////////////////////
-	// Definition methods //
-	////////////////////////
-
-	/**
-	 * Create a Route and add it to the Router.
-	 *
-	 * @method route
-	 * @param  {string} 			pattern 	The uri pattern
-	 * @param  {Object|String} 		actions     
-	 * @param  {Object} 			[options] 
-	 * @return {Routing.Route}        
-	 */
-	route(pattern, actions, options = {}) {
-
-		// Merge options
-		options = _.defaults({}, options, _.omit(this._currentConfig.toObject(), &#x27;parentRoute&#x27;));
+		this.$app = $app;
 		
-		// Create the route
-		var route = new Route(this, this._currentConfig.get(&#x27;parentRoute&#x27;),	pattern, actions, options);
-		
-		// Add route
-		this.routes.push(route);
+		/**
+		 * All ViewContainers in the application. This is automatically
+		 * kept up to date to contain all and only still existing containers.
+		 *
+		 * @property viewContainers
+		 * @type {Map}
+		 */
+		this.viewContainers = new Map();
 
-		// Return route
-		return route;
+
+
+		/**
+		 * @property router
+		 * @type {Routing.Router}
+		 */
+		this.router = new Router(this);
+
+
+
+		/**
+		 * @property settings
+		 * @type {Core.SettingsObject}
+		 */
+		this.settings = SettingsObject.create({
+			baseUrl: &#x27;/&#x27;
+		}, [ &#x27;baseUrl&#x27; ]).apply(settings);
+
+
+
+		/**
+		 * @property history
+		 * @type {History}
+		 */
+		this.history = history ? history : createHistory();
+
+
+
 
 	}
 
-	/**
-	 * Configure the Router to add the given options to
-	 * the Routes you define within the callback.
-	 *
-	 * @method group
-	 * @param  {object}   options  
-	 * @param  {Function} callback 
-	 * @chainable
-	 */
-	group(options, callback) {
 
-		// Store options
-		var oldConfig = this._currentConfig.clone();
-		this._currentConfig.apply(options);
+	routes(callback) {
 
-		// Do the callback
-		callback.apply(this);
-
-		// Restore options
-		this._currentConfig = oldConfig;
-
+		// Run callback with router
+		callback.apply(this.router, []);
 		return this;
 
 	}
 
 
+	start() {
 
-
-	//////////////////////
-	// Router in action //
-	//////////////////////
-
-	/**
-	 * Handle given Request, by finding a matching Route
-	 * and executing it.
-	 * 
-	 * @method handle
-	 * @param  {Routing.Request} request 
-	 * @chainable
-	 */
-	handle(request) {
-
-		// Is it just a URL passed along?
-		if (!(request instanceof Request)) {
-			request = new Request(request);
-		}
-
-		// Loop through routes until we found something.
-		var routeMatch = _.find(this.routes, (route) =&gt; {
-			return route.match(request);
+		// Listen to browser&#x27;s address bar
+		this.history.listen((location) =&gt; {
+			this.router.handle(location);
 		});
-		
 
+		// Start with current location
+		this.router.handle(this.history.getCurrentLocation());
 
-		// Found something?
-
-		console.log(&#x27;Router&#x27;, routeMatch);
-
-		return this;
-
-	}
-
-
-
-	/**
-	 * Output a table to the console containing an overview
-	 * of all defined routes.
-	 *
-	 * Note: This is not supported in all browsers!
-	 * https://developer.mozilla.org/en-US/docs/Web/API/Console/table
-	 *  
-	 * @method outputToConsole
-	 * @chainable
-	 */
-	outputToConsole() {
-
-		// Loop and log
-		console.table(_.map(this.routes, (route) =&gt; {
-			return {
-				&#x27;Pattern&#x27;: route.getFullPattern(),
-				&#x27;Actions&#x27;: route.isAbstract() ? &#x27;(abstract)&#x27; : _.map(route.getFullActions(), (action, targetViewContainer) =&gt; { 
-					return targetViewContainer + &#x27;: &#x27; + (typeof action === &#x27;function&#x27; ? &#x27;(Callback)&#x27; : action);
-				}).join(&#x27;, &#x27;),
-				&#x27;Regular expression&#x27;: route.getRegExp()
-			};
-		}));
-
-		return this;
 
 	}
 
@@ -293,7 +234,13 @@ class Router extends Obj
 }
 
 
-module.exports = Router;
+Application.getInstance = () =&gt; {
+	return __instance;
+};
+ClassMap.register(&#x27;Application&#x27;, Application);
+
+
+module.exports = Application;
     </pre>
 </div>
 

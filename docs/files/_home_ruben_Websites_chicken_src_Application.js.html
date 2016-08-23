@@ -49,9 +49,19 @@
             
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
+                <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
             
+                <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
+            
+                <li><a href="../classes/Routing.Controller.html">Routing.Controller</a></li>
+            
+                <li><a href="../classes/Routing.Request.html">Routing.Request</a></li>
+            
                 <li><a href="../classes/Routing.Route.html">Routing.Route</a></li>
+            
+                <li><a href="../classes/Routing.RouteMatch.html">Routing.RouteMatch</a></li>
             
                 <li><a href="../classes/Routing.Router.html">Routing.Router</a></li>
             
@@ -110,32 +120,39 @@
 // Vendor libraries //
 //////////////////////
 
-import _ from &#x27;underscore&#x27;;
-
+import { createHistory } from &#x27;history&#x27;;
+import $ from &#x27;jquery&#x27;;
 
 /////////////////////
 // Chicken classes //
 /////////////////////
 
 import Observable from &#x27;~/Core/Observable&#x27;;
+import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
+import ViewContainer from &#x27;~/Dom/ViewContainer&#x27;;
+import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 import Router from &#x27;~/Routing/Router&#x27;;
+
 
 //////////////////////
 // Class definitino //
 //////////////////////
 
-class Chicken_Application extends Observable {
+var __instance = undefined;
+
+class Application extends Observable {
 
 	/**
-	 * [constructor description]
+	 * The Application class is 
 	 *
 	 * @class Application
+	 * @extend Core.Observable
 	 */
-	constructor($app, settings) {
+	constructor($app, settings, history) {
 
 		// Basics
 		super();
-
+		__instance = this;
 
 		////////////////
 		// Properties //
@@ -160,14 +177,46 @@ class Chicken_Application extends Observable {
 
 
 
+		/**
+		 * @property router
+		 * @type {Routing.Router}
+		 */
+		this.router = new Router(this);
 
-		this.router = new Router();
+
+
+		/**
+		 * @property settings
+		 * @type {Core.SettingsObject}
+		 */
+		this.settings = SettingsObject.create({
+			baseUrl: &#x27;/&#x27;
+		}, [ &#x27;baseUrl&#x27; ]).apply(settings);
 
 
 
-		this.settings = new Observable(_.defaults(settings, {
-			
-		}));
+		/**
+		 * @property history
+		 * @type {History}
+		 */
+		this.history = history ? history : createHistory();
+
+
+
+
+	}
+
+	findViewContainers($element = null) {
+
+		// No element to look in?
+		if (!$element) $element = $;
+
+		// Find view containers
+		var $vcs = $element.find(ViewContainer.ElementSelector);
+		console.log($vcs);
+
+
+
 
 	}
 
@@ -180,9 +229,34 @@ class Chicken_Application extends Observable {
 
 	}
 
+
+	start() {
+
+		// Find initial view containers
+		this.findViewContainers();
+
+		// Listen to browser&#x27;s address bar
+		this.history.listen((location) =&gt; {
+			this.router.handle(location);
+		});
+
+		// Start with current location
+		this.router.handle(this.history.getCurrentLocation());
+
+
+	}
+
+
 }
 
-module.exports = Chicken_Application;
+
+Application.getInstance = () =&gt; {
+	return __instance;
+};
+ClassMap.register(&#x27;Application&#x27;, Application);
+
+
+module.exports = Application;
     </pre>
 </div>
 

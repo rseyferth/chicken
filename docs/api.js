@@ -5,8 +5,13 @@ YUI.add("yuidoc-meta", function(Y) {
         "Core.Obj",
         "Core.Observable",
         "Core.ObservableArray",
+        "Core.SettingsObject",
         "Dom.ViewContainer",
+        "Routing.Action",
+        "Routing.Controller",
+        "Routing.Request",
         "Routing.Route",
+        "Routing.RouteMatch",
         "Routing.Router"
     ],
     "modules": [

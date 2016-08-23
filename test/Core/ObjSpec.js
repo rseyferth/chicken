@@ -61,5 +61,67 @@ describe('Core.Obj', function() {
 	});
 
 
+	describe('#promise(key, successCallback, failureCallback) and #when(...keys, callback)', () => {
+
+		it('should allow a promise to be made using a key', (done) => {
+
+			obj.promise('ready', (resolve) => {
+				resolve('We are ready!');
+			});
+
+			obj.when('ready', () => {				
+				done();
+			});
+
+		});
+
+		it('should allow a #when call before a #promise and still call the callback', (done) => {
+
+			obj.when('lazy', () => {
+				done();
+			});
+
+			obj.promise('lazy', (resolve) => {
+				resolve('I am not lazy.');
+			});
+
+		});
+
+		it('should allow multiple promises to be resolved at once', (done) => {
+
+			obj.when('crazy', 'chilly', () => {
+				done();
+			});
+
+			obj.promise('crazy', (resolve) => {
+				resolve('I am crazy');
+			});
+			obj.promise('chilly', (resolve) => {
+				resolve('I am chilly');
+			});
+
+		});
+
+		it('should call second callback when a promise fails', (done) => {
+
+			obj.when('impossible', 'possible', () => {
+				// This should not be reached.
+			}, () => {
+				done();
+			});
+
+			obj.promise('possible', (resolve) => {
+				resolve('No problem.');
+			});
+
+			obj.promise('impossible', (resolve, reject) => {
+				reject('It ain\'t happening');
+			});
+
+		});
+
+	});
+
+
 
 });

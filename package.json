@@ -31,6 +31,7 @@
     "babel-polyfill": "^6.13.0",
     "debug": "^2.2.0",
     "deep-get-set": "^1.0.0",
+    "history": "^3.0.0",
     "jquery": "^3.1.0",
     "underscore": "^1.8.3",
     "xregexp": "^3.1.1"

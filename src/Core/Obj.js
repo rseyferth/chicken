@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 /**
  * @module Core
  */
@@ -13,12 +15,72 @@ class Obj {
 		
 		// Init values
 		this._listeners = new Map();
+		this._promises = new Map();
 
 	}
 
 	////////////////////
 	// Public methods //
 	////////////////////
+
+
+	promise(key, callback) {
+
+		
+		// Do the callback
+		var promise = this._getPromise(key);
+		callback.apply(null, [promise.resolve, promise.reject]);
+
+		return this;
+
+	}
+
+	_getPromise(key) {
+
+		// Was the promise already defined
+		if (!this._promises.has(key)) {
+
+			// Store it
+			var p = {};
+			p.promise = new Promise((resolve, reject) => {
+				p.resolve = resolve;
+				p.reject = reject;
+			});
+			this._promises.set(key, p);
+			return p;
+
+		}
+		return this._promises.get(key);
+		
+
+	}
+
+	when(...args) {
+
+		// The last one should be a callback
+		var successCallback = args.pop();
+		var failCallback = (error) => {
+			throw new Error('Uncaught promise failure for ' + args.join(', ') + ': ' + error);
+		};
+		if (args.length > 1 && typeof _.last(args) === 'function') {
+			failCallback = successCallback;
+			successCallback = args.pop();
+		}
+
+		// Collect promises
+		var promises = [];
+		_.each(args, (arg) => {
+			promises.push(this._getPromise(arg).promise);
+		});
+
+		// When all are done
+		Promise.all(promises).then(successCallback, failCallback);
+
+		return this;
+
+	}
+
+
 
 	/**
 	 * Add listener for chosen event

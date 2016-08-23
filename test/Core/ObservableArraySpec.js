@@ -75,14 +75,44 @@ describe('Core.ObservableArray', () => {
 
 	});
 
-	describe('constructor(...values)', () => {
+	describe('constructor(values)', () => {
 
 		it('should store the items in the array', () => {
 
-			let a = new ObservableArray('a', 'b', 'c');
+			let a = new ObservableArray(['a', 'b', 'c']);
 			assert.equal(a.length, 3);
 
 		});
+
+		it('should store objects and arrays are Observables', () => {
+
+			var source = [
+				'value1', 'value2', {
+					'hi': 'ho',
+					'foo': 'bar',
+					'list': ['a', 'b', {
+						'foo': 'bar',
+						'bee': 'bop'
+					}]
+				}
+			];
+			let a = new ObservableArray(source);
+			assert.equal(a.length, 3);
+			assert.instanceOf(a.get(2), Observable);
+			assert.equal(a.get('2.foo'), 'bar');
+			assert.instanceOf(a.get('2.list'), ObservableArray);
+			assert.instanceOf(a.get('2.list.2'), Observable);
+			assert.equal(a.get('2.list.2.foo'), 'bar');
+			assert.equal(a.get('2.list.2.bee'), 'bop');
+
+
+			assert.deepEqual(a.toArray(), source);
+
+
+		});
+
+
+
 	});
 
 
@@ -90,7 +120,7 @@ describe('Core.ObservableArray', () => {
 
 		it('should retrieve value when passing an index', () => {
 
-			var a = new ObservableArray('item0', 'item1', 'item2', 'item3');
+			var a = new ObservableArray(['item0', 'item1', 'item2', 'item3']);
 			assert.equal(a.get(1), 'item1');
 			assert.equal(a.get(3), 'item3');
 			assert.isUndefined(a.get(4));
@@ -100,9 +130,9 @@ describe('Core.ObservableArray', () => {
 
 		it('should retrieve a value when passing a deep-get key', () => {
 
-			var a = new ObservableArray('item0', new Observable({
+			var a = new ObservableArray(['item0', {
 				'foo': 'bar'
-			}));
+			}]);
 			assert.instanceOf(a.get(1), Observable);
 			assert.equal(a.get('1.foo'), 'bar');
 
