@@ -125,31 +125,25 @@ class Controller
 	/**
 	 * @class Routing.Controller
 	 * 
-	 * 
+	 * @constructor
+	 * @param {Routing.Action} action  The routing action that leads to the creation of this controller
 	 */
-	constructor() {
+	constructor(action) {
+
+		/**
+		 * @property action
+		 * @type {Routing.Action}
+		 */
+		this.action = action;
+
+
+		// Copy some of the action props for local use.
 
 	}
 
 }
 
-var controllers = new Map();
-
-Controller.register = (name, controllerClass) =&gt; {
-
-	// Does it extend?
-	if (!(controllerClass instanceof Controller)) {
-		throw &#x27;Your controller needs to extend the Chicken.Routing.Controller class&#x27;;
-	}
-
-	// Register
-	controllers.set(name, controllerClass);
-
-	return controllerClass;
-
-};
-
-
+Controller.registry = new Map();
 
 
 

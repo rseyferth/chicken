@@ -2,8 +2,7 @@
 // Vendor libraries //
 //////////////////////
 
-//import $ from 'jquery';
-//import _ from 'underscore';
+import $ from 'jquery';
 
 
 /////////////////////
@@ -68,6 +67,22 @@ module.exports = {
 		RouteMatch: RouteMatch,
 		Router: Router
 	},
+
+
+	controller: (name, actions) => {
+
+		// Create class
+		let ChickenController = function() {
+
+		};
+		ChickenController.prototype = $.extend({}, Controller.prototype, actions);
+		ChickenController.prototype.constructor = Controller;
+
+		// Store it
+		Controller.registry.set(name, ChickenController);
+
+	},
+
 
 
 	createApplication: ($element, options) => {

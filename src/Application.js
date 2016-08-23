@@ -91,14 +91,28 @@ class Application extends Observable {
 	findViewContainers($element = null) {
 
 		// No element to look in?
-		if (!$element) $element = $;
+		if (!$element) $element = this.$app;
 
 		// Find view containers
-		var $vcs = $element.find(ViewContainer.ElementSelector);
-		console.log($vcs);
+		$element.find(ViewContainer.ElementSelector).each((index, el) => {
 
+			// Create view container
+			var vc = new ViewContainer($(el));
 
+			// Already known?
+			if (this.viewContainers.has(vc.name)) {
+				throw new Error('There is already a view named "' + vc.name + '". It is not possible to have two views with the same name at the same time.');
+			}
 
+			// Store it.
+			this.viewContainers.set(vc.name, vc);
+
+			// Initialize
+			vc.initialize();
+
+		});
+		
+		
 
 	}
 

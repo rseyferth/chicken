@@ -118,7 +118,7 @@ class Router extends Obj
 	 * 
 	 * @method handle
 	 * @param  {Routing.Request} request 
-	 * @chainable
+	 * @returns {Routing.RouteMatch}
 	 */
 	handle(request) {
 
@@ -136,9 +136,9 @@ class Router extends Obj
 
 		// Found something?
 
-		console.log('Router', routeMatch);
+//		console.log('Router', routeMatch);
 
-		return this;
+		return routeMatch;
 
 	}
 
