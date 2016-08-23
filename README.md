@@ -27,7 +27,7 @@ Chicken uses the following third-party libraries:
 The easiest way to install Chicken is by using `bower`:
 
 ```
-bower install --save chicken
+bower install --save chickenjs
 ```
 
 Then add jQuery, Underscore and Chicken to your HTML page:
