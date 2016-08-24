@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Application.js</title>
+    <title>/home/ruben/Websites/chicken/src/Dom/Element.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -114,184 +114,64 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Application.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Element.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-//////////////////////
-// Vendor libraries //
-//////////////////////
+import Obj from &#x27;~/Core/Obj&#x27;;
+import Application from &#x27;~/Application&#x27;;
 
-import { createHistory } from &#x27;history&#x27;;
-import $ from &#x27;jquery&#x27;;
-
-/////////////////////
-// Chicken classes //
-/////////////////////
-
-import Observable from &#x27;~/Core/Observable&#x27;;
-import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
-import ViewContainer from &#x27;~/Dom/ViewContainer&#x27;;
-import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
-import Router from &#x27;~/Routing/Router&#x27;;
-
-
-//////////////////////
-// Class definitino //
-//////////////////////
-
-var __instance = undefined;
-
-class Application extends Observable {
-
+/**
+ * @module Dom
+ */
+class Element extends Obj
+{
 	/**
-	 * The Application class is 
+	 * @class Dom.Element
+	 * @extends Core.Obj
 	 *
-	 * @class Application
-	 * @extend Core.Observable
+	 * @constructor
+	 * @param {jQuery} $element
+	 * @param {Application} [application]
 	 */
-	constructor($app, settings, history) {
+	constructor($element, application = null) {
 
-		// Basics
 		super();
-		__instance = this;
-
-		////////////////
-		// Properties //
-		////////////////
 
 		/**
-		 * The jQuery element that is the Application
+		 * @property application
+		 * @type {Application}
+		 */
+		this.application = application ? application : Application.getInstance();
+
+		/**
+		 * The jQuery element that is the ViewContainer
 		 * 
-		 * @property $app
+		 * @property $element
 		 * @type {jQuery}
 		 */
-		this.$app = $app;
-		
-		/**
-		 * All ViewContainers in the application. This is automatically
-		 * kept up to date to contain all and only still existing containers.
-		 *
-		 * @property viewContainers
-		 * @type {Map}
-		 */
-		this.viewContainers = new Map();
-
-
-
-		/**
-		 * @property router
-		 * @type {Routing.Router}
-		 */
-		this.router = new Router(this);
-
-
-
-		/**
-		 * @property settings
-		 * @type {Core.SettingsObject}
-		 */
-		this.settings = SettingsObject.create({
-			baseUrl: &#x27;/&#x27;
-		}, [ &#x27;baseUrl&#x27; ]).apply(settings);
-
-
-
-		/**
-		 * @property history
-		 * @type {History}
-		 */
-		this.history = history ? history : createHistory();
-
-
+		this.$element = $element;
 
 
 	}
 
-	findViewContainers($element = null) {
-
-		// No element to look in?
-		if (!$element) $element = this.$app;
-
-		// Find view containers
-		$element.find(ViewContainer.ElementSelector).each((index, el) =&gt; {
-
-			// Create view container
-			var vc = new ViewContainer($(el), this);
-
-			// Already known?
-			if (this.viewContainers.has(vc.name)) {
-				throw new Error(&#x27;There is already a view named &quot;&#x27; + vc.name + &#x27;&quot;. It is not possible to have two views with the same name at the same time.&#x27;);
-			}
-
-			// Store it.
-			this.viewContainers.set(vc.name, vc);
-
-			// Initialize
-			vc.initialize();
-
-		});
-		
-		return this;
-
-	}
-
-	updateViewContainers($lookForNewOnesIn = null) {
-
-		// Check if all old ones are still there
-		
-
-		// Look for new ones
-		if ($lookForNewOnesIn) this.findViewContainers($lookForNewOnesIn);
-
-		return this;
-
-	}
-
-	getViewContainer(key) {
-		return this.viewContainers.get(key);
-	}
 
 
+	setContent(content) {
 
+		// Set it
+		this.$element.html(content);
+		this.trigger(&#x27;content&#x27;, content);
 
-
-	routes(callback) {
-
-		// Run callback with router
-		callback.apply(this.router, []);
-		return this;
-
-	}
-
-
-	start() {
-
-		// Find initial view containers
-		this.findViewContainers();
-
-		// Listen to browser&#x27;s address bar
-		this.history.listen((location) =&gt; {
-			this.router.handle(location);
-		});
-
-		// Start with current location
-		this.router.handle(this.history.getCurrentLocation());
-
+		// Update view containers
+		this.application.updateViewContainers(this.$element);
 
 	}
 
 
 }
 
-
-Application.getInstance = () =&gt; {
-	return __instance;
-};
-ClassMap.register(&#x27;Application&#x27;, Application);
-
-
-module.exports = Application;
+module.exports = Element;
     </pre>
 </div>
 

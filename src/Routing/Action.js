@@ -1,5 +1,8 @@
 import XRegExp from 'xregexp';
+
 import Obj from '~/Core/Obj';
+import Controller from '~/Routing/Controller';
+import View from '~/Dom/View';
 
 /**
  * @module Routing
@@ -144,7 +147,7 @@ class Action extends Obj
 		if (typeof controllerActionOrCallback === 'string') {
 
 			// Parse controller name
-			var match = XRegExp.exec(controllerActionOrCallback, Action.controllerActionRegExp);
+			var match = XRegExp.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
 			if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
 			
 			// Store this
@@ -153,24 +156,141 @@ class Action extends Obj
 
 
 
-		} else if (controllerActionOrCallback === 'function') {
+		} else if (typeof controllerActionOrCallback === 'function') {
 
 			// Store it
 			this.callback = controllerActionOrCallback;
 
 		} else {
 
-			throw new TypeError('Unknown controllerActionOrCallback value');
+			throw new TypeError('[Routing.Action] Did not understand action: ' + controllerActionOrCallback);
 
 		}
 
+	}
 
+	
+	execute(application) {
+
+		// Make the promise
+		return this.promise('complete', (resolve, reject) => {
+
+			// Get the view container
+			this.viewContainer = application.getViewContainer(this.targetViewContainer);
+			if (this.viewContainer === undefined) {
+				reject('There is no ViewContainer available with the name "' + this.targetViewContainer + '"');
+				return;
+			}
+
+			// The VC is busy now.
+			this.viewContainer.setLoading(true);
+
+			////////////////
+			// Controller //
+			////////////////
+
+			if (this.controllerClass) {
+
+				// Make controller
+				var ChickenController = Controller.registry.get(this.controllerClass);
+				if (ChickenController === undefined) {
+					reject('No controller defined with name "' + this.controllerClass + '"');
+					return;
+				}
+				this.controller = new ChickenController(this);
+
+				// Call action
+				var controllerAction = this.controller[this.controllerAction];
+				if (controllerAction === 'undefined' || typeof controllerAction !== 'function') {
+					reject('There is no action on the ' + this.controllerClass + ' controller with the name "' + this.controllerAction + '"');
+					return;
+				}
+
+				// Make the call
+				this._processResult(controllerAction.apply(this.controller, this.parameterArray), resolve, reject);
+
+			} 
+
+			//////////////
+			// Callback //
+			//////////////
+			else if (this.callback) {
+				
+				// Do the callback
+				this._processResult(this.callback.apply(this.controller, this.parameterArray), resolve, reject);
+
+			} else {
+				reject('There is no controller or callback defined... This shouldn\'t happen.');
+				return;
+			}
+
+		}).then((result) => {
+
+		}, (error) => {
+
+			// No longer loaeding
+			if (this.viewContainer) this.viewContainer.setLoading(false);
+
+		});
 
 	}
 
+	_processResult(result, resolve, reject) {
+
+		///////////////////////////
+		// Is the result a view? //
+		///////////////////////////
+
+		if (result instanceof View) {
+
+			throw new Error('View rendering not yet implemented.');
+
+		}
+
+		//////////////////////////////
+		// Is the result a promise? //
+		//////////////////////////////
+		
+		else if (result instanceof Promise) {
+
+		}
+
+		/////////////////////////////////
+		// Is it rendarable by itself? //
+		/////////////////////////////////
+
+		else {
+
+			// A string
+			if (typeof result === 'string') {
+
+				// Set content
+				this.viewContainer.setActionContent(this, result);
+				resolve();
+
+			} else {
+
+				// Don't know how to render this...
+				reject('I don\'t know how to render the result for "' + this.targetViewContainer + '"');
+				return;
+
+			}
+
+		}		
+
+	}
+
+
 }
 
-Action.controllerActionRegExp = XRegExp('^(?<class>[A-Z][a-zA-Z0-9\-\.]+)@(?<action>[a-z][a-zA-Z0-9\_]+)$');
+
+var _controllerActionRegExp;
+Action.getControllerActionRegExp = () => {
+	if (_controllerActionRegExp === undefined) {
+		_controllerActionRegExp = XRegExp('^(?<class>[A-Z][a-zA-Z0-9\-\.]+)@(?<action>[a-z][a-zA-Z0-9\_]+)$');
+	}
+	return _controllerActionRegExp;
+};
 
 
 module.exports = Action;

@@ -118,13 +118,15 @@ class RouteMatch
 
 		// Make any actions that are already there dependent on the new ones, 
 		// because these actions are the parent(s) of the existing actions.
-		this.actions.forEach((action) => {
-			action.dependsOn.push(action);
+		this.actions.forEach((previousAction) => {
+			_.each(myActions, (myAction) => {
+				previousAction.dependsOn.push(myAction);
+			});
 		});	
 
 		// Add these actions
-		_.each(myActions, (action, targetViewContainer) => {
-			this.actions.set(targetViewContainer, action);
+		_.each(myActions, (myAction, targetViewContainer) => {
+			this.actions.set(targetViewContainer, myAction);
 		});
 
 		// Now look into the parent

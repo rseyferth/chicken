@@ -19,6 +19,7 @@
     "gulp-connect": "^5.0.0",
     "gulp-eslint": "^3.0.1",
     "gulp-mocha": "^3.0.1",
+    "gulp-util": "^3.0.7",
     "gulp-watch": "^4.3.9",
     "gulp-yuidoc": "^0.1.2",
     "jsdom": "^9.4.2",
@@ -29,9 +30,6 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.13.0",
-    "debug": "^2.2.0",
-    "deep-get-set": "^1.0.0",
-    "gulp-util": "^3.0.7",
     "history": "^3.0.0",
     "jquery": "^3.1.0",
     "underscore": "^1.8.3",

@@ -51,6 +51,8 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
@@ -116,12 +118,12 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import Obj from &#x27;~/Core/Obj&#x27;;
+import Element from &#x27;~/Dom/Element&#x27;;
 
 /**
  * @module Dom
  */
-class ViewContainer extends Obj
+class ViewContainer extends Element
 {
 
 	/**
@@ -135,15 +137,20 @@ class ViewContainer extends Obj
 	 *
 	 * @constructor
 	 * @param {jQuery} $element
+	 * @param {Application} application
 	 */
-	constructor($element) {
+	constructor($element, application) {
 
-		super();
+		super($element, application);
+
+		// Private props
+		this._isLoading = false;
+		
 
 		////////////////
 		// Properties //
 		////////////////
-
+	
 		/**
 		 * The unique name you can use in your routes to target this
 		 * ViewContainer.
@@ -153,14 +160,14 @@ class ViewContainer extends Obj
 		 */
 		this.name = ViewContainer.getViewName($element);
 
-
 		/**
-		 * The jQuery element that is the ViewContainer
+		 * The Routing.Action that rendered the content that is currently
+		 * in this ViewContainer
 		 * 
-		 * @property $element
-		 * @type {jQuery}
+		 * @property currentAction
+		 * @type {Routing.Action}
 		 */
-		this.$element = $element;
+		this.currentAction = null;
 
 
 	}
@@ -172,13 +179,53 @@ class ViewContainer extends Obj
 	 * @chainable
 	 */
 	initialize() {
-		this.$element.addClass(&#x27;initialized&#x27;);
+		this.$element.addClass(ViewContainer.Classes.Initialized);
 		return this;
+	}
+
+
+	/**
+	 * @method setActionContent
+	 * @param {Routing.Action} 		action 				The Action instance that rendered the content
+	 * @param {string} 				content 			The (HTML) content to render
+	 * @param {boolean}				setLoadingFalse		Whether to set the loading-state to false
+	 * @chainable
+	 */
+	setActionContent(action, content, setLoadingFalse = true) {
+
+		// Store action.
+		this.currentAction = action;
+
+		// Set HTML
+		this.setContent(content);
+
+		// No longer loading
+		if (setLoadingFalse) this.setLoading(false);
+
+		return this;
+
+	}
+
+
+
+	setLoading(loading = true) {
+		this._isLoading = loading;
+		this.$element.toggleClass(ViewContainer.Classes.Loading, loading);
+		return this;
+	}
+
+
+	isLoading() {
+		return this._isLoading;
 	}
 
 
 }
 
+ViewContainer.Classes = {
+	Initialized: &#x27;initialized&#x27;,
+	Loading: &#x27;loading&#x27;
+};
 ViewContainer.ElementSelector = &#x27;view:not(.initialized),[view]:not(.initialized)&#x27;;
 ViewContainer.DefaultName = &#x27;main&#x27;;
 

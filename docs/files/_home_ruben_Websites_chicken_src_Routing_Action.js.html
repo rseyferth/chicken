@@ -51,6 +51,8 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
@@ -117,7 +119,10 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 import XRegExp from &#x27;xregexp&#x27;;
+
 import Obj from &#x27;~/Core/Obj&#x27;;
+import Controller from &#x27;~/Routing/Controller&#x27;;
+import View from &#x27;~/Dom/View&#x27;;
 
 /**
  * @module Routing
@@ -262,7 +267,7 @@ class Action extends Obj
 		if (typeof controllerActionOrCallback === &#x27;string&#x27;) {
 
 			// Parse controller name
-			var match = XRegExp.exec(controllerActionOrCallback, Action.controllerActionRegExp);
+			var match = XRegExp.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
 			if (!match) throw new TypeError(&#x27;Invalid action string: &#x27; + controllerActionOrCallback + &#x27;. Use controller@method format.&#x27;);
 			
 			// Store this
@@ -271,24 +276,141 @@ class Action extends Obj
 
 
 
-		} else if (controllerActionOrCallback === &#x27;function&#x27;) {
+		} else if (typeof controllerActionOrCallback === &#x27;function&#x27;) {
 
 			// Store it
 			this.callback = controllerActionOrCallback;
 
 		} else {
 
-			throw new TypeError(&#x27;Unknown controllerActionOrCallback value&#x27;);
+			throw new TypeError(&#x27;[Routing.Action] Did not understand action: &#x27; + controllerActionOrCallback);
 
 		}
 
+	}
 
+	
+	execute(application) {
+
+		// Make the promise
+		return this.promise(&#x27;complete&#x27;, (resolve, reject) =&gt; {
+
+			// Get the view container
+			this.viewContainer = application.getViewContainer(this.targetViewContainer);
+			if (this.viewContainer === undefined) {
+				reject(&#x27;There is no ViewContainer available with the name &quot;&#x27; + this.targetViewContainer + &#x27;&quot;&#x27;);
+				return;
+			}
+
+			// The VC is busy now.
+			this.viewContainer.setLoading(true);
+
+			////////////////
+			// Controller //
+			////////////////
+
+			if (this.controllerClass) {
+
+				// Make controller
+				var ChickenController = Controller.registry.get(this.controllerClass);
+				if (ChickenController === undefined) {
+					reject(&#x27;No controller defined with name &quot;&#x27; + this.controllerClass + &#x27;&quot;&#x27;);
+					return;
+				}
+				this.controller = new ChickenController(this);
+
+				// Call action
+				var controllerAction = this.controller[this.controllerAction];
+				if (controllerAction === &#x27;undefined&#x27; || typeof controllerAction !== &#x27;function&#x27;) {
+					reject(&#x27;There is no action on the &#x27; + this.controllerClass + &#x27; controller with the name &quot;&#x27; + this.controllerAction + &#x27;&quot;&#x27;);
+					return;
+				}
+
+				// Make the call
+				this._processResult(controllerAction.apply(this.controller, this.parameterArray), resolve, reject);
+
+			} 
+
+			//////////////
+			// Callback //
+			//////////////
+			else if (this.callback) {
+				
+				// Do the callback
+				this._processResult(this.callback.apply(this.controller, this.parameterArray), resolve, reject);
+
+			} else {
+				reject(&#x27;There is no controller or callback defined... This shouldn\&#x27;t happen.&#x27;);
+				return;
+			}
+
+		}).then((result) =&gt; {
+
+		}, (error) =&gt; {
+
+			// No longer loaeding
+			if (this.viewContainer) this.viewContainer.setLoading(false);
+
+		});
 
 	}
 
+	_processResult(result, resolve, reject) {
+
+		///////////////////////////
+		// Is the result a view? //
+		///////////////////////////
+
+		if (result instanceof View) {
+
+			throw new Error(&#x27;View rendering not yet implemented.&#x27;);
+
+		}
+
+		//////////////////////////////
+		// Is the result a promise? //
+		//////////////////////////////
+		
+		else if (result instanceof Promise) {
+
+		}
+
+		/////////////////////////////////
+		// Is it rendarable by itself? //
+		/////////////////////////////////
+
+		else {
+
+			// A string
+			if (typeof result === &#x27;string&#x27;) {
+
+				// Set content
+				this.viewContainer.setActionContent(this, result);
+				resolve();
+
+			} else {
+
+				// Don&#x27;t know how to render this...
+				reject(&#x27;I don\&#x27;t know how to render the result for &quot;&#x27; + this.targetViewContainer + &#x27;&quot;&#x27;);
+				return;
+
+			}
+
+		}		
+
+	}
+
+
 }
 
-Action.controllerActionRegExp = XRegExp(&#x27;^(?&lt;class&gt;[A-Z][a-zA-Z0-9\-\.]+)@(?&lt;action&gt;[a-z][a-zA-Z0-9\_]+)$&#x27;);
+
+var _controllerActionRegExp;
+Action.getControllerActionRegExp = () =&gt; {
+	if (_controllerActionRegExp === undefined) {
+		_controllerActionRegExp = XRegExp(&#x27;^(?&lt;class&gt;[A-Z][a-zA-Z0-9\-\.]+)@(?&lt;action&gt;[a-z][a-zA-Z0-9\_]+)$&#x27;);
+	}
+	return _controllerActionRegExp;
+};
 
 
 module.exports = Action;

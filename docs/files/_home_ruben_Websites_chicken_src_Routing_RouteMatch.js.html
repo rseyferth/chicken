@@ -51,6 +51,8 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
@@ -236,13 +238,15 @@ class RouteMatch
 
 		// Make any actions that are already there dependent on the new ones, 
 		// because these actions are the parent(s) of the existing actions.
-		this.actions.forEach((action) =&gt; {
-			action.dependsOn.push(action);
+		this.actions.forEach((previousAction) =&gt; {
+			_.each(myActions, (myAction) =&gt; {
+				previousAction.dependsOn.push(myAction);
+			});
 		});	
 
 		// Add these actions
-		_.each(myActions, (action, targetViewContainer) =&gt; {
-			this.actions.set(targetViewContainer, action);
+		_.each(myActions, (myAction, targetViewContainer) =&gt; {
+			this.actions.set(targetViewContainer, myAction);
 		});
 
 		// Now look into the parent

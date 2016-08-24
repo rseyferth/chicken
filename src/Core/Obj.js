@@ -1,5 +1,7 @@
 import _ from 'underscore';
 
+var promiseCount = 0;
+
 /**
  * @module Core
  */
@@ -23,19 +25,21 @@ class Obj {
 	// Public methods //
 	////////////////////
 
-
 	promise(key, callback) {
 
 		
 		// Do the callback
-		var promise = this._getPromise(key);
+		var promise = this._getPromiseInfo(key);
 		callback.apply(null, [promise.resolve, promise.reject]);
-
-		return this;
+		return promise.promise;
 
 	}
 
-	_getPromise(key) {
+	getPromise(key) {
+		return this._getPromiseInfo(key).promise;
+	}
+
+	_getPromiseInfo(key) {
 
 		// Was the promise already defined
 		if (!this._promises.has(key)) {
@@ -44,10 +48,10 @@ class Obj {
 			var p = {};
 			p.promise = new Promise((resolve, reject) => {
 				p.resolve = resolve;
-				p.reject = reject;
+				p.reject = reject;		
+				p.id = promiseCount++;
 			});
 			this._promises.set(key, p);
-			return p;
 
 		}
 		return this._promises.get(key);
@@ -70,7 +74,7 @@ class Obj {
 		// Collect promises
 		var promises = [];
 		_.each(args, (arg) => {
-			promises.push(this._getPromise(arg).promise);
+			promises.push(this._getPromiseInfo(arg).promise);
 		});
 
 		// When all are done

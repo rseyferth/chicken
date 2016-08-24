@@ -51,6 +51,8 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
@@ -116,7 +118,10 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
+
 import Obj from &#x27;~/Core/Obj&#x27;;
+import Observable from &#x27;~/Core/Observable&#x27;;
 
 /**
  * @module Dom
@@ -125,10 +130,60 @@ class View extends Obj
 {
 
 	constructor() {
-
 		super();
 
+
+		this.data = new Observable();
+
+
+
+		this.dataPromises = {};
+
+
+		this.loadPromises = [];
+
+
+
 	}
+
+	with(...args) {
+
+		// Is it a single object hash?
+		if (args.length === 1 &amp;&amp; typeof args[0] === &#x27;object&#x27;) {
+
+			// Do an each
+			_.each(args[0], (value, key) =&gt; {
+				this.with(key, value);
+			});
+
+		} else {
+
+			// Use key/value
+			var [key, value] = args;
+			
+			// Is the key a string?
+			if (typeof key !== &#x27;string&#x27;) throw new TypeError(&#x27;[Dom.View] The &quot;with&quot; method accepts either a key, value or hash-object as arguments.&#x27;);
+
+			// Is the data a promise?
+			if (value instanceof Promise) {
+
+				// Add to promises
+				this.dataPromises[key] = value;
+				this.loadPromises.push(value);
+
+			} else {
+
+				// Set it now
+				this.data.set(key, value, true);
+
+			}
+
+		}
+
+		return this;
+
+	} 
+
 
 
 }

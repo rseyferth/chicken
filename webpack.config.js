@@ -11,7 +11,8 @@ module.exports = {
 
 	"externals": {
 		"underscore": "_",
-		"jquery": "$"
+		"jquery": "$",
+		"xregexp": 'XRegExp'
 	},
 
 	module: {

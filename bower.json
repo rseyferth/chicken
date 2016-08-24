@@ -5,6 +5,12 @@
   "authors": [
     "Ruben Seyferth <ruben.seyferth@gmail.com>"
   ],
+  "dependencies": {
+    "jquery": "~2.1.1",
+    "underscore": "^1.8.3",
+    "xregexp": "^3.1.1"    
+    
+  },
   "license": "ISC",
   "homepage": "https://github.com/rseyferth/chicken",
   "ignore": [

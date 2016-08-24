@@ -97,7 +97,7 @@ class Application extends Observable {
 		$element.find(ViewContainer.ElementSelector).each((index, el) => {
 
 			// Create view container
-			var vc = new ViewContainer($(el));
+			var vc = new ViewContainer($(el), this);
 
 			// Already known?
 			if (this.viewContainers.has(vc.name)) {
@@ -112,9 +112,28 @@ class Application extends Observable {
 
 		});
 		
-		
+		return this;
 
 	}
+
+	updateViewContainers($lookForNewOnesIn = null) {
+
+		// Check if all old ones are still there
+		
+
+		// Look for new ones
+		if ($lookForNewOnesIn) this.findViewContainers($lookForNewOnesIn);
+
+		return this;
+
+	}
+
+	getViewContainer(key) {
+		return this.viewContainers.get(key);
+	}
+
+
+
 
 
 	routes(callback) {

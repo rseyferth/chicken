@@ -51,7 +51,7 @@ Then add a script that will initialize the application, thusly:
 
 **app/js/app.js**
 ```javascript
-Chicken.createApplication($('#application'), {
+Chicken.application($('#application'), {
   baseUrl: '/'
 }).routes(() => {
   
@@ -157,6 +157,10 @@ app.routes(() => {
   
 });
 ```
+
+**Note:** Nested routes will always wait for their parent route to complete before executing. This allows you
+to render nested routes into a view container that is created by the parent route.
+
 
 ## Controllers
 Controllers are where you define what will be rendered into the view containers. For example:

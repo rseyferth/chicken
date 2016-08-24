@@ -20,7 +20,7 @@ class Router extends Obj
 	 * @class Routing.Router
 	 * @extends Core.Object
 	 */
-	constructor() {
+	constructor(application) {
 		super();
 		
 		////////////////
@@ -32,6 +32,12 @@ class Router extends Obj
 		 * @type {Array}
 		 */
 		this.routes = [];
+
+		/**
+		 * @property application
+		 * @type {Application}
+		 */
+		this.application = application;
 
 
 		///////////////////////////////////////////
@@ -122,21 +128,91 @@ class Router extends Obj
 	 */
 	handle(request) {
 
+		/////////////////
+		// Match route //
+		/////////////////
+
 		// Is it just a URL passed along?
 		if (!(request instanceof Request)) {
 			request = new Request(request);
 		}
 
 		// Loop through routes until we found something.
-		var routeMatch = _.find(this.routes, (route) => {
-			return route.match(request);
+		var routeMatch = false;
+		_.find(this.routes, (route) => {
+			routeMatch = route.match(request);
+			return routeMatch;
 		});
 		
-
-
 		// Found something?
+		if (routeMatch === false) {
 
-//		console.log('Router', routeMatch);
+			// There is no route matching the request
+			throw new Error('[Routing.Router] Could not find matching route. 404 handling is not implemented yet.');
+
+		}
+
+
+		/////////////////////////////
+		// Start executing actions //
+		/////////////////////////////
+
+		var numberOfActionsStarted = 0;
+		var actionPromises = [];
+		routeMatch.actions.forEach((action, vcName) => {
+
+
+			// Get depends on promises
+			var dependsOnPromises = _.map(action.dependsOn, (dependsOnAction) => {
+				return dependsOnAction.getPromise('complete');
+			});
+
+			// Wait?
+			if (dependsOnPromises.length > 0) {
+
+				// Wait for it
+				Promise.all(dependsOnPromises).then(() => {
+
+					// Now we're ready!
+					action.execute(this.application);
+
+				}, (error) => {
+					throw new Error('[Routing.Router] Action for "' + vcName + '" was not started, due to error in dependancy route: ' + error);
+				});
+
+			} else {
+
+				// Start now
+				numberOfActionsStarted++;
+				action.execute(this.application);
+
+			}
+
+			// Add complete promise
+			actionPromises.push(action.getPromise('complete'));
+
+		});
+
+
+		////////////////////////////
+		// Keep track of progress //
+		////////////////////////////
+
+		// Any action started?
+		if (numberOfActionsStarted === 0) {
+
+			throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.matchedRoute.getFullPattern() + '. Check your configuration.'); 
+
+		}
+
+		// Listen to the result
+		Promise.all(actionPromises).then((...results) => {
+			console.log(results);
+		}, (error) => {
+
+			throw new Error('[Routing.Router] Executing route failed: ' + error);
+
+		});
 
 		return routeMatch;
 
