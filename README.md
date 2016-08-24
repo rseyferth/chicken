@@ -1,7 +1,7 @@
 [![Build Status](https://travis-ci.org/rseyferth/chicken.svg?branch=master)](https://travis-ci.org/rseyferth/chicken)
 
 # Chicken Javascript MVC framework
-(This package is still being development, and is not ready for use yet)
+(This package is still being developed, and is not ready for use yet)
 
 ## What is Chicken?
 Chicken is a Javascript framework you can use to quickly build webapps. It is intended as an alternative to bigger frameworks like Ember and Angular, but without the frustration when you're trying to do something that's not in the first couple of tutorials. 
@@ -39,7 +39,7 @@ Then add jQuery, Underscore and Chicken to your HTML page:
 ```
 
 ## Create application
-The first step in creating in application is adding element and a view container to your HTML page:
+The first step in creating an application is adding an element and a view container to your HTML page:
 
 ```html
 <div id="application">
@@ -64,39 +64,41 @@ Chicken.createApplication($('#application'), {
 ```
 
 ## View containers
-A view container is an element in your page that can be used to render views in. Each view container needs to have a name.  Every application must have at least one view container, with the name **main**. Adding a `<view></view>` or `<div view></div>` tag to your HTML page will tell the application to use this as the **main** view container.
+A view container is an element in your page that can be used to render views in. Each view container needs to have a name.  Every application must have at least a view container with the name **main**. Adding a `<view></view>` or `<div view></div>` tag to your HTML page will tell the application to use this as the **main** view container.
 
 You can also add view containers in your views, to allow for nested views. For example:
 
 **app/index.html**
 ```html
 <div id="application">
-  Application
+  <h1>Application</h1>
   <view></view>
 </div>
 ```
 
 **app/views/page.hbs**
 ```html
-<h1>Page</h1>
+<h2>Page</h2>
 <view name="sub"></vieW>
 ```
 
 **app/views/sub-page.hbs**
 ```html
-<h2>Subpage</h2>
+<h3>Subpage</h3>
 ```
 
 Now, if you were to have a route that rendered the `sub-page.hbs` template into the `sub` view container, the resulting HTML would look something like:
 
 ```html 
 <div id="application">
+  <h1>Application</h1>
   <view>
-    <h1>Page</h1>
+    <h2>Page</h2>
     <view name="sub">
-      <h2>Subpage</h2>
+      <h3>Subpage</h3>
     </view>
   </view>
+</div>
 ``` 
 
 
