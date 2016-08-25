@@ -53,7 +53,7 @@ import Router from '~/Routing/Router';
 // Chicken Package exports //
 /////////////////////////////
 
-module.exports = {
+var Chicken = {
 	
 	////////////////
 	// Class tree //
@@ -97,7 +97,16 @@ module.exports = {
 
 		// Arguments given?
 		if (args.length > 0) {
-			return new Application(...args);			
+
+			// Create app
+			var app = new Application(...args);
+
+			// Store globally
+			Chicken.app = app;
+
+			// Return
+			return app;
+
 		} else {
 			return Application.getInstance();
 		}
@@ -135,3 +144,5 @@ module.exports = {
 
 
 };
+
+module.exports = Chicken;

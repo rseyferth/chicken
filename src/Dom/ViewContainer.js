@@ -106,13 +106,13 @@ ViewContainer.Classes = {
 	Initialized: 'initialized',
 	Loading: 'loading'
 };
-ViewContainer.ElementSelector = 'view:not(.initialized),[view]:not(.initialized)';
+ViewContainer.ElementSelector = 'view-container:not(.initialized),[view-container]:not(.initialized)';
 ViewContainer.DefaultName = 'main';
 
 ViewContainer.getViewName = ($element) => {
 
 	// Get it either from the name-attr or view-attr
-	var name = $element.is('view') ? $element.attr('name') : $element.attr('view');
+	var name = $element.is('view-container') ? $element.attr('name') : $element.attr('view-container');
 
 	// No?
 	if (!name) name = ViewContainer.DefaultName;

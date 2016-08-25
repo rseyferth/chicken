@@ -10,7 +10,7 @@ class Controller
 	 * @constructor
 	 * @param {Routing.Action} action  The routing action that leads to the creation of this controller
 	 */
-	constructor(action) {
+	constructor(action, application) {
 
 		/**
 		 * @property action
@@ -18,11 +18,57 @@ class Controller
 		 */
 		this.action = action;
 
-
-		// Copy some of the action props for local use.
-		
+		/**
+		 * @property application
+		 * @type {Application}
+		 */
+		this.application = application;
 
 	}
+
+
+
+	////////////////
+	// Properties //
+	////////////////
+
+
+	/**
+	 * Request parameters
+	 * 
+	 * @property parameters
+	 * @type {Map}
+	 */
+	get parameters() {
+		return this.action.parameters;
+	}
+
+	/**
+	 * The ViewContainer into which this controller action will render
+	 * 
+	 * @property viewContainer
+	 * @type {Dom.ViewContainer}
+	 */
+	get viewContainer() {
+		return this.action.viewContainer;
+	}
+
+	/**
+	 * @property request
+	 * @type {Routing.Request}
+	 */
+	get request() {
+		return this.action.request;
+	}
+
+	/**
+	 * @property route
+	 * @type {Routing.Route} 
+	 */
+	get route() {
+		return this.action.route;
+	}
+
 
 }
 

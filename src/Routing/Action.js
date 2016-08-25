@@ -202,7 +202,7 @@ class Action extends Obj
 				// Call action
 				var controllerAction = this.controller[this.controllerAction];
 				if (controllerAction === 'undefined' || typeof controllerAction !== 'function') {
-					reject('There is no action on the ' + this.controllerClass + ' controller with the name "' + this.controllerAction + '"');
+					reject('There is no action on the "' + this.controllerClass + '" controller with the name "' + this.controllerAction + '"');
 					return;
 				}
 
@@ -243,7 +243,15 @@ class Action extends Obj
 
 		if (result instanceof View) {
 
-			throw new Error('View rendering not yet implemented.');
+			// Render the view
+			result.render().then((viewResult) => {
+
+				// Process result again!
+				this._processResult(viewResult, resolve, reject);
+
+			}, (error) => {
+				reject(error);
+			});
 
 		}
 

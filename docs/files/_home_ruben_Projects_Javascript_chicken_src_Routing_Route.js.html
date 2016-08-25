@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>/home/ruben/Projects/Javascript/chicken/src/Routing/Route.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
+            
+                <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
+            
+                <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
+            
+                <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
+                <li><a href="../classes/Dom.View.html">Dom.View</a></li>
+            
+                <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
+            
+                <li><a href="../classes/Routing.Controller.html">Routing.Controller</a></li>
+            
+                <li><a href="../classes/Routing.Request.html">Routing.Request</a></li>
+            
+                <li><a href="../classes/Routing.Route.html">Routing.Route</a></li>
+            
+                <li><a href="../classes/Routing.RouteMatch.html">Routing.RouteMatch</a></li>
+            
+                <li><a href="../classes/Routing.Router.html">Routing.Router</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Core.html">Core</a></li>
+            
+                <li><a href="../modules/Dom.html">Dom</a></li>
+            
+                <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Routing.html">Routing</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Routing/Route.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
+import XRegExp from &#x27;xregexp&#x27;;
+
+import Obj from &#x27;~/Core/Obj&#x27;;
+import RouteMatch from &#x27;~/Routing/RouteMatch&#x27;;
+
+/**
+ * @module Routing
+ */
+class Route extends Obj
+{
+	
+	/**
+	 * A Route configures a uri and its actions, parameters,
+	 * and models.
+	 * 
+	 * @class Routing.Route
+	 * @extends Core.Object
+	 * 
+	 * @constructor
+	 * @param {Routing.Router} 	router 				The application&#x27;s Router instance
+	 * @param {Routing.Route} 	parent 				The route that the route you are creating is to be child of. Use &#x60;null&#x60; when there is no parent.
+	 * @param {string} 			pattern 			The route&#x27;s pattern, not including the parent&#x27;s pattern
+	 * @param {object|string}	[actions=null]		An action string o object containing one or more actions, keyed by the target ViewContainer. 
+	 *                                        		If you don&#x27;t define actions this route will be made abstract.
+	 * @param {object}			[options={}]		An object containing one or more configuration options
+	 */
+	constructor(router, parent, pattern, actions = null, options = {}) {
+		
+		// Basics
+		super();
+		
+		// Private vars
+		this._parameterConstraints = new Map();		
+		this._actions = actions;
+		
+
+		////////////////
+		// Properties //
+		////////////////
+
+		/**
+		 * The Route that this Route is nested in
+		 * 
+		 * @property parentRoute
+		 * @type {Routing.Route}
+		 */
+		this.parentRoute = parent;
+
+		/**
+		 * The Router that this Route is a part of
+		 * 
+		 * @property router
+		 * @type {Routing.Router}
+		 */
+		this.router = router;
+
+		/**
+		 * The defined pattern, not including any parent patterns
+		 * 
+		 * @property pattern
+		 * @type {string}
+		 */
+		this.pattern = pattern.replace(/(.)\/$/, &#x27;$1&#x27;); // Remove trailing slash
+
+
+
+
+		/**
+		 * The parameter names used in this route
+		 * 
+		 * @property parameters
+		 * @type {array}
+		 */
+		this.parameters = [];
+
+
+
+		/**
+		 * The options used when defining this Route
+		 * 
+		 * @property options
+		 * @type {object}
+		 */
+		this.options = _.defaults(options, {
+			abstract: actions === null,
+			as: null,
+			viewContainer: &#x27;main&#x27;
+		});
+
+
+	}	
+
+
+
+	////////////////////
+	// Public methods //
+	////////////////////
+
+	/**
+	 * Call this when you want to define routes nested under the current one. The provided callback
+	 * will be called with the Router as context, allowing you to use this.route to define the nested
+	 * routes.
+	 *
+	 * @example
+	 * 	Chicken.createApplication($(&#x27;#application&#x27;), {
+	 * 		baseUrl: &#x27;/&#x27;
+	 * 	}).routes(function() {
+	 *  
+	 *  	this.route(&#x27;/animals&#x27;, &#x27;Animal@index&#x27;)                            // /animals
+	 *  		.nest(function() {
+	 *  			this.route(&#x27;/dog&#x27;, &#x27;Animal@dog&#x27;)                          // /animals/dog
+	 *  				.nest({ viewContainer: &#x27;dogs&#x27;}, function() {
+	 *      				this.route(&#x27;/:dogName&#x27;, &#x27;Animal@dogDetails&#x27;);     // /animals/dog/:dogName
+	 *      				this.route(&#x27;/about-dogs&#x27;, &#x27;Animal@aboutDogs&#x27;);    // /animals/dog/about-dogs
+	 *  				});  				
+	 *      		this.route(&#x27;/cat&#x27;, &#x27;Animal@cat&#x27;);                         // /animals/cat
+	 *  		 });
+	 *  	
+	 *   
+	 * 	});
+	 * 	
+	 *
+	 * @method nest
+	 * @param {object} 		[options]   An optional options hash, to apply to all nested routes
+	 * @param {function} 	callback 	Your callback
+	 * @chainable
+	 */
+	nest(...args) {
+
+		// Check if options were given
+		var callback = args.pop();
+		var options = args.length &gt; 0 ? args.pop() : {};
+
+		// Make me the parent route
+		this.router.group(_.defaults({
+			parentRoute: this
+		}, options), callback);
+
+		return this;
+
+	}
+
+
+	/**
+	 * Check whether this Route matches the given Request. If so, the method
+	 * will return a complete RouteMatch. If not, the method will return &#x60;false&#x60;.
+	 * 
+	 * @method match
+	 * @param  {Routing.Request} request     
+	 * @return {Routing.RouteMatch|boolean}  
+	 */
+	match(request) {
+
+		// Am I an abstract route?
+		if (this.isAbstract()) return;
+
+		// Does it match?
+		let match = XRegExp.exec(request.uri, this.getRegExp());
+
+		// No match?
+		if (!match) return false;
+
+		// We matched! Let&#x27;s create a match object.
+		return new RouteMatch(this, match, request);
+
+	}
+
+
+	/**
+	 * Get the action definitions for the Route. An action definition can either
+	 * be a Controller action (e.g.: &#x60;Product@index&#x60;), or a callback. The result
+	 * is keyed by the target ViewContainer name.
+	 *
+	 * @method getActions
+	 * @return {object} 
+	 */
+	getActions() {
+
+		// Is it still a string (Controller@action) or callback?
+		if (typeof this._actions === &#x27;string&#x27; || typeof this._actions === &#x27;function&#x27;) {
+
+			// Wrap in object using default view container
+			var actions = {};
+			actions[this.options.viewContainer] = this._actions;
+			this._actions = actions;
+
+		}
+
+		return this._actions;
+
+	}
+
+	/**
+	 * Get the action definitions for this Route, and any parent routes that it may have.
+	 *
+	 * @method getFullActions
+	 * @return {object} [description]
+	 */
+	getFullActions() {
+
+		// Start with mine
+		var actions = this.getActions();
+
+		// Add parent
+		if (this.parentRoute) {
+			return _.defaults(actions, this.parentRoute.actions);
+		} 
+		return actions;
+
+	}
+
+
+	/**
+	 * Get the full Route pattern within the application for this route,
+	 * including any parent Routes.
+	 *
+	 * @method getFullPattern
+	 * @return {string}
+	 */
+	getFullPattern() {
+
+		// My pattern as base
+		var p = this.pattern;
+
+		// Get parent&#x27;s full pattern
+		if (this.parentRoute) {
+			var parentPart = this.parentRoute.getFullPattern();
+			if (parentPart !== &#x27;/&#x27;) {
+				p = parentPart + p;
+			}
+		}		
+
+		return p;
+
+	}
+
+	/**
+	 * Get all parameter constraints for this Route, combining constraints
+	 * defined by parent routes.
+	 *
+	 * @method getAllParameterConstraints
+	 * @return {Map} Map with a regular expression constraint for each constrained parameter
+	 */
+	getAllParameterConstraints() {
+
+		// My constraints (don&#x27;t overwrite)
+		var c = new Map(this._parameterConstraints);
+
+		// Get parent&#x27;s constraints
+		if (this.parentRoute) {
+
+			// Prefix the pattern
+			this.parentRoute.getAllParameterConstraints().forEach((regex, key) =&gt; {
+				if (!c.has(key)) c.set(key, regex);
+			});
+			
+		}
+
+		return c;
+
+
+	}
+
+
+	/**
+	 * Get the Route&#x27;s complete Regular Expression, including
+	 * parameters
+	 * 
+	 * @method getRegExp
+	 * @return {XRegExp}
+	 */
+	getRegExp() {
+		
+		// Not yet set?
+		if (this._regExp === undefined) {
+
+			// Collect buildingBlocks (a regular expression pattern for each parameter)
+			let buildingBlocks = {};
+
+			// Convert :params into regex with building blocks 
+			// (see XRegExp.build documentation)
+			let constraints = this.getAllParameterConstraints();
+			let exp = XRegExp.replace(this.getFullPattern(), /(([\:\*])([a-zA-Z\-\_]+))/, (match, complete, paramType, paramName) =&gt; {
+				
+				// Wildcard?
+				let paramRegex;
+				if (paramType === &#x27;*&#x27;) {
+
+					// Use wildcard
+					paramRegex = Route.ParameterType.Wildcard;
+
+				} else {
+
+					// Check if there is a constraint
+					paramRegex = constraints.has(paramName) ? constraints.get(paramName) : Route.ParameterType.Standard;
+
+				}
+
+				// Store as building block for regex
+				buildingBlocks[paramName] = paramRegex;
+
+				// Store parameter
+				this.parameters.push(paramName);
+
+
+				// Replace with a building block using named parameter
+				return &#x27;({{&#x27; + paramName + &#x27;}})&#x27;;
+
+			}, &#x27;all&#x27;);
+
+
+			// Create it
+			this._regExp = XRegExp.build(&#x27;^&#x27; + exp + &#x27;$&#x27;, buildingBlocks);
+
+		}
+
+		// Return it
+		return this._regExp;
+
+	}
+
+	/**
+	 * Add a constraint to a parameter, by supplying a regular expression.
+	 * 
+	 * @method constrain
+	 * @param  {string} parameterName The name of the parameter to add constrains to
+	 * @param  {RegExp} regExp        A regular expression to use when matching the parameter
+	 * @chainable
+	 */
+	constrain(parameterName, regExp) {
+
+		// Store it
+		this._parameterConstraints.set(parameterName, regExp);
+
+		return this;
+
+	}
+
+
+
+	/**
+	 * An abstract Route can never be matched. This is useful when you have a Route
+	 * that only has subroutes, but no actions itself. If you define a Route without
+	 * actions, this will automatically be set to true.
+	 * 
+	 * @method isAbstract
+	 * @return {Boolean}
+	 */
+	isAbstract() {
+		return !!this.options.abstract;
+	}
+
+
+
+}
+
+Route.ParameterType = {
+
+	/**
+	 * Regular expression for a standard parameter 
+	 *
+	 * Default: &#x60;/[^\/]+/&#x60;
+	 * 
+	 * @property ParameterType.Standard
+	 * @static
+	 * @type {RegExp}
+	 */
+	Standard: /[^\/]+/,
+	
+	/**
+	 * Regular expression for a wildcard parameter
+	 *
+	 * Default: &#x60;/.+/&#x60;
+	 * 
+	 * @property ParameterType.Wildcard
+	 * @static
+	 * @type {RegExp}
+	 */
+	Wildcard: /.+/
+
+
+};
+
+
+
+
+module.exports = Route;
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

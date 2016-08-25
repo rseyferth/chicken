@@ -4,6 +4,7 @@
 
 import { createHistory } from 'history';
 import $ from 'jquery';
+import _ from 'underscore';
 
 /////////////////////
 // Chicken classes //
@@ -46,8 +47,9 @@ class Application extends Observable {
 		 * @property $app
 		 * @type {jQuery}
 		 */
-		this.$app = $app;
-		
+		this.$app = $app ? $app : $('#application');
+
+
 		/**
 		 * All ViewContainers in the application. This is automatically
 		 * kept up to date to contain all and only still existing containers.
@@ -72,8 +74,12 @@ class Application extends Observable {
 		 * @type {Core.SettingsObject}
 		 */
 		this.settings = SettingsObject.create({
-			baseUrl: '/'
-		}, [ 'baseUrl' ]).apply(settings);
+			baseUrl: '/',
+			
+			viewPath: 'views',
+			viewExtension: 'hbs'
+
+		}, [ 'baseUrl', 'viewPath', 'viewExtension' ]).apply(settings);
 
 
 
@@ -162,13 +168,59 @@ class Application extends Observable {
 	}
 
 
+	config(...args) {
+
+		// Get all?
+		if (args.length === 0) {
+			return this.settings;
+		} 
+
+		// Get one?
+		else if (args.length === 1) {
+			return this.settings.get(args[0]);
+		}
+
+		// Set?
+		else {
+			return this.settings.set(args[0], args[1]);
+		}
+
+	}
+
+
+	uri(...args) {
+
+		// Add baseUrl
+		args.unshift(this.settings.get('baseUrl') === '/' ? '' : this.settings.get('baseUrl'));
+		var url = args.join('/');
+
+		// Was the last one an extension?
+		if (/^\.[a-z]+$/.test(_.last(args))) {
+
+			// Replace last slash
+			url = url.replace(/\/\.[a-z]+$/, _.last(args));
+
+		}
+		return url;
+
+	}
+
+
+
+
 }
 
 
 Application.getInstance = () => {
 	return __instance;
 };
+
+
+
 ClassMap.register('Application', Application);
+
+
+
 
 
 module.exports = Application;

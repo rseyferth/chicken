@@ -7,6 +7,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "Core.ObservableArray",
         "Core.SettingsObject",
         "Dom.Element",
+        "Dom.View",
         "Dom.ViewContainer",
         "Routing.Action",
         "Routing.Controller",

@@ -9,10 +9,11 @@ module.exports = {
 		library: 'Chicken'
 	},
 
-	"externals": {
-		"underscore": "_",
-		"jquery": "$",
-		"xregexp": 'XRegExp'
+	'externals': {
+		underscore: '_',
+		jquery: '$',
+		xregexp: 'XRegExp',
+		handlebars: 'Handlebars'
 	},
 
 	module: {

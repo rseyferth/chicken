@@ -43,7 +43,7 @@ The first step in creating an application is adding an element and a view contai
 
 ```html
 <div id="application">
-  <view></view>
+  <view-container></view-container>
 </div>
 ```
 
@@ -64,7 +64,7 @@ Chicken.application($('#application'), {
 ```
 
 ## View containers
-A view container is an element in your page that can be used to render views in. Each view container needs to have a name.  Every application must have at least a view container with the name **main**. Adding a `<view></view>` or `<div view></div>` tag to your HTML page will tell the application to use this as the **main** view container.
+A view container is an element in your page that can be used to render views in. Each view container needs to have a name.  Every application must have at least a view container with the name **main**. Adding a `<view-container></view-container>` or `<div view-container="main"></div>` tag to your HTML page will tell the application to use this as the **main** view container.
 
 You can also add view containers in your views, to allow for nested views. For example:
 
@@ -72,14 +72,14 @@ You can also add view containers in your views, to allow for nested views. For e
 ```html
 <div id="application">
   <h1>Application</h1>
-  <view></view>
+  <view-container></view-container>
 </div>
 ```
 
 **app/views/page.hbs**
 ```html
 <h2>Page</h2>
-<view name="sub"></vieW>
+<view-container name="sub"></view-container>
 ```
 
 **app/views/sub-page.hbs**
@@ -92,12 +92,12 @@ Now, if you were to have a route that rendered the `sub-page.hbs` template into 
 ```html 
 <div id="application">
   <h1>Application</h1>
-  <view>
+  <view-container>
     <h2>Page</h2>
-    <view name="sub">
+    <view-container name="sub">
       <h3>Subpage</h3>
-    </view>
-  </view>
+    </view-container>
+  </view-container>
 </div>
 ``` 
 
@@ -169,7 +169,7 @@ Controllers are where you define what will be rendered into the view containers.
 ```javascript
 Chicken.controller('Product', {
 
-  index: () => {
+  index: function() {
   
     return Chicken.view('product.index')
       .withModels('products', Chicken.api('/products'))
@@ -185,7 +185,7 @@ Chicken.controller('Product', {
       
   },
   
-  show: (id) => {
+  show: function(id) {
   
     return Chicken.view('product.show')
       .withModel('product', Chicken.api('/products/' + id))

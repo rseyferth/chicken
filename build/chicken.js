@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("$"), require("_"), require("XRegExp"));
+		module.exports = factory(require("$"), require("_"), require("XRegExp"), require("Handlebars"));
 	else if(typeof define === 'function' && define.amd)
-		define(["$", "_", "XRegExp"], factory);
+		define(["$", "_", "XRegExp", "Handlebars"], factory);
 	else if(typeof exports === 'object')
-		exports["Chicken"] = factory(require("$"), require("_"), require("XRegExp"));
+		exports["Chicken"] = factory(require("$"), require("_"), require("XRegExp"), require("Handlebars"));
 	else
-		root["Chicken"] = factory(root["$"], root["_"], root["XRegExp"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__) {
+		root["Chicken"] = factory(root["$"], root["_"], root["XRegExp"], root["Handlebars"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_43__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -80,7 +80,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(44);
+	var _ObservableArray = __webpack_require__(46);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -116,7 +116,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
-	var _Request = __webpack_require__(43);
+	var _Request = __webpack_require__(45);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -170,7 +170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Chicken Package exports //
 	/////////////////////////////
 
-	module.exports = {
+	var Chicken = {
 
 		////////////////
 		// Class tree //
@@ -216,7 +216,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			// Arguments given?
 			if (args.length > 0) {
-				return new (Function.prototype.bind.apply(_Application2.default, [null].concat(args)))();
+
+				// Create app
+				var app = new (Function.prototype.bind.apply(_Application2.default, [null].concat(args)))();
+
+				// Store globally
+				Chicken.app = app;
+
+				// Return
+				return app;
 			} else {
 				return _Application2.default.getInstance();
 			}
@@ -235,7 +243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				function ChickenController(action) {
 					_classCallCheck(this, ChickenController);
 
-					return _possibleConstructorReturn(this, Object.getPrototypeOf(ChickenController).call(this, action));
+					return _possibleConstructorReturn(this, (ChickenController.__proto__ || Object.getPrototypeOf(ChickenController)).call(this, action));
 				}
 
 				return ChickenController;
@@ -255,6 +263,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 	};
+
+	module.exports = Chicken;
 
 /***/ },
 /* 1 */
@@ -287,6 +297,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _jquery = __webpack_require__(1);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
 
 	var _Observable2 = __webpack_require__(30);
 
@@ -340,7 +354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		function Application($app, settings, history) {
 			_classCallCheck(this, Application);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Application).call(this));
+			var _this = _possibleConstructorReturn(this, (Application.__proto__ || Object.getPrototypeOf(Application)).call(this));
 
 			// Basics
 
@@ -357,7 +371,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property $app
 	   * @type {jQuery}
 	   */
-			_this.$app = $app;
+			_this.$app = $app ? $app : (0, _jquery2.default)('#application');
 
 			/**
 	   * All ViewContainers in the application. This is automatically
@@ -379,8 +393,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Core.SettingsObject}
 	   */
 			_this.settings = _SettingsObject2.default.create({
-				baseUrl: '/'
-			}, ['baseUrl']).apply(settings);
+				baseUrl: '/',
+
+				viewPath: 'views',
+				viewExtension: 'hbs'
+
+			}, ['baseUrl', 'viewPath', 'viewExtension']).apply(settings);
 
 			/**
 	   * @property history
@@ -465,6 +483,44 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Start with current location
 				this.router.handle(this.history.getCurrentLocation());
 			}
+		}, {
+			key: 'config',
+			value: function config() {
+
+				// Get all?
+				if (arguments.length === 0) {
+					return this.settings;
+				}
+
+				// Get one?
+				else if (arguments.length === 1) {
+						return this.settings.get(arguments.length <= 0 ? undefined : arguments[0]);
+					}
+
+					// Set?
+					else {
+							return this.settings.set(arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1]);
+						}
+			}
+		}, {
+			key: 'uri',
+			value: function uri() {
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
+				}
+
+				// Add baseUrl
+				args.unshift(this.settings.get('baseUrl') === '/' ? '' : this.settings.get('baseUrl'));
+				var url = args.join('/');
+
+				// Was the last one an extension?
+				if (/^\.[a-z]+$/.test(_underscore2.default.last(args))) {
+
+					// Replace last slash
+					url = url.replace(/\/\.[a-z]+$/, _underscore2.default.last(args));
+				}
+				return url;
+			}
 		}]);
 
 		return Application;
@@ -473,6 +529,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	Application.getInstance = function () {
 		return __instance;
 	};
+
 	_ClassMap2.default.register('Application', Application);
 
 	module.exports = Application;
@@ -2763,7 +2820,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property observers
 	   * @type {Map}
 	   */
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Observable).call(this));
+			var _this = _possibleConstructorReturn(this, (Observable.__proto__ || Object.getPrototypeOf(Observable)).call(this));
 
 			// Basics
 
@@ -3537,7 +3594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property allowedKeys
 	   * @type Array
 	   */
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(SettingsObject).call(this, defaultSettings));
+			var _this = _possibleConstructorReturn(this, (SettingsObject.__proto__ || Object.getPrototypeOf(SettingsObject)).call(this, defaultSettings));
 
 			// Instantiate with default settings
 
@@ -3581,7 +3638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				// Do it.
-				return _get(Object.getPrototypeOf(SettingsObject.prototype), 'set', this).call(this, key, value);
+				return _get(SettingsObject.prototype.__proto__ || Object.getPrototypeOf(SettingsObject.prototype), 'set', this).call(this, key, value);
 			}
 		}]);
 
@@ -3652,7 +3709,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_classCallCheck(this, ViewContainer);
 
 			// Private props
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ViewContainer).call(this, $element, application));
+			var _this = _possibleConstructorReturn(this, (ViewContainer.__proto__ || Object.getPrototypeOf(ViewContainer)).call(this, $element, application));
 
 			_this._isLoading = false;
 
@@ -3744,13 +3801,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		Initialized: 'initialized',
 		Loading: 'loading'
 	};
-	ViewContainer.ElementSelector = 'view:not(.initialized),[view]:not(.initialized)';
+	ViewContainer.ElementSelector = 'view-container:not(.initialized),[view-container]:not(.initialized)';
 	ViewContainer.DefaultName = 'main';
 
 	ViewContainer.getViewName = function ($element) {
 
 		// Get it either from the name-attr or view-attr
-		var name = $element.is('view') ? $element.attr('name') : $element.attr('view');
+		var name = $element.is('view-container') ? $element.attr('name') : $element.attr('view-container');
 
 		// No?
 		if (!name) name = ViewContainer.DefaultName;
@@ -3807,7 +3864,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property application
 	   * @type {Application}
 	   */
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Element).call(this));
+			var _this = _possibleConstructorReturn(this, (Element.__proto__ || Object.getPrototypeOf(Element)).call(this));
 
 			_this.application = application ? application : _Application2.default.getInstance();
 
@@ -3864,7 +3921,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _Request = __webpack_require__(43);
+	var _Request = __webpack_require__(45);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -3899,7 +3956,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property routes
 	   * @type {Array}
 	   */
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Router).call(this));
+			var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this));
 
 			_this.routes = [];
 
@@ -4180,7 +4237,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_classCallCheck(this, Route);
 
 			// Private vars
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Route).call(this));
+			var _this = _possibleConstructorReturn(this, (Route.__proto__ || Object.getPrototypeOf(Route)).call(this));
 
 			// Basics
 
@@ -4757,7 +4814,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property targetViewContainer
 	   * @type {string}
 	   */
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Action).call(this));
+			var _this = _possibleConstructorReturn(this, (Action.__proto__ || Object.getPrototypeOf(Action)).call(this));
 
 			_this.targetViewContainer = targetViewContainer;
 
@@ -4918,7 +4975,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Call action
 						var controllerAction = _this2.controller[_this2.controllerAction];
 						if (controllerAction === 'undefined' || typeof controllerAction !== 'function') {
-							reject('There is no action on the ' + _this2.controllerClass + ' controller with the name "' + _this2.controllerAction + '"');
+							reject('There is no action on the "' + _this2.controllerClass + '" controller with the name "' + _this2.controllerAction + '"');
 							return;
 						}
 
@@ -4946,6 +5003,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_processResult',
 			value: function _processResult(result, resolve, reject) {
+				var _this3 = this;
 
 				///////////////////////////
 				// Is the result a view? //
@@ -4953,7 +5011,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				if (result instanceof _View2.default) {
 
-					throw new Error('View rendering not yet implemented.');
+					// Render the view
+					result.render().then(function (viewResult) {
+
+						// Process result again!
+						_this3._processResult(viewResult, resolve, reject);
+					}, function (error) {
+						reject(error);
+					});
 				}
 
 				//////////////////////////////
@@ -5003,31 +5068,94 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/**
 	 * @module Routing
 	 */
-	var Controller =
-
-	/**
-	 * @class Routing.Controller
-	 * 
-	 * @constructor
-	 * @param {Routing.Action} action  The routing action that leads to the creation of this controller
-	 */
-	function Controller(action) {
-		_classCallCheck(this, Controller);
+	var Controller = function () {
 
 		/**
-	  * @property action
-	  * @type {Routing.Action}
+	  * @class Routing.Controller
+	  * 
+	  * @constructor
+	  * @param {Routing.Action} action  The routing action that leads to the creation of this controller
 	  */
-		this.action = action;
+		function Controller(action, application) {
+			_classCallCheck(this, Controller);
 
-		// Copy some of the action props for local use.
+			/**
+	   * @property action
+	   * @type {Routing.Action}
+	   */
+			this.action = action;
 
-	};
+			/**
+	   * @property application
+	   * @type {Application}
+	   */
+			this.application = application;
+		}
+
+		////////////////
+		// Properties //
+		////////////////
+
+
+		/**
+	  * Request parameters
+	  * 
+	  * @property parameters
+	  * @type {Map}
+	  */
+
+
+		_createClass(Controller, [{
+			key: "parameters",
+			get: function get() {
+				return this.action.parameters;
+			}
+
+			/**
+	   * The ViewContainer into which this controller action will render
+	   * 
+	   * @property viewContainer
+	   * @type {Dom.ViewContainer}
+	   */
+
+		}, {
+			key: "viewContainer",
+			get: function get() {
+				return this.action.viewContainer;
+			}
+
+			/**
+	   * @property request
+	   * @type {Routing.Request}
+	   */
+
+		}, {
+			key: "request",
+			get: function get() {
+				return this.action.request;
+			}
+
+			/**
+	   * @property route
+	   * @type {Routing.Route} 
+	   */
+
+		}, {
+			key: "route",
+			get: function get() {
+				return this.action.route;
+			}
+		}]);
+
+		return Controller;
+	}();
 
 	Controller.registry = new Map();
 
@@ -5046,6 +5174,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _underscore = __webpack_require__(2);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _handlebars = __webpack_require__(43);
+
+	var _handlebars2 = _interopRequireDefault(_handlebars);
+
+	var _App = __webpack_require__(44);
+
+	var _App2 = _interopRequireDefault(_App);
 
 	var _Obj2 = __webpack_require__(31);
 
@@ -5069,24 +5209,213 @@ return /******/ (function(modules) { // webpackBootstrap
 	var View = function (_Obj) {
 		_inherits(View, _Obj);
 
-		function View() {
+		/**
+	  * ## Creating a View
+	  * 
+	  * A View is the part where your HTML and data come together. A View
+	  * can be created directly:
+	  *
+	  * 	var view = new Chicken.Dom.View(source);
+	  *
+	  * Or shortly:
+	  *
+	  * 	var view = Chicken.view(source);
+	  *
+	  * A View can be created with three different `source` types:
+	  * - HTML string
+	  * - Name of a view template
+	  * - And URL to a view template
+	  *
+	  * ## HTML
+	  *
+	  * The following example should be self-explanatory:
+	  *
+	  * 	Chicken.application($('#application'))
+	  * 		.routes(function() {
+	  *
+	  *			this.route('/', () => {
+	  *
+	  *				return Chicken.view('<h1>{{ title }}</h1>')
+	  *					.with('title', 'Page title');
+	  * 
+	  *			});
+	  * 
+	  * 		});
+	  *
+	  * Note: The `source` parameter is recognized as HTML when it starts with an HTML tag.
+	  *
+	  * ## By name
+	  *
+	  * If you want to put your templates in separate files, you can use 'names' to
+	  * link to them. Use `.` in the name in place of a path seperator. Some examples:
+	  *
+	  * 	Chicken.view('home');               // Will open /views/home.hbs
+	  * 	Chicken.view('product.index');      // Will open /views/product/index.hbs
+	  * 	Chicken.view('a.b.c.d');            // Will open /views/a/b/c/d.hbs
+	  *
+	  * You can configure the default path and extension in your Application configuration.
+	  *
+	  * Note: Only use lowercase, numbers, and dashes in your names (`/[a-z0-9\-]/`)
+	  *
+	  *
+	  * ## By URL
+	  *
+	  * This is pretty self-explanatory; the principle is the same as 'by name', only 
+	  * here you pass a relative or absolute url instead:
+	  *
+	  * 	Chicken.view('/weird-location/template.xxx');
+	  * 	Chicken.view('//my-domain.com/chicken-templates/welcome.hbs');
+	  * 
+	  * @class Dom.View
+	  * @extends Core.Obj
+	  *
+	  * @constructor
+	  * @param {string} source   The source for the view
+	  */
+		function View(source) {
 			_classCallCheck(this, View);
 
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(View).call(this));
+			/**
+	   * @property data
+	   * @type {Core.Observable}
+	   */
+			var _this = _possibleConstructorReturn(this, (View.__proto__ || Object.getPrototypeOf(View)).call(this));
 
 			_this.data = new _Observable2.default();
 
+			/**
+	   * Promises for data to load, keyed by the key
+	   * as provided in the `with` method
+	   * 
+	   * @property dataPromises
+	   * @type {Object}
+	   */
 			_this.dataPromises = {};
 
+			/**
+	   * All promises that need to resolve for the 
+	   * page to load.
+	   *
+	   * @property loadPromises
+	   * @type {Array}
+	   */
 			_this.loadPromises = [];
+
+			/**
+	   * @property templateString
+	   * @type {string}
+	   */
+			_this.templateString = null;
+
+			/**
+	   * @property tempalte
+	   * @type {Handlebars}
+	   */
+			_this.template = null;
+
+			//////////////////////////
+			// Check out the source //
+			//////////////////////////
+
+			// Is it HTML?
+			if (/^\<[a-z\!]/.test(source)) {
+
+				// Use code now
+				_this.templateString = source;
+			}
+
+			// Name?
+			else if (/[a-z0-9\-]+\./.test) {
+
+					// Is it cached?
+					if (View.TemplateCache.has(source)) {
+
+						// Use it.
+						_this.templateString = View.TemplateCache.get(source);
+					} else {
+
+						// Load template
+						var url = (0, _App2.default)().uri((0, _App2.default)().config('viewPath'), source.split(/\./).join('/'), '.' + (0, _App2.default)().config('viewExtension'));
+						_this._loadTemplate(url);
+					}
+				}
+
+				// Url.
+				else {
+
+						// Load it
+						_this._loadTemplate(url);
+					}
 
 			return _this;
 		}
 
 		_createClass(View, [{
+			key: '_loadTemplate',
+			value: function _loadTemplate(url) {
+				var _this2 = this;
+
+				// Promise.
+				var promise = this.promise('template', function (resolve, reject) {
+
+					// Load it.
+					_jquery2.default.ajax(url).then(function (result) {
+
+						// Set template code
+						_this2.templateString = result;
+
+						// We're done.
+						resolve(result);
+					}).fail(function (error) {
+
+						reject(error.responseText);
+					});
+				});
+
+				// Add and return
+				this.loadPromises.push(promise);
+				return promise;
+			}
+
+			/**
+	   * To add data to the view, you can use the **with** method. The simplest way is to
+	   * call it using a **key** and a **value**:
+	   *
+	   * 	Chicken.view('page').with('title', 'Page title')
+	   *
+	   * You can also add a promise-returning method, such as:
+	   *
+	   * 	Chicken.view('product.index')
+	   * 		.with('products', Chicken.api('/products'));
+	   *
+	   * The view will then wait for the Api call to finish, before showing, so that you
+	   * can use the `products` collection your view.
+	   *
+	   * The same goes for a single model:
+	   *
+	   * 	Chicken.view('product.show')
+	   * 		.with('product', Chicken.api('/product/' + this.parameters.get('id')));
+	   * 
+	   * When you have multiple data variables you want to pass to the view, you
+	   * can also use object notation:
+	   *
+	   * 	Chicken.view('product.index')
+	   * 		.with({
+	   * 			products: Chicken.api('/products'),
+	   * 			categories: Chicken.api('/categories')
+	   * 		});
+	   *
+	   * 
+	   * 
+	   * @method with
+	   * @param  {...mixed} args   This method can be called in two ways. See documentation
+	   * @chainable
+	   */
+
+		}, {
 			key: 'with',
 			value: function _with() {
-				var _this2 = this;
+				var _this3 = this;
 
 				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
 					args[_key] = arguments[_key];
@@ -5097,7 +5426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Do an each
 					_underscore2.default.each(args[0], function (value, key) {
-						_this2.with(key, value);
+						_this3.with(key, value);
 					});
 				} else {
 
@@ -5124,15 +5453,60 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this;
 			}
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this4 = this;
+
+				// We make the 'render' promise.
+				return this.promise('render', function (resolve, reject) {
+
+					/////////////////////////////////////////
+					// Wait for all loadPromises to finish //
+					/////////////////////////////////////////
+
+					Promise.all(_this4.loadPromises).then(function () {
+
+						// Create template
+						_this4.template = _handlebars2.default.compile(_this4.templateString);
+
+						console.log(_this4.template(_this4.data));
+					});
+				});
+			}
 		}]);
 
 		return View;
 	}(_Obj3.default);
 
+	View.TemplateCache = new Map();
+
 	module.exports = View;
 
 /***/ },
 /* 43 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_43__;
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _ClassMap = __webpack_require__(32);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = function () {
+		return _ClassMap2.default.get('Application').getInstance();
+	};
+
+/***/ },
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5194,7 +5568,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Request;
 
 /***/ },
-/* 44 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5246,7 +5620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_classCallCheck(this, ObservableArray);
 
 			// Properties
-			var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(ObservableArray).call(this));
+			var _this = _possibleConstructorReturn(this, (ObservableArray.__proto__ || Object.getPrototypeOf(ObservableArray)).call(this));
 
 			_this._items = [];
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Routing.Action</title>
+    <title>Dom.View</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -116,7 +116,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Routing.Action Class</h1>
+                        <h1>Dom.View Class</h1>
 <div class="box meta">
     
 
@@ -128,13 +128,13 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l13"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:13</code></a>
+            Defined in: <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Dom_View.js.html#l15"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:15</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/Routing.html">Routing</a>
+            Module: <a href="../modules/Dom.html">Dom</a>
         
     
 
@@ -144,9 +144,139 @@
 
 
 <div class="box intro">
+    <h2 id="creating-a-view">Creating a View</h2>
+<p>A View is the part where your HTML and data come together. A View
+can be created directly:</p>
+<pre class="code prettyprint"><code>var view = new Chicken.Dom.View(source);</code></pre>
+<p>Or shortly:</p>
+<pre class="code prettyprint"><code>var view = Chicken.view(source);</code></pre>
+<p>A View can be created with three different <code>source</code> types:</p>
+<ul>
+<li>HTML string</li>
+<li>Name of a view template</li>
+<li>And URL to a view template</li>
+</ul>
+<h2 id="html">HTML</h2>
+<p>The following example should be self-explanatory:</p>
+<pre class="code prettyprint"><code>Chicken.application($(&#39;#application&#39;))
+    .routes(function() {
+
+        this.route(&#39;/&#39;, () =&gt; {
+
+            return Chicken.view(&#39;&lt;h1&gt;{{ title }}&lt;/h1&gt;&#39;)
+                .with(&#39;title&#39;, &#39;Page title&#39;);
+
+        });
+
+    });</code></pre>
+<p>Note: The <code>source</code> parameter is recognized as HTML when it starts with an HTML tag.</p>
+<h2 id="by-name">By name</h2>
+<p>If you want to put your templates in separate files, you can use &#39;names&#39; to
+link to them. Use <code>.</code> in the name in place of a path seperator. Some examples:</p>
+<pre class="code prettyprint"><code>Chicken.view(&#39;home&#39;);               // Will open /views/home.hbs
+Chicken.view(&#39;product.index&#39;);      // Will open /views/product/index.hbs
+Chicken.view(&#39;a.b.c.d&#39;);            // Will open /views/a/b/c/d.hbs</code></pre>
+<p>You can configure the default path and extension in your Application configuration.</p>
+<p>Note: Only use lowercase, numbers, and dashes in your names (<code>/[a-z0-9\-]/</code>)</p>
+<h2 id="by-url">By URL</h2>
+<p>This is pretty self-explanatory; the principle is the same as &#39;by name&#39;, only 
+here you pass a relative or absolute url instead:</p>
+<pre class="code prettyprint"><code>Chicken.view(&#39;/weird-location/template.xxx&#39;);
+Chicken.view(&#39;//my-domain.com/chicken-templates/welcome.hbs&#39;);</code></pre>
+
+</div>
+
+
+    <div class="constructor">
+        <h2>Constructor</h2>
+        <div id="method_Dom.View" class="method item">
+    <h3 class="name"><code>Dom.View</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>source</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Dom_View.js.html#l15"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:15</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">source</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The source for the view</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
     
 </div>
 
+    </div>
 
 
 <div id="classdocs" class="tabview">
@@ -194,6 +324,13 @@
                                 
                             </li>
                         
+                            <li class="index-item method">
+                                <a href="#method_with">with</a>
+
+                                
+                                
+                            </li>
+                        
                     </ul>
                 </div>
             
@@ -205,84 +342,35 @@
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property">
-                                <a href="#property_callback">callback</a>
+                                <a href="#property_data">data</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_controller">controller</a>
+                                <a href="#property_dataPromises">dataPromises</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_controllerClass">controllerClass</a>
+                                <a href="#property_loadPromises">loadPromises</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_controllerMethod">controllerMethod</a>
+                                <a href="#property_tempalte">tempalte</a>
 
                                 
                                 
                             </li>
                         
                             <li class="index-item property">
-                                <a href="#property_dependsOn">dependsOn</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_matchedRoute">matchedRoute</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_parameterArray">parameterArray</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_parameters">parameters</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_request">request</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_route">route</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_routeMatch">routeMatch</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item property">
-                                <a href="#property_targetViewContainer">targetViewContainer</a>
+                                <a href="#property_templateString">templateString</a>
 
                                 
                                 
@@ -645,6 +733,114 @@ with given arguments.</p>
 </div>
 
                 
+                    <div id="method_with" class="method item">
+    <h3 class="name"><code>with</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>args</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Dom_View.js.html#l202"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:202</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>To add data to the view, you can use the <strong>with</strong> method. The simplest way is to
+call it using a <strong>key</strong> and a <strong>value</strong>:</p>
+<pre class="code prettyprint"><code>Chicken.view(&#39;page&#39;).with(&#39;title&#39;, &#39;Page title&#39;)</code></pre>
+<p>You can also add a promise-returning method, such as:</p>
+<pre class="code prettyprint"><code>Chicken.view(&#39;product.index&#39;)
+    .with(&#39;products&#39;, Chicken.api(&#39;/products&#39;));</code></pre>
+<p>The view will then wait for the Api call to finish, before showing, so that you
+can use the <code>products</code> collection your view.</p>
+<p>The same goes for a single model:</p>
+<pre class="code prettyprint"><code>Chicken.view(&#39;product.show&#39;)
+    .with(&#39;product&#39;, Chicken.api(&#39;/product/&#39; + this.parameters.get(&#39;id&#39;)));</code></pre>
+<p>When you have multiple data variables you want to pass to the view, you
+can also use object notation:</p>
+<pre class="code prettyprint"><code>Chicken.view(&#39;product.index&#39;)
+    .with({
+        products: Chicken.api(&#39;/products&#39;),
+        categories: Chicken.api(&#39;/categories&#39;)
+    });</code></pre>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">args</code>
+                        <span class="type">...mixed</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>This method can be called in two ways. See documentation</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
             </div>
         
 
@@ -653,9 +849,9 @@ with given arguments.</p>
                 <h2 class="off-left">Properties</h2>
 
                 
-                    <div id="property_callback" class="property item">
-    <h3 class="name"><code>callback</code></h3>
-    <span class="type">Function</span>
+                    <div id="property_data" class="property item">
+    <h3 class="name"><code>data</code></h3>
+    <span class="type"><a href="../classes/Core.Observable.html" class="crosslink">Core.Observable</a></span>
 
     
 
@@ -676,7 +872,7 @@ with given arguments.</p>
             
         
         
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l97"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:97</code></a>
+        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Dom_View.js.html#l82"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:82</code></a>
         
         </p>
 
@@ -686,9 +882,7 @@ with given arguments.</p>
     </div>
 
     <div class="description">
-        <p>A callback function, when the route did not configure
-a Controller to be used, but an inline callback instead.</p>
-
+        
     </div>
 
     
@@ -699,9 +893,9 @@ a Controller to be used, but an inline callback instead.</p>
 </div>
 
                 
-                    <div id="property_controller" class="property item">
-    <h3 class="name"><code>controller</code></h3>
-    <span class="type"><a href="../classes/Routing.Controller.html" class="crosslink">Routing.Controller</a></span>
+                    <div id="property_dataPromises" class="property item">
+    <h3 class="name"><code>dataPromises</code></h3>
+    <span class="type">Object</span>
 
     
 
@@ -722,7 +916,7 @@ a Controller to be used, but an inline callback instead.</p>
             
         
         
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l70"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:70</code></a>
+        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Dom_View.js.html#l89"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:89</code></a>
         
         </p>
 
@@ -732,8 +926,8 @@ a Controller to be used, but an inline callback instead.</p>
     </div>
 
     <div class="description">
-        <p>The instance of the Controller that has been created by 
-this action.</p>
+        <p>Promises for data to load, keyed by the key
+as provided in the <code>with</code> method</p>
 
     </div>
 
@@ -745,98 +939,8 @@ this action.</p>
 </div>
 
                 
-                    <div id="property_controllerClass" class="property item">
-    <h3 class="name"><code>controllerClass</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l80"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:80</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The name of the Controller class used by this action</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_controllerMethod" class="property item">
-    <h3 class="name"><code>controllerMethod</code></h3>
-    <span class="type">String</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l88"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:88</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The name of the Controller method used by this action</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_dependsOn" class="property item">
-    <h3 class="name"><code>dependsOn</code></h3>
+                    <div id="property_loadPromises" class="property item">
+    <h3 class="name"><code>loadPromises</code></h3>
     <span class="type">Array</span>
 
     
@@ -858,7 +962,7 @@ this action.</p>
             
         
         
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l126"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:126</code></a>
+        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Dom_View.js.html#l98"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:98</code></a>
         
         </p>
 
@@ -868,12 +972,8 @@ this action.</p>
     </div>
 
     <div class="description">
-        <p>An array of other Actions that this Action depends on, 
-meaning it will wait for them to finish, before executing.</p>
-<p>This is useful when you have a route where the second action
-renders into a ViewContainer that is created by the first action.
-Child routes will automatically wait for the parent route to finish
-before running it&#39;s own actions.</p>
+        <p>All promises that need to resolve for the 
+page to load.</p>
 
     </div>
 
@@ -885,9 +985,9 @@ before running it&#39;s own actions.</p>
 </div>
 
                 
-                    <div id="property_matchedRoute" class="property item">
-    <h3 class="name"><code>matchedRoute</code></h3>
-    <span class="type"><a href="../classes/Routing.Route.html" class="crosslink">Routing.Route</a></span>
+                    <div id="property_tempalte" class="property item">
+    <h3 class="name"><code>tempalte</code></h3>
+    <span class="type">Handlebars</span>
 
     
 
@@ -908,7 +1008,7 @@ before running it&#39;s own actions.</p>
             
         
         
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l52"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:52</code></a>
+        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Dom_View.js.html#l115"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:115</code></a>
         
         </p>
 
@@ -918,8 +1018,7 @@ before running it&#39;s own actions.</p>
     </div>
 
     <div class="description">
-        <p>The Route that matched the Request</p>
-
+        
     </div>
 
     
@@ -930,234 +1029,8 @@ before running it&#39;s own actions.</p>
 </div>
 
                 
-                    <div id="property_parameterArray" class="property item">
-    <h3 class="name"><code>parameterArray</code></h3>
-    <span class="type">Array</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l116"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:116</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>An array of request parameters, in the order of the route&#39;s
-pattern definition</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_parameters" class="property item">
-    <h3 class="name"><code>parameters</code></h3>
-    <span class="type">Map</span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l107"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:107</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>A map of request parameters that are supplied to this action.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_request" class="property item">
-    <h3 class="name"><code>request</code></h3>
-    <span class="type"><a href="../classes/Routing.Request.html" class="crosslink">Routing.Request</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l34"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:34</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The Request instance that was used to create this action</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_route" class="property item">
-    <h3 class="name"><code>route</code></h3>
-    <span class="type"><a href="../classes/Routing.Route.html" class="crosslink">Routing.Route</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l43"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:43</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The Route that defined this action</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_routeMatch" class="property item">
-    <h3 class="name"><code>routeMatch</code></h3>
-    <span class="type"><a href="../classes/Routing.RouteMatch.html" class="crosslink">Routing.RouteMatch</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l61"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:61</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>The RouteMatch that this Action is a part</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
-                    <div id="property_targetViewContainer" class="property item">
-    <h3 class="name"><code>targetViewContainer</code></h3>
+                    <div id="property_templateString" class="property item">
+    <h3 class="name"><code>templateString</code></h3>
     <span class="type">String</span>
 
     
@@ -1179,7 +1052,7 @@ pattern definition</p>
             
         
         
-        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Routing_Action.js.html#l25"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Action.js:25</code></a>
+        <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Dom_View.js.html#l108"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:108</code></a>
         
         </p>
 
@@ -1189,8 +1062,7 @@ pattern definition</p>
     </div>
 
     <div class="description">
-        <p>The name of the ViewContainer that this action is targeting.</p>
-
+        
     </div>
 
     
