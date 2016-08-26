@@ -11,7 +11,7 @@ Chicken allows you to do the following things easily, quickly, and well:
 - Connect to a JSONAPI compliant Api (under construction)
 - Authentication using JWT (under construction)
 - Two-way model binding (mostly working)
-- Make web-compontent-style directives (under construction)
+- Simple creation or reusable components (under constructor)
 - Use SemanticUI components (separate package, under construction)
 
 ## Dependencies
