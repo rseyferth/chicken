@@ -10,7 +10,7 @@ Chicken allows you to do the following things easily, quickly, and well:
 - Setup webapp with routes, controllers, and views (mostly working)
 - Connect to a JSONAPI compliant Api (under construction)
 - Authentication using JWT (under construction)
-- Two-way model binding (under construction)
+- Two-way model binding (mostly working)
 - Make web-compontent-style directives (under construction)
 - Use SemanticUI components (separate package, under construction)
 
