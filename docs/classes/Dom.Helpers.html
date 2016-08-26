@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Routing.Request</title>
+    <title>Dom.Helpers</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -124,7 +124,7 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Routing.Request Class</h1>
+                        <h1>Dom.Helpers Class</h1>
 <div class="box meta">
     
 
@@ -132,13 +132,13 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Routing_Request.js.html#l9"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Request.js:9</code></a>
+            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Dom_Helpers.js.html#l15"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;Helpers.js:15</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/Routing.html">Routing</a>
+            Module: <a href="../modules/Dom.html">Dom</a>
         
     
 
@@ -154,8 +154,8 @@
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_Routing.Request" class="method item">
-    <h3 class="name"><code>Routing.Request</code></h3>
+        <div id="method_Dom.Helpers" class="method item">
+    <h3 class="name"><code>Dom.Helpers</code></h3>
 
     
         <div class="args">
@@ -163,13 +163,7 @@
             
                 <li class="arg">
                     
-                        <code>location</code>
-                    
-                </li>
-            
-                <li class="arg">
-                    
-                        <code class="optional">[application]</code>
+                        <code>renderer</code>
                     
                 </li>
             
@@ -202,7 +196,7 @@
             
         
         
-        <a href="../files/_home_ruben_Websites_chicken_src_Routing_Request.js.html#l9"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Request.js:9</code></a>
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_Helpers.js.html#l15"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;Helpers.js:15</code></a>
         
         </p>
 
@@ -224,32 +218,14 @@
             
                 <li class="param">
                     
-                        <code class="param-name">location</code>
-                        <span class="type">Object</span>
+                        <code class="param-name">renderer</code>
+                        <span class="type"><a href="../classes/Dom.Renderer.html" class="crosslink">Dom.Renderer</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The location received from the History library</p>
-
-                    </div>
-
-                    
-                </li>
-            
-                <li class="param">
-                    
-                        <code class="param-name optional">[application]</code>
-                        <span class="type"><a href="../classes/Application.html" class="crosslink">Application</a></span>
-                        <span class="flag optional" title="This parameter is optional.">optional</span>
-                    
-
-                    
-
-                    <div class="param-description">
-                        <p>The Application instance that this Request is a part of</p>
-
+                         
                     </div>
 
                     
@@ -272,8 +248,8 @@
         <li class="api-class-tab index"><a href="#index">Index</a></li>
 
         
+            <li class="api-class-tab methods"><a href="#methods">Methods</a></li>
         
-            <li class="api-class-tab properties"><a href="#properties">Properties</a></li>
         
         
         
@@ -284,15 +260,27 @@
             <h2 class="off-left">Item Index</h2>
 
             
+                <div class="index-section methods">
+                    <h3>Methods</h3>
 
-            
-                <div class="index-section properties">
-                    <h3>Properties</h3>
-
-                    <ul class="index-list properties">
+                    <ul class="index-list methods">
                         
-                            <li class="index-item property">
-                                <a href="#property_uri">uri</a>
+                            <li class="index-item method">
+                                <a href="#method_each">each</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_if">if</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_unless">unless</a>
 
                                 
                                 
@@ -305,18 +293,27 @@
             
 
             
+
+            
         </div>
 
         
-
-        
-            <div id="properties" class="api-class-tabpanel">
-                <h2 class="off-left">Properties</h2>
+            <div id="methods" class="api-class-tabpanel">
+                <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="property_uri" class="property item">
-    <h3 class="name"><code>uri</code></h3>
-    <span class="type">String</span>
+                    <div id="method_each" class="method item">
+    <h3 class="name"><code>each</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
 
     
 
@@ -337,9 +334,118 @@
             
         
         
-        <a href="../files/_home_ruben_Websites_chicken_src_Routing_Request.js.html#l33"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Routing&#x2F;Request.js:33</code></a>
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_Helpers.js.html#l31"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;Helpers.js:31</code></a>
         
         </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_if" class="method item">
+    <h3 class="name"><code>if</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_Helpers.js.html#l44"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;Helpers.js:44</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_unless" class="method item">
+    <h3 class="name"><code>unless</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_Helpers.js.html#l55"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;Helpers.js:55</code></a>
+        
+        </p>
+
 
         
 
@@ -359,6 +465,8 @@
 
                 
             </div>
+        
+
         
 
         

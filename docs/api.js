@@ -8,6 +8,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "Core.SettingsObject",
         "Dom.Binding",
         "Dom.Element",
+        "Dom.Helpers",
         "Dom.Renderer",
         "Dom.View",
         "Dom.ViewContainer",

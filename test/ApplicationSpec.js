@@ -17,7 +17,7 @@ var $body = $('body');
 // Init objects
 const $app = $('<div id="application"></div>').appendTo($body);
 const app = new Application($app, {
-
+	renderer: 'none'
 }, createMemoryHistory());
 
 

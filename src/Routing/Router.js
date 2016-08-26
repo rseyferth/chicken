@@ -124,7 +124,7 @@ class Router extends Obj
 	 * 
 	 * @method handle
 	 * @param  {Routing.Request} request 
-	 * @returns {Routing.RouteMatch}
+	 * @return {Routing.RouteMatch}
 	 */
 	handle(request) {
 
@@ -206,7 +206,7 @@ class Router extends Obj
 		}
 
 		// Listen to the result
-		Promise.all(actionPromises).then((...results) => {
+		Promise.all(actionPromises).then((/*...results*/) => {
 			
 			//@TODO What to do?
 

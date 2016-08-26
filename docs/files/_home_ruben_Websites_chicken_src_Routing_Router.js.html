@@ -55,6 +55,8 @@
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
                 <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
@@ -252,7 +254,7 @@ class Router extends Obj
 	 * 
 	 * @method handle
 	 * @param  {Routing.Request} request 
-	 * @returns {Routing.RouteMatch}
+	 * @return {Routing.RouteMatch}
 	 */
 	handle(request) {
 
@@ -334,7 +336,7 @@ class Router extends Obj
 		}
 
 		// Listen to the result
-		Promise.all(actionPromises).then((...results) =&gt; {
+		Promise.all(actionPromises).then((/*...results*/) =&gt; {
 			
 			//@TODO What to do?
 

@@ -36,6 +36,8 @@ class Binding
 
 		/**
 		 * The path/key in the Observable to observe
+		 *
+		 * @property path
 		 * @type {string}
 		 */
 		this.path = path;
@@ -60,7 +62,7 @@ class Binding
 
 			// Trigger updates for all morphs
 			_.each(this.morphs, (morph) => {
-				this.applyValue(morph);				
+				morph.isDirty = true;
 			});
 
 		});
@@ -78,8 +80,17 @@ class Binding
 	}
 
 
-	setValue(value) {
+	setValue(value, morph = null) {
+
+		if (morph) {
+
+			// Make sure the morph is not updated itself by this value setting
+			morph.lastValue = value;
+
+		}
+
 		return this.observable.set(this.path, value);
+
 	}
 
 
@@ -120,20 +131,6 @@ class Binding
 
 	}
 
-
-	/**
-	 * Apply the current value to the given morph
-	 *
-	 * @method applyValue
-	 * @param  {HTMLBarsMorph} 	morph
-	 */
-	applyValue(morph) {
-
-		// Set it		
-		morph.setContent(this.renderer.hooks.getValue(this));
-
-	}
-
 }
 
 
@@ -150,7 +147,7 @@ Binding.TwoWay = {
 			// Listen to key up, etc
 			var $element = $(morph.element);
 			$element.on('keyup change paste', () => {
-				binding.setValue($element.val());
+				binding.setValue($element.val(), morph);
 			});
 
 		}
@@ -165,7 +162,7 @@ Binding.TwoWay = {
 			// Listen to key up, etc
 			var $element = $(morph.contextualElement);
 			$element.on('keyup change paste', () => {
-				binding.setValue($element.val());
+				binding.setValue($element.val(), morph);
 			});
 
 		}
@@ -181,7 +178,7 @@ Binding.TwoWay = {
 			// Listen to change
 			var $element = $(morph.element);
 			$element.on('change', () => {
-				binding.setValue($element.val());
+				binding.setValue($element.val(), morph);
 			});
 
 		}
@@ -199,7 +196,7 @@ Binding.TwoWay = {
 			// Listen to key up, etc
 			var $element = $(morph.element);
 			$element.on('change', () => {
-				binding.setValue($element.prop('checked'));
+				binding.setValue($element.prop('checked'), morph);
 			});
 
 		}

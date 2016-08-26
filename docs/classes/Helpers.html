@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/Renderer.js</title>
+    <title>Helpers</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -55,13 +55,13 @@
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
-                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
-            
                 <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
             
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.html">Helpers</a></li>
             
                 <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
@@ -84,6 +84,8 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
+            
+                <li><a href="../modules/Dom.Helpers.html">Dom.Helpers</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
             
@@ -124,206 +126,66 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Renderer.js</h1>
+                        <h1>Helpers Class</h1>
+<div class="box meta">
+    
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-import _ from &#x27;underscore&#x27;;
-import HTMLBars from &#x27;htmlbars-standalone&#x27;;
+    
 
-import Observable from &#x27;~/Core/Observable&#x27;;
-import Binding from &#x27;~/Dom/Binding&#x27;;
-import Helpers from &#x27;~/Dom/Helpers&#x27;;
+    
+        <div class="foundat">
+            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Dom_Helpers_each.js.html#l1"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;Helpers&#x2F;each.js:1</code></a>
+        </div>
+    
 
-/**
- * @module Dom
- */
-class Renderer
-{
+    
+        
+            Module: <a href="../modules/Dom.Helpers.html">Dom.Helpers</a>
+        
+    
 
-	/**
-	 * @class Dom.Renderer
-	 * 
-	 * @constructor
-	 */
-	constructor() {
-
-		/**
-		 * @property dom
-		 * @type {HTMLBars.DOMHelper}
-		 */
-		this.dom = new HTMLBars.DOMHelper();
-
-		/**
-		 * Hooks are the way to configure the way HTMLBars renders your
-		 * templates. Renderer comes pre-configured with hooks that allow you
-		 * to bind to Observables (models) and ObservableArrays (collections).
-		 * 
-		 * @property hooks
-		 * @type {object}
-		 */
-		this.hooks = _.defaults({
-
-			/**
-			 * The &#x60;get&#x60; hook is responsible for retrieving Bindings from the data store.
-			 * 
-			 * @method hooks.get
-			 * @param  {Renderer} 	renderer   	The Renderer instance (this)
-			 * @param  {Scope} 		scope 		The Scope in which the &#x60;get&#x60; was called, 
-			 *                           		containing the data that is available in this Scope
-			 * @param  {string} 	path 		The path (key) of the variable to retrieve 		
-			 * @return {mixed}     	The retrieved value
-			 */
-			get: (renderer, scope, path) =&gt; {
-				
-				// Get first part
-				var keys = path.split(/\./);
-
-				// Look into local data
-				var appliedScope = scope.self;
-				if (scope.localPresent[keys[0]]) {
-					appliedScope = scope.locals[keys[0]];
-					keys.shift();
-					path = keys.join(&#x27;.&#x27;);
-				}
-
-				// No path? Return the whole data
-				if (path === &#x27;&#x27;) return appliedScope;
-
-				// Is data an observable?
-				if (appliedScope instanceof Observable) {
-
-					// Create a binding
-					var binding = new Binding(this, appliedScope, path);
-
-					// Get the value
-					return binding;
-
-				} else {
-
-					// Do native thing (deep-get)
-					var value = this.hooks.getRoot(scope, keys[0])[0];
-					for (var i = 1; i &lt; keys.length; i++) {
-						if (value) {
-							value = this.hooks.getChild(value, keys[i]);
-						} else {
-							break;
-						}
-					}
-
-				}
-				
-				return value;
-
-			},
-
-			/**
-			 * Get value from reference (Binding)
-			 *
-			 * @method hooks.getValue
-			 * @param  {Binding} reference 
-			 * @return {mixed}           
-			 */
-			getValue: (reference) =&gt; {
-				return reference instanceof Binding ? reference.getValue() : reference;
-			},
-
-			/**
-			 * Link a morph to one or more values (in our case Bindings)
-			 *
-			 * @method hooks.linksRenderNode
-			 * @param  {HTMLBarsMorph} morph    
-			 * @param  {Dom.Renderer} renderer 
-			 * @param  {Scope} scope    
-			 * @param  {string} type   				Values can be &#x60;@range&#x60;, &#x60;@attribute&#x60;, or helper names
-			 * @param  {array} values     			Array of values that have been linked to the morph. The should be Binding instances
-			 * @return {[type]}          [description]
-			 */
-			linkRenderNode: (morph, renderer, scope, type, values) =&gt; {
-			
-				
-				// Add this morph to all involved bindings
-				_.each(values, (binding) =&gt; {
-
-					// Is it a binding?
-					if (binding instanceof Binding) {	
-
-						binding.addMorph(morph);
-
-					}
-
-				});
-							
-			},
-
-			lookupHelper: (renderer, scope, helperName) =&gt; {
-				if (!renderer.helpers[helperName]) {
-					throw new Error(&#x27;There is no helper registered with the name &quot;&#x27; + helperName + &#x27;&quot;&#x27;);
-				}
-				return renderer.helpers[helperName];
-			},
-
-			invokeHelper: (morph, env, scope, visitor, params, hash, helper, templates) =&gt; {
-				
-				// Call it with its own context
-				return { 
-					value: helper.call(this.helpers, params, hash, templates)
-				};
-
-			}
-
-		}, HTMLBars.Runtime.Hooks.Default);
-
-		/**
-		 * @property helpers
-		 * @type {Dom.Helpers}
-		 */
-		this.helpers = new Helpers(this);
+    
+</div>
 
 
-		/**
-		 * @property partials
-		 * @type {Object}
-		 */
-		this.partials = {
 
-		};
+<div class="box intro">
+    
+</div>
 
 
-		/**
-		 * @property useFragmentCache
-		 * @default true
-		 * @type {Boolean}
-		 */
-		this.useFragmentCache = true;
 
-	}
+<div id="classdocs" class="tabview">
+    <ul class="api-class-tabs">
+        <li class="api-class-tab index"><a href="#index">Index</a></li>
 
-	applyValue(morph, value)  {
+        
+        
+        
+        
+    </ul>
 
-		// Is it a Binding
-		if (value instanceof Binding) {
+    <div>
+        <div id="index" class="api-class-tabpanel index">
+            <h2 class="off-left">Item Index</h2>
 
-			// Apply it
-			value.applyValue(morph);
+            
 
-		} else {
+            
 
-			// Just set the value
-			value = this.hooks.getValue(value);
-			if (morph.lastValue !== value) morph.setContent(value);
-			morph.lastValue = value;
+            
 
-		}
+            
+        </div>
 
-	}
+        
 
+        
 
-}
+        
 
-
-module.exports = Renderer;
-    </pre>
+        
+    </div>
 </div>
 
                     </div>

@@ -224,11 +224,11 @@ class Action extends Obj
 				return;
 			}
 
-		}).then((result) => {
+		}).then((/* result */) => {
 
-		}, (error) => {
+		}, (/* error */) => {
 
-			// No longer loaeding
+			// No longer loading
 			if (this.viewContainer) this.viewContainer.setLoading(false);
 
 		});
@@ -290,8 +290,6 @@ class Action extends Obj
 				resolve();
 
 			} else {
-
-				console.log(result);
 
 				// Don't know how to render this...
 				reject('I don\'t know how to render the result for "' + this.targetViewContainer + '"');

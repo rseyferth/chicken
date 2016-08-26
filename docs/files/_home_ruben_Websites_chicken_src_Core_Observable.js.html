@@ -55,6 +55,8 @@
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
                 <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
@@ -407,7 +409,7 @@ class Observable extends Obj {
 			if ((Array.isArray(value) || (typeof value === &#x27;object&#x27; &amp;&amp; value !== null &amp;&amp; value.constructor === Object)) &amp;&amp; convertToObservables === true) {
 
 				// Do I have this value?
-				if (this.attributes.has(key) &amp;&amp; Observable.isObservable(this.attributes.get(key))) {
+				if (this.attributes[key] !== undefined &amp;&amp; Observable.isObservable(this.attributes[key])) {
 
 					// Import
 					var obj = this.attributes.get(key);
@@ -419,12 +421,12 @@ class Observable extends Obj {
 					if (Array.isArray(value)) {
 						
 						// Put a new observable array in there
-						this.attributes.set(key, ClassMap.create(&#x27;ObservableArray&#x27;, [value]));
+						this.attributes[key] = ClassMap.create(&#x27;ObservableArray&#x27;, [value]);
 
 					} else {
 
 						// Put a new observable in there
-						this.attributes.set(key, new Observable(value));
+						this.attributes[key] = new Observable(value);
 
 					}
 

@@ -55,6 +55,8 @@
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
                 <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
@@ -352,11 +354,11 @@ class Action extends Obj
 				return;
 			}
 
-		}).then((result) =&gt; {
+		}).then((/* result */) =&gt; {
 
-		}, (error) =&gt; {
+		}, (/* error */) =&gt; {
 
-			// No longer loaeding
+			// No longer loading
 			if (this.viewContainer) this.viewContainer.setLoading(false);
 
 		});
@@ -418,8 +420,6 @@ class Action extends Obj
 				resolve();
 
 			} else {
-
-				console.log(result);
 
 				// Don&#x27;t know how to render this...
 				reject(&#x27;I don\&#x27;t know how to render the result for &quot;&#x27; + this.targetViewContainer + &#x27;&quot;&#x27;);

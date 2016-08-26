@@ -29,7 +29,7 @@ class Application extends Observable {
 	 * The Application class is 
 	 *
 	 * @class Application
-	 * @extend Core.Observable
+	 * @extends Core.Observable
 	 */
 	constructor($app, settings, history) {
 
@@ -81,7 +81,7 @@ class Application extends Observable {
 
 			renderer: settings.renderer === undefined ? new Renderer() : null
 
-		}, [ 'baseUrl', 'viewPath', 'viewExtension' ]).apply(settings);
+		}, [ 'baseUrl', 'viewPath', 'viewExtension', 'renderer' ]).apply(settings);
 
 		
 

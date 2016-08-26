@@ -53,7 +53,7 @@ class SettingsObject extends Observable
 	set(key, value) {
 
 		// Is it allowed?
-		if (this.allowedKeys && this.allowedKeys.length > 0 && !this.allowedKeys.includes(key)) {
+		if (this.allowedKeys && this.allowedKeys.length > 0 && !_.contains(this.allowedKeys,key)) {
 			throw new Error('This SettingsObject does not have a setting for "' + key + '". The allowed settings are: ' + this.allowedKeys.join(', '));
 		}
 

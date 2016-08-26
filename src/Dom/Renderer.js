@@ -1,10 +1,9 @@
 import _ from 'underscore';
 import HTMLBars from 'htmlbars-standalone';
 
-import Utils from '~/Helpers/Utils';
 import Observable from '~/Core/Observable';
-import ObservableArray from '~/Core/ObservableArray';
 import Binding from '~/Dom/Binding';
+import Helpers from '~/Dom/Helpers';
 
 /**
  * @module Dom
@@ -80,7 +79,7 @@ class Renderer
 						} else {
 							break;
 						}
-					};
+					}
 
 				}
 				
@@ -106,101 +105,51 @@ class Renderer
 			 * @param  {HTMLBarsMorph} morph    
 			 * @param  {Dom.Renderer} renderer 
 			 * @param  {Scope} scope    
-			 * @param  {string} type   				This is originally called 'params'. Values can be `@range`, `@attribute`
+			 * @param  {string} type   				Values can be `@range`, `@attribute`, or helper names
 			 * @param  {array} values     			Array of values that have been linked to the morph. The should be Binding instances
 			 * @return {[type]}          [description]
 			 */
 			linkRenderNode: (morph, renderer, scope, type, values) => {
 			
+				
 				// Add this morph to all involved bindings
 				_.each(values, (binding) => {
-					if (binding instanceof Binding)	binding.addMorph(morph);
+
+					// Is it a binding?
+					if (binding instanceof Binding) {	
+
+						binding.addMorph(morph);
+
+					}
+
 				});
 							
 			},
 
-
-			/**
-			 * This hook applies a value to an attribute
-			 *
-			 * @method hooks.attribute
-			 * @param  {HTMLBarsMorph} 	morph        
-			 * @param  {Dom.Renderer} 	renderer  
-			 * @param  {Scope} 			scope
-			 * @param  {string} 		attributeName 
-			 * @param  {mixed} 			value 			This should be a Binding instance
-			 */
-			attribute: (morph, renderer, scope, attributeName, value) => {
-				this.applyValue(morph, value);
+			lookupHelper: (renderer, scope, helperName) => {
+				if (!renderer.helpers[helperName]) {
+					throw new Error('There is no helper registered with the name "' + helperName + '"');
+				}
+				return renderer.helpers[helperName];
 			},
 
-
-			/**
-			 * This hook applies a value to a 'range', which is a piece of text within
-			 * an element.
-			 *
-			 * @method hooks.range
-			 * @param  {HTMLBarsMorph} 	morph        
-			 * @param  {Dom.Renderer} 	renderer  
-			 * @param  {Scope} 			scope
-			 * @param  {string} 		path 
-			 * @param  {mixed} 			value 			This should be a Binding instance
-			 * @param  {??} 			visitor  
-			 */
-			range: (morph, renderer, scope, path, value, visitor) => {
-
-				// What does this do exactly? Prevent recursion?
-				if (HTMLBars.Runtime.Hooks.Helpers.handleRedirect(morph, renderer, scope, path, [], {}, null, null, visitor)) {
-					return;
-				}
-
-				// Apply
-				this.applyValue(morph, value);
+			invokeHelper: (morph, env, scope, visitor, params, hash, helper, templates) => {
+				
+				// Call it with its own context
+				return { 
+					value: helper.call(this.helpers, params, hash, templates)
+				};
 
 			}
-
-
-
 
 		}, HTMLBars.Runtime.Hooks.Default);
 
 		/**
 		 * @property helpers
-		 * @type {Object}
+		 * @type {Dom.Helpers}
 		 */
-		this.helpers = {
+		this.helpers = new Helpers(this);
 
-			each: (params, hash, blocks) => {
-				
-				// Get the value
-				let list = params[0] instanceof Binding ? params[0].getValue() : params[0];
-				let keyPath = hash.key;
-				Utils.each(list, (item, i) => {
-					blocks.template.yieldItem('item' + i, [item, i]);
-				});
-				
-			},
-
-			if: (params, hash, blocks) => {
-
-				// Is the param truth-like?
-				if (Utils.isTruthlike(params[0])) {
-					if (blocks.template.yield) {
-						blocks.template.yield();
-					} else {
-						return params[1];
-					}
-				} else {
-					if (options.inverse.yield) {
-						options.inverse.yield();
-					} else {
-						return params[2];
-					}
-				}
-
-			}
-
-		},
 
 		/**
 		 * @property partials
@@ -208,7 +157,7 @@ class Renderer
 		 */
 		this.partials = {
 
-		}
+		};
 
 
 		/**
@@ -216,7 +165,7 @@ class Renderer
 		 * @default true
 		 * @type {Boolean}
 		 */
-		this.useFragmentCache = true		
+		this.useFragmentCache = true;
 
 	}
 
@@ -231,14 +180,13 @@ class Renderer
 		} else {
 
 			// Just set the value
-			var value = this.hooks.getValue(value);			
+			value = this.hooks.getValue(value);
 			if (morph.lastValue !== value) morph.setContent(value);
 			morph.lastValue = value;
 
 		}
 
 	}
-
 
 
 }

@@ -55,6 +55,8 @@
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
                 <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
@@ -331,6 +333,20 @@ Chicken.view(&#39;//my-domain.com/chicken-templates/welcome.hbs&#39;);</code></p
 
                     <ul class="index-list methods extends">
                         
+                            <li class="index-item method">
+                                <a href="#method_addToContainer">addToContainer</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_addToDom">addToDom</a>
+
+                                
+                                
+                            </li>
+                        
                             <li class="index-item method inherited">
                                 <a href="#method_off">off</a>
 
@@ -340,6 +356,27 @@ Chicken.view(&#39;//my-domain.com/chicken-templates/welcome.hbs&#39;);</code></p
                         
                             <li class="index-item method inherited">
                                 <a href="#method_on">on</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_render">render</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_revalidate">revalidate</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_scheduleRevalidate">scheduleRevalidate</a>
 
                                 
                                 
@@ -370,6 +407,13 @@ Chicken.view(&#39;//my-domain.com/chicken-templates/welcome.hbs&#39;);</code></p
                     <ul class="index-list properties extends">
                         
                             <li class="index-item property">
+                                <a href="#property_$element">$element</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_data">data</a>
 
                                 
@@ -378,6 +422,13 @@ Chicken.view(&#39;//my-domain.com/chicken-templates/welcome.hbs&#39;);</code></p
                         
                             <li class="index-item property">
                                 <a href="#property_dataPromises">dataPromises</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_documentFragment">documentFragment</a>
 
                                 
                                 
@@ -398,8 +449,33 @@ Chicken.view(&#39;//my-domain.com/chicken-templates/welcome.hbs&#39;);</code></p
                             </li>
                         
                             <li class="index-item property">
+                                <a href="#property_renderResult">renderResult</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_RevalidationDelay">RevalidationDelay</a>
+
+                                
+                                    <span class="flag static">static</span>
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
                                 <a href="#property_template">template</a>
 
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_TemplateCache">TemplateCache</a>
+
+                                
+                                    <span class="flag static">static</span>
                                 
                                 
                             </li>
@@ -423,6 +499,185 @@ Chicken.view(&#39;//my-domain.com/chicken-templates/welcome.hbs&#39;);</code></p
         
             <div id="methods" class="api-class-tabpanel">
                 <h2 class="off-left">Methods</h2>
+
+                
+                    <div id="method_addToContainer" class="method item">
+    <h3 class="name"><code>addToContainer</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>viewContainer</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l435"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:435</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Add the view to the ViewContainer, replacing previous contents
+and making sure the ViewContainer knows it&#39;s gotten the view.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">viewContainer</code>
+                        <span class="type"><a href="../classes/Dom.ViewContainer.html" class="crosslink">Dom.ViewContainer</a></span>
+                    
+
+                    
+
+                    <div class="param-description">
+                         
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_addToDom" class="method item">
+    <h3 class="name"><code>addToDom</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>$target</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l414"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:414</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Set the contents of this view in given $target element</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">$target</code>
+                        <span class="type">JQuery</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>The $target for the view to render in. The contents will be completely replaced
+                           by this view.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="method_off" class="method item inherited">
@@ -657,6 +912,199 @@ Chicken.view(&#39;//my-domain.com/chicken-templates/welcome.hbs&#39;);</code></p
 </div>
 
                 
+                    <div id="method_render" class="method item">
+    <h3 class="name"><code>render</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Promise</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l312"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:312</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Render the view!</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Promise</span>:
+                    
+                    <p>The &#39;render&#39; promise is returned. The &#39;added&#39; promise will be called
+                   when the view is added to the DOM.</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_revalidate" class="method item">
+    <h3 class="name"><code>revalidate</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l395"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:395</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Revalidate the rendered view. Revalidation means the updating of 
+&#39;dirty&#39; elements (morphs). The dirtying is done by the Bindings, set up
+by the Renderer.</p>
+<p>If your binding is valid, and components work as the should, you shouldn&#39;t 
+need to call this method. If you do though, it is better to call
+<code>scheduleRevalidate</code> instead, to prevent undue calls.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_scheduleRevalidate" class="method item">
+    <h3 class="name"><code>scheduleRevalidate</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+        <span class="flag chainable">chainable</span>
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l369"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:369</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Have the rendered view be revalidated when it&#39;s convenient.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_trigger" class="method item inherited">
     <h3 class="name"><code>trigger</code></h3>
 
@@ -812,7 +1260,7 @@ with given arguments.</p>
             
         
         
-        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l212"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:212</code></a>
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l239"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:239</code></a>
         
         </p>
 
@@ -882,6 +1330,52 @@ can also use object notation:</p>
         
             <div id="properties" class="api-class-tabpanel">
                 <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_$element" class="property item">
+    <h3 class="name"><code>$element</code></h3>
+    <span class="type">JQuery</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l147"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:147</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The jQuery version of the DocumentFragment, that can be 
+used to manipulate the view&#39;s contents.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
 
                 
                     <div id="property_data" class="property item">
@@ -963,6 +1457,51 @@ can also use object notation:</p>
     <div class="description">
         <p>Promises for data to load, keyed by the key
 as provided in the <code>with</code> method</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_documentFragment" class="property item">
+    <h3 class="name"><code>documentFragment</code></h3>
+    <span class="type">DocumentFragment</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l138"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:138</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The DocumentFragment that is the rendered view.</p>
 
     </div>
 
@@ -1064,6 +1603,101 @@ page to load.</p>
 </div>
 
                 
+                    <div id="property_renderResult" class="property item">
+    <h3 class="name"><code>renderResult</code></h3>
+    <span class="type">HTMLBars.RenderResult</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l130"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:130</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The RenderResult gotten back from the Template rendering.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_RevalidationDelay" class="property item">
+    <h3 class="name"><code>RevalidationDelay</code></h3>
+    <span class="type">Number</span>
+
+    
+
+    
+
+    
+
+    
+        <span class="flag static">static</span>
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l467"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:467</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The number of milliseconds to wait before revalidating your views after
+a change in the data has occured.</p>
+<p>This value can be very low, as it is mostly used to bundle changes together
+that occur semi-simultaneously.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="property_template" class="property item">
     <h3 class="name"><code>template</code></h3>
     <span class="type">HTMLBars template</span>
@@ -1098,6 +1732,55 @@ page to load.</p>
 
     <div class="description">
         
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_TemplateCache" class="property item">
+    <h3 class="name"><code>TemplateCache</code></h3>
+    <span class="type">Map</span>
+
+    
+
+    
+
+    
+
+    
+        <span class="flag static">static</span>
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Dom_View.js.html#l456"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;View.js:456</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The TemplateCache is used to cache templates by their name. When you are
+building your application for production, you can also use this to bundle
+the templates.</p>
+
     </div>
 
     

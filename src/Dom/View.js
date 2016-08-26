@@ -127,6 +127,33 @@ class View extends Obj
 		this.renderer = renderer ? renderer : App().config('renderer');
 
 
+		/**
+		 * The RenderResult gotten back from the Template rendering.
+		 * 
+		 * @property renderResult
+		 * @type {HTMLBars.RenderResult}
+		 */
+		this.renderResult = null;
+
+		/**
+		 * The DocumentFragment that is the rendered view.
+		 * 
+		 * @property documentFragment
+		 * @type {DocumentFragment}
+		 */
+		this.documentFragment = null;
+
+
+		/**
+		 * The jQuery version of the DocumentFragment, that can be 
+		 * used to manipulate the view's contents.
+		 * 
+		 * @property $element
+		 * @type {jQuery}
+		 */
+		this.$element = null;
+
+
 
 
 		//////////////////////////
@@ -282,6 +309,13 @@ class View extends Obj
 	} 
 
 
+	/**
+	 * Render the view!
+	 *
+	 * @method render
+	 * @return {Promise}  The 'render' promise is returned. The 'added' promise will be called
+	 *                    when the view is added to the DOM.
+	 **/
 	render() {
 
 		// We make the 'render' promise.
@@ -298,14 +332,30 @@ class View extends Obj
 				/////////////////////
 
 				this.template = HTMLBars.Compiler.compile(this.templateString);
-				var result = this.template.render(this.data, this.renderer);
-				result.revalidate();
-
-				// Resolve the promise
-				resolve(result.fragment);
-
+				try {
+					this.renderResult = this.template.render(this.data, this.renderer);
+				} catch (error) {
+					reject(error);
+					return;
+				}
+				
 				// Localize and be done!
-				this.documentFragment = result.fragment;
+				this.documentFragment = this.renderResult.fragment;
+				resolve(this.documentFragment);
+
+
+				//////////////////
+				// Revalidating //
+				//////////////////
+
+				// Have a look at the data, and revalidate the result whenever a change
+				// occurs. The 'dirtying' of elements (morphs) is handled by the Renderer
+				// and Binding classes.				
+				
+				// Study the object
+				this.data.study(() => {
+					this.scheduleRevalidate();
+				});
 
 				
 			});
@@ -316,6 +366,58 @@ class View extends Obj
 	}
 
 
+	/**
+	 * Have the rendered view be revalidated when it's convenient.
+	 * 
+	 * @method scheduleRevalidate
+	 * @chainable
+	 */
+	scheduleRevalidate() {
+
+		// Not already pending?
+		if (!this.revalidateTimeout)  {
+
+			// Wait a bit.
+			this.revalidateTimeout = setTimeout(() => {
+
+				// Revalidate!
+				this.revalidate();				
+
+			}, View.RevalidationDelay);
+
+		}
+		
+		return this;
+	
+
+	}
+
+	/**
+	 * Revalidate the rendered view. Revalidation means the updating of 
+	 * 'dirty' elements (morphs). The dirtying is done by the Bindings, set up
+	 * by the Renderer.
+	 *
+	 * If your binding is valid, and components work as the should, you shouldn't 
+	 * need to call this method. If you do though, it is better to call
+	 * `scheduleRevalidate` instead, to prevent undue calls.
+	 * 
+	 * @method revalidate
+	 * @chainable
+	 */
+	revalidate() {
+		this.renderResult.revalidate();
+		this.revalidateTimeout = false;
+		return this;
+	}
+
+
+	/**
+	 * Set the contents of this view in given $target element
+	 * 
+	 * @method addToDom
+	 * @param {jQuery} $target    The $target for the view to render in. The contents will be completely replaced
+	 *                            by this view.
+	 */
 	addToDOM($target) {
 
 		// Add to dom
@@ -330,10 +432,19 @@ class View extends Obj
 	}
 
 
+	/**
+	 * Add the view to the ViewContainer, replacing previous contents
+	 * and making sure the ViewContainer knows it's gotten the view.
+	 * 
+	 * @method addToContainer
+	 * @param {Dom.ViewContainer} viewContainer 
+	 */
 	addToContainer(viewContainer) {
 
+		// Set view
 		viewContainer.setView(this);
 
+		// Add to DOM
 		this.addToDOM(viewContainer.$element);
 
 
@@ -342,8 +453,28 @@ class View extends Obj
 
 }
 
-
+/**
+ * The TemplateCache is used to cache templates by their name. When you are
+ * building your application for production, you can also use this to bundle
+ * the templates.
+ * 
+ * @property TemplateCache
+ * @static
+ * @type {Map}
+ */
 View.TemplateCache = new Map();
 
+/**
+ * The number of milliseconds to wait before revalidating your views after
+ * a change in the data has occured.
+ *
+ * This value can be very low, as it is mostly used to bundle changes together
+ * that occur semi-simultaneously.
+ * 
+ * @property RevalidationDelay
+ * @static
+ * @type {Number}
+ */
+View.RevalidationDelay = 3;
 
 module.exports = View;

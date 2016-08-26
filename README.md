@@ -22,6 +22,7 @@ Chicken uses the following third-party libraries:
 - [Underscore](http://underscorejs.org)
 - [History](https://github.com/mjackson/history)
 - [XRegExp](https://github.com/slevithan/xregexp)
+- [HTMLBars](https://github.com/rseyferth/htmlbars)
 
 ## Installation
 The easiest way to install Chicken is by using `bower`:
@@ -30,11 +31,13 @@ The easiest way to install Chicken is by using `bower`:
 bower install --save chickenjs
 ```
 
-Then add jQuery, Underscore and Chicken to your HTML page:
+Then add the dependencies and Chicken to your HTML page:
 
 ```html
 <script src="/bower_components/jquery/dist/jquery.js"></script>
 <script src="/bower_components/underscore/underscore.js"></script>
+<script src="/bower_components/xregexp/xregexp-all.js"></script>
+<script src="/bower_components/htmlbars-standalone/build/htmlbars.js"></script>
 <script src="/bower_components/chickenjs/build/chicken.js"></script>
 ```
 
@@ -172,7 +175,7 @@ Chicken.controller('Product', {
   index: function() {
   
     return Chicken.view('product.index')
-      .withModels('products', Chicken.api('/products'))
+      .with('products', Chicken.api('/products'))
       .when('ready', (view) => { 
       
         // The view is rendered, and accessible through script
@@ -188,7 +191,7 @@ Chicken.controller('Product', {
   show: function(id) {
   
     return Chicken.view('product.show')
-      .withModel('product', Chicken.api('/products/' + id))
+      .with('product', Chicken.api('/products/' + id))
       .when('ready', (view) => {
       
         // The view is rendered, and has access to the model that was loaded

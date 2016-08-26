@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/Renderer.js</title>
+    <title>/home/ruben/Websites/chicken/src/Dom/Helpers.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -124,205 +124,154 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Renderer.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Helpers.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import _ from &#x27;underscore&#x27;;
-import HTMLBars from &#x27;htmlbars-standalone&#x27;;
+/* eslint no-console: [&quot;error&quot;, { allow: [&quot;log&quot;] }] */
 
-import Observable from &#x27;~/Core/Observable&#x27;;
-import Binding from &#x27;~/Dom/Binding&#x27;;
-import Helpers from &#x27;~/Dom/Helpers&#x27;;
+import _ from &#x27;underscore&#x27;;
+import Uuid from &#x27;uuid-lib&#x27;;
+import QueryString from &#x27;query-string&#x27;;
+
+import Utils from &#x27;~/Helpers/Utils&#x27;;
 
 /**
  * @module Dom
  */
-class Renderer
+class Helpers
 {
 
 	/**
-	 * @class Dom.Renderer
-	 * 
-	 * @constructor
+	 * @class Dom.Helpers
+	 *
+	 * @constructor 
+	 * @param  {Dom.Renderer} renderer
 	 */
-	constructor() {
-
-		/**
-		 * @property dom
-		 * @type {HTMLBars.DOMHelper}
-		 */
-		this.dom = new HTMLBars.DOMHelper();
-
-		/**
-		 * Hooks are the way to configure the way HTMLBars renders your
-		 * templates. Renderer comes pre-configured with hooks that allow you
-		 * to bind to Observables (models) and ObservableArrays (collections).
-		 * 
-		 * @property hooks
-		 * @type {object}
-		 */
-		this.hooks = _.defaults({
-
-			/**
-			 * The &#x60;get&#x60; hook is responsible for retrieving Bindings from the data store.
-			 * 
-			 * @method hooks.get
-			 * @param  {Renderer} 	renderer   	The Renderer instance (this)
-			 * @param  {Scope} 		scope 		The Scope in which the &#x60;get&#x60; was called, 
-			 *                           		containing the data that is available in this Scope
-			 * @param  {string} 	path 		The path (key) of the variable to retrieve 		
-			 * @return {mixed}     	The retrieved value
-			 */
-			get: (renderer, scope, path) =&gt; {
-				
-				// Get first part
-				var keys = path.split(/\./);
-
-				// Look into local data
-				var appliedScope = scope.self;
-				if (scope.localPresent[keys[0]]) {
-					appliedScope = scope.locals[keys[0]];
-					keys.shift();
-					path = keys.join(&#x27;.&#x27;);
-				}
-
-				// No path? Return the whole data
-				if (path === &#x27;&#x27;) return appliedScope;
-
-				// Is data an observable?
-				if (appliedScope instanceof Observable) {
-
-					// Create a binding
-					var binding = new Binding(this, appliedScope, path);
-
-					// Get the value
-					return binding;
-
-				} else {
-
-					// Do native thing (deep-get)
-					var value = this.hooks.getRoot(scope, keys[0])[0];
-					for (var i = 1; i &lt; keys.length; i++) {
-						if (value) {
-							value = this.hooks.getChild(value, keys[i]);
-						} else {
-							break;
-						}
-					}
-
-				}
-				
-				return value;
-
-			},
-
-			/**
-			 * Get value from reference (Binding)
-			 *
-			 * @method hooks.getValue
-			 * @param  {Binding} reference 
-			 * @return {mixed}           
-			 */
-			getValue: (reference) =&gt; {
-				return reference instanceof Binding ? reference.getValue() : reference;
-			},
-
-			/**
-			 * Link a morph to one or more values (in our case Bindings)
-			 *
-			 * @method hooks.linksRenderNode
-			 * @param  {HTMLBarsMorph} morph    
-			 * @param  {Dom.Renderer} renderer 
-			 * @param  {Scope} scope    
-			 * @param  {string} type   				Values can be &#x60;@range&#x60;, &#x60;@attribute&#x60;, or helper names
-			 * @param  {array} values     			Array of values that have been linked to the morph. The should be Binding instances
-			 * @return {[type]}          [description]
-			 */
-			linkRenderNode: (morph, renderer, scope, type, values) =&gt; {
-			
-				
-				// Add this morph to all involved bindings
-				_.each(values, (binding) =&gt; {
-
-					// Is it a binding?
-					if (binding instanceof Binding) {	
-
-						binding.addMorph(morph);
-
-					}
-
-				});
-							
-			},
-
-			lookupHelper: (renderer, scope, helperName) =&gt; {
-				if (!renderer.helpers[helperName]) {
-					throw new Error(&#x27;There is no helper registered with the name &quot;&#x27; + helperName + &#x27;&quot;&#x27;);
-				}
-				return renderer.helpers[helperName];
-			},
-
-			invokeHelper: (morph, env, scope, visitor, params, hash, helper, templates) =&gt; {
-				
-				// Call it with its own context
-				return { 
-					value: helper.call(this.helpers, params, hash, templates)
-				};
-
-			}
-
-		}, HTMLBars.Runtime.Hooks.Default);
-
-		/**
-		 * @property helpers
-		 * @type {Dom.Helpers}
-		 */
-		this.helpers = new Helpers(this);
+	constructor(renderer) {
+		this.renderer = renderer;
+	}
 
 
-		/**
-		 * @property partials
-		 * @type {Object}
-		 */
-		this.partials = {
-
-		};
+	////////////////////////
+	// Control statements //
+	////////////////////////
 
 
-		/**
-		 * @property useFragmentCache
-		 * @default true
-		 * @type {Boolean}
-		 */
-		this.useFragmentCache = true;
+	/**
+	 * @method each
+	 */
+	each(params, hash, options) {
+
+		// Get the value
+		let list = this._getValue(params[0]);
+		Utils.each(list, (item, i) =&gt; {
+			options.template.yieldItem(&#x27;each-item-&#x27; + Uuid.raw(), [item, i]);
+		});
+		
+	}
+
+	/**
+	 * @method if	 
+	 */
+	if(params, hash, options) {
+
+		// Get the value
+		let value = this._getValue(params[0]);
+		return this._ifUnless(params, hash, options, Utils.isTruthlike(value));		
 
 	}
 
-	applyValue(morph, value)  {
+	/**
+	 * @method unless
+	 */
+	unless(params, hash, options) {
 
-		// Is it a Binding
-		if (value instanceof Binding) {
+		// Get the value
+		let value = this._getValue(params[0]);
+		return this._ifUnless(params, hash, options, !Utils.isTruthlike(value));		
 
-			// Apply it
-			value.applyValue(morph);
+	}
+
+	_ifUnless(params, hash, options, show) {
+
+		// Is the param truth-like?
+		if (show) {
+
+			// Is it a yielding-if?
+			if (options.template.yield) {
+				options.template.yield();
+
+			// Or parameter-if?
+			} else {
+				return this._getValue(params[1]);
+			}
 
 		} else {
 
-			// Just set the value
-			value = this.hooks.getValue(value);
-			if (morph.lastValue !== value) morph.setContent(value);
-			morph.lastValue = value;
-
+			// Render the inverse yield
+			if (options.inverse.yield) {
+				options.inverse.yield();
+			
+			// Or the inverse param
+			} else {
+				return params[2];
+			}
 		}
 
 	}
 
 
+	////////////
+	// Values //
+	////////////
+
+	concat(params) {
+
+		return this._getValues(params).join(&#x27;&#x27;);
+
+	}
+
+
+	///////////
+	// Debug //
+	///////////
+
+	log(params) {
+		console.log.apply(console, this._getValues(params));
+	}
+
+	&#x27;query-params&#x27;(params, hash) {
+		return QueryString.stringify(this._getHashValues(hash));		
+	}
+
+
+
+	//////////////
+	// Internal //
+	//////////////
+
+	_getValue(param) {
+		return this.renderer.hooks.getValue(param);
+	}
+
+	_getValues(params) {
+		return params.map((value) =&gt; {
+			return this._getValue(value);
+		});
+	}
+	_getHashValues(hash) {
+		var result = {};
+		_.each(hash, (value, key) =&gt; {
+			result[key] = this._getValue(value);
+		});
+		return result;
+	}
+	
+
 }
 
-
-module.exports = Renderer;
+module.exports = Helpers;
     </pre>
 </div>
 

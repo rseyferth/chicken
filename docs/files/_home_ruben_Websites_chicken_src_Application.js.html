@@ -55,6 +55,8 @@
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
                 <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
@@ -157,7 +159,7 @@ class Application extends Observable {
 	 * The Application class is 
 	 *
 	 * @class Application
-	 * @extend Core.Observable
+	 * @extends Core.Observable
 	 */
 	constructor($app, settings, history) {
 
@@ -209,7 +211,7 @@ class Application extends Observable {
 
 			renderer: settings.renderer === undefined ? new Renderer() : null
 
-		}, [ &#x27;baseUrl&#x27;, &#x27;viewPath&#x27;, &#x27;viewExtension&#x27; ]).apply(settings);
+		}, [ &#x27;baseUrl&#x27;, &#x27;viewPath&#x27;, &#x27;viewExtension&#x27;, &#x27;renderer&#x27; ]).apply(settings);
 
 		
 

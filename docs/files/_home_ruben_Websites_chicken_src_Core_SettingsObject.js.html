@@ -55,6 +55,8 @@
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
                 <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
@@ -181,7 +183,7 @@ class SettingsObject extends Observable
 	set(key, value) {
 
 		// Is it allowed?
-		if (this.allowedKeys &amp;&amp; this.allowedKeys.length &gt; 0 &amp;&amp; !this.allowedKeys.includes(key)) {
+		if (this.allowedKeys &amp;&amp; this.allowedKeys.length &gt; 0 &amp;&amp; !_.contains(this.allowedKeys,key)) {
 			throw new Error(&#x27;This SettingsObject does not have a setting for &quot;&#x27; + key + &#x27;&quot;. The allowed settings are: &#x27; + this.allowedKeys.join(&#x27;, &#x27;));
 		}
 
