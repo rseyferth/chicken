@@ -23,6 +23,7 @@ YUI.add("yuidoc-meta", function(Y) {
     ],
     "modules": [
         "Core",
+        "Data",
         "Dom",
         "Helpers",
         "Routing"
@@ -31,6 +32,10 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "Core",
             "name": "Core"
+        },
+        {
+            "displayName": "Data",
+            "name": "Data"
         },
         {
             "displayName": "Dom",

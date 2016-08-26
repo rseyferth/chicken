@@ -3,12 +3,12 @@ import $ from 'jquery';
 import HTMLBars from 'htmlbars-standalone';
 
 import App from '~/Helpers/App';
-import Observable from '~/Core/Observable';
+import Model from '~/Data/Model';
 
 /**
  * @module Dom
  */
-class View extends Observable
+class View extends Model
 {
 
 	/**

@@ -120,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
-	var _Request = __webpack_require__(52);
+	var _Request = __webpack_require__(53);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -5406,7 +5406,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _Request = __webpack_require__(52);
+	var _Request = __webpack_require__(53);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -6685,9 +6685,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Observable2 = __webpack_require__(30);
+	var _Model2 = __webpack_require__(52);
 
-	var _Observable3 = _interopRequireDefault(_Observable2);
+	var _Model3 = _interopRequireDefault(_Model2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6700,8 +6700,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @module Dom
 	 */
-	var View = function (_Observable) {
-		_inherits(View, _Observable);
+	var View = function (_Model) {
+		_inherits(View, _Model);
 
 		/**
 	  * ## Creating a View
@@ -7136,7 +7136,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}]);
 
 		return View;
-	}(_Observable3.default);
+	}(_Model3.default);
 
 	/**
 	 * The TemplateCache is used to cache templates by their name. When you are
@@ -7184,6 +7184,55 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 52 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _Observable2 = __webpack_require__(30);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Data
+	 */
+	var Model = function (_Observable) {
+		_inherits(Model, _Observable);
+
+		function Model() {
+			var initValues = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+			var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
+			_classCallCheck(this, Model);
+
+			return _possibleConstructorReturn(this, (Model.__proto__ || Object.getPrototypeOf(Model)).call(this, initValues, convertToObservables));
+		}
+
+		_createClass(Model, [{
+			key: 'computed',
+			value: function computed() {
+
+				// Dependencies?
+				if (arguments.length === 0) throw new Error('The `computed` method needs at least one argument.');
+			}
+		}]);
+
+		return Model;
+	}(_Observable3.default);
+
+	module.exports = Model;
+
+/***/ },
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
