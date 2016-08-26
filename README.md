@@ -168,7 +168,7 @@ to render nested routes into a view container that is created by the parent rout
 ## Controllers
 Controllers are where you define what will be rendered into the view containers. For example:
 
-**app/controllers/ProductController.js**
+**app/js/controllers/ProductController.js**
 ```javascript
 Chicken.controller('Product', {
 
@@ -176,7 +176,7 @@ Chicken.controller('Product', {
   
     return Chicken.view('product.index')
       .with('products', Chicken.api('/products'))
-      .when('ready', (view) => { 
+      .when('added', (view) => { 
       
         // The view is rendered, and accessible through script
         view.$element.find('h1').style('color', 'red');
@@ -192,7 +192,7 @@ Chicken.controller('Product', {
   
     return Chicken.view('product.show')
       .with('product', Chicken.api('/products/' + id))
-      .when('ready', (view) => {
+      .when('added', (view) => {
       
         // The view is rendered, and has access to the model that was loaded
         // from the API
@@ -205,7 +205,43 @@ Chicken.controller('Product', {
 });
 ```
 
+## Views
+A view takes care of rendering the data to proper HTML, and keeping both the data and the interface up 
+to date. For templating we use HTMLBars, which uses [Handlebars syntax](https://handlebarsjs.com).
 
+### Example
+A small example to illustrate one-way and two-way binding:
+
+**app/js/controllers/HomeController.js**
+```javascript
+[...]
+index() {
+  return Chicken.view('home.index')
+    .with({
+      positive: false,
+      title: 'Do you like this page?'
+    })
+    .when('added', (view) => {
+    
+      view.$element.find('button').on('click', (e) => {
+        view.data.set('positive', true);
+        view.data.set('title', 'Thank you!');
+      });
+    
+    });
+    
+}
+```
+
+**app/views/home/index.hbs**
+```handlebars
+<h1>{{title}}</h1>
+{{#unless positive}}
+  <button>I like it!</button>
+{{/unless}}
+```
+
+Note: Soon we'll add `actions` (like Ember), so you can simplify the on-click behaviors.
 
 
 
