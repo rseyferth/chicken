@@ -219,7 +219,8 @@ as [Ember templates](https://guides.emberjs.com/v2.7.0/templates/handlebars-basi
 index() {
   return Chicken.view('home.index')
     .with({
-      name: ''
+      name: ''  // This is actually optional. The attribute would also be created
+                // by the template.
     })
     .action('log', function(name, actionBinding, view) {
         
