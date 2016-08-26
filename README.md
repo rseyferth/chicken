@@ -7,7 +7,7 @@
 Chicken is a Javascript framework you can use to quickly build webapps. It is intended as an alternative to bigger frameworks like Ember and Angular, but without the frustration when you're trying to do something that's not in the first couple of tutorials. 
 
 Chicken allows you to do the following things easily, quickly, and well:
-- Setup webapp with routes, controllers, and views (under construction)
+- Setup webapp with routes, controllers, and views (mostly working)
 - Connect to a JSONAPI compliant Api (under construction)
 - Authentication using JWT (under construction)
 - Two-way model binding (under construction)
