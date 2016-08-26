@@ -3,13 +3,12 @@ import $ from 'jquery';
 import HTMLBars from 'htmlbars-standalone';
 
 import App from '~/Helpers/App';
-import Obj from '~/Core/Obj';
 import Observable from '~/Core/Observable';
 
 /**
  * @module Dom
  */
-class View extends Obj
+class View extends Observable
 {
 
 	/**
@@ -70,7 +69,7 @@ class View extends Obj
 	 * 	Chicken.view('//my-domain.com/chicken-templates/welcome.hbs');
 	 * 
 	 * @class Dom.View
-	 * @extends Core.Obj
+	 * @extends Core.Observable
 	 *
 	 * @constructor
 	 * @param {string} source   			The source for the view
@@ -79,13 +78,6 @@ class View extends Obj
 	constructor(source, renderer) {
 		
 		super();
-
-		/**
-		 * @property data
-		 * @type {Core.Observable}
-		 */
-		this.data = new Observable();
-
 
 		/**
 		 * Promises for data to load, keyed by the key
@@ -118,6 +110,15 @@ class View extends Obj
 		 * @type {HTMLBars template}
 		 */
 		this.template = null;
+
+
+		/**
+		 * @property actions
+		 * @type {Object}
+		 */
+		this.actions = {
+
+		};
 
 
 		/**
@@ -294,11 +295,14 @@ class View extends Obj
 				// Add to promises
 				this.dataPromises[key] = value;
 				this.loadPromises.push(value);
+				value.then((result) => {
+					this.set(key, result, false);
+				});
 
 			} else {
 
 				// Set it now
-				this.data.set(key, value, true);
+				this.set(key, value, true);
 
 			}
 
@@ -307,6 +311,14 @@ class View extends Obj
 		return this;
 
 	} 
+
+	action(key, callback) {
+
+		this.actions[key] = callback;
+		return this;
+
+	}
+
 
 
 	/**
@@ -333,7 +345,7 @@ class View extends Obj
 
 				this.template = HTMLBars.Compiler.compile(this.templateString);
 				try {
-					this.renderResult = this.template.render(this.data, this.renderer);
+					this.renderResult = this.template.render(this, this.renderer);
 				} catch (error) {
 					reject(error);
 					return;
@@ -353,7 +365,7 @@ class View extends Obj
 				// and Binding classes.				
 				
 				// Study the object
-				this.data.study(() => {
+				this.study(() => {
 					this.scheduleRevalidate();
 				});
 
@@ -421,10 +433,12 @@ class View extends Obj
 	addToDOM($target) {
 
 		// Add to dom
-		$target.html(this.documentFragment);
+		var $view = $('<view/>');
+		$view.html(this.documentFragment);
+		$target.html($view);
 
 		// Get the element
-		this.$element = $target.find('>*');
+		this.$element = $view;
 		
 		// Done!
 		this.resolvePromise('added', this);

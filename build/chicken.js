@@ -80,7 +80,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(43);
+	var _ObservableArray = __webpack_require__(44);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -96,7 +96,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Renderer2 = _interopRequireDefault(_Renderer);
 
-	var _View = __webpack_require__(49);
+	var _View = __webpack_require__(50);
 
 	var _View2 = _interopRequireDefault(_View);
 
@@ -112,27 +112,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Action = __webpack_require__(47);
+	var _Action = __webpack_require__(48);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
-	var _Controller2 = __webpack_require__(48);
+	var _Controller2 = __webpack_require__(49);
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
-	var _Request = __webpack_require__(51);
+	var _Request = __webpack_require__(52);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
-	var _Route = __webpack_require__(45);
+	var _Route = __webpack_require__(46);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _RouteMatch = __webpack_require__(46);
+	var _RouteMatch = __webpack_require__(47);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
-	var _Router = __webpack_require__(44);
+	var _Router = __webpack_require__(45);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -327,7 +327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Router = __webpack_require__(44);
+	var _Router = __webpack_require__(45);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -3967,7 +3967,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
-	var _Helpers = __webpack_require__(40);
+	var _ActionBinding = __webpack_require__(40);
+
+	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
+
+	var _Helpers = __webpack_require__(42);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -4085,7 +4089,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Is it a binding?
 						if (binding instanceof _Binding2.default) {
-
 							binding.addMorph(morph);
 						}
 					});
@@ -4098,13 +4101,50 @@ return /******/ (function(modules) { // webpackBootstrap
 					return renderer.helpers[helperName];
 				},
 
-				invokeHelper: function invokeHelper(morph, env, scope, visitor, params, hash, helper, templates) {
+				invokeHelper: function invokeHelper(morph, env, scope, visitor, params, attributeHash, helper, templates) {
 
 					// Call it with its own context
 					return {
-						value: helper.call(_this.helpers, params, hash, templates)
+						value: helper.call(_this.helpers, params, attributeHash, templates)
 					};
-				}
+				},
+
+				keywords: _underscore2.default.defaults({
+
+					/**
+	     * The action keyword creates an ActionBinding instance and 
+	     * stores it on the element. The `action` helper can then use 
+	     * this ActionBinding to apply it on the DOM.
+	     *
+	     * @method keywords.action
+	     */
+					action: function action(morph, renderer, scope, params, attributeHash) {
+
+						// Get action scope
+						var appliedScope = void 0;
+						if (scope.localPresent['actions'] && scope.locals.actions[params[0]]) {
+
+							// Use local action
+							appliedScope = scope.locals;
+						} else if (scope.self.actions && scope.self.actions[params[0]]) {
+
+							// Use that
+							appliedScope = scope.self;
+						} else {
+
+							// Undefined action.
+							throw new Error('Could not find action "' + params[0] + '" within the scope');
+						}
+
+						// Get action
+						var actionCallback = appliedScope.actions[params[0]];
+						var parameters = params.slice(1);
+
+						// Create action binding
+						morph.actionBinding = new _ActionBinding2.default(morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
+					}
+
+				}, _htmlbarsStandalone2.default.Runtime.Hooks.Default.keywords)
 
 			}, _htmlbarsStandalone2.default.Runtime.Hooks.Default);
 
@@ -4382,23 +4422,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint no-console: ["error", { allow: ["log"] }] */
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _underscore = __webpack_require__(2);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
 	var _uuidLib = __webpack_require__(41);
 
 	var _uuidLib2 = _interopRequireDefault(_uuidLib);
-
-	var _queryString = __webpack_require__(27);
-
-	var _queryString2 = _interopRequireDefault(_queryString);
-
-	var _Utils = __webpack_require__(42);
-
-	var _Utils2 = _interopRequireDefault(_Utils);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4407,155 +4443,154 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @module Dom
 	 */
-	var Helpers = function () {
+	var ActionBinding = function () {
 
 		/**
-	  * @class Dom.Helpers
-	  *
-	  * @constructor 
-	  * @param  {Dom.Renderer} renderer
+	  * @class Dom.ActionBinding
+	  * 
+	  * @constructor
 	  */
-		function Helpers(renderer) {
-			_classCallCheck(this, Helpers);
+		function ActionBinding(morph, actionName, actionHandler, parameters, options, view) {
+			_classCallCheck(this, ActionBinding);
 
-			this.renderer = renderer;
+			/**
+	   * @property morph
+	   * @type {HTMLBarsMorph}
+	   */
+			this.morph = morph;
+
+			/**
+	   * The name of the action on the view
+	   * 
+	   * @property actionName
+	   * @type {string}
+	   */
+			this.actionName = actionName;
+
+			/**
+	   * The function to call when the action is executed
+	   * 
+	   * @property actionHandler
+	   * @type {function}
+	   */
+			this.actionHandler = actionHandler;
+
+			/**
+	   * @property options
+	   * @type {object}
+	   */
+			this.options = _underscore2.default.defaults(options, {
+				preventDefault: true
+			});
+
+			/**
+	   * The parameters that will be passed along to the action handler.
+	   * 
+	   * @property parameters
+	   * @type {array}
+	   */
+			this.parameters = parameters;
+
+			/**
+	   * @property view
+	   * @type {Dom.View}
+	   */
+			this.view = view;
+
+			/**
+	   * The name of the event that is listened to on the element.
+	   * When not specifically configured in the binding itself, a default
+	   * event will be decided on, based on the element tag name. 
+	   * 
+	   * @property eventName
+	   * @type {string}
+	   */
+			this.eventName = options.on ? options.on : ActionBinding.getDefaultEventName(morph.element);
+
+			/**
+	   * Indicator whether the binding is applied
+	   * to the element
+	   * 
+	   * @property isListening
+	   * @type {Boolean}
+	   */
+			this.isListening = false;
+
+			/**
+	   * @property $element
+	   * @type {jQuery}
+	   */
+			this.$element = null;
+
+			/**
+	   * The unique identifier for this ActionBinding. This is used
+	   * by the Helper to retrieve this instance and automatically
+	   * generated in the constructor.
+	   * 
+	   * @property id
+	   * @type {string}
+	   */
+			this.id = ActionBinding.register(this);
+
+			// Store this binding on the element
+			morph.element.setAttribute('data-chicken-action', this.id);
 		}
 
-		////////////////////////
-		// Control statements //
-		////////////////////////
-
-
-		/**
-	  * @method each
-	  */
-
-
-		_createClass(Helpers, [{
-			key: 'each',
-			value: function each(params, hash, options) {
-
-				// Get the value
-				var list = this._getValue(params[0]);
-				_Utils2.default.each(list, function (item, i) {
-					options.template.yieldItem('each-item-' + _uuidLib2.default.raw(), [item, i]);
-				});
-			}
-
-			/**
-	   * @method if	 
-	   */
-
-		}, {
-			key: 'if',
-			value: function _if(params, hash, options) {
-
-				// Get the value
-				var value = this._getValue(params[0]);
-				return this._ifUnless(params, hash, options, _Utils2.default.isTruthlike(value));
-			}
-
-			/**
-	   * @method unless
-	   */
-
-		}, {
-			key: 'unless',
-			value: function unless(params, hash, options) {
-
-				// Get the value
-				var value = this._getValue(params[0]);
-				return this._ifUnless(params, hash, options, !_Utils2.default.isTruthlike(value));
-			}
-		}, {
-			key: '_ifUnless',
-			value: function _ifUnless(params, hash, options, show) {
-
-				// Is the param truth-like?
-				if (show) {
-
-					// Is it a yielding-if?
-					if (options.template.yield) {
-						options.template.yield();
-
-						// Or parameter-if?
-					} else {
-						return this._getValue(params[1]);
-					}
-				} else {
-
-					// Render the inverse yield
-					if (options.inverse.yield) {
-						options.inverse.yield();
-
-						// Or the inverse param
-					} else {
-						return params[2];
-					}
-				}
-			}
-
-			////////////
-			// Values //
-			////////////
-
-		}, {
-			key: 'concat',
-			value: function concat(params) {
-
-				return this._getValues(params).join('');
-			}
-
-			///////////
-			// Debug //
-			///////////
-
-		}, {
-			key: 'log',
-			value: function log(params) {
-				console.log.apply(console, this._getValues(params));
-			}
-		}, {
-			key: 'query-params',
-			value: function queryParams(params, hash) {
-				return _queryString2.default.stringify(this._getHashValues(hash));
-			}
-
-			//////////////
-			// Internal //
-			//////////////
-
-		}, {
-			key: '_getValue',
-			value: function _getValue(param) {
-				return this.renderer.hooks.getValue(param);
-			}
-		}, {
-			key: '_getValues',
-			value: function _getValues(params) {
+		_createClass(ActionBinding, [{
+			key: 'apply',
+			value: function apply() {
 				var _this = this;
 
-				return params.map(function (value) {
-					return _this._getValue(value);
-				});
-			}
-		}, {
-			key: '_getHashValues',
-			value: function _getHashValues(hash) {
-				var _this2 = this;
+				// Already applied?
+				if (this.isListening) return this;
+				this.isListening = true;
 
-				var result = {};
-				_underscore2.default.each(hash, function (value, key) {
-					result[key] = _this2._getValue(value);
+				// Get element
+				this.$element = (0, _jquery2.default)(this.morph.element);
+				this.$element.on(this.eventName, function (e) {
+
+					// Prevent default?
+					if (_this.options.preventDefault) e.preventDefault();
+
+					// Call the handler
+					var params = _underscore2.default.flatten([_this.parameters, _this, _this.view]);
+					_this.actionHandler.apply(_this.view, params);
 				});
-				return result;
 			}
 		}]);
 
-		return Helpers;
+		return ActionBinding;
 	}();
 
-	module.exports = Helpers;
+	ActionBinding.registry = new Map();
+	ActionBinding.register = function (binding) {
+
+		// Generate id
+		var id = _uuidLib2.default.raw();
+		ActionBinding.registry.set(id, binding);
+		return id;
+	};
+	ActionBinding.get = function (id) {
+		return ActionBinding.registry.get(id);
+	};
+
+	ActionBinding.getDefaultEventName = function (element) {
+
+		// Specific one for this tag?
+		var eventName = ActionBinding.DefaultEventNames[element.tagName.toLowerCase()];
+
+		// Or the old click.
+		if (!eventName) eventName = 'click';
+		return eventName;
+	};
+	ActionBinding.DefaultEventNames = {
+
+		input: 'change keyup paste',
+		select: 'change',
+		form: 'submit'
+	};
+
+	module.exports = ActionBinding;
 
 /***/ },
 /* 41 */
@@ -4632,6 +4667,210 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint no-console: ["error", { allow: ["log"] }] */
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _uuidLib = __webpack_require__(41);
+
+	var _uuidLib2 = _interopRequireDefault(_uuidLib);
+
+	var _queryString = __webpack_require__(27);
+
+	var _queryString2 = _interopRequireDefault(_queryString);
+
+	var _ActionBinding = __webpack_require__(40);
+
+	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
+
+	var _Utils = __webpack_require__(43);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Dom
+	 */
+	var Helpers = function () {
+
+		/**
+	  * @class Dom.Helpers
+	  *
+	  * @constructor 
+	  * @param  {Dom.Renderer} renderer
+	  */
+		function Helpers(renderer) {
+			_classCallCheck(this, Helpers);
+
+			this.renderer = renderer;
+		}
+
+		/////////////
+		// Actions //
+		/////////////
+
+		_createClass(Helpers, [{
+			key: 'action',
+			value: function action(params, attributeHash, options) {
+
+				// There should be an ActionBinding for this element
+				var element = options.element;
+				if (element && element.getAttribute('data-chicken-action')) {
+
+					// Get the action
+					var binding = _ActionBinding2.default.get(element.getAttribute('data-chicken-action'));
+					binding.apply();
+				} else {
+					throw new Error('The "action" keyword was not correctly configured in your Renderer...');
+				}
+			}
+
+			////////////////////////
+			// Control statements //
+			////////////////////////
+
+
+			/**
+	   * @method each
+	   */
+
+		}, {
+			key: 'each',
+			value: function each(params, attributeHash, options) {
+
+				// Get the value
+				var list = this._getValue(params[0]);
+				_Utils2.default.each(list, function (item, i) {
+					options.template.yieldItem('each-item-' + _uuidLib2.default.raw(), [item, i]);
+				});
+			}
+
+			/**
+	   * @method if	 
+	   */
+
+		}, {
+			key: 'if',
+			value: function _if(params, attributeHash, options) {
+
+				// Get the value
+				var value = this._getValue(params[0]);
+				return this._ifUnless(params, attributeHash, options, _Utils2.default.isTruthlike(value));
+			}
+
+			/**
+	   * @method unless
+	   */
+
+		}, {
+			key: 'unless',
+			value: function unless(params, attributeHash, options) {
+
+				// Get the value
+				var value = this._getValue(params[0]);
+				return this._ifUnless(params, attributeHash, options, !_Utils2.default.isTruthlike(value));
+			}
+		}, {
+			key: '_ifUnless',
+			value: function _ifUnless(params, attributeHash, options, show) {
+
+				// Is the param truth-like?
+				if (show) {
+
+					// Is it a yielding-if?
+					if (options.template.yield) {
+						options.template.yield();
+
+						// Or parameter-if?
+					} else {
+						return this._getValue(params[1]);
+					}
+				} else {
+
+					// Render the inverse yield
+					if (options.inverse.yield) {
+						options.inverse.yield();
+
+						// Or the inverse param
+					} else {
+						return params[2];
+					}
+				}
+			}
+
+			////////////
+			// Values //
+			////////////
+
+		}, {
+			key: 'concat',
+			value: function concat(params) {
+
+				return this._getValues(params).join('');
+			}
+
+			///////////
+			// Debug //
+			///////////
+
+		}, {
+			key: 'log',
+			value: function log(params) {
+				console.log.apply(console, this._getValues(params));
+			}
+		}, {
+			key: 'query-params',
+			value: function queryParams(params, attributeHash) {
+				return _queryString2.default.stringify(this._getHashValues(attributeHash));
+			}
+
+			//////////////
+			// Internal //
+			//////////////
+
+		}, {
+			key: '_getValue',
+			value: function _getValue(param) {
+				return this.renderer.hooks.getValue(param);
+			}
+		}, {
+			key: '_getValues',
+			value: function _getValues(params) {
+				var _this = this;
+
+				return params.map(function (value) {
+					return _this._getValue(value);
+				});
+			}
+		}, {
+			key: '_getHashValues',
+			value: function _getHashValues(attributeHash) {
+				var _this2 = this;
+
+				var result = {};
+				_underscore2.default.each(attributeHash, function (value, key) {
+					result[key] = _this2._getValue(value);
+				});
+				return result;
+			}
+		}]);
+
+		return Helpers;
+	}();
+
+	module.exports = Helpers;
+
+/***/ },
+/* 43 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _underscore = __webpack_require__(2);
@@ -4642,7 +4881,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(43);
+	var _ObservableArray = __webpack_require__(44);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -4697,7 +4936,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5155,7 +5394,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ObservableArray;
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5174,11 +5413,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Route = __webpack_require__(45);
+	var _Route = __webpack_require__(46);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _Request = __webpack_require__(51);
+	var _Request = __webpack_require__(52);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -5433,7 +5672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Router;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5452,7 +5691,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _RouteMatch = __webpack_require__(46);
+	var _RouteMatch = __webpack_require__(47);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
@@ -5854,7 +6093,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Route;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5865,7 +6104,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Action = __webpack_require__(47);
+	var _Action = __webpack_require__(48);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
@@ -6015,7 +6254,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = RouteMatch;
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6030,11 +6269,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _Controller = __webpack_require__(48);
+	var _Controller = __webpack_require__(49);
 
 	var _Controller2 = _interopRequireDefault(_Controller);
 
-	var _View = __webpack_require__(49);
+	var _View = __webpack_require__(50);
 
 	var _View2 = _interopRequireDefault(_View);
 
@@ -6333,7 +6572,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Action;
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6432,7 +6671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Controller;
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6453,17 +6692,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
 
-	var _App = __webpack_require__(50);
+	var _App = __webpack_require__(51);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Obj2 = __webpack_require__(31);
+	var _Observable2 = __webpack_require__(30);
 
-	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	var _Observable = __webpack_require__(30);
-
-	var _Observable2 = _interopRequireDefault(_Observable);
+	var _Observable3 = _interopRequireDefault(_Observable2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6476,8 +6711,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @module Dom
 	 */
-	var View = function (_Obj) {
-		_inherits(View, _Obj);
+	var View = function (_Observable) {
+		_inherits(View, _Observable);
 
 		/**
 	  * ## Creating a View
@@ -6537,7 +6772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * 	Chicken.view('//my-domain.com/chicken-templates/welcome.hbs');
 	  * 
 	  * @class Dom.View
-	  * @extends Core.Obj
+	  * @extends Core.Observable
 	  *
 	  * @constructor
 	  * @param {string} source   			The source for the view
@@ -6547,20 +6782,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			_classCallCheck(this, View);
 
 			/**
-	   * @property data
-	   * @type {Core.Observable}
-	   */
-			var _this = _possibleConstructorReturn(this, (View.__proto__ || Object.getPrototypeOf(View)).call(this));
-
-			_this.data = new _Observable2.default();
-
-			/**
 	   * Promises for data to load, keyed by the key
 	   * as provided in the `with` method
 	   * 
 	   * @property dataPromises
 	   * @type {Object}
 	   */
+			var _this = _possibleConstructorReturn(this, (View.__proto__ || Object.getPrototypeOf(View)).call(this));
+
 			_this.dataPromises = {};
 
 			/**
@@ -6583,6 +6812,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {HTMLBars template}
 	   */
 			_this.template = null;
+
+			/**
+	   * @property actions
+	   * @type {Object}
+	   */
+			_this.actions = {};
 
 			/**
 	   * @property renderer
@@ -6746,13 +6981,23 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Add to promises
 						this.dataPromises[key] = value;
 						this.loadPromises.push(value);
+						value.then(function (result) {
+							_this3.set(key, result, false);
+						});
 					} else {
 
 						// Set it now
-						this.data.set(key, value, true);
+						this.set(key, value, true);
 					}
 				}
 
+				return this;
+			}
+		}, {
+			key: 'action',
+			value: function action(key, callback) {
+
+				this.actions[key] = callback;
 				return this;
 			}
 
@@ -6784,7 +7029,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						_this4.template = _htmlbarsStandalone2.default.Compiler.compile(_this4.templateString);
 						try {
-							_this4.renderResult = _this4.template.render(_this4.data, _this4.renderer);
+							_this4.renderResult = _this4.template.render(_this4, _this4.renderer);
 						} catch (error) {
 							reject(error);
 							return;
@@ -6803,7 +7048,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						// and Binding classes.				
 
 						// Study the object
-						_this4.data.study(function () {
+						_this4.study(function () {
 							_this4.scheduleRevalidate();
 						});
 					});
@@ -6870,10 +7115,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function addToDOM($target) {
 
 				// Add to dom
-				$target.html(this.documentFragment);
+				var $view = (0, _jquery2.default)('<view/>');
+				$view.html(this.documentFragment);
+				$target.html($view);
 
 				// Get the element
-				this.$element = $target.find('>*');
+				this.$element = $view;
 
 				// Done!
 				this.resolvePromise('added', this);
@@ -6900,7 +7147,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}]);
 
 		return View;
-	}(_Obj3.default);
+	}(_Observable3.default);
 
 	/**
 	 * The TemplateCache is used to cache templates by their name. When you are
@@ -6931,7 +7178,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = View;
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6947,7 +7194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

@@ -3,6 +3,7 @@ import HTMLBars from 'htmlbars-standalone';
 
 import Observable from '~/Core/Observable';
 import Binding from '~/Dom/Binding';
+import ActionBinding from '~/Dom/ActionBinding';
 import Helpers from '~/Dom/Helpers';
 
 /**
@@ -56,6 +57,7 @@ class Renderer
 					keys.shift();
 					path = keys.join('.');
 				}
+
 
 				// No path? Return the whole data
 				if (path === '') return appliedScope;
@@ -117,9 +119,7 @@ class Renderer
 
 					// Is it a binding?
 					if (binding instanceof Binding) {	
-
 						binding.addMorph(morph);
-
 					}
 
 				});
@@ -133,14 +133,55 @@ class Renderer
 				return renderer.helpers[helperName];
 			},
 
-			invokeHelper: (morph, env, scope, visitor, params, hash, helper, templates) => {
+			invokeHelper: (morph, env, scope, visitor, params, attributeHash, helper, templates) => {
 				
 				// Call it with its own context
 				return { 
-					value: helper.call(this.helpers, params, hash, templates)
+					value: helper.call(this.helpers, params, attributeHash, templates)
 				};
 
-			}
+			},
+
+			keywords: _.defaults({
+
+				/**
+				 * The action keyword creates an ActionBinding instance and 
+				 * stores it on the element. The `action` helper can then use 
+				 * this ActionBinding to apply it on the DOM.
+				 *
+				 * @method keywords.action
+				 */
+				action: (morph, renderer, scope, params, attributeHash) => {
+					
+					// Get action scope
+					let appliedScope;
+					if (scope.localPresent['actions'] && scope.locals.actions[params[0]]) {
+
+						// Use local action
+						appliedScope = scope.locals;
+
+					} else if (scope.self.actions && scope.self.actions[params[0]]) {
+
+						// Use that
+						appliedScope = scope.self;
+
+					} else {
+
+						// Undefined action.
+						throw new Error('Could not find action "' + params[0] + '" within the scope');
+
+					}
+
+					// Get action
+					let actionCallback = appliedScope.actions[params[0]];
+					let parameters = params.slice(1);
+
+					// Create action binding
+					morph.actionBinding = new ActionBinding(morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
+					
+				}
+
+			}, HTMLBars.Runtime.Hooks.Default.keywords)
 
 		}, HTMLBars.Runtime.Hooks.Default);
 

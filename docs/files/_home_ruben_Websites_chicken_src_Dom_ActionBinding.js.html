@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Core/SettingsObject.js</title>
+    <title>/home/ruben/Websites/chicken/src/Dom/ActionBinding.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -126,80 +126,176 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Core/SettingsObject.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/ActionBinding.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 import _ from &#x27;underscore&#x27;;
-
-import Observable from &#x27;~/Core/Observable&#x27;;
-import Chainable from &#x27;~/Helpers/Chainable&#x27;;
+import $ from &#x27;jquery&#x27;;
+import Uuid from &#x27;uuid-lib&#x27;;
 
 /**
- * @module Core
+ * @module Dom
  */
-class SettingsObject extends Observable
+class ActionBinding
 {
 
 	/**
-	 * @class Core.SettingsObject
-	 * @extends Core.Observable
-	 *
+	 * @class Dom.ActionBinding
+	 * 
 	 * @constructor
-	 * @param {object}  defaultSettings  	Initialize with these default settings
-	 * @param {array}   [allowedKeys] 		Optional array of allowed keys. By default all keys are allowed	 
 	 */
-	constructor(defaultSettings = {}, allowedKeys = []) {
-		
-		// Instantiate with default settings
-		super(defaultSettings);
+	constructor(morph, actionName, actionHandler, parameters, options, view) {
 
 		/**
-		 * @property allowedKeys
-		 * @type Array
+		 * @property morph
+		 * @type {HTMLBarsMorph}
 		 */
-		this.allowedKeys = allowedKeys;
-		
-	}
+		this.morph = morph;
 
-	/**
-	 * Apply given settings
-	 *
-	 * @method apply
-	 * @param {object} 	settings	A hash-object with keys and values
-	 * @chainable
-	 */
-	apply(settings) {
+		/**
+		 * The name of the action on the view
+		 * 
+		 * @property actionName
+		 * @type {string}
+		 */
+		this.actionName = actionName;
 
-		// Apply each key individually
-		_.each(settings, (value, key) =&gt; {
-			this.set(key, value);			
+		/**
+		 * The function to call when the action is executed
+		 * 
+		 * @property actionHandler
+		 * @type {function}
+		 */
+		this.actionHandler = actionHandler;
+
+		/**
+		 * @property options
+		 * @type {object}
+		 */
+		this.options = _.defaults(options, {
+			preventDefault: true
 		});
 
-		return this;
+		/**
+		 * The parameters that will be passed along to the action handler.
+		 * 
+		 * @property parameters
+		 * @type {array}
+		 */
+		this.parameters = parameters;
+
+		/**
+		 * @property view
+		 * @type {Dom.View}
+		 */
+		this.view = view;
+
+
+		/**
+		 * The name of the event that is listened to on the element.
+		 * When not specifically configured in the binding itself, a default
+		 * event will be decided on, based on the element tag name. 
+		 * 
+		 * @property eventName
+		 * @type {string}
+		 */
+		this.eventName = options.on ? options.on : ActionBinding.getDefaultEventName(morph.element);
+
+		/**
+		 * Indicator whether the binding is applied
+		 * to the element
+		 * 
+		 * @property isListening
+		 * @type {Boolean}
+		 */
+		this.isListening = false;
+
+
+		/**
+		 * @property $element
+		 * @type {jQuery}
+		 */
+		this.$element = null;
+
+		/**
+		 * The unique identifier for this ActionBinding. This is used
+		 * by the Helper to retrieve this instance and automatically
+		 * generated in the constructor.
+		 * 
+		 * @property id
+		 * @type {string}
+		 */
+		this.id = ActionBinding.register(this);
+
+		// Store this binding on the element
+		morph.element.setAttribute(&#x27;data-chicken-action&#x27;, this.id);
+
+
+
+
 
 	}
 
+	apply() {
 
-	// Extra check for allowedKeys.
-	set(key, value) {
+		// Already applied?
+		if (this.isListening) return this;
+		this.isListening = true;
 
-		// Is it allowed?
-		if (this.allowedKeys &amp;&amp; this.allowedKeys.length &gt; 0 &amp;&amp; !_.contains(this.allowedKeys,key)) {
-			throw new Error(&#x27;This SettingsObject does not have a setting for &quot;&#x27; + key + &#x27;&quot;. The allowed settings are: &#x27; + this.allowedKeys.join(&#x27;, &#x27;));
-		}
+		// Get element
+		this.$element = $(this.morph.element);
+		this.$element.on(this.eventName, (e) =&gt; {
 
-		// Do it.
-		return super.set(key, value);
-	
+			// Prevent default?
+			if (this.options.preventDefault) e.preventDefault();
 
-	} 
+			// Call the handler
+			var params = _.flatten([this.parameters, this, this.view]);
+			this.actionHandler.apply(this.view, params);
 
+		});
+
+
+	}
 
 }
 
+ActionBinding.registry = new Map();
+ActionBinding.register = (binding) =&gt; {
 
-module.exports = Chainable(SettingsObject);
+	// Generate id
+	var id = Uuid.raw();
+	ActionBinding.registry.set(id, binding);
+	return id;
+
+};
+ActionBinding.get = (id) =&gt; {
+	return ActionBinding.registry.get(id);
+};
+
+
+ActionBinding.getDefaultEventName = (element) =&gt; {
+
+	// Specific one for this tag?
+	var eventName = ActionBinding.DefaultEventNames[element.tagName.toLowerCase()];
+
+	// Or the old click.
+	if (!eventName) eventName = &#x27;click&#x27;;
+	return eventName;
+
+
+};
+ActionBinding.DefaultEventNames = {
+
+	input: &#x27;change keyup paste&#x27;,
+	select: &#x27;change&#x27;,
+	form: &#x27;submit&#x27;	
+};
+
+
+
+module.exports = ActionBinding;
     </pre>
 </div>
 

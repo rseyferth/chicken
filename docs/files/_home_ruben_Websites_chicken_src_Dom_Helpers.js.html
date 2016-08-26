@@ -51,6 +51,8 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
+            
                 <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
@@ -134,6 +136,7 @@ import _ from &#x27;underscore&#x27;;
 import Uuid from &#x27;uuid-lib&#x27;;
 import QueryString from &#x27;query-string&#x27;;
 
+import ActionBinding from &#x27;~/Dom/ActionBinding&#x27;;
 import Utils from &#x27;~/Helpers/Utils&#x27;;
 
 /**
@@ -153,6 +156,28 @@ class Helpers
 	}
 
 
+	/////////////
+	// Actions //
+	/////////////
+
+	action(params, attributeHash, options) {
+		
+		// There should be an ActionBinding for this element
+		let element = options.element;
+		if (element &amp;&amp; element.getAttribute(&#x27;data-chicken-action&#x27;)) {
+			
+			// Get the action
+			var binding = ActionBinding.get(element.getAttribute(&#x27;data-chicken-action&#x27;));
+			binding.apply();
+
+
+		} else {
+			throw new Error(&#x27;The &quot;action&quot; keyword was not correctly configured in your Renderer...&#x27;);
+		}
+
+	}
+
+
 	////////////////////////
 	// Control statements //
 	////////////////////////
@@ -161,7 +186,7 @@ class Helpers
 	/**
 	 * @method each
 	 */
-	each(params, hash, options) {
+	each(params, attributeHash, options) {
 
 		// Get the value
 		let list = this._getValue(params[0]);
@@ -174,26 +199,26 @@ class Helpers
 	/**
 	 * @method if	 
 	 */
-	if(params, hash, options) {
+	if(params, attributeHash, options) {
 
 		// Get the value
 		let value = this._getValue(params[0]);
-		return this._ifUnless(params, hash, options, Utils.isTruthlike(value));		
+		return this._ifUnless(params, attributeHash, options, Utils.isTruthlike(value));		
 
 	}
 
 	/**
 	 * @method unless
 	 */
-	unless(params, hash, options) {
+	unless(params, attributeHash, options) {
 
 		// Get the value
 		let value = this._getValue(params[0]);
-		return this._ifUnless(params, hash, options, !Utils.isTruthlike(value));		
+		return this._ifUnless(params, attributeHash, options, !Utils.isTruthlike(value));		
 
 	}
 
-	_ifUnless(params, hash, options, show) {
+	_ifUnless(params, attributeHash, options, show) {
 
 		// Is the param truth-like?
 		if (show) {
@@ -241,8 +266,8 @@ class Helpers
 		console.log.apply(console, this._getValues(params));
 	}
 
-	&#x27;query-params&#x27;(params, hash) {
-		return QueryString.stringify(this._getHashValues(hash));		
+	&#x27;query-params&#x27;(params, attributeHash) {
+		return QueryString.stringify(this._getHashValues(attributeHash));		
 	}
 
 
@@ -260,9 +285,9 @@ class Helpers
 			return this._getValue(value);
 		});
 	}
-	_getHashValues(hash) {
+	_getHashValues(attributeHash) {
 		var result = {};
-		_.each(hash, (value, key) =&gt; {
+		_.each(attributeHash, (value, key) =&gt; {
 			result[key] = this._getValue(value);
 		});
 		return result;

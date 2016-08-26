@@ -4,6 +4,7 @@ import _ from 'underscore';
 import Uuid from 'uuid-lib';
 import QueryString from 'query-string';
 
+import ActionBinding from '~/Dom/ActionBinding';
 import Utils from '~/Helpers/Utils';
 
 /**
@@ -23,6 +24,28 @@ class Helpers
 	}
 
 
+	/////////////
+	// Actions //
+	/////////////
+
+	action(params, attributeHash, options) {
+		
+		// There should be an ActionBinding for this element
+		let element = options.element;
+		if (element && element.getAttribute('data-chicken-action')) {
+			
+			// Get the action
+			var binding = ActionBinding.get(element.getAttribute('data-chicken-action'));
+			binding.apply();
+
+
+		} else {
+			throw new Error('The "action" keyword was not correctly configured in your Renderer...');
+		}
+
+	}
+
+
 	////////////////////////
 	// Control statements //
 	////////////////////////
@@ -31,7 +54,7 @@ class Helpers
 	/**
 	 * @method each
 	 */
-	each(params, hash, options) {
+	each(params, attributeHash, options) {
 
 		// Get the value
 		let list = this._getValue(params[0]);
@@ -44,26 +67,26 @@ class Helpers
 	/**
 	 * @method if	 
 	 */
-	if(params, hash, options) {
+	if(params, attributeHash, options) {
 
 		// Get the value
 		let value = this._getValue(params[0]);
-		return this._ifUnless(params, hash, options, Utils.isTruthlike(value));		
+		return this._ifUnless(params, attributeHash, options, Utils.isTruthlike(value));		
 
 	}
 
 	/**
 	 * @method unless
 	 */
-	unless(params, hash, options) {
+	unless(params, attributeHash, options) {
 
 		// Get the value
 		let value = this._getValue(params[0]);
-		return this._ifUnless(params, hash, options, !Utils.isTruthlike(value));		
+		return this._ifUnless(params, attributeHash, options, !Utils.isTruthlike(value));		
 
 	}
 
-	_ifUnless(params, hash, options, show) {
+	_ifUnless(params, attributeHash, options, show) {
 
 		// Is the param truth-like?
 		if (show) {
@@ -111,8 +134,8 @@ class Helpers
 		console.log.apply(console, this._getValues(params));
 	}
 
-	'query-params'(params, hash) {
-		return QueryString.stringify(this._getHashValues(hash));		
+	'query-params'(params, attributeHash) {
+		return QueryString.stringify(this._getHashValues(attributeHash));		
 	}
 
 
@@ -130,9 +153,9 @@ class Helpers
 			return this._getValue(value);
 		});
 	}
-	_getHashValues(hash) {
+	_getHashValues(attributeHash) {
 		var result = {};
-		_.each(hash, (value, key) => {
+		_.each(attributeHash, (value, key) => {
 			result[key] = this._getValue(value);
 		});
 		return result;
