@@ -13,7 +13,13 @@ class ActionBinding
 	 * 
 	 * @constructor
 	 */
-	constructor(morph, actionName, actionHandler, parameters, options, view) {
+	constructor(renderer, morph, actionName, actionHandler, parameters, options, view) {
+
+		/**
+		 * @property renderer
+		 * @type {Dom.Renderer}
+		 */
+		this.renderer = renderer;
 
 		/**
 		 * @property morph
@@ -108,8 +114,9 @@ class ActionBinding
 	apply() {
 
 		// Already applied?
-		if (this.isListening) return this;
+		if (this.isListening === true) return this;
 		this.isListening = true;
+
 
 		// Get element
 		this.$element = $(this.morph.element);
@@ -119,11 +126,18 @@ class ActionBinding
 			if (this.options.preventDefault) e.preventDefault();
 
 			// Call the handler
-			var params = _.flatten([this.parameters, this, this.view]);
+			var params = _.flatten([
+				_.map(this.parameters, (value) => {
+					return this.renderer.hooks.getValue(value);
+				}), 
+				this, 
+				this.view
+			]);
 			this.actionHandler.apply(this.view, params);
 
 		});
 
+		return this;
 
 	}
 

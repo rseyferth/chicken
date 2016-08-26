@@ -210,7 +210,8 @@ A view takes care of rendering the data to proper HTML, and keeping both the dat
 to date. For templating we use HTMLBars, which uses [Handlebars syntax](https://handlebarsjs.com).
 
 ### Example
-A small example to illustrate one-way and two-way binding:
+A small example to illustrate one-way and two-way binding and actions. This all works in much the same way
+as [Ember templates](https://guides.emberjs.com/v2.7.0/templates/handlebars-basics/) do.
 
 **app/js/controllers/HomeController.js**
 ```javascript
@@ -218,27 +219,25 @@ A small example to illustrate one-way and two-way binding:
 index() {
   return Chicken.view('home.index')
     .with({
-      positive: false,
-      title: 'Do you like this page?'
+      name: ''
     })
-    .when('added', (view) => {
-    
-      view.$element.find('button').on('click', (e) => {
-        view.data.set('positive', true);
-        view.data.set('title', 'Thank you!');
-      });
-    
+    .action('log', function(name, actionBinding, view) {
+        
+      // These are all the same
+      console.log(name, this.get('name'), view.get('name'));  
+
+      // This is the $element that caused the action to be called
+      actionBinding.$element.text('I was ' + actionBinding.eventName + 'ed!');
+                    
     });
-    
 }
 ```
 
 **app/views/home/index.hbs**
 ```handlebars
-<h1>{{title}}</h1>
-{{#unless positive}}
-  <button>I like it!</button>
-{{/unless}}
+<h1>Hello {{name}}</h1>
+<input type="text" value={{name}} placeholder="Enter your name here...">
+<button {{action "log" name}}>Log it.</button>
 ```
 
 Note: Soon we'll add `actions` (like Ember), so you can simplify the on-click behaviors.

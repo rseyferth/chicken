@@ -3949,8 +3949,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
 	var _underscore = __webpack_require__(2);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
@@ -3982,213 +3980,194 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @module Dom
 	 */
-	var Renderer = function () {
+	var Renderer =
+
+	/**
+	 * @class Dom.Renderer
+	 * 
+	 * @constructor
+	 */
+	function Renderer() {
+		var _this = this;
+
+		_classCallCheck(this, Renderer);
 
 		/**
-	  * @class Dom.Renderer
-	  * 
-	  * @constructor
+	  * @property dom
+	  * @type {HTMLBars.DOMHelper}
 	  */
-		function Renderer() {
-			var _this = this;
+		this.dom = new _htmlbarsStandalone2.default.DOMHelper();
 
-			_classCallCheck(this, Renderer);
+		/**
+	  * Hooks are the way to configure the way HTMLBars renders your
+	  * templates. Renderer comes pre-configured with hooks that allow you
+	  * to bind to Observables (models) and ObservableArrays (collections).
+	  * 
+	  * @property hooks
+	  * @type {object}
+	  */
+		this.hooks = _underscore2.default.defaults({
 
 			/**
-	   * @property dom
-	   * @type {HTMLBars.DOMHelper}
-	   */
-			this.dom = new _htmlbarsStandalone2.default.DOMHelper();
-
-			/**
-	   * Hooks are the way to configure the way HTMLBars renders your
-	   * templates. Renderer comes pre-configured with hooks that allow you
-	   * to bind to Observables (models) and ObservableArrays (collections).
+	   * The `get` hook is responsible for retrieving Bindings from the data store.
 	   * 
-	   * @property hooks
-	   * @type {object}
+	   * @method hooks.get
+	   * @param  {Renderer} 	renderer   	The Renderer instance (this)
+	   * @param  {Scope} 		scope 		The Scope in which the `get` was called, 
+	   *                           		containing the data that is available in this Scope
+	   * @param  {string} 	path 		The path (key) of the variable to retrieve 		
+	   * @return {mixed}     	The retrieved value
 	   */
-			this.hooks = _underscore2.default.defaults({
+			get: function get(renderer, scope, path) {
 
-				/**
-	    * The `get` hook is responsible for retrieving Bindings from the data store.
-	    * 
-	    * @method hooks.get
-	    * @param  {Renderer} 	renderer   	The Renderer instance (this)
-	    * @param  {Scope} 		scope 		The Scope in which the `get` was called, 
-	    *                           		containing the data that is available in this Scope
-	    * @param  {string} 	path 		The path (key) of the variable to retrieve 		
-	    * @return {mixed}     	The retrieved value
-	    */
-				get: function get(renderer, scope, path) {
+				// Get first part
+				var keys = path.split(/\./);
 
-					// Get first part
-					var keys = path.split(/\./);
+				// Look into local data
+				var appliedScope = scope.self;
+				if (scope.localPresent[keys[0]]) {
+					appliedScope = scope.locals[keys[0]];
+					keys.shift();
+					path = keys.join('.');
+				}
 
-					// Look into local data
-					var appliedScope = scope.self;
-					if (scope.localPresent[keys[0]]) {
-						appliedScope = scope.locals[keys[0]];
-						keys.shift();
-						path = keys.join('.');
-					}
+				// No path? Return the whole data
+				if (path === '') return appliedScope;
 
-					// No path? Return the whole data
-					if (path === '') return appliedScope;
+				// Is data an observable?
+				if (appliedScope instanceof _Observable2.default) {
 
-					// Is data an observable?
-					if (appliedScope instanceof _Observable2.default) {
+					// Create a binding
+					var binding = new _Binding2.default(_this, appliedScope, path);
 
-						// Create a binding
-						var binding = new _Binding2.default(_this, appliedScope, path);
-
-						// Get the value
-						return binding;
-					} else {
-
-						// Do native thing (deep-get)
-						var value = _this.hooks.getRoot(scope, keys[0])[0];
-						for (var i = 1; i < keys.length; i++) {
-							if (value) {
-								value = _this.hooks.getChild(value, keys[i]);
-							} else {
-								break;
-							}
-						}
-					}
-
-					return value;
-				},
-
-				/**
-	    * Get value from reference (Binding)
-	    *
-	    * @method hooks.getValue
-	    * @param  {Binding} reference 
-	    * @return {mixed}           
-	    */
-				getValue: function getValue(reference) {
-					return reference instanceof _Binding2.default ? reference.getValue() : reference;
-				},
-
-				/**
-	    * Link a morph to one or more values (in our case Bindings)
-	    *
-	    * @method hooks.linksRenderNode
-	    * @param  {HTMLBarsMorph} morph    
-	    * @param  {Dom.Renderer} renderer 
-	    * @param  {Scope} scope    
-	    * @param  {string} type   				Values can be `@range`, `@attribute`, or helper names
-	    * @param  {array} values     			Array of values that have been linked to the morph. The should be Binding instances
-	    * @return {[type]}          [description]
-	    */
-				linkRenderNode: function linkRenderNode(morph, renderer, scope, type, values) {
-
-					// Add this morph to all involved bindings
-					_underscore2.default.each(values, function (binding) {
-
-						// Is it a binding?
-						if (binding instanceof _Binding2.default) {
-							binding.addMorph(morph);
-						}
-					});
-				},
-
-				lookupHelper: function lookupHelper(renderer, scope, helperName) {
-					if (!renderer.helpers[helperName]) {
-						throw new Error('There is no helper registered with the name "' + helperName + '"');
-					}
-					return renderer.helpers[helperName];
-				},
-
-				invokeHelper: function invokeHelper(morph, env, scope, visitor, params, attributeHash, helper, templates) {
-
-					// Call it with its own context
-					return {
-						value: helper.call(_this.helpers, params, attributeHash, templates)
-					};
-				},
-
-				keywords: _underscore2.default.defaults({
-
-					/**
-	     * The action keyword creates an ActionBinding instance and 
-	     * stores it on the element. The `action` helper can then use 
-	     * this ActionBinding to apply it on the DOM.
-	     *
-	     * @method keywords.action
-	     */
-					action: function action(morph, renderer, scope, params, attributeHash) {
-
-						// Get action scope
-						var appliedScope = void 0;
-						if (scope.localPresent['actions'] && scope.locals.actions[params[0]]) {
-
-							// Use local action
-							appliedScope = scope.locals;
-						} else if (scope.self.actions && scope.self.actions[params[0]]) {
-
-							// Use that
-							appliedScope = scope.self;
-						} else {
-
-							// Undefined action.
-							throw new Error('Could not find action "' + params[0] + '" within the scope');
-						}
-
-						// Get action
-						var actionCallback = appliedScope.actions[params[0]];
-						var parameters = params.slice(1);
-
-						// Create action binding
-						morph.actionBinding = new _ActionBinding2.default(morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
-					}
-
-				}, _htmlbarsStandalone2.default.Runtime.Hooks.Default.keywords)
-
-			}, _htmlbarsStandalone2.default.Runtime.Hooks.Default);
-
-			/**
-	   * @property helpers
-	   * @type {Dom.Helpers}
-	   */
-			this.helpers = new _Helpers2.default(this);
-
-			/**
-	   * @property partials
-	   * @type {Object}
-	   */
-			this.partials = {};
-
-			/**
-	   * @property useFragmentCache
-	   * @default true
-	   * @type {Boolean}
-	   */
-			this.useFragmentCache = true;
-		}
-
-		_createClass(Renderer, [{
-			key: 'applyValue',
-			value: function applyValue(morph, value) {
-
-				// Is it a Binding
-				if (value instanceof _Binding2.default) {
-
-					// Apply it
-					value.applyValue(morph);
+					// Get the value
+					return binding;
 				} else {
 
-					// Just set the value
-					value = this.hooks.getValue(value);
-					if (morph.lastValue !== value) morph.setContent(value);
-					morph.lastValue = value;
+					// Do native thing (deep-get)
+					var value = _this.hooks.getRoot(scope, keys[0])[0];
+					for (var i = 1; i < keys.length; i++) {
+						if (value) {
+							value = _this.hooks.getChild(value, keys[i]);
+						} else {
+							break;
+						}
+					}
 				}
-			}
-		}]);
 
-		return Renderer;
-	}();
+				return value;
+			},
+
+			/**
+	   * Get value from reference (Binding)
+	   *
+	   * @method hooks.getValue
+	   * @param  {Binding} reference 
+	   * @return {mixed}           
+	   */
+			getValue: function getValue(reference) {
+				return reference instanceof _Binding2.default ? reference.getValue() : reference;
+			},
+
+			/**
+	   * Link a morph to one or more values (in our case Bindings)
+	   *
+	   * @method hooks.linksRenderNode
+	   * @param  {HTMLBarsMorph} morph    
+	   * @param  {Dom.Renderer} renderer 
+	   * @param  {Scope} scope    
+	   * @param  {string} type   				Values can be `@range`, `@attribute`, or helper names
+	   * @param  {array} values     			Array of values that have been linked to the morph. The should be Binding instances
+	   * @return {[type]}          [description]
+	   */
+			linkRenderNode: function linkRenderNode(morph, renderer, scope, type, values) {
+
+				// Add this morph to all involved bindings
+				_underscore2.default.each(values, function (binding) {
+
+					// Is it a binding?
+					if (binding instanceof _Binding2.default) {
+						binding.addMorph(morph);
+					}
+				});
+			},
+
+			lookupHelper: function lookupHelper(renderer, scope, helperName) {
+				if (!renderer.helpers[helperName]) {
+					throw new Error('There is no helper registered with the name "' + helperName + '"');
+				}
+				return renderer.helpers[helperName];
+			},
+
+			invokeHelper: function invokeHelper(morph, env, scope, visitor, params, attributeHash, helper, templates) {
+
+				// Call it with its own context
+				return {
+					value: helper.call(_this.helpers, params, attributeHash, templates)
+				};
+			},
+
+			keywords: _underscore2.default.defaults({
+
+				/**
+	    * The action keyword creates an ActionBinding instance and 
+	    * stores it on the element. The `action` helper can then use 
+	    * this ActionBinding to apply it on the DOM.
+	    *
+	    * @method keywords.action
+	    */
+				action: function action(morph, renderer, scope, params, attributeHash) {
+
+					// Check binding
+					if (morph.actionBindings) return;
+
+					// Get action scope
+					var appliedScope = void 0;
+					if (scope.localPresent['actions'] && scope.locals.actions[params[0]]) {
+
+						// Use local action
+						appliedScope = scope.locals;
+					} else if (scope.self.actions && scope.self.actions[params[0]]) {
+
+						// Use that
+						appliedScope = scope.self;
+					} else {
+
+						// Undefined action.
+						throw new Error('Could not find action "' + params[0] + '" within the scope');
+					}
+
+					// Get action
+					var actionCallback = appliedScope.actions[params[0]];
+					var parameters = params.slice(1);
+
+					// Create action binding
+					morph.actionBindings = new _ActionBinding2.default(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
+				}
+
+			}, _htmlbarsStandalone2.default.Runtime.Hooks.Default.keywords)
+
+		}, _htmlbarsStandalone2.default.Runtime.Hooks.Default);
+
+		/**
+	  * @property helpers
+	  * @type {Dom.Helpers}
+	  */
+		this.helpers = new _Helpers2.default(this);
+
+		/**
+	  * @property partials
+	  * @type {Object}
+	  */
+		this.partials = {};
+
+		/**
+	  * @property useFragmentCache
+	  * @default true
+	  * @type {Boolean}
+	  */
+		this.useFragmentCache = true;
+	};
 
 	module.exports = Renderer;
 
@@ -4450,8 +4429,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * 
 	  * @constructor
 	  */
-		function ActionBinding(morph, actionName, actionHandler, parameters, options, view) {
+		function ActionBinding(renderer, morph, actionName, actionHandler, parameters, options, view) {
 			_classCallCheck(this, ActionBinding);
+
+			/**
+	   * @property renderer
+	   * @type {Dom.Renderer}
+	   */
+			this.renderer = renderer;
 
 			/**
 	   * @property morph
@@ -4542,7 +4527,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var _this = this;
 
 				// Already applied?
-				if (this.isListening) return this;
+				if (this.isListening === true) return this;
 				this.isListening = true;
 
 				// Get element
@@ -4553,9 +4538,13 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (_this.options.preventDefault) e.preventDefault();
 
 					// Call the handler
-					var params = _underscore2.default.flatten([_this.parameters, _this, _this.view]);
+					var params = _underscore2.default.flatten([_underscore2.default.map(_this.parameters, function (value) {
+						return _this.renderer.hooks.getValue(value);
+					}), _this, _this.view]);
 					_this.actionHandler.apply(_this.view, params);
 				});
+
+				return this;
 			}
 		}]);
 

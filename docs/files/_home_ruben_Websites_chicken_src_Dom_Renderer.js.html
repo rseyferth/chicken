@@ -285,6 +285,9 @@ class Renderer
 				 */
 				action: (morph, renderer, scope, params, attributeHash) =&gt; {
 					
+					// Check binding
+					if (morph.actionBindings) return;
+
 					// Get action scope
 					let appliedScope;
 					if (scope.localPresent[&#x27;actions&#x27;] &amp;&amp; scope.locals.actions[params[0]]) {
@@ -309,8 +312,8 @@ class Renderer
 					let parameters = params.slice(1);
 
 					// Create action binding
-					morph.actionBinding = new ActionBinding(morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
-					
+					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
+
 				}
 
 			}, HTMLBars.Runtime.Hooks.Default.keywords)
@@ -339,25 +342,6 @@ class Renderer
 		 * @type {Boolean}
 		 */
 		this.useFragmentCache = true;
-
-	}
-
-	applyValue(morph, value)  {
-
-		// Is it a Binding
-		if (value instanceof Binding) {
-
-			// Apply it
-			value.applyValue(morph);
-
-		} else {
-
-			// Just set the value
-			value = this.hooks.getValue(value);
-			if (morph.lastValue !== value) morph.setContent(value);
-			morph.lastValue = value;
-
-		}
 
 	}
 
