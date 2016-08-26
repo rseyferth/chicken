@@ -50,6 +50,9 @@ class ViewContainer extends Element
 		this.currentAction = null;
 
 
+		this.currentView = null;
+
+
 	}
 
 	/**
@@ -66,24 +69,32 @@ class ViewContainer extends Element
 
 	/**
 	 * @method setActionContent
-	 * @param {Routing.Action} 		action 				The Action instance that rendered the content
 	 * @param {string} 				content 			The (HTML) content to render
 	 * @param {boolean}				setLoadingFalse		Whether to set the loading-state to false
 	 * @chainable
 	 */
-	setActionContent(action, content, setLoadingFalse = true) {
-
-		// Store action.
-		this.currentAction = action;
+	setContent(content, setLoadingFalse = true) {
 
 		// Set HTML
-		this.setContent(content);
+		super.setContent(content);
 
 		// No longer loading
 		if (setLoadingFalse) this.setLoading(false);
 
 		return this;
 
+	}
+
+	setView(view) {
+
+		this.currentView = view;
+		return this;
+
+	}
+
+	setAction(action) {
+		this.currentAction = action;
+		return this;
 	}
 
 

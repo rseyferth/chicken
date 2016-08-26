@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/ruben/Websites/chicken/src/Dom/Binding.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -122,73 +122,224 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Binding.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
+import $ from &#x27;jquery&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
+/**
+ * @module Dom
+ */
+class Binding
+{
 
-    
-</div>
+	/**
+	 * @class Dom.Binding
+	 * 
+	 * @constructor
+	 * @param  {Dom.Renderer} 							renderer   
+	 * @param  {Core.Observable|Core.ObservableArray} 	observable 
+	 * @param  {string} 								path       	
+	 */
+	constructor(renderer, observable, path) {
+
+		/**
+		 * The Renderer this Binding has been created by. This is 
+		 * used to be able to hook back into Rendere functions.
+		 *
+		 * @property renderer
+		 * @type {Dom.Renderer}
+		 */
+		this.renderer = renderer;
+
+		/**
+		 * The Observable (or ObservableArray) that contains the data.
+		 * 
+		 * @property observable
+		 * @type {Core.Observable|Core.ObservableArray}
+		 */
+		this.observable = observable;
+
+		/**
+		 * The path/key in the Observable to observe
+		 * @type {string}
+		 */
+		this.path = path;
+
+
+		/**
+		 * The list of &#x27;morph&#x27; objects that are bound by this Binding. A
+		 * morph refers to a specific part of the DocumentFragment that can be
+		 * updated. These morphs are provides by the HTMLBars package.
+		 * 
+		 * @property morphs
+		 * @type {Array} 
+		 */
+		this.morphs = [];
+
+
+		////////////////
+		// Now watch! //
+		////////////////
+
+		this.observable.observe(path, () =&gt; {
+
+			// Trigger updates for all morphs
+			_.each(this.morphs, (morph) =&gt; {
+				this.applyValue(morph);				
+			});
+
+		});
+
+	}
+
+	/**
+	 * Get the current value of the data object
+	 *
+	 * @method getValue
+	 * @return {mixed}
+	 */
+	getValue() {
+		return this.observable.get(this.path);
+	}
+
+
+	setValue(value) {
+		return this.observable.set(this.path, value);
+	}
 
 
 
-<div class="box intro">
-    
-</div>
+	/**
+	 * Add a morph object to the list of morphs, so that it will
+	 * be updated when the data changes. And in cases when applicable,
+	 * vice-versa.
+	 *
+	 * @method addMorph
+	 * @param {HTMLBarsMorph} morph 
+	 */
+	addMorph(morph) {
+
+		//////////////////////////////////////////
+		// Add the morph, for data-&gt;dom binding //
+		//////////////////////////////////////////
+
+		this.morphs.push(morph);
+
+
+		///////////////////////////////////////////
+		// Check node type for dom-&gt;data binding //
+		///////////////////////////////////////////
+		
+		for (var key in Binding.TwoWay) {
+
+			// Check if it applies
+			var twoWay = Binding.TwoWay[key];
+			if (twoWay.match(morph)) {
+
+				// Let&#x27;s bind!
+				twoWay.bind(this, morph);
+				break;
+			}
+
+		}
+
+	}
+
+
+	/**
+	 * Apply the current value to the given morph
+	 *
+	 * @method applyValue
+	 * @param  {HTMLBarsMorph} 	morph
+	 */
+	applyValue(morph) {
+
+		// Set it		
+		morph.setContent(this.renderer.hooks.getValue(this));
+
+	}
+
+}
+
+
+Binding.TwoWay = {
+	
+	InputValue: {
+		match: (morph) =&gt; {
+			return morph.element &amp;&amp; /^INPUT$/.test(morph.element.tagName) 
+				&amp;&amp; morph.attrName === &#x27;value&#x27;
+				&amp;&amp; /^text|password|number|email$/.test(morph.element.type);
+		},
+		bind: (binding, morph) =&gt; {
+
+			// Listen to key up, etc
+			var $element = $(morph.element);
+			$element.on(&#x27;keyup change paste&#x27;, () =&gt; {
+				binding.setValue($element.val());
+			});
+
+		}
+	},
+
+	TextareaContent: {
+		match: (morph) =&gt; {
+			return morph.contextualElement &amp;&amp; /^TEXTAREA$/.test(morph.contextualElement.tagName) &amp;&amp; morph.attributeName === undefined;
+		},
+		bind: (binding, morph) =&gt; {
+
+			// Listen to key up, etc
+			var $element = $(morph.contextualElement);
+			$element.on(&#x27;keyup change paste&#x27;, () =&gt; {
+				binding.setValue($element.val());
+			});
+
+		}
+
+	},
+
+	SelectValue: {
+		match: (morph) =&gt; {
+			return morph.element &amp;&amp; /^SELECT$/.test(morph.element.tagName) &amp;&amp; morph.attrName === &#x27;value&#x27;;
+		},
+		bind: (binding, morph) =&gt; {
+
+			// Listen to change
+			var $element = $(morph.element);
+			$element.on(&#x27;change&#x27;, () =&gt; {
+				binding.setValue($element.val());
+			});
+
+		}
+
+	},
+
+	CheckboxChecked: {
+		match: (morph) =&gt; {
+			return morph.element &amp;&amp; /^INPUT$/.test(morph.element.tagName) 
+				&amp;&amp; morph.attrName === &#x27;checked&#x27;
+				&amp;&amp; /^checkbox$/.test(morph.element.type);
+		},
+		bind: (binding, morph) =&gt; {
+
+			// Listen to key up, etc
+			var $element = $(morph.element);
+			$element.on(&#x27;change&#x27;, () =&gt; {
+				binding.setValue($element.prop(&#x27;checked&#x27;));
+			});
+
+		}
+	}
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+};
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+module.exports = Binding;
+    </pre>
 </div>
 
                     </div>

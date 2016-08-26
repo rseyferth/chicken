@@ -51,9 +51,17 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
+            
+                <li><a href="../classes/Dom.View.html">Dom.View</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -155,6 +163,11 @@ class Obj {
 
 	}
 
+	resolvePromise(key, ...args) {
+		this._getPromiseInfo(key).resolve.apply(this, args);
+		return this;
+	}
+
 	getPromise(key) {
 		return this._getPromiseInfo(key).promise;
 	}
@@ -197,8 +210,18 @@ class Obj {
 			promises.push(this._getPromiseInfo(arg).promise);
 		});
 
-		// When all are done
-		Promise.all(promises).then(successCallback, failCallback);
+		// One?
+		if (promises.length === 1) {
+
+			// Simple.
+			promises[0].then(successCallback, failCallback);
+
+		} else {
+
+			// When all are done
+			Promise.all(promises).then(successCallback, failCallback);
+
+		}
 
 		return this;
 

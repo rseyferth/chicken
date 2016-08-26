@@ -244,10 +244,12 @@ class Action extends Obj
 		if (result instanceof View) {
 
 			// Render the view
-			result.render().then((viewResult) => {
+			let view = result;
+			view.render().then(() => {
 
-				// Process result again!
-				this._processResult(viewResult, resolve, reject);
+				// Add it
+				this.viewContainer.setAction(this);
+				view.addToContainer(this.viewContainer);
 
 			}, (error) => {
 				reject(error);
@@ -261,6 +263,16 @@ class Action extends Obj
 		
 		else if (result instanceof Promise) {
 
+			// Wait for it to finish
+			result.then((promiseResult) => {
+
+				// Process result again!
+				this._processResult(promiseResult, resolve, reject);
+
+			}, (error) => {
+				reject(error);
+			});
+
 		}
 
 		/////////////////////////////////
@@ -270,13 +282,16 @@ class Action extends Obj
 		else {
 
 			// A string
-			if (typeof result === 'string') {
+			if (typeof result === 'string' || result instanceof DocumentFragment) {
 
 				// Set content
-				this.viewContainer.setActionContent(this, result);
+				this.viewContainer.setAction(this);
+				this.viewContainer.setContent(result);
 				resolve();
 
 			} else {
+
+				console.log(result);
 
 				// Don't know how to render this...
 				reject('I don\'t know how to render the result for "' + this.targetViewContainer + '"');

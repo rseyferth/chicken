@@ -8,8 +8,7 @@
   "dependencies": {
     "jquery": "~2.1.1",
     "underscore": "^1.8.3",
-    "xregexp": "^3.1.1",
-    "handlebars": "^4.0.5"
+    "xregexp": "^3.1.1"
   },
   "license": "ISC",
   "homepage": "https://github.com/rseyferth/chicken",

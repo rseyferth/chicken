@@ -13,9 +13,9 @@ import _ from 'underscore';
 import Observable from '~/Core/Observable';
 import SettingsObject from '~/Core/SettingsObject';
 import ViewContainer from '~/Dom/ViewContainer';
+import Renderer from '~/Dom/Renderer';
 import ClassMap from '~/Helpers/ClassMap';
 import Router from '~/Routing/Router';
-
 
 //////////////////////
 // Class definitino //
@@ -77,11 +77,13 @@ class Application extends Observable {
 			baseUrl: '/',
 			
 			viewPath: 'views',
-			viewExtension: 'hbs'
+			viewExtension: 'hbs',
+
+			renderer: settings.renderer === undefined ? new Renderer() : null
 
 		}, [ 'baseUrl', 'viewPath', 'viewExtension' ]).apply(settings);
 
-
+		
 
 		/**
 		 * @property history

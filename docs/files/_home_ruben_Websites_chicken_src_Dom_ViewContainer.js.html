@@ -51,9 +51,17 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
+            
+                <li><a href="../classes/Dom.View.html">Dom.View</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -170,6 +178,9 @@ class ViewContainer extends Element
 		this.currentAction = null;
 
 
+		this.currentView = null;
+
+
 	}
 
 	/**
@@ -186,24 +197,32 @@ class ViewContainer extends Element
 
 	/**
 	 * @method setActionContent
-	 * @param {Routing.Action} 		action 				The Action instance that rendered the content
 	 * @param {string} 				content 			The (HTML) content to render
 	 * @param {boolean}				setLoadingFalse		Whether to set the loading-state to false
 	 * @chainable
 	 */
-	setActionContent(action, content, setLoadingFalse = true) {
-
-		// Store action.
-		this.currentAction = action;
+	setContent(content, setLoadingFalse = true) {
 
 		// Set HTML
-		this.setContent(content);
+		super.setContent(content);
 
 		// No longer loading
 		if (setLoadingFalse) this.setLoading(false);
 
 		return this;
 
+	}
+
+	setView(view) {
+
+		this.currentView = view;
+		return this;
+
+	}
+
+	setAction(action) {
+		this.currentAction = action;
+		return this;
 	}
 
 
@@ -226,13 +245,13 @@ ViewContainer.Classes = {
 	Initialized: &#x27;initialized&#x27;,
 	Loading: &#x27;loading&#x27;
 };
-ViewContainer.ElementSelector = &#x27;view:not(.initialized),[view]:not(.initialized)&#x27;;
+ViewContainer.ElementSelector = &#x27;view-container:not(.initialized),[view-container]:not(.initialized)&#x27;;
 ViewContainer.DefaultName = &#x27;main&#x27;;
 
 ViewContainer.getViewName = ($element) =&gt; {
 
 	// Get it either from the name-attr or view-attr
-	var name = $element.is(&#x27;view&#x27;) ? $element.attr(&#x27;name&#x27;) : $element.attr(&#x27;view&#x27;);
+	var name = $element.is(&#x27;view-container&#x27;) ? $element.attr(&#x27;name&#x27;) : $element.attr(&#x27;view-container&#x27;);
 
 	// No?
 	if (!name) name = ViewContainer.DefaultName;

@@ -51,9 +51,17 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
+            
+                <li><a href="../classes/Dom.View.html">Dom.View</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -124,6 +132,7 @@
 
 import { createHistory } from &#x27;history&#x27;;
 import $ from &#x27;jquery&#x27;;
+import _ from &#x27;underscore&#x27;;
 
 /////////////////////
 // Chicken classes //
@@ -132,9 +141,9 @@ import $ from &#x27;jquery&#x27;;
 import Observable from &#x27;~/Core/Observable&#x27;;
 import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
 import ViewContainer from &#x27;~/Dom/ViewContainer&#x27;;
+import Renderer from &#x27;~/Dom/Renderer&#x27;;
 import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 import Router from &#x27;~/Routing/Router&#x27;;
-
 
 //////////////////////
 // Class definitino //
@@ -166,8 +175,9 @@ class Application extends Observable {
 		 * @property $app
 		 * @type {jQuery}
 		 */
-		this.$app = $app;
-		
+		this.$app = $app ? $app : $(&#x27;#application&#x27;);
+
+
 		/**
 		 * All ViewContainers in the application. This is automatically
 		 * kept up to date to contain all and only still existing containers.
@@ -192,10 +202,16 @@ class Application extends Observable {
 		 * @type {Core.SettingsObject}
 		 */
 		this.settings = SettingsObject.create({
-			baseUrl: &#x27;/&#x27;
-		}, [ &#x27;baseUrl&#x27; ]).apply(settings);
+			baseUrl: &#x27;/&#x27;,
+			
+			viewPath: &#x27;views&#x27;,
+			viewExtension: &#x27;hbs&#x27;,
 
+			renderer: settings.renderer === undefined ? new Renderer() : null
 
+		}, [ &#x27;baseUrl&#x27;, &#x27;viewPath&#x27;, &#x27;viewExtension&#x27; ]).apply(settings);
+
+		
 
 		/**
 		 * @property history
@@ -282,13 +298,59 @@ class Application extends Observable {
 	}
 
 
+	config(...args) {
+
+		// Get all?
+		if (args.length === 0) {
+			return this.settings;
+		} 
+
+		// Get one?
+		else if (args.length === 1) {
+			return this.settings.get(args[0]);
+		}
+
+		// Set?
+		else {
+			return this.settings.set(args[0], args[1]);
+		}
+
+	}
+
+
+	uri(...args) {
+
+		// Add baseUrl
+		args.unshift(this.settings.get(&#x27;baseUrl&#x27;) === &#x27;/&#x27; ? &#x27;&#x27; : this.settings.get(&#x27;baseUrl&#x27;));
+		var url = args.join(&#x27;/&#x27;);
+
+		// Was the last one an extension?
+		if (/^\.[a-z]+$/.test(_.last(args))) {
+
+			// Replace last slash
+			url = url.replace(/\/\.[a-z]+$/, _.last(args));
+
+		}
+		return url;
+
+	}
+
+
+
+
 }
 
 
 Application.getInstance = () =&gt; {
 	return __instance;
 };
+
+
+
 ClassMap.register(&#x27;Application&#x27;, Application);
+
+
+
 
 
 module.exports = Application;

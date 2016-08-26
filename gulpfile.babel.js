@@ -97,12 +97,12 @@ gulp.task('watch', [], () => {
 		gutil.log(gutil.colors.bold.green('*'.repeat(50)));		
 		gutil.log(gutil.colors.bold.green('I detected a change in the codebase:'));		
 		gutil.log(gutil.colors.green('** Running eslint on all code'));		
-		gutil.log(gutil.colors.green('** Running mocha tests'));
+	//	gutil.log(gutil.colors.green('** Running mocha tests'));
 		gutil.log(gutil.colors.green('** Building package using webpack'));
 		gutil.log(gutil.colors.bold.green('*'.repeat(50)));		
 
 		gulp.start('lint');
-		gulp.start('mocha');
+	//	gulp.start('mocha');
 		gulp.start('webpack');
 
 	});

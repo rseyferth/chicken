@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
-import Handlebars from 'handlebars';
+import HTMLBars from 'htmlbars-standalone';
 
 import App from '~/Helpers/App';
 import Obj from '~/Core/Obj';
@@ -73,9 +73,10 @@ class View extends Obj
 	 * @extends Core.Obj
 	 *
 	 * @constructor
-	 * @param {string} source   The source for the view
+	 * @param {string} source   			The source for the view
+	 * @param {Dom.Renderer} renderer 		The Renderer instance that will be used by HTMLBars
 	 */
-	constructor(source) {
+	constructor(source, renderer) {
 		
 		super();
 
@@ -113,10 +114,19 @@ class View extends Obj
 
 
 		/**
-		 * @property tempalte
-		 * @type {Handlebars}
+		 * @property template
+		 * @type {HTMLBars template}
 		 */
 		this.template = null;
+
+
+		/**
+		 * @property renderer
+		 * @type {Dom.Renderer}
+		 */
+		this.renderer = renderer ? renderer : App().config('renderer');
+
+
 
 
 		//////////////////////////
@@ -272,7 +282,6 @@ class View extends Obj
 	} 
 
 
-
 	render() {
 
 		// We make the 'render' promise.
@@ -284,12 +293,21 @@ class View extends Obj
 
 			Promise.all(this.loadPromises).then(() => {
 
-				// Create template
-				this.template = Handlebars.compile(this.templateString);
+				/////////////////////
+				// Create template //
+				/////////////////////
 
-				console.log(this.template(this.data));
+				this.template = HTMLBars.Compiler.compile(this.templateString);
+				var result = this.template.render(this.data, this.renderer);
+				result.revalidate();
 
+				// Resolve the promise
+				resolve(result.fragment);
 
+				// Localize and be done!
+				this.documentFragment = result.fragment;
+
+				
 			});
 
 
@@ -298,6 +316,28 @@ class View extends Obj
 	}
 
 
+	addToDOM($target) {
+
+		// Add to dom
+		$target.html(this.documentFragment);
+
+		// Get the element
+		this.$element = $target.find('>*');
+		
+		// Done!
+		this.resolvePromise('added', this);
+
+	}
+
+
+	addToContainer(viewContainer) {
+
+		viewContainer.setView(this);
+
+		this.addToDOM(viewContainer.$element);
+
+
+	}
 
 
 }

@@ -35,6 +35,11 @@ class Obj {
 
 	}
 
+	resolvePromise(key, ...args) {
+		this._getPromiseInfo(key).resolve.apply(this, args);
+		return this;
+	}
+
 	getPromise(key) {
 		return this._getPromiseInfo(key).promise;
 	}
@@ -77,8 +82,18 @@ class Obj {
 			promises.push(this._getPromiseInfo(arg).promise);
 		});
 
-		// When all are done
-		Promise.all(promises).then(successCallback, failCallback);
+		// One?
+		if (promises.length === 1) {
+
+			// Simple.
+			promises[0].then(successCallback, failCallback);
+
+		} else {
+
+			// When all are done
+			Promise.all(promises).then(successCallback, failCallback);
+
+		}
 
 		return this;
 

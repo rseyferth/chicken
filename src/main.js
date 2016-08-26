@@ -31,6 +31,7 @@ import SettingsObject from '~/Core/SettingsObject';
 
 // Dom
 import Element from '~/Dom/Element';
+import Renderer from '~/Dom/Renderer';
 import View from '~/Dom/View';
 import ViewContainer from '~/Dom/ViewContainer';
 
@@ -70,6 +71,7 @@ var Chicken = {
 
 	Dom: {
 		Element: Element,
+		Renderer: Renderer,
 		View: View,
 		ViewContainer: ViewContainer
 	},

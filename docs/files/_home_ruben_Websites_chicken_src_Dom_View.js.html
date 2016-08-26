@@ -51,9 +51,17 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
+            
+                <li><a href="../classes/Dom.View.html">Dom.View</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -119,7 +127,10 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 import _ from &#x27;underscore&#x27;;
+import $ from &#x27;jquery&#x27;;
+import HTMLBars from &#x27;htmlbars-standalone&#x27;;
 
+import App from &#x27;~/Helpers/App&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
 import Observable from &#x27;~/Core/Observable&#x27;;
 
@@ -129,23 +140,237 @@ import Observable from &#x27;~/Core/Observable&#x27;;
 class View extends Obj
 {
 
-	constructor() {
+	/**
+	 * ## Creating a View
+	 * 
+	 * A View is the part where your HTML and data come together. A View
+	 * can be created directly:
+	 *
+	 * 	var view = new Chicken.Dom.View(source);
+	 *
+	 * Or shortly:
+	 *
+	 * 	var view = Chicken.view(source);
+	 *
+	 * A View can be created with three different &#x60;source&#x60; types:
+	 * - HTML string
+	 * - Name of a view template
+	 * - And URL to a view template
+	 *
+	 * ## HTML
+	 *
+	 * The following example should be self-explanatory:
+	 *
+	 * 	Chicken.application($(&#x27;#application&#x27;))
+	 * 		.routes(function() {
+	 *
+	 *			this.route(&#x27;/&#x27;, () =&gt; {
+	 *
+	 *				return Chicken.view(&#x27;&lt;h1&gt;{{ title }}&lt;/h1&gt;&#x27;)
+	 *					.with(&#x27;title&#x27;, &#x27;Page title&#x27;);
+	 * 
+	 *			});
+	 * 
+	 * 		});
+	 *
+	 * Note: The &#x60;source&#x60; parameter is recognized as HTML when it starts with an HTML tag.
+	 *
+	 * ## By name
+	 *
+	 * If you want to put your templates in separate files, you can use &#x27;names&#x27; to
+	 * link to them. Use &#x60;.&#x60; in the name in place of a path seperator. Some examples:
+	 *
+	 * 	Chicken.view(&#x27;home&#x27;);               // Will open /views/home.hbs
+	 * 	Chicken.view(&#x27;product.index&#x27;);      // Will open /views/product/index.hbs
+	 * 	Chicken.view(&#x27;a.b.c.d&#x27;);            // Will open /views/a/b/c/d.hbs
+	 *
+	 * You can configure the default path and extension in your Application configuration.
+	 *
+	 * Note: Only use lowercase, numbers, and dashes in your names (&#x60;/[a-z0-9\-]/&#x60;)
+	 *
+	 *
+	 * ## By URL
+	 *
+	 * This is pretty self-explanatory; the principle is the same as &#x27;by name&#x27;, only 
+	 * here you pass a relative or absolute url instead:
+	 *
+	 * 	Chicken.view(&#x27;/weird-location/template.xxx&#x27;);
+	 * 	Chicken.view(&#x27;//my-domain.com/chicken-templates/welcome.hbs&#x27;);
+	 * 
+	 * @class Dom.View
+	 * @extends Core.Obj
+	 *
+	 * @constructor
+	 * @param {string} source   			The source for the view
+	 * @param {Dom.Renderer} renderer 		The Renderer instance that will be used by HTMLBars
+	 */
+	constructor(source, renderer) {
+		
 		super();
 
-
+		/**
+		 * @property data
+		 * @type {Core.Observable}
+		 */
 		this.data = new Observable();
 
 
-
+		/**
+		 * Promises for data to load, keyed by the key
+		 * as provided in the &#x60;with&#x60; method
+		 * 
+		 * @property dataPromises
+		 * @type {Object}
+		 */
 		this.dataPromises = {};
 
-
+		/**
+		 * All promises that need to resolve for the 
+		 * page to load.
+		 *
+		 * @property loadPromises
+		 * @type {Array}
+		 */
 		this.loadPromises = [];
+
+
+		/**
+		 * @property templateString
+		 * @type {string}
+		 */
+		this.templateString = null;
+
+
+		/**
+		 * @property template
+		 * @type {HTMLBars template}
+		 */
+		this.template = null;
+
+
+		/**
+		 * @property renderer
+		 * @type {Dom.Renderer}
+		 */
+		this.renderer = renderer ? renderer : App().config(&#x27;renderer&#x27;);
+
+
+
+
+		//////////////////////////
+		// Check out the source //
+		//////////////////////////
+
+		// Is it HTML?
+		if (/^\&lt;[a-z\!]/.test(source)) {
+
+			// Use code now
+			this.templateString = source;
+
+		} 
+		
+		// Name?
+		else if (/[a-z0-9\-]+\./.test) {
+
+			// Is it cached?
+			if (View.TemplateCache.has(source)) {
+
+				// Use it.
+				this.templateString = View.TemplateCache.get(source);
+
+			} else {
+
+				// Load template
+				var url = App().uri(
+					App().config(&#x27;viewPath&#x27;), 
+					source.split(/\./).join(&#x27;/&#x27;), 
+					&#x27;.&#x27; + App().config(&#x27;viewExtension&#x27;)
+				);
+				this._loadTemplate(url);
+
+			}
+
+		}
+		
+		// Url.
+		else { 
+
+			// Load it
+			this._loadTemplate(url);
+
+		}
+
 
 
 
 	}
 
+
+	_loadTemplate(url) {
+
+		// Promise.
+		var promise = this.promise(&#x27;template&#x27;, (resolve, reject) =&gt; {
+
+			// Load it.
+			$.ajax(url).then((result) =&gt; {
+
+				// Set template code
+				this.templateString = result;
+
+				// We&#x27;re done.
+				resolve(result);
+
+			}).fail((error) =&gt; {
+
+				reject(error.responseText);
+
+			});
+
+			
+		});
+
+
+		// Add and return
+		this.loadPromises.push(promise);
+		return promise;
+
+	}
+
+
+	/**
+	 * To add data to the view, you can use the **with** method. The simplest way is to
+	 * call it using a **key** and a **value**:
+	 *
+	 * 	Chicken.view(&#x27;page&#x27;).with(&#x27;title&#x27;, &#x27;Page title&#x27;)
+	 *
+	 * You can also add a promise-returning method, such as:
+	 *
+	 * 	Chicken.view(&#x27;product.index&#x27;)
+	 * 		.with(&#x27;products&#x27;, Chicken.api(&#x27;/products&#x27;));
+	 *
+	 * The view will then wait for the Api call to finish, before showing, so that you
+	 * can use the &#x60;products&#x60; collection your view.
+	 *
+	 * The same goes for a single model:
+	 *
+	 * 	Chicken.view(&#x27;product.show&#x27;)
+	 * 		.with(&#x27;product&#x27;, Chicken.api(&#x27;/product/&#x27; + this.parameters.get(&#x27;id&#x27;)));
+	 * 
+	 * When you have multiple data variables you want to pass to the view, you
+	 * can also use object notation:
+	 *
+	 * 	Chicken.view(&#x27;product.index&#x27;)
+	 * 		.with({
+	 * 			products: Chicken.api(&#x27;/products&#x27;),
+	 * 			categories: Chicken.api(&#x27;/categories&#x27;)
+	 * 		});
+	 *
+	 * 
+	 * 
+	 * @method with
+	 * @param  {...mixed} args   This method can be called in two ways. See documentation
+	 * @chainable
+	 */
 	with(...args) {
 
 		// Is it a single object hash?
@@ -185,8 +410,69 @@ class View extends Obj
 	} 
 
 
+	render() {
+
+		// We make the &#x27;render&#x27; promise.
+		return this.promise(&#x27;render&#x27;, (resolve, reject) =&gt; {
+
+			/////////////////////////////////////////
+			// Wait for all loadPromises to finish //
+			/////////////////////////////////////////
+
+			Promise.all(this.loadPromises).then(() =&gt; {
+
+				/////////////////////
+				// Create template //
+				/////////////////////
+
+				this.template = HTMLBars.Compiler.compile(this.templateString);
+				var result = this.template.render(this.data, this.renderer);
+				result.revalidate();
+
+				// Resolve the promise
+				resolve(result.fragment);
+
+				// Localize and be done!
+				this.documentFragment = result.fragment;
+
+				
+			});
+
+
+		});
+
+	}
+
+
+	addToDOM($target) {
+
+		// Add to dom
+		$target.html(this.documentFragment);
+
+		// Get the element
+		this.$element = $target.find(&#x27;&gt;*&#x27;);
+		
+		// Done!
+		this.resolvePromise(&#x27;added&#x27;, this);
+
+	}
+
+
+	addToContainer(viewContainer) {
+
+		viewContainer.setView(this);
+
+		this.addToDOM(viewContainer.$element);
+
+
+	}
+
 
 }
+
+
+View.TemplateCache = new Map();
+
 
 module.exports = View;
     </pre>

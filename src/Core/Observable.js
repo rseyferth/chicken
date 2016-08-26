@@ -82,9 +82,9 @@ class Observable extends Obj {
 		
 		/**
 		 * @attribute attributes
-		 * @type {Map}
+		 * @type {object}
 		 */
-		this.attributes = new Map();
+		this.attributes = {};
 
 
 		////////////////////
@@ -114,10 +114,10 @@ class Observable extends Obj {
 		let currentPart = parts.shift(); 
 
 		// No deep shit?
-		if (parts.length === 0) return this.attributes.has(currentPart);
+		if (parts.length === 0) return this.attributes[currentPart] !== undefined;
 
 		// Look deeper
-		let value = this.attributes.get(currentPart);
+		let value = this.attributes[currentPart];
 
 		// No value
 		if (value === undefined) {
@@ -153,7 +153,7 @@ class Observable extends Obj {
 		let currentPart = parts.shift();
 
 		// Get value
-		let value = this.attributes.get(currentPart);
+		let value = this.attributes[currentPart];
 
 		// Value found?
 		if (value === undefined || parts.length === 0) {
@@ -192,9 +192,15 @@ class Observable extends Obj {
 	set(key, value, convertToObservables = false, doNotNotify = false) {
 
 		// Convert?
-		if (convertToObservables === true && typeof value === 'object' && value.constructor === Object) {
-			value = new Observable(value);
+		if (convertToObservables === true && typeof value === 'object' && value !== null) {
+			if (value.constructor === Object) {
+				value = new Observable(value);
+			} else if (Array.isArray(value)) {
+				value = ClassMap.create('ObservableArray', [value]);
+			}
 		}
+
+
 
 		// Is there a dot in there?
 		if (typeof key === 'string' && key.match(/\.[\w]/)) {		
@@ -206,8 +212,8 @@ class Observable extends Obj {
 			let parts = key.split(/\./);
 			let currentPart = parts.shift();
 			
-			// Does the first key exist?
-			if (!this.attributes.has(currentPart)) {
+			// Does the first key not exist?
+			if (this.attributes[currentPart] === undefined) {
 
 				// Should it be an array?
 				let newValue;
@@ -229,7 +235,7 @@ class Observable extends Obj {
 				});
 				
 				// Store it
-				this.attributes.set(currentPart, newValue);
+				this.attributes[currentPart] = newValue;
 
 			
 
@@ -244,7 +250,7 @@ class Observable extends Obj {
 		}
 
 		// Store the value
-		this.attributes.set(key, value);
+		this.attributes[key] = value;
 
 		// Is the value observable?
 		if (Observable.isObservable(value)) {
@@ -270,7 +276,7 @@ class Observable extends Obj {
 		_.each(obj, (value, key) => {
 
 			// Is the value an array or object?
-			if ((Array.isArray(value) || typeof value === 'object') && value !== null && convertToObservables === true) {
+			if ((Array.isArray(value) || (typeof value === 'object' && value !== null && value.constructor === Object)) && convertToObservables === true) {
 
 				// Do I have this value?
 				if (this.attributes.has(key) && Observable.isObservable(this.attributes.get(key))) {
@@ -432,7 +438,7 @@ class Observable extends Obj {
 	toObject() { 
 
 		var obj = {};
-		this.attributes.forEach((item, key) => {
+		_.each(this.attributes, (item, key) => {
 
 			// Observable?
 			if (Observable.isObservable(item)) {

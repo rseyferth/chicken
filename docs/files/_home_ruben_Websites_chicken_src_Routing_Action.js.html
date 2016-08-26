@@ -51,9 +51,17 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
+            
+                <li><a href="../classes/Dom.View.html">Dom.View</a></li>
+            
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -322,7 +330,7 @@ class Action extends Obj
 				// Call action
 				var controllerAction = this.controller[this.controllerAction];
 				if (controllerAction === &#x27;undefined&#x27; || typeof controllerAction !== &#x27;function&#x27;) {
-					reject(&#x27;There is no action on the &#x27; + this.controllerClass + &#x27; controller with the name &quot;&#x27; + this.controllerAction + &#x27;&quot;&#x27;);
+					reject(&#x27;There is no action on the &quot;&#x27; + this.controllerClass + &#x27;&quot; controller with the name &quot;&#x27; + this.controllerAction + &#x27;&quot;&#x27;);
 					return;
 				}
 
@@ -363,7 +371,17 @@ class Action extends Obj
 
 		if (result instanceof View) {
 
-			throw new Error(&#x27;View rendering not yet implemented.&#x27;);
+			// Render the view
+			let view = result;
+			view.render().then(() =&gt; {
+
+				// Add it
+				this.viewContainer.setAction(this);
+				view.addToContainer(this.viewContainer);
+
+			}, (error) =&gt; {
+				reject(error);
+			});
 
 		}
 
@@ -372,6 +390,16 @@ class Action extends Obj
 		//////////////////////////////
 		
 		else if (result instanceof Promise) {
+
+			// Wait for it to finish
+			result.then((promiseResult) =&gt; {
+
+				// Process result again!
+				this._processResult(promiseResult, resolve, reject);
+
+			}, (error) =&gt; {
+				reject(error);
+			});
 
 		}
 
@@ -382,13 +410,16 @@ class Action extends Obj
 		else {
 
 			// A string
-			if (typeof result === &#x27;string&#x27;) {
+			if (typeof result === &#x27;string&#x27; || result instanceof DocumentFragment) {
 
 				// Set content
-				this.viewContainer.setActionContent(this, result);
+				this.viewContainer.setAction(this);
+				this.viewContainer.setContent(result);
 				resolve();
 
 			} else {
+
+				console.log(result);
 
 				// Don&#x27;t know how to render this...
 				reject(&#x27;I don\&#x27;t know how to render the result for &quot;&#x27; + this.targetViewContainer + &#x27;&quot;&#x27;);

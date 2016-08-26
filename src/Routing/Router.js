@@ -207,7 +207,9 @@ class Router extends Obj
 
 		// Listen to the result
 		Promise.all(actionPromises).then((...results) => {
-			console.log(results);
+			
+			//@TODO What to do?
+
 		}, (error) => {
 
 			throw new Error('[Routing.Router] Executing route failed: ' + error);

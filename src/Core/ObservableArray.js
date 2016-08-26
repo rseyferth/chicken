@@ -23,7 +23,7 @@ class ObservableArray extends Obj
 
 		
 		// Properties
-		this._items = [];
+		this.items = [];
 		
 
 		// Import start values
@@ -90,7 +90,7 @@ class ObservableArray extends Obj
 
 			// We will return an array containg all the values we retrieve!
 			var restKey = parts.join('.');
-			return _.map(this._items, (item) => {
+			return _.map(this.items, (item) => {
 				return item.get(restKey);
 			});
 			
@@ -98,7 +98,7 @@ class ObservableArray extends Obj
 		} else if (Number.isInteger(currentPart) || currentPart.match(/^\d+$/)) {
 
 			// Get the value
-			value = this._items[currentPart];
+			value = this.items[currentPart];
 
 		} else {
 
@@ -138,7 +138,7 @@ class ObservableArray extends Obj
 		if (Number.isInteger(key) || typeof key === 'string' && key.match(/^\d+$/)) {
 
 			// Set it
-			this._items[key] = value;
+			this.items[key] = value;
 			return this;
 
 		}
@@ -155,7 +155,7 @@ class ObservableArray extends Obj
 			let currentPart = parts.shift();
 			
 			// Does the first key exist?
-			let item = this._items[currentPart];
+			let item = this.items[currentPart];
 			if (item === undefined) {
 
 				// Should it be an array or an observable?
@@ -178,7 +178,7 @@ class ObservableArray extends Obj
 				});
 				
 				// Store it
-				this._items[currentPart] = newValue;	
+				this.items[currentPart] = newValue;	
 
 			}
 
@@ -209,7 +209,7 @@ class ObservableArray extends Obj
 		_.each(values, (value) => {
 			
 			// Add it.
-			this._items.push(value);
+			this.items.push(value);
 
 			// Is it observable?
 			if (ObservableArray.isObservable(value)) {
@@ -237,7 +237,7 @@ class ObservableArray extends Obj
 	 */
 	delete(...values) {
 
-		this._items = _.difference(this._items, values);
+		this.items = _.difference(this.items, values);
 
 		// Trigger events
 		this.trigger('change');
@@ -257,10 +257,10 @@ class ObservableArray extends Obj
 	empty() {
 
 		// Values that are deleted
-		var deleted = _.difference(this._items, []);
+		var deleted = _.difference(this.items, []);
 
 		// Now clear
-		this._items = [];
+		this.items = [];
 
 		// Trigger events
 		this.trigger(ObservableArray.Events.Change);
@@ -360,20 +360,8 @@ class ObservableArray extends Obj
 	 * @type {Number}
 	 */
 	get length() {
-		return this._items.length;
+		return this.items.length;
 	}
-
-
-	/**
-	 * The native Javascript array containing the items
-	 * 
-	 * @property items
-	 * @type {Array}
-	 */
-	get items() {
-		return this._items;
-	}
-
 
 
 	isObservable() {
