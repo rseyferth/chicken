@@ -217,31 +217,39 @@ as [Ember templates](https://guides.emberjs.com/v2.7.0/templates/handlebars-basi
 ```javascript
 [...]
 index() {
-  return Chicken.view('home.index')
-    .with({
-      name: ''  // This is actually optional. The attribute would also be created
-                // by the template.
+  return Chicken.view('home.index', function() {
+    
+    this.with({
+      firstName: 'John',
+      lastName: 'Wayne',
+      reverseName: this.computed(['firstName', 'lastName'], (firstName, lastName) => {
+        return lastName + ', ' + firstName;
+      })
     })
-    .action('log', function(name, actionBinding, view) {
-        
+    .computed('fullName', ['firstName', 'lastName'], function(firstName, lastName) {
+      return firstName + ' ' + lastName;
+    })
+    .action('log', (name, actionBinding, view) => {
+
       // These are all the same
-      console.log(name, this.get('name'), view.get('name'));  
+      console.log(name, this.get('fullName'), view.get('fullName'));
 
       // This is the $element that caused the action to be called
       actionBinding.$element.text('I was ' + actionBinding.eventName + 'ed!');
-                    
+
     });
+
+  });
 }
 ```
 
 **app/views/home/index.hbs**
 ```handlebars
-<h1>Hello {{name}}</h1>
-<input type="text" value={{name}} placeholder="Enter your name here...">
-<button {{action "log" name}}>Log it.</button>
+<h1>Hello {{reverseName}}</h1>
+<input type="text" value={{firstName}} placeholder="Enter your first name here...">
+<input type="text" value={{lastName}} placeholder="And your last name here...">
+<button {{action "log" fullName}}>Log it.</button>
 ```
-
-Note: Soon we'll add `actions` (like Ember), so you can simplify the on-click behaviors.
 
 
 

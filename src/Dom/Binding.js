@@ -146,8 +146,13 @@ Binding.TwoWay = {
 
 			// Listen to key up, etc
 			var $element = $(morph.element);
+			var lastValue = $element.val();
 			$element.on('keyup change paste', () => {
-				binding.setValue($element.val(), morph);
+				var v = $element.val();
+				if (v !== lastValue) {
+					binding.setValue(v, morph);
+					lastValue = v;
+				}
 			});
 
 		}

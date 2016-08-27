@@ -1,6 +1,7 @@
 import _ from 'underscore';
 import Obj from '~/Core/Obj';
 import ClassMap from '~/Helpers/ClassMap';
+import ComputedAttribute from '~/Core/ComputedAttribute';
 
 /**
  * @module Core
@@ -87,6 +88,13 @@ class Observable extends Obj {
 		this.attributes = {};
 
 
+
+
+		// Scheduling
+		this._scheduleAttributesChangedTimeout = false;
+		this._scheduleAttributesChangedAttributes = null;
+
+
 		////////////////////
 		// Initialization //
 		////////////////////
@@ -155,8 +163,18 @@ class Observable extends Obj {
 		// Get value
 		let value = this.attributes[currentPart];
 
+		// Nothing?
+		if (value === undefined) return;
+
 		// Value found?
-		if (value === undefined || parts.length === 0) {
+		if (parts.length === 0) {
+
+			// Is it computed?
+			if (value instanceof ComputedAttribute) {
+				return value.getValue();
+			}
+
+			// Return the value as is.
 			return value;
 		}
 
@@ -200,6 +218,11 @@ class Observable extends Obj {
 			}
 		}
 
+		// Is it a computed attribute
+		if (value instanceof ComputedAttribute) {
+			value.name = key;
+		}
+
 
 
 		// Is there a dot in there?
@@ -231,7 +254,7 @@ class Observable extends Obj {
 
 				// Study it
 				newValue.study(() => {
-					this._triggerAttributeChanged(currentPart);
+					this._scheduleAttributeChanged(currentPart);
 				});
 				
 				// Store it
@@ -257,13 +280,13 @@ class Observable extends Obj {
 
 			// Study the object
 			value.study(() => {
-				this._triggerAttributeChanged(key);
+				this._scheduleAttributeChanged(key);
 			});
 
 		}
 
 		// Update attribute
-		if (!doNotNotify) this._triggerAttributeChanged(key, value);
+		if (!doNotNotify) this._scheduleAttributeChanged(key);
 
 		return this;
 
@@ -393,11 +416,20 @@ class Observable extends Obj {
 	 * 	obj.set('foo', 'boo'); // Will alert 'Changed: boo'
 	 * 	
 	 * @method observe
-	 * @param  {string}   key      The name of the attribute to observe
+	 * @param  {string|array}   key      The name of the attribute to observe
 	 * @param  {Function} callback 
 	 * @chainable
 	 */
-	observe(key, callback) {
+	observe(keyOrKeys, callback) {
+
+		// More than one?
+		if (Array.isArray(keyOrKeys)) {
+			_.each(keyOrKeys, (key) => {
+				this.observe(key, callback);
+				return this;
+			});
+		}
+		var key = keyOrKeys;
 
 		// Get the set
 		if (!this.observers.has(key)) {
@@ -435,6 +467,44 @@ class Observable extends Obj {
 	}
 
 
+	/**
+	 * @method computed
+	 * @param  {string}   [name]         The name of the attribute to define. Only when you use this method directly.
+	 * @param  {array}    dependencies An array of zero or more keys to watch
+	 * @param  {Function} callback     The method to call 
+	 * @return {Core.ComputedAttribute}
+	 */
+	computed(...args) {
+
+		// Name given?
+		var name, dependencies, callback;
+		if (args.length === 3) {
+			[name, dependencies, callback] = args;
+		} else if (args.length === 2) {
+			[dependencies, callback] = args;
+		} else {
+			throw new Error('The "computed" method needs either 2 or 3 arguments.');
+		}
+
+		// Create (and set)
+		var computed = new ComputedAttribute(this, dependencies, callback);
+		if (name) {
+			computed.name = name;
+			this.attributes[name] = computed;
+		}
+			
+		// Name given? Then it's chainable, otherwise we need the result
+		return name ? this : computed;
+
+	}
+
+
+	/**
+	 * Get the Observable including all its children
+	 * as a native object.
+	 * 
+	 * @return {object}
+	 */
 	toObject() { 
 
 		var obj = {};
@@ -475,43 +545,71 @@ class Observable extends Obj {
 	// Private methods //
 	/////////////////////
 
-	_triggerAttributeChanged(key, value, calledFromObjectChanged = false) {
+	_scheduleAttributeChanged(key) {
 
-		// Listeners?
-		var observers = this.observers.get(key);
-		if (observers !== undefined) {
+		// Already something scheduled?
+		if (!this._scheduleAttributesChangedTimeout) {
 
-			// Call them
-			observers.forEach((observer) => {
+			// Schedule it
+			this._scheduleAttributesChangedAttributes = [];
+			this._scheduleAttributesChangedTimeout = setTimeout(() => {
+
+				// Trigger it now!
+				this._scheduleAttributesChangedTimeout = false;
+				this._triggerAttributesChanged();
+
+			}, Observable.AttributeChangedDelay);
+
+		}
+
+		// Add attribute to the set
+		this._scheduleAttributesChangedAttributes.push(key);
+
+	}
+
+	_triggerAttributesChanged() {
+
+		// Clear for next time.
+		if (this._scheduleAttributesChangedTimeout) clearTimeout(this._scheduleAttributesChangedTimeout);
+		this._scheduleAttributesChangedTimeout = false;		
+
+		// Check my attributes
+		var attrs = _.unique(this._scheduleAttributesChangedAttributes);
+		if (attrs) {
+
+			// Collect the observers, using a Set to make sure the same observer can't be called twice
+			var combinedObservers = new Set();
+			_.each(attrs, (attr) => {
+				
+				// Get observers
+				var attrObservers = this.observers.get(attr);
+				if (attrObservers) {
+					attrObservers.forEach((observer) => {
+
+						// Add it.
+						combinedObservers.add(observer);
+
+					});
+				}
+
+			});
+
+			// Did we have any observers?
+			combinedObservers.forEach((observer) => {
+
+				// Now call it.
 				observer.apply(this);
+
 			});
 
+			// Students as well.
+			this.trigger(Observable.Events.Change, attrs);
+
+
 		}
 
-		// Trigger object change?
-		if (calledFromObjectChanged === false) {
-			this._triggerObjectChanged([key], true);
-		}
 
 	}
-
-	_triggerObjectChanged(changedAttributes, calledFromAttributeChanged = false) {
-
-		// Trigger change event
-		this.trigger(Observable.Events.Change, changedAttributes);
-
-		// Called from attribute?
-		if (calledFromAttributeChanged === false) {
-
-			// Call individual attributes
-			changedAttributes.forEach((value, key) => {
-				this._triggerAttributeChanged(key, value, true);
-			});
-
-		}
-
-	}
-
 
 
 	isObservable() {
@@ -552,6 +650,8 @@ Observable.isObservable = (obj) => {
 
 };
 
+
+Observable.AttributeChangedDelay = 3;
 
 ClassMap.register('Observable', Observable);
 

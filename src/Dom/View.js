@@ -3,12 +3,12 @@ import $ from 'jquery';
 import HTMLBars from 'htmlbars-standalone';
 
 import App from '~/Helpers/App';
-import Model from '~/Data/Model';
+import Observable from '~/Core/Observable';
 
 /**
  * @module Dom
  */
-class View extends Model
+class View extends Observable
 {
 
 	/**
@@ -75,7 +75,7 @@ class View extends Model
 	 * @param {string} source   			The source for the view
 	 * @param {Dom.Renderer} renderer 		The Renderer instance that will be used by HTMLBars
 	 */
-	constructor(source, renderer) {
+	constructor(source, definitionCallback = null, renderer = null) {
 		
 		super();
 
@@ -157,6 +157,7 @@ class View extends Model
 
 
 
+
 		//////////////////////////
 		// Check out the source //
 		//////////////////////////
@@ -198,6 +199,12 @@ class View extends Model
 			// Load it
 			this._loadTemplate(url);
 
+		}
+
+
+		// Definition callback?
+		if (definitionCallback) {
+			definitionCallback.apply(this);
 		}
 
 
@@ -296,13 +303,13 @@ class View extends Model
 				this.dataPromises[key] = value;
 				this.loadPromises.push(value);
 				value.then((result) => {
-					this.set(key, result, false);
+					this.set(key, result, true, true);
 				});
 
 			} else {
 
-				// Set it now
-				this.set(key, value, true);
+				// Set it now (convert to observables, and do not trigger updates)
+				this.set(key, value, true, true);
 
 			}
 

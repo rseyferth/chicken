@@ -13,13 +13,6 @@ class Model extends Observable
 	}
 
 
-	computed(...args) {
-
-		// Dependencies?
-		if (args.length === 0) throw new Error('The `computed` method needs at least one argument.');
-
-	}
-
 
 
 }

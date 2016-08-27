@@ -7,7 +7,7 @@
 		exports["Chicken"] = factory(require("$"), require("_"), require("XRegExp"), require("HTMLBars"));
 	else
 		root["Chicken"] = factory(root["$"], root["_"], root["XRegExp"], root["HTMLBars"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_38__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_39__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -80,31 +80,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(44);
+	var _ObservableArray = __webpack_require__(45);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
-	var _SettingsObject = __webpack_require__(33);
+	var _SettingsObject = __webpack_require__(34);
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Element = __webpack_require__(36);
+	var _Element = __webpack_require__(37);
 
 	var _Element2 = _interopRequireDefault(_Element);
 
-	var _Renderer = __webpack_require__(37);
+	var _Renderer = __webpack_require__(38);
 
 	var _Renderer2 = _interopRequireDefault(_Renderer);
 
-	var _View = __webpack_require__(50);
+	var _View = __webpack_require__(51);
 
 	var _View2 = _interopRequireDefault(_View);
 
-	var _ViewContainer = __webpack_require__(35);
+	var _ViewContainer = __webpack_require__(36);
 
 	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
 
-	var _Chainable = __webpack_require__(34);
+	var _Chainable = __webpack_require__(35);
 
 	var _Chainable2 = _interopRequireDefault(_Chainable);
 
@@ -112,11 +112,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Action = __webpack_require__(48);
+	var _Action = __webpack_require__(49);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
-	var _Controller2 = __webpack_require__(49);
+	var _Controller2 = __webpack_require__(50);
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
@@ -124,15 +124,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Request2 = _interopRequireDefault(_Request);
 
-	var _Route = __webpack_require__(46);
+	var _Route = __webpack_require__(47);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _RouteMatch = __webpack_require__(47);
+	var _RouteMatch = __webpack_require__(48);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
-	var _Router = __webpack_require__(45);
+	var _Router = __webpack_require__(46);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -311,15 +311,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _SettingsObject = __webpack_require__(33);
+	var _SettingsObject = __webpack_require__(34);
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _ViewContainer = __webpack_require__(35);
+	var _ViewContainer = __webpack_require__(36);
 
 	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
 
-	var _Renderer = __webpack_require__(37);
+	var _Renderer = __webpack_require__(38);
 
 	var _Renderer2 = _interopRequireDefault(_Renderer);
 
@@ -327,7 +327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Router = __webpack_require__(45);
+	var _Router = __webpack_require__(46);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -2745,6 +2745,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
+	var _ComputedAttribute = __webpack_require__(33);
+
+	var _ComputedAttribute2 = _interopRequireDefault(_ComputedAttribute);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -2844,6 +2848,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.attributes = {};
 
+			// Scheduling
+			_this._scheduleAttributesChangedTimeout = false;
+			_this._scheduleAttributesChangedAttributes = null;
+
 			////////////////////
 			// Initialization //
 			////////////////////
@@ -2916,8 +2924,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Get value
 				var value = this.attributes[currentPart];
 
+				// Nothing?
+				if (value === undefined) return;
+
 				// Value found?
-				if (value === undefined || parts.length === 0) {
+				if (parts.length === 0) {
+
+					// Is it computed?
+					if (value instanceof _ComputedAttribute2.default) {
+						return value.getValue();
+					}
+
+					// Return the value as is.
 					return value;
 				}
 
@@ -2964,6 +2982,11 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				}
 
+				// Is it a computed attribute
+				if (value instanceof _ComputedAttribute2.default) {
+					value.name = key;
+				}
+
 				// Is there a dot in there?
 				if (typeof key === 'string' && key.match(/\.[\w]/)) {
 					var _ret = function () {
@@ -2992,7 +3015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 							// Study it
 							newValue.study(function () {
-								_this2._triggerAttributeChanged(currentPart);
+								_this2._scheduleAttributeChanged(currentPart);
 							});
 
 							// Store it
@@ -3018,12 +3041,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Study the object
 					value.study(function () {
-						_this2._triggerAttributeChanged(key);
+						_this2._scheduleAttributeChanged(key);
 					});
 				}
 
 				// Update attribute
-				if (!doNotNotify) this._triggerAttributeChanged(key, value);
+				if (!doNotNotify) this._scheduleAttributeChanged(key);
 
 				return this;
 			}
@@ -3151,14 +3174,24 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * 	obj.set('foo', 'boo'); // Will alert 'Changed: boo'
 	   * 	
 	   * @method observe
-	   * @param  {string}   key      The name of the attribute to observe
+	   * @param  {string|array}   key      The name of the attribute to observe
 	   * @param  {Function} callback 
 	   * @chainable
 	   */
 
 		}, {
 			key: 'observe',
-			value: function observe(key, callback) {
+			value: function observe(keyOrKeys, callback) {
+				var _this4 = this;
+
+				// More than one?
+				if (Array.isArray(keyOrKeys)) {
+					_underscore2.default.each(keyOrKeys, function (key) {
+						_this4.observe(key, callback);
+						return _this4;
+					});
+				}
+				var key = keyOrKeys;
 
 				// Get the set
 				if (!this.observers.has(key)) {
@@ -3195,6 +3228,55 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this;
 			}
+
+			/**
+	   * @method computed
+	   * @param  {string}   [name]         The name of the attribute to define. Only when you use this method directly.
+	   * @param  {array}    dependencies An array of zero or more keys to watch
+	   * @param  {Function} callback     The method to call 
+	   * @return {Core.ComputedAttribute}
+	   */
+
+		}, {
+			key: 'computed',
+			value: function computed() {
+
+				// Name given?
+				var name, dependencies, callback;
+
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
+				}
+
+				if (args.length === 3) {
+					name = args[0];
+					dependencies = args[1];
+					callback = args[2];
+				} else if (args.length === 2) {
+					dependencies = args[0];
+					callback = args[1];
+				} else {
+					throw new Error('The "computed" method needs either 2 or 3 arguments.');
+				}
+
+				// Create (and set)
+				var computed = new _ComputedAttribute2.default(this, dependencies, callback);
+				if (name) {
+					computed.name = name;
+					this.attributes[name] = computed;
+				}
+
+				// Name given? Then it's chainable, otherwise we need the result
+				return name ? this : computed;
+			}
+
+			/**
+	   * Get the Observable including all its children
+	   * as a native object.
+	   * 
+	   * @return {object}
+	   */
+
 		}, {
 			key: 'toObject',
 			value: function toObject() {
@@ -3235,46 +3317,63 @@ return /******/ (function(modules) { // webpackBootstrap
 			/////////////////////
 
 		}, {
-			key: '_triggerAttributeChanged',
-			value: function _triggerAttributeChanged(key, value) {
-				var _this4 = this;
-
-				var calledFromObjectChanged = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
-
-
-				// Listeners?
-				var observers = this.observers.get(key);
-				if (observers !== undefined) {
-
-					// Call them
-					observers.forEach(function (observer) {
-						observer.apply(_this4);
-					});
-				}
-
-				// Trigger object change?
-				if (calledFromObjectChanged === false) {
-					this._triggerObjectChanged([key], true);
-				}
-			}
-		}, {
-			key: '_triggerObjectChanged',
-			value: function _triggerObjectChanged(changedAttributes) {
+			key: '_scheduleAttributeChanged',
+			value: function _scheduleAttributeChanged(key) {
 				var _this5 = this;
 
-				var calledFromAttributeChanged = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
+				// Already something scheduled?
+				if (!this._scheduleAttributesChangedTimeout) {
 
+					// Schedule it
+					this._scheduleAttributesChangedAttributes = [];
+					this._scheduleAttributesChangedTimeout = setTimeout(function () {
 
-				// Trigger change event
-				this.trigger(Observable.Events.Change, changedAttributes);
+						// Trigger it now!
+						_this5._scheduleAttributesChangedTimeout = false;
+						_this5._triggerAttributesChanged();
+					}, Observable.AttributeChangedDelay);
+				}
 
-				// Called from attribute?
-				if (calledFromAttributeChanged === false) {
+				// Add attribute to the set
+				this._scheduleAttributesChangedAttributes.push(key);
+			}
+		}, {
+			key: '_triggerAttributesChanged',
+			value: function _triggerAttributesChanged() {
+				var _this6 = this;
 
-					// Call individual attributes
-					changedAttributes.forEach(function (value, key) {
-						_this5._triggerAttributeChanged(key, value, true);
+				// Clear for next time.
+				if (this._scheduleAttributesChangedTimeout) clearTimeout(this._scheduleAttributesChangedTimeout);
+				this._scheduleAttributesChangedTimeout = false;
+
+				// Check my attributes
+				var attrs = _underscore2.default.unique(this._scheduleAttributesChangedAttributes);
+				if (attrs) {
+
+					// Collect the observers, using a Set to make sure the same observer can't be called twice
+					var combinedObservers = new Set();
+					_underscore2.default.each(attrs, function (attr) {
+
+						// Get observers
+						var attrObservers = _this6.observers.get(attr);
+						if (attrObservers) {
+							attrObservers.forEach(function (observer) {
+
+								// Add it.
+								combinedObservers.add(observer);
+							});
+						}
 					});
+
+					// Did we have any observers?
+					combinedObservers.forEach(function (observer) {
+
+						// Now call it.
+						observer.apply(_this6);
+					});
+
+					// Students as well.
+					this.trigger(Observable.Events.Change, attrs);
 				}
 			}
 		}, {
@@ -3314,6 +3413,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
 	};
+
+	Observable.AttributeChangedDelay = 3;
 
 	_ClassMap2.default.register('Observable', Observable);
 
@@ -3581,6 +3682,83 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Core
+	 */
+	var ComputedAttribute = function () {
+
+		/**
+	  * @constructor
+	  * @param  {Core.Observable}   	observable   
+	  * @param  {Array}   			dependencies 
+	  * @param  {Function} 			callback     	 
+	  */
+		function ComputedAttribute(observable, dependencies, callback) {
+			var _this = this;
+
+			_classCallCheck(this, ComputedAttribute);
+
+			this.observable = observable;
+			this.name = null;
+			this.dependencies = dependencies;
+
+			this.callback = callback;
+
+			// Watch
+			this.observable.observe(this.dependencies, function () {
+				_this.update();
+			});
+		}
+
+		_createClass(ComputedAttribute, [{
+			key: 'update',
+			value: function update() {
+
+				// Trigger it.
+				this.observable._scheduleAttributeChanged(this.name);
+			}
+		}, {
+			key: 'getValue',
+			value: function getValue() {
+				var _this2 = this;
+
+				// Get dependency values
+				var args = [];
+				_underscore2.default.each(this.dependencies, function (dep) {
+					args.push(_this2.observable.get(dep));
+				});
+
+				// Do the callback
+				return this.callback.apply(this.observable, args);
+			}
+		}, {
+			key: 'toString',
+			value: function toString() {
+				return this.getValue();
+			}
+		}]);
+
+		return ComputedAttribute;
+	}();
+
+	module.exports = ComputedAttribute;
+
+/***/ },
+/* 34 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
 	var _underscore = __webpack_require__(2);
@@ -3591,7 +3769,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _Chainable = __webpack_require__(34);
+	var _Chainable = __webpack_require__(35);
 
 	var _Chainable2 = _interopRequireDefault(_Chainable);
 
@@ -3681,7 +3859,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = (0, _Chainable2.default)(SettingsObject);
 
 /***/ },
-/* 34 */
+/* 35 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -3700,7 +3878,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 35 */
+/* 36 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3709,7 +3887,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _Element2 = __webpack_require__(36);
+	var _Element2 = __webpack_require__(37);
 
 	var _Element3 = _interopRequireDefault(_Element2);
 
@@ -3864,7 +4042,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ViewContainer;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3944,7 +4122,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Element;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -3953,7 +4131,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _htmlbarsStandalone = __webpack_require__(38);
+	var _htmlbarsStandalone = __webpack_require__(39);
 
 	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
 
@@ -3961,15 +4139,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _Binding = __webpack_require__(39);
+	var _Binding = __webpack_require__(40);
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
-	var _ActionBinding = __webpack_require__(40);
+	var _ActionBinding = __webpack_require__(41);
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Helpers = __webpack_require__(42);
+	var _Helpers = __webpack_require__(43);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -4172,13 +4350,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Renderer;
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_38__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_39__;
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4341,8 +4519,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Listen to key up, etc
 				var $element = (0, _jquery2.default)(morph.element);
+				var lastValue = $element.val();
 				$element.on('keyup change paste', function () {
-					binding.setValue($element.val(), morph);
+					var v = $element.val();
+					if (v !== lastValue) {
+						binding.setValue(v, morph);
+						lastValue = v;
+					}
 				});
 			}
 		},
@@ -4396,7 +4579,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Binding;
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4411,7 +4594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _uuidLib = __webpack_require__(41);
+	var _uuidLib = __webpack_require__(42);
 
 	var _uuidLib2 = _interopRequireDefault(_uuidLib);
 
@@ -4582,7 +4765,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ActionBinding;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports) {
 
 	var validator = new RegExp("^[a-z0-9]{32}$", "i");
@@ -4651,7 +4834,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4662,7 +4845,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _uuidLib = __webpack_require__(41);
+	var _uuidLib = __webpack_require__(42);
 
 	var _uuidLib2 = _interopRequireDefault(_uuidLib);
 
@@ -4670,11 +4853,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
-	var _ActionBinding = __webpack_require__(40);
+	var _ActionBinding = __webpack_require__(41);
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Utils = __webpack_require__(43);
+	var _Utils = __webpack_require__(44);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
@@ -4855,7 +5038,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Helpers;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4870,7 +5053,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(44);
+	var _ObservableArray = __webpack_require__(45);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -4925,7 +5108,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5383,7 +5566,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ObservableArray;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5398,11 +5581,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _SettingsObject = __webpack_require__(33);
+	var _SettingsObject = __webpack_require__(34);
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Route = __webpack_require__(46);
+	var _Route = __webpack_require__(47);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
@@ -5661,7 +5844,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Router;
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5680,7 +5863,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _RouteMatch = __webpack_require__(47);
+	var _RouteMatch = __webpack_require__(48);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
@@ -6082,7 +6265,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Route;
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6093,7 +6276,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Action = __webpack_require__(48);
+	var _Action = __webpack_require__(49);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
@@ -6243,7 +6426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = RouteMatch;
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6258,11 +6441,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _Controller = __webpack_require__(49);
+	var _Controller = __webpack_require__(50);
 
 	var _Controller2 = _interopRequireDefault(_Controller);
 
-	var _View = __webpack_require__(50);
+	var _View = __webpack_require__(51);
 
 	var _View2 = _interopRequireDefault(_View);
 
@@ -6561,7 +6744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Action;
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -6660,7 +6843,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Controller;
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6677,17 +6860,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _htmlbarsStandalone = __webpack_require__(38);
+	var _htmlbarsStandalone = __webpack_require__(39);
 
 	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
 
-	var _App = __webpack_require__(51);
+	var _App = __webpack_require__(52);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Model2 = __webpack_require__(52);
+	var _Observable2 = __webpack_require__(30);
 
-	var _Model3 = _interopRequireDefault(_Model2);
+	var _Observable3 = _interopRequireDefault(_Observable2);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6700,8 +6883,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @module Dom
 	 */
-	var View = function (_Model) {
-		_inherits(View, _Model);
+	var View = function (_Observable) {
+		_inherits(View, _Observable);
 
 		/**
 	  * ## Creating a View
@@ -6767,7 +6950,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param {string} source   			The source for the view
 	  * @param {Dom.Renderer} renderer 		The Renderer instance that will be used by HTMLBars
 	  */
-		function View(source, renderer) {
+		function View(source) {
+			var definitionCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+			var renderer = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
 			_classCallCheck(this, View);
 
 			/**
@@ -6873,6 +7059,11 @@ return /******/ (function(modules) { // webpackBootstrap
 						_this._loadTemplate(url);
 					}
 
+			// Definition callback?
+			if (definitionCallback) {
+				definitionCallback.apply(_this);
+			}
+
 			return _this;
 		}
 
@@ -6971,12 +7162,12 @@ return /******/ (function(modules) { // webpackBootstrap
 						this.dataPromises[key] = value;
 						this.loadPromises.push(value);
 						value.then(function (result) {
-							_this3.set(key, result, false);
+							_this3.set(key, result, true, true);
 						});
 					} else {
 
-						// Set it now
-						this.set(key, value, true);
+						// Set it now (convert to observables, and do not trigger updates)
+						this.set(key, value, true, true);
 					}
 				}
 
@@ -7136,7 +7327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}]);
 
 		return View;
-	}(_Model3.default);
+	}(_Observable3.default);
 
 	/**
 	 * The TemplateCache is used to cache templates by their name. When you are
@@ -7167,7 +7358,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = View;
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7181,55 +7372,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = function () {
 		return _ClassMap2.default.get('Application').getInstance();
 	};
-
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _Observable2 = __webpack_require__(30);
-
-	var _Observable3 = _interopRequireDefault(_Observable2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Data
-	 */
-	var Model = function (_Observable) {
-		_inherits(Model, _Observable);
-
-		function Model() {
-			var initValues = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
-			var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
-
-			_classCallCheck(this, Model);
-
-			return _possibleConstructorReturn(this, (Model.__proto__ || Object.getPrototypeOf(Model)).call(this, initValues, convertToObservables));
-		}
-
-		_createClass(Model, [{
-			key: 'computed',
-			value: function computed() {
-
-				// Dependencies?
-				if (arguments.length === 0) throw new Error('The `computed` method needs at least one argument.');
-			}
-		}]);
-
-		return Model;
-	}(_Observable3.default);
-
-	module.exports = Model;
 
 /***/ },
 /* 53 */
