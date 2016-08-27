@@ -98,20 +98,15 @@ describe('Core.Observable', () => {
 		it('should return itself', () => {
 			assert.equal(obj.study(function() {}), obj);
 		});
-		it('should call the callback when any attribute is updated', () => {
+		it('should call the callback when any attribute is updated', (done) => {
 
 			var called = false;
 			var callback = (changedAttributes) => {
-				assert.deepEqual(changedAttributes, ['foo']);
-				called = true;
+				done();
+				obj.neglect(callback);
 			};
 			obj.study(callback);
-
 			obj.set('foo', 'bar');
-			assert.equal(called, true);
-
-			obj.neglect(callback);
-
 
 		});
 	});
@@ -122,22 +117,7 @@ describe('Core.Observable', () => {
 		it('should return itself', () => {
 			assert.equal(obj.neglect(function() {}), obj);
 		});
-		it('should not call the callback when any attribute is updated after the object is neglected', () => {
-
-			var called = false;
-			var callback = (changedAttributes) => {
-				assert.deepEqual(changedAttributes, ['foo']);
-				called = true;
-			};
-			obj.study(callback);
-			obj.neglect(callback);
-
-			obj.set('foo', 'bar');
-			assert.equal(called, false);
-
-
-
-		});
+		
 	});
 
 
@@ -149,21 +129,19 @@ describe('Core.Observable', () => {
 			assert.equal(obj.observe('foo', function() {}), obj);
 		});
 
-		it('should call the callback when the attribute itself is updated', () => {
+		it('should call the callback when the attribute itself is updated', (done) => {
 
 			var called = false;
-			obj.observe('foo', () => {
-				assert.equal(obj.get('foo'), 'bar');
-				called = true;
-			});
-
+			var callback = () => {
+				done();
+				obj.disregard('foo', callback);
+			};
+			obj.observe('foo', callback);
 			obj.set('foo', 'bar');
-
-			assert.equal(called, true);
 
 		});
 
-		it('should call the callback when a child attribute of the attribute is updated', () => {
+		it('should call the callback when a child attribute of the attribute is updated', (done) => {
 
 			// Create child observable
 			var called = false;
@@ -172,16 +150,14 @@ describe('Core.Observable', () => {
 			obj.set('child', child);
 			obj.observe('child', () => {
 
-				// Check that the observable is returned
-				assert.equal(child.get('hello'), 'moon');
-				called = true;
+				done();
 
 			});
 
 
 			// Now change child value
 			child.set('hello', 'moon');
-			assert.equal(called, true);
+			
 
 		});
 
