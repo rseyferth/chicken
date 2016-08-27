@@ -89,6 +89,17 @@ class Route extends Obj
 		});
 
 
+
+		/**
+		 * The name of the route you can use to link to. This is only 
+		 * set if you used the 'as' option.
+		 * 
+		 * @property name
+		 * @type {string}
+		 */
+		this.name = null;
+
+
 	}	
 
 
@@ -337,6 +348,25 @@ class Route extends Obj
 
 	}
 
+
+	/**
+	 * Set the name of this Route
+	 *
+	 * @method as
+	 * @param  {string} name 
+	 * @chainable
+	 */
+	as(name) {
+
+		// Store name
+		this.name = name;
+
+		// Store in router
+		this.router.namedRoutes.set(name, this);
+
+		return this;
+
+	}
 
 
 	/**

@@ -40,6 +40,13 @@ class Router extends Obj
 		this.application = application;
 
 
+		/**
+		 * @property namedRoutes
+		 * @type {Map}
+		 */
+		this.namedRoutes = new Map();
+
+
 		///////////////////////////////////////////
 		// Grouped configuration state variables //
 		///////////////////////////////////////////
@@ -50,6 +57,8 @@ class Router extends Obj
 			viewContainer: 'main'
 
 		}, ['parentRoute', 'viewContainer']);
+
+
 
 
 

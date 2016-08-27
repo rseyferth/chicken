@@ -39,6 +39,10 @@ class Obj {
 		this._getPromiseInfo(key).resolve.apply(this, args);
 		return this;
 	}
+	rejectPromise(key, ...args) {
+		this._getPromiseInfo(key).reject.apply(this, args);
+		return this;
+	}
 
 	getPromise(key) {
 		return this._getPromiseInfo(key).promise;

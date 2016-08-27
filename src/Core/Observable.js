@@ -1,7 +1,7 @@
 import _ from 'underscore';
 import Obj from '~/Core/Obj';
 import ClassMap from '~/Helpers/ClassMap';
-import ComputedAttribute from '~/Core/ComputedAttribute';
+import ComputedProperty from '~/Core/ComputedProperty';
 
 /**
  * @module Core
@@ -170,7 +170,7 @@ class Observable extends Obj {
 		if (parts.length === 0) {
 
 			// Is it computed?
-			if (value instanceof ComputedAttribute) {
+			if (value instanceof ComputedProperty) {
 				return value.getValue();
 			}
 
@@ -219,8 +219,8 @@ class Observable extends Obj {
 		}
 
 		// Is it a computed attribute
-		if (value instanceof ComputedAttribute) {
-			value.name = key;
+		if (value instanceof ComputedProperty) {
+			value.initialize(key, this);
 		}
 
 
@@ -421,17 +421,51 @@ class Observable extends Obj {
 	 * @chainable
 	 */
 	observe(keyOrKeys, callback) {
+		
+		////////////////////
+		// More than one? //
+		////////////////////
 
-		// More than one?
 		if (Array.isArray(keyOrKeys)) {
 			_.each(keyOrKeys, (key) => {
 				this.observe(key, callback);
-				return this;
 			});
+			return this;
 		}
 		var key = keyOrKeys;
 
-		// Get the set
+
+		//////////////////////////////
+		// Does the key have a dot? //
+		//////////////////////////////
+
+		let parts = key.split(/\./);
+		let currentPart = parts.shift();
+		if (parts.length > 0) {
+
+			// Do the sub thing
+			var sub = this.attributes[currentPart];
+			if (sub === undefined) {
+
+				// Create new observable
+				this.set(currentPart, {}, true);
+				sub = this.attributes[currentPart];
+
+			}
+
+			// Is it an observable?
+			if (Observable.isObservable(sub)) {
+				return sub.observe(parts.join('.'), callback);				
+			}
+
+			throw new Error('Cannot observe property of non-existing object');
+			
+		}
+
+		//////////////////
+		// Add observer //
+		//////////////////
+		
 		if (!this.observers.has(key)) {
 			this.observers.set(key, new Set());
 		}
@@ -466,43 +500,11 @@ class Observable extends Obj {
 
 	}
 
-
-	/**
-	 * @method computed
-	 * @param  {string}   [name]         The name of the attribute to define. Only when you use this method directly.
-	 * @param  {array}    dependencies An array of zero or more keys to watch
-	 * @param  {Function} callback     The method to call 
-	 * @return {Core.ComputedAttribute}
-	 */
-	computed(...args) {
-
-		// Name given?
-		var name, dependencies, callback;
-		if (args.length === 3) {
-			[name, dependencies, callback] = args;
-		} else if (args.length === 2) {
-			[dependencies, callback] = args;
-		} else {
-			throw new Error('The "computed" method needs either 2 or 3 arguments.');
-		}
-
-		// Create (and set)
-		var computed = new ComputedAttribute(this, dependencies, callback);
-		if (name) {
-			computed.name = name;
-			this.attributes[name] = computed;
-		}
-			
-		// Name given? Then it's chainable, otherwise we need the result
-		return name ? this : computed;
-
-	}
-
-
 	/**
 	 * Get the Observable including all its children
 	 * as a native object.
-	 * 
+	 *
+	 * @method toObject
 	 * @return {object}
 	 */
 	toObject() { 
@@ -651,7 +653,7 @@ Observable.isObservable = (obj) => {
 };
 
 
-Observable.AttributeChangedDelay = 3;
+Observable.AttributeChangedDelay = 1;
 
 ClassMap.register('Observable', Observable);
 

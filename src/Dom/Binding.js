@@ -1,4 +1,3 @@
-import _ from 'underscore';
 import $ from 'jquery';
 
 /**
@@ -49,9 +48,9 @@ class Binding
 		 * updated. These morphs are provides by the HTMLBars package.
 		 * 
 		 * @property morphs
-		 * @type {Array} 
+		 * @type {Set} 
 		 */
-		this.morphs = [];
+		this.morphs = new Set();
 
 
 		////////////////
@@ -61,7 +60,7 @@ class Binding
 		this.observable.observe(path, () => {
 
 			// Trigger updates for all morphs
-			_.each(this.morphs, (morph) => {
+			this.morphs.forEach((morph) => {
 				morph.isDirty = true;
 			});
 
@@ -105,11 +104,14 @@ class Binding
 	 */
 	addMorph(morph) {
 
+		// Is this an already bound morph?
+		if (this.morphs.has(morph)) return;
+
 		//////////////////////////////////////////
 		// Add the morph, for data->dom binding //
 		//////////////////////////////////////////
 
-		this.morphs.push(morph);
+		this.morphs.add(morph);
 
 
 		///////////////////////////////////////////

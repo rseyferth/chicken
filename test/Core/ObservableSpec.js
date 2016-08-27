@@ -100,8 +100,7 @@ describe('Core.Observable', () => {
 		});
 		it('should call the callback when any attribute is updated', (done) => {
 
-			var called = false;
-			var callback = (changedAttributes) => {
+			var callback = () => {
 				done();
 				obj.neglect(callback);
 			};
@@ -131,7 +130,6 @@ describe('Core.Observable', () => {
 
 		it('should call the callback when the attribute itself is updated', (done) => {
 
-			var called = false;
 			var callback = () => {
 				done();
 				obj.disregard('foo', callback);
@@ -144,7 +142,6 @@ describe('Core.Observable', () => {
 		it('should call the callback when a child attribute of the attribute is updated', (done) => {
 
 			// Create child observable
-			var called = false;
 			var child = new Observable();
 			child.set('hello', 'world');
 			obj.set('child', child);

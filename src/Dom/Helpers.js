@@ -28,7 +28,7 @@ class Helpers
 	// Actions //
 	/////////////
 
-	action(params, attributeHash, options) {
+	action(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
 		
 		// There should be an ActionBinding for this element
 		let element = options.element;
@@ -54,7 +54,7 @@ class Helpers
 	/**
 	 * @method each
 	 */
-	each(params, attributeHash, options) {
+	each(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
 
 		// Get the value
 		let list = this._getValue(params[0]);
@@ -67,26 +67,26 @@ class Helpers
 	/**
 	 * @method if	 
 	 */
-	if(params, attributeHash, options) {
+	if(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
 
 		// Get the value
 		let value = this._getValue(params[0]);
-		return this._ifUnless(params, attributeHash, options, Utils.isTruthlike(value));		
+		return this._ifUnless(params, options, Utils.isTruthlike(value));		
 
 	}
 
 	/**
 	 * @method unless
 	 */
-	unless(params, attributeHash, options) {
+	unless(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
 
 		// Get the value
 		let value = this._getValue(params[0]);
-		return this._ifUnless(params, attributeHash, options, !Utils.isTruthlike(value));		
+		return this._ifUnless(params, options, !Utils.isTruthlike(value));
 
 	}
 
-	_ifUnless(params, attributeHash, options, show) {
+	_ifUnless(params, options, show) {
 
 		// Is the param truth-like?
 		if (show) {
@@ -97,7 +97,7 @@ class Helpers
 
 			// Or parameter-if?
 			} else {
-				return this._getValue(params[1]);
+				return this._getValue(params[0]);
 			}
 
 		} else {
@@ -119,24 +119,27 @@ class Helpers
 	// Values //
 	////////////
 
-	concat(params) {
+	concat(params/*, attributeHash, options, morph, renderer, scope, visitor*/) {
 
-		return this._getValues(params).join('');
+		return this._getValues(params).join();
 
 	}
+
 
 
 	///////////
 	// Debug //
 	///////////
 
-	log(params) {
+	log(params/*, attributeHash, options, morph, renderer, scope, visitor*/) {
 		console.log.apply(console, this._getValues(params));
 	}
 
-	'query-params'(params, attributeHash) {
+	'query-params'(params, attributeHash /*, options, morph, renderer, scope, visitor*/) {
 		return QueryString.stringify(this._getHashValues(attributeHash));		
 	}
+
+
 
 
 
@@ -160,6 +163,11 @@ class Helpers
 		});
 		return result;
 	}
+
+
+
+
+
 	
 
 }

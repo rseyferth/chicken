@@ -2,12 +2,14 @@ YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
         "Application",
+        "Core.ComputedProperty",
         "Core.Obj",
         "Core.Observable",
         "Core.ObservableArray",
         "Core.SettingsObject",
         "Dom.ActionBinding",
         "Dom.Binding",
+        "Dom.Component",
         "Dom.Element",
         "Dom.Helpers",
         "Dom.Renderer",

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/ActionBinding.js</title>
+    <title>/home/ruben/Websites/chicken/src/Core/ComputedProperty.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,190 +132,127 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/ActionBinding.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Core/ComputedProperty.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 import _ from &#x27;underscore&#x27;;
-import $ from &#x27;jquery&#x27;;
-import Uuid from &#x27;uuid-lib&#x27;;
 
 /**
- * @module Dom
+ * @module Core
  */
-class ActionBinding
+class ComputedProperty
 {
 
 	/**
-	 * @class Dom.ActionBinding
+	 * @class Core.ComputedProperty
 	 * 
 	 * @constructor
+	 * @param  {Array}   			dependencies 
+	 * @param  {Function} 			callback     	 
 	 */
-	constructor(renderer, morph, actionName, actionHandler, parameters, options, view) {
+	constructor(dependencies, callback) {
 
 		/**
-		 * @property renderer
-		 * @type {Dom.Renderer}
-		 */
-		this.renderer = renderer;
-
-		/**
-		 * @property morph
-		 * @type {HTMLBarsMorph}
-		 */
-		this.morph = morph;
-
-		/**
-		 * The name of the action on the view
+		 * The Observable instance that this computed attribute is
+		 * a part of.
 		 * 
-		 * @property actionName
+		 * @property observable
+		 * @type {Core.Observable}
+		 */
+		this.observable = null;
+
+		/**
+		 * The attribute name within the Observable that this ComputedProperty
+		 * represents.
+		 * 
+		 * @property name
 		 * @type {string}
 		 */
-		this.actionName = actionName;
+		this.name = null;
 
 		/**
-		 * The function to call when the action is executed
-		 * 
-		 * @property actionHandler
-		 * @type {function}
-		 */
-		this.actionHandler = actionHandler;
-
-		/**
-		 * @property options
-		 * @type {object}
-		 */
-		this.options = _.defaults(options, {
-			preventDefault: true
-		});
-
-		/**
-		 * The parameters that will be passed along to the action handler.
-		 * 
-		 * @property parameters
+		 * The names of the attributes that this compution depends on. These
+		 * attributes will also be injected into the callback.
+		 *
+		 * @property dependencies
 		 * @type {array}
 		 */
-		this.parameters = parameters;
+		this.dependencies = dependencies;
 
 		/**
-		 * @property view
-		 * @type {Dom.View}
+		 * The compution function that is called when the value is requested.
+		 *
+		 * @property callback
+		 * @type {Function}
 		 */
-		this.view = view;
-
-
-		/**
-		 * The name of the event that is listened to on the element.
-		 * When not specifically configured in the binding itself, a default
-		 * event will be decided on, based on the element tag name. 
-		 * 
-		 * @property eventName
-		 * @type {string}
-		 */
-		this.eventName = options.on ? options.on : ActionBinding.getDefaultEventName(morph.element);
-
-		/**
-		 * Indicator whether the binding is applied
-		 * to the element
-		 * 
-		 * @property isListening
-		 * @type {Boolean}
-		 */
-		this.isListening = false;
-
-
-		/**
-		 * @property $element
-		 * @type {jQuery}
-		 */
-		this.$element = null;
-
-		/**
-		 * The unique identifier for this ActionBinding. This is used
-		 * by the Helper to retrieve this instance and automatically
-		 * generated in the constructor.
-		 * 
-		 * @property id
-		 * @type {string}
-		 */
-		this.id = ActionBinding.register(this);
-
-		// Store this binding on the element
-		morph.element.setAttribute(&#x27;data-chicken-action&#x27;, this.id);
-
-
-
-
+		this.callback = callback;
 
 	}
 
-	apply() {
+	/**
+	 * Get the current computed value 
+	 *
+	 * @method getValue
+	 * @return {mixed}
+	 */
+	getValue() {
 
-		// Already applied?
-		if (this.isListening === true) return this;
-		this.isListening = true;
+		// Get dependency values
+		var args = [];
+		_.each(this.dependencies, (dep) =&gt; {
+			args.push(this.observable.get(dep));
+		});	
+
+		// Do the callback
+		return this.callback.apply(this.observable, args);
+
+	}
+
+	/**
+	 * Alias of &#x60;getValue&#x60;
+	 * 
+	 * @method toString
+	 * @return {mixed}
+	 */
+	toString() {
+		return this.getValue();
+	}
 
 
-		// Get element
-		this.$element = $(this.morph.element);
-		this.$element.on(this.eventName, (e) =&gt; {
+	/**
+	 * Make this property part of an Observable object, and 
+	 * start watching for changes.
+	 * 
+	 * @method initialize
+	 * @param {string} name 					The name op the property
+	 * @param {Core.Observable} observable 		The observable instance this property is a part of
+	 * @chainable
+	 */
+	initialize(name, observable) {
 
-			// Prevent default?
-			if (this.options.preventDefault) e.preventDefault();
+		// Localize
+		this.name = name;
+		this.observable = observable;
 
-			// Call the handler
-			var params = _.flatten([
-				_.map(this.parameters, (value) =&gt; {
-					return this.renderer.hooks.getValue(value);
-				}), 
-				this, 
-				this.view
-			]);
-			this.actionHandler.apply(this.view, params);
-
+		// Watch the properties
+		this.observable.observe(this.dependencies, () =&gt; {
+			this.observable._scheduleAttributeChanged(this.name);
 		});
 
 		return this;
 
 	}
 
+
+
+
+
+
 }
 
-ActionBinding.registry = new Map();
-ActionBinding.register = (binding) =&gt; {
+module.exports = ComputedProperty;
 
-	// Generate id
-	var id = Uuid.raw();
-	ActionBinding.registry.set(id, binding);
-	return id;
-
-};
-ActionBinding.get = (id) =&gt; {
-	return ActionBinding.registry.get(id);
-};
-
-
-ActionBinding.getDefaultEventName = (element) =&gt; {
-
-	// Specific one for this tag?
-	var eventName = ActionBinding.DefaultEventNames[element.tagName.toLowerCase()];
-
-	// Or the old click.
-	if (!eventName) eventName = &#x27;click&#x27;;
-	return eventName;
-
-
-};
-ActionBinding.DefaultEventNames = {
-
-	input: &#x27;change keyup paste&#x27;,
-	select: &#x27;change&#x27;,
-	form: &#x27;submit&#x27;	
-};
-
-
-
-module.exports = ActionBinding;
     </pre>
 </div>
 

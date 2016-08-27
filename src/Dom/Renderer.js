@@ -58,15 +58,25 @@ class Renderer
 					path = keys.join('.');
 				}
 
-
 				// No path? Return the whole data
 				if (path === '') return appliedScope;
 
 				// Is data an observable?
 				if (appliedScope instanceof Observable) {
 
+					// Already a binding?
+					if (appliedScope._bindings === undefined) appliedScope._bindings = {};
+					if (appliedScope._bindings[path]) {
+						
+						// Return existing binding
+						return appliedScope._bindings[path];
+					}
+
 					// Create a binding
 					var binding = new Binding(this, appliedScope, path);
+
+					// Store it
+					appliedScope._bindings[path] = binding;
 
 					// Get the value
 					return binding;
@@ -113,7 +123,6 @@ class Renderer
 			 */
 			linkRenderNode: (morph, renderer, scope, type, values) => {
 			
-				
 				// Add this morph to all involved bindings
 				_.each(values, (binding) => {
 
@@ -133,14 +142,19 @@ class Renderer
 				return renderer.helpers[helperName];
 			},
 
-			invokeHelper: (morph, env, scope, visitor, params, attributeHash, helper, templates) => {
+			invokeHelper: (morph, renderer, scope, visitor, params, attributeHash, helper, options) => {
 				
 				// Call it with its own context
 				return { 
-					value: helper.call(this.helpers, params, attributeHash, templates)
+					value: helper.apply(this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor])
 				};
 
 			},
+
+			component: (/*morph, renderer, scope, tagName, params, attrs, options, visitor*/) => {
+//				console.log('Component', tagName, params, attrs);
+			},
+
 
 			keywords: _.defaults({
 
@@ -182,7 +196,15 @@ class Renderer
 					// Create action binding
 					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
 
+				},
+
+
+				component: (/*morph, renderer, scope, params, hash, template, inverse, visitor, isRerender = false*/) => {
+
+					//console.log(' jojojojo');
+
 				}
+
 
 			}, HTMLBars.Runtime.Hooks.Default.keywords)
 

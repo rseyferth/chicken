@@ -43,6 +43,8 @@
             
                 <li><a href="../classes/Application.html">Application</a></li>
             
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
+            
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
                 <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
                 <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
@@ -221,6 +225,17 @@ class Route extends Obj
 			as: null,
 			viewContainer: &#x27;main&#x27;
 		});
+
+
+
+		/**
+		 * The name of the route you can use to link to. This is only 
+		 * set if you used the &#x27;as&#x27; option.
+		 * 
+		 * @property name
+		 * @type {string}
+		 */
+		this.name = null;
 
 
 	}	
@@ -471,6 +486,25 @@ class Route extends Obj
 
 	}
 
+
+	/**
+	 * Set the name of this Route
+	 *
+	 * @method as
+	 * @param  {string} name 
+	 * @chainable
+	 */
+	as(name) {
+
+		// Store name
+		this.name = name;
+
+		// Store in router
+		this.router.namedRoutes.set(name, this);
+
+		return this;
+
+	}
 
 
 	/**

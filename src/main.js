@@ -24,20 +24,28 @@ if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Err
 import Application from '~/Application';
 
 // Core
+import ComputedProperty from '~/Core/ComputedProperty';
 import Obj from '~/Core/Obj';
 import Observable from '~/Core/Observable';
 import ObservableArray from '~/Core/ObservableArray';
 import SettingsObject from '~/Core/SettingsObject';
 
 // Dom
+import ActionBinding from '~/Dom/ActionBinding';
+import Binding from '~/Dom/Binding';
+import Component from '~/Dom/Component';
+import ComponentDefinition from '~/Dom/ComponentDefinition';
 import Element from '~/Dom/Element';
+import Helpers from '~/Dom/Helpers';
 import Renderer from '~/Dom/Renderer';
 import View from '~/Dom/View';
 import ViewContainer from '~/Dom/ViewContainer';
 
 // Helpers
+import App from '~/Helpers/App';
 import Chainable from '~/Helpers/Chainable';
 import ClassMap from '~/Helpers/ClassMap';
+import Utils from '~/Helpers/Utils';
 
 // Routing
 import Action from '~/Routing/Action';
@@ -63,6 +71,7 @@ var Chicken = {
 	Application: Application,
 
 	Core: {
+		ComputedProperty: ComputedProperty,
 		Obj: Obj,
 		Observable: Observable,
 		ObservableArray: ObservableArray,
@@ -70,15 +79,22 @@ var Chicken = {
 	},
 
 	Dom: {
+		ActionBinding: ActionBinding,
+		Binding: Binding,
+		Component: Component,
+		ComponentDefinition: ComponentDefinition,
 		Element: Element,
+		Helpers: Helpers,
 		Renderer: Renderer,
 		View: View,
 		ViewContainer: ViewContainer
 	},
 
 	Helpers: {
+		App: App,
 		Chainable: Chainable,
-		ClassMap: ClassMap		
+		ClassMap: ClassMap,
+		Utils: Utils
 	},
 
 	Routing: {
@@ -134,7 +150,30 @@ var Chicken = {
 		// Store it
 		Controller.registry.set(name, ChickenController);
 
+		return ChickenController;
+
 	},
+
+	component: (name, source, initCallback, renderer, overwrite = false) => {
+
+		// Create definition
+		var def = new ComponentDefinition(name, source, initCallback, renderer);
+
+		// Register it.
+		if (Component.registry.has(name) && !overwrite) throw new Error('A component with the name ' + name + ' was already defined. If you want to overwrite this, use the "overwrite" parameter.');
+		Component.registry.set(name, def);
+
+		return def;
+
+	},
+
+
+	computed: (dependencies, callback) => {
+
+		return new ComputedProperty(dependencies, callback);
+
+	},
+
 
 	view: (...args) => {
 

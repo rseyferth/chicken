@@ -43,6 +43,8 @@
             
                 <li><a href="../classes/Application.html">Application</a></li>
             
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
+            
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
                 <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
                 <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
@@ -192,15 +196,25 @@ class Renderer
 					path = keys.join(&#x27;.&#x27;);
 				}
 
-
 				// No path? Return the whole data
 				if (path === &#x27;&#x27;) return appliedScope;
 
 				// Is data an observable?
 				if (appliedScope instanceof Observable) {
 
+					// Already a binding?
+					if (appliedScope._bindings === undefined) appliedScope._bindings = {};
+					if (appliedScope._bindings[path]) {
+						
+						// Return existing binding
+						return appliedScope._bindings[path];
+					}
+
 					// Create a binding
 					var binding = new Binding(this, appliedScope, path);
+
+					// Store it
+					appliedScope._bindings[path] = binding;
 
 					// Get the value
 					return binding;
@@ -247,7 +261,6 @@ class Renderer
 			 */
 			linkRenderNode: (morph, renderer, scope, type, values) =&gt; {
 			
-				
 				// Add this morph to all involved bindings
 				_.each(values, (binding) =&gt; {
 
@@ -267,14 +280,19 @@ class Renderer
 				return renderer.helpers[helperName];
 			},
 
-			invokeHelper: (morph, env, scope, visitor, params, attributeHash, helper, templates) =&gt; {
+			invokeHelper: (morph, renderer, scope, visitor, params, attributeHash, helper, options) =&gt; {
 				
 				// Call it with its own context
 				return { 
-					value: helper.call(this.helpers, params, attributeHash, templates)
+					value: helper.apply(this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor])
 				};
 
 			},
+
+			component: (/*morph, renderer, scope, tagName, params, attrs, options, visitor*/) =&gt; {
+//				console.log(&#x27;Component&#x27;, tagName, params, attrs);
+			},
+
 
 			keywords: _.defaults({
 
@@ -316,7 +334,15 @@ class Renderer
 					// Create action binding
 					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
 
+				},
+
+
+				component: (/*morph, renderer, scope, params, hash, template, inverse, visitor, isRerender = false*/) =&gt; {
+
+					//console.log(&#x27; jojojojo&#x27;);
+
 				}
+
 
 			}, HTMLBars.Runtime.Hooks.Default.keywords)
 

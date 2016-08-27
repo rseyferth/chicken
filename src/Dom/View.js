@@ -75,7 +75,7 @@ class View extends Observable
 	 * @param {string} source   			The source for the view
 	 * @param {Dom.Renderer} renderer 		The Renderer instance that will be used by HTMLBars
 	 */
-	constructor(source, definitionCallback = null, renderer = null) {
+	constructor(source, initCallback = null, renderer = null) {
 		
 		super();
 
@@ -110,6 +110,13 @@ class View extends Observable
 		 * @type {HTMLBars template}
 		 */
 		this.template = null;
+
+
+		/**
+		 * @property templateUrl
+		 * @type {string}
+		 */
+		this.templateUrl = null;
 
 
 		/**
@@ -187,7 +194,7 @@ class View extends Observable
 					source.split(/\./).join('/'), 
 					'.' + App().config('viewExtension')
 				);
-				this._loadTemplate(url);
+				this.templateUrl = url;
 
 			}
 
@@ -197,14 +204,14 @@ class View extends Observable
 		else { 
 
 			// Load it
-			this._loadTemplate(url);
+			this.templateUrl = url;
 
 		}
 
 
 		// Definition callback?
-		if (definitionCallback) {
-			definitionCallback.apply(this);
+		if (initCallback) {
+			initCallback.apply(this);
 		}
 
 
@@ -213,13 +220,24 @@ class View extends Observable
 	}
 
 
-	_loadTemplate(url) {
+	loadTemplate() {
+
+		// Already loading or loaded?
+		if (this._promises.has('template')) {
+			return this.getPromise('template');
+		}
 
 		// Promise.
 		var promise = this.promise('template', (resolve, reject) => {
 
+			// Do we have the template already?
+			if (this.templateString) {
+				resolve(this.templateString);
+				return;
+			}
+
 			// Load it.
-			$.ajax(url).then((result) => {
+			$.ajax(this.templateUrl).then((result) => {
 
 				// Set template code
 				this.templateString = result;
@@ -337,8 +355,11 @@ class View extends Observable
 	 **/
 	render() {
 
+		// Make sure the template is loaded
+		this.loadTemplate();
+
 		// We make the 'render' promise.
-		return this.promise('render', (resolve, reject) => {
+		return this.promise('render', () => {
 
 			/////////////////////////////////////////
 			// Wait for all loadPromises to finish //
@@ -346,43 +367,60 @@ class View extends Observable
 
 			Promise.all(this.loadPromises).then(() => {
 
-				/////////////////////
-				// Create template //
-				/////////////////////
+				this.renderSync();
 
-				this.template = HTMLBars.Compiler.compile(this.templateString);
-				try {
-					this.renderResult = this.template.render(this, this.renderer);
-				} catch (error) {
-					reject(error);
-					return;
-				}
-				
-				// Localize and be done!
-				this.documentFragment = this.renderResult.fragment;
-				resolve(this.documentFragment);
-
-
-				//////////////////
-				// Revalidating //
-				//////////////////
-
-				// Have a look at the data, and revalidate the result whenever a change
-				// occurs. The 'dirtying' of elements (morphs) is handled by the Renderer
-				// and Binding classes.				
-				
-				// Study the object
-				this.study(() => {
-					this.scheduleRevalidate();
-				});
-
-				
 			});
 
 
 		});
 
 	}
+
+
+	/**
+	 * Render the view synchronously. Only use this when you know all
+	 * the data is already loaded!
+	 *
+	 * @method renderSync
+	 * @chainable
+	 */
+
+	renderSync() {
+
+		/////////////////////
+		// Create template //
+		/////////////////////
+
+		this.template = HTMLBars.Compiler.compile(this.templateString);
+		try {
+			this.renderResult = this.template.render(this, this.renderer);
+		} catch (error) {
+			this.rejectPromise('render', error);
+			return;
+		}
+		
+		// Localize and be done!
+		this.documentFragment = this.renderResult.fragment;
+		this.resolvePromise('render', this.documentFragment);
+
+		//////////////////
+		// Revalidating //
+		//////////////////
+
+		// Have a look at the data, and revalidate the result whenever a change
+		// occurs. The 'dirtying' of elements (morphs) is handled by the Renderer
+		// and Binding classes.				
+		
+		// Study the object
+		this.study(() => {
+			this.scheduleRevalidate();
+		});
+
+
+		return this;
+
+	}
+
 
 
 	/**

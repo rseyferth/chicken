@@ -220,19 +220,24 @@ index() {
   return Chicken.view('home.index', function() {
     
     this.with({
-      firstName: 'John',
-      lastName: 'Wayne',
-      reverseName: this.computed(['firstName', 'lastName'], (firstName, lastName) => {
-        return lastName + ', ' + firstName;
-      })
-    })
-    .computed('fullName', ['firstName', 'lastName'], function(firstName, lastName) {
-      return firstName + ' ' + lastName;
+      person: {
+        firstName: 'John',
+        lastName: 'Wayne',
+        fullName: Chicken.computed(['firstName', 'lastName'], (firstName, lastName) => {
+          return firstName + ' ' + lastName;
+        })
+      },
+      reversedName: Chicken.computed(['person.fullName'], (fullName) => {
+        return _.map(fullName, (c) => c).reverse().join('');
+      }),
+      secretFound: Chicken.computed(['reversedName'], (reversedName) => {
+        return reversedName === 'revooH ragdE .J';
+      }),
     })
     .action('log', (name, actionBinding, view) => {
 
       // These are all the same
-      console.log(name, this.get('fullName'), view.get('fullName'));
+      console.log(name, this.get('person.fullName'), view.get('person.fullName'));
 
       // This is the $element that caused the action to be called
       actionBinding.$element.text('I was ' + actionBinding.eventName + 'ed!');
@@ -245,17 +250,88 @@ index() {
 
 **app/views/home/index.hbs**
 ```handlebars
-<h1>Hello {{reverseName}}</h1>
-<input type="text" value={{firstName}} placeholder="Enter your first name here...">
-<input type="text" value={{lastName}} placeholder="And your last name here...">
-<button {{action "log" fullName}}>Log it.</button>
+<h1>Hello {{person.fullName}}!</h1>
+<p>To kill you, I say <strong>{{reversedName}}</strong></p>
+
+<input type="text" value={{person.firstName}} placeholder="Enter your first name here...">
+<input type="text" value={{person.lastName}} placeholder="And your last name here...">
+<button {{action "log" person.fullName}}>Log it.</button>
+
+{{#if secretFound}}
+  <h2>You found the secret!</h2>
+{{/if}}
+```
+
+## Components
+A component is basically a view that is set up to be reused within your  templates. The following example should explain:
+
+**app/js/components/Avatar.js**
+```javascript
+Chicken.component('avatar', 'components.avatar');
+```
+
+**app/views/components/avatar.hbs**
+```handlebars
+<div class="avatar">
+  <img src={{contact.imageUrl}}>
+  <h1>{{title}}</h1>
+  <h2>{{contact.fullName }}</h2>
+  <div class="bio">
+    {{yield}}
+  </div>
+</div>
+```
+
+**app/js/controllers/ContactController.js**
+```javascript```
+show: (id) => {
+
+  return Chicken.view('contacts.show')
+    .with('contact', Chicken.api('/contacts/' + id));
+
+}
+```
+
+**app/views/contacts/show.hbs**
+```handlebars
+<section>
+  {{#avatar contact=contact title="Contact details"}}
+    <p>This person is really good. All people are really good.</p>
+  {{/avatar}}
+</section>
+```
+
+The rendered result will be something like:
+```html
+<section>
+  <div class="avatar">
+    <img src="/images/contacts/john.jpg">
+    <h1>Contact details</h1>
+    <h2>John Wayne</h2>
+    <div class="bio">
+      <p>This person is really good. All people are really good.</p>
+    </div>
+  </div>
+</section>
+```
+
+### Inline templates
+For really simple components it might be easiest to define the template inline:
+
+```javascript
+Chicken.component('eu-currency', '<span>{{{currency}}}</span>', function() {
+  
+  this.computed('currency', ['value'], (value) => {
+    return '&euro; ' + value.toFixed(2);
+  });
+
+});
+```
+
+```handlebars
+{{eu-currency value=10.3}}
 ```
 
 
-
-
-
-
-
-
-
+### Component definitions
+When you define a component this way, note that you are not actually creating a `Chicken.Dom.Component` instance, but a `Chicken.Dom.ComponentDefinition` instance instead. The component itself will not be instantiated until it is used. 

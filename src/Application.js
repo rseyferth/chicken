@@ -2,7 +2,8 @@
 // Vendor libraries //
 //////////////////////
 
-import { createHistory } from 'history';
+import QueryString from 'query-string';
+import { createHistory } from 'history';		// https://www.npmjs.com/package/history
 import $ from 'jquery';
 import _ from 'underscore';
 
@@ -16,6 +17,7 @@ import ViewContainer from '~/Dom/ViewContainer';
 import Renderer from '~/Dom/Renderer';
 import ClassMap from '~/Helpers/ClassMap';
 import Router from '~/Routing/Router';
+import Component from '~/Dom/Component';
 
 //////////////////////
 // Class definitino //
@@ -158,6 +160,11 @@ class Application extends Observable {
 		// Find initial view containers
 		this.findViewContainers();
 
+		// Register defined components
+		Component.registry.forEach((def) => {
+			def.registerHelper(this.config('renderer'));
+		});
+
 		// Listen to browser's address bar
 		this.history.listen((location) => {
 			this.router.handle(location);
@@ -167,7 +174,34 @@ class Application extends Observable {
 		this.router.handle(this.history.getCurrentLocation());
 
 
+		return this;
+
 	}
+
+	goto(uri, query = null) {
+
+		// Check the query
+		if (query) {
+
+			// Is it a hash?
+			if (typeof query !== 'string') {
+				query = QueryString.stringify(query);
+			}
+
+		}
+
+		// Change the history state
+		history.push({
+			pathname: uri,
+			search: query
+		});
+
+		return this;
+
+
+	}
+
+
 
 
 	config(...args) {

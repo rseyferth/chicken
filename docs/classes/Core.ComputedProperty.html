@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom.ViewContainer</title>
+    <title>Core.ComputedProperty</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,25 +132,21 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom.ViewContainer Class</h1>
+                        <h1>Core.ComputedProperty Class</h1>
 <div class="box meta">
     
 
     
-        <div class="extends">
-            Extends Core.Object
-        </div>
-    
 
     
         <div class="foundat">
-            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
+            Defined in: <a href="../files/_home_ruben_Websites_chicken_src_Core_ComputedProperty.js.html#l9"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ComputedProperty.js:9</code></a>
         </div>
     
 
     
         
-            Module: <a href="../modules/Dom.html">Dom</a>
+            Module: <a href="../modules/Core.html">Core</a>
         
     
 
@@ -160,18 +156,14 @@
 
 
 <div class="box intro">
-    <p>A ViewContainer is en DomElement in your application that
-can contain a rendered View. Each ViewContainer needs a 
-unique name, and the main ViewContainer for the application
-is always called &#39;main&#39;.</p>
-
+    
 </div>
 
 
     <div class="constructor">
         <h2>Constructor</h2>
-        <div id="method_Dom.ViewContainer" class="method item">
-    <h3 class="name"><code>Dom.ViewContainer</code></h3>
+        <div id="method_Core.ComputedProperty" class="method item">
+    <h3 class="name"><code>Core.ComputedProperty</code></h3>
 
     
         <div class="args">
@@ -179,13 +171,13 @@ is always called &#39;main&#39;.</p>
             
                 <li class="arg">
                     
-                        <code>$element</code>
+                        <code>dependencies</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>application</code>
+                        <code>callback</code>
                     
                 </li>
             
@@ -218,7 +210,7 @@ is always called &#39;main&#39;.</p>
             
         
         
-        <a href="../files/_home_ruben_Websites_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
+        <a href="../files/_home_ruben_Websites_chicken_src_Core_ComputedProperty.js.html#l9"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ComputedProperty.js:9</code></a>
         
         </p>
 
@@ -240,8 +232,8 @@ is always called &#39;main&#39;.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">$element</code>
-                        <span class="type">JQuery</span>
+                        <code class="param-name">dependencies</code>
+                        <span class="type">Array</span>
                     
 
                     
@@ -255,8 +247,8 @@ is always called &#39;main&#39;.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">application</code>
-                        <span class="type"><a href="../classes/Application.html" class="crosslink">Application</a></span>
+                        <code class="param-name">callback</code>
+                        <span class="type">Function</span>
                     
 
                     
@@ -302,7 +294,14 @@ is always called &#39;main&#39;.</p>
                 <div class="index-section methods">
                     <h3>Methods</h3>
 
-                    <ul class="index-list methods extends">
+                    <ul class="index-list methods">
+                        
+                            <li class="index-item method">
+                                <a href="#method_getValue">getValue</a>
+
+                                
+                                
+                            </li>
                         
                             <li class="index-item method">
                                 <a href="#method_initialize">initialize</a>
@@ -312,7 +311,7 @@ is always called &#39;main&#39;.</p>
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_setActionContent">setActionContent</a>
+                                <a href="#method_toString">toString</a>
 
                                 
                                 
@@ -326,10 +325,17 @@ is always called &#39;main&#39;.</p>
                 <div class="index-section properties">
                     <h3>Properties</h3>
 
-                    <ul class="index-list properties extends">
+                    <ul class="index-list properties">
                         
                             <li class="index-item property">
-                                <a href="#property_currentAction">currentAction</a>
+                                <a href="#property_callback">callback</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_dependencies">dependencies</a>
 
                                 
                                 
@@ -337,6 +343,13 @@ is always called &#39;main&#39;.</p>
                         
                             <li class="index-item property">
                                 <a href="#property_name">name</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item property">
+                                <a href="#property_observable">observable</a>
 
                                 
                                 
@@ -356,15 +369,17 @@ is always called &#39;main&#39;.</p>
                 <h2 class="off-left">Methods</h2>
 
                 
-                    <div id="method_initialize" class="method item">
-    <h3 class="name"><code>initialize</code></h3>
+                    <div id="method_getValue" class="method item">
+    <h3 class="name"><code>getValue</code></h3>
 
     
         <span class="paren">()</span>
     
 
     
-
+        <span class="returns-inline">
+            <span class="type">Mixed</span>
+        </span>
     
 
     
@@ -374,7 +389,7 @@ is always called &#39;main&#39;.</p>
     
 
     
-        <span class="flag chainable">chainable</span>
+
     
 
     
@@ -390,7 +405,7 @@ is always called &#39;main&#39;.</p>
             
         
         
-        <a href="../files/_home_ruben_Websites_chicken_src_Dom_ViewContainer.js.html#l58"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:58</code></a>
+        <a href="../files/_home_ruben_Websites_chicken_src_Core_ComputedProperty.js.html#l55"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ComputedProperty.js:55</code></a>
         
         </p>
 
@@ -401,20 +416,32 @@ is always called &#39;main&#39;.</p>
     </div>
 
     <div class="description">
-        <p>Initialize the ViewContainer.</p>
+        <p>Get the current computed value</p>
 
     </div>
 
     
 
     
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Mixed</span>:
+                    
+                
+            </div>
+        </div>
+    
 
     
 </div>
 
                 
-                    <div id="method_setActionContent" class="method item">
-    <h3 class="name"><code>setActionContent</code></h3>
+                    <div id="method_initialize" class="method item">
+    <h3 class="name"><code>initialize</code></h3>
 
     
         <div class="args">
@@ -422,13 +449,13 @@ is always called &#39;main&#39;.</p>
             
                 <li class="arg">
                     
-                        <code>content</code>
+                        <code>name</code>
                     
                 </li>
             
                 <li class="arg">
                     
-                        <code>setLoadingFalse</code>
+                        <code>observable</code>
                     
                 </li>
             
@@ -463,7 +490,7 @@ is always called &#39;main&#39;.</p>
             
         
         
-        <a href="../files/_home_ruben_Websites_chicken_src_Dom_ViewContainer.js.html#l70"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:70</code></a>
+        <a href="../files/_home_ruben_Websites_chicken_src_Core_ComputedProperty.js.html#l85"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ComputedProperty.js:85</code></a>
         
         </p>
 
@@ -474,7 +501,9 @@ is always called &#39;main&#39;.</p>
     </div>
 
     <div class="description">
-        
+        <p>Make this property part of an Observable object, and 
+start watching for changes.</p>
+
     </div>
 
     
@@ -485,14 +514,14 @@ is always called &#39;main&#39;.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">content</code>
+                        <code class="param-name">name</code>
                         <span class="type">String</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>The (HTML) content to render</p>
+                        <p>The name op the property</p>
 
                     </div>
 
@@ -501,14 +530,14 @@ is always called &#39;main&#39;.</p>
             
                 <li class="param">
                     
-                        <code class="param-name">setLoadingFalse</code>
-                        <span class="type">Boolean</span>
+                        <code class="param-name">observable</code>
+                        <span class="type"><a href="../classes/Core.Observable.html" class="crosslink">Core.Observable</a></span>
                     
 
                     
 
                     <div class="param-description">
-                        <p>Whether to set the loading-state to false</p>
+                        <p>The observable instance this property is a part of</p>
 
                     </div>
 
@@ -525,17 +554,22 @@ is always called &#39;main&#39;.</p>
 </div>
 
                 
-            </div>
-        
+                    <div id="method_toString" class="method item">
+    <h3 class="name"><code>toString</code></h3>
 
-        
-            <div id="properties" class="api-class-tabpanel">
-                <h2 class="off-left">Properties</h2>
+    
+        <span class="paren">()</span>
+    
 
-                
-                    <div id="property_currentAction" class="property item">
-    <h3 class="name"><code>currentAction</code></h3>
-    <span class="type"><a href="../classes/Routing.Action.html" class="crosslink">Routing.Action</a></span>
+    
+        <span class="returns-inline">
+            <span class="type">Mixed</span>
+        </span>
+    
+
+    
+
+    
 
     
 
@@ -556,7 +590,73 @@ is always called &#39;main&#39;.</p>
             
         
         
-        <a href="../files/_home_ruben_Websites_chicken_src_Dom_ViewContainer.js.html#l43"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:43</code></a>
+        <a href="../files/_home_ruben_Websites_chicken_src_Core_ComputedProperty.js.html#l74"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ComputedProperty.js:74</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Alias of <code>getValue</code></p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Mixed</span>:
+                    
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+            </div>
+        
+
+        
+            <div id="properties" class="api-class-tabpanel">
+                <h2 class="off-left">Properties</h2>
+
+                
+                    <div id="property_callback" class="property item">
+    <h3 class="name"><code>callback</code></h3>
+    <span class="type">Function</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Core_ComputedProperty.js.html#l45"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ComputedProperty.js:45</code></a>
         
         </p>
 
@@ -566,8 +666,53 @@ is always called &#39;main&#39;.</p>
     </div>
 
     <div class="description">
-        <p>The Routing.Action that rendered the content that is currently
-in this ViewContainer</p>
+        <p>The compution function that is called when the value is requested.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_dependencies" class="property item">
+    <h3 class="name"><code>dependencies</code></h3>
+    <span class="type">Array</span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Core_ComputedProperty.js.html#l36"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ComputedProperty.js:36</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The names of the attributes that this compution depends on. These
+attributes will also be injected into the callback.</p>
 
     </div>
 
@@ -602,7 +747,7 @@ in this ViewContainer</p>
             
         
         
-        <a href="../files/_home_ruben_Websites_chicken_src_Dom_ViewContainer.js.html#l34"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:34</code></a>
+        <a href="../files/_home_ruben_Websites_chicken_src_Core_ComputedProperty.js.html#l27"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ComputedProperty.js:27</code></a>
         
         </p>
 
@@ -612,8 +757,54 @@ in this ViewContainer</p>
     </div>
 
     <div class="description">
-        <p>The unique name you can use in your routes to target this
-ViewContainer.</p>
+        <p>The attribute name within the Observable that this ComputedProperty
+represents.</p>
+
+    </div>
+
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="property_observable" class="property item">
+    <h3 class="name"><code>observable</code></h3>
+    <span class="type"><a href="../classes/Core.Observable.html" class="crosslink">Core.Observable</a></span>
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/_home_ruben_Websites_chicken_src_Core_ComputedProperty.js.html#l18"><code>&#x2F;home&#x2F;ruben&#x2F;Websites&#x2F;chicken&#x2F;src&#x2F;Core&#x2F;ComputedProperty.js:18</code></a>
+        
+        </p>
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>The Observable instance that this computed attribute is
+a part of.</p>
 
     </div>
 

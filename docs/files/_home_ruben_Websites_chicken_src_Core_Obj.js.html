@@ -43,6 +43,8 @@
             
                 <li><a href="../classes/Application.html">Application</a></li>
             
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
+            
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
                 <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
                 <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
@@ -171,6 +175,10 @@ class Obj {
 
 	resolvePromise(key, ...args) {
 		this._getPromiseInfo(key).resolve.apply(this, args);
+		return this;
+	}
+	rejectPromise(key, ...args) {
+		this._getPromiseInfo(key).reject.apply(this, args);
 		return this;
 	}
 

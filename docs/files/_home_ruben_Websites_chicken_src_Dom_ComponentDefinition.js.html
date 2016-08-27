@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/ActionBinding.js</title>
+    <title>/home/ruben/Websites/chicken/src/Dom/ComponentDefinition.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,190 +132,94 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/ActionBinding.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/ComponentDefinition.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import _ from &#x27;underscore&#x27;;
-import $ from &#x27;jquery&#x27;;
-import Uuid from &#x27;uuid-lib&#x27;;
+import App from &#x27;~/Helpers/App&#x27;;
 
 /**
  * @module Dom
  */
-class ActionBinding
+class ComponentDefinition
 {
 
-	/**
-	 * @class Dom.ActionBinding
-	 * 
-	 * @constructor
-	 */
-	constructor(renderer, morph, actionName, actionHandler, parameters, options, view) {
+	constructor(name, source, initCallback, renderer = null) {
 
 		/**
+		 * The name of the component. This is also the name you use
+		 * in your templates, to insert the component.
+		 * 
+		 * @property name
+		 * @type {string}
+		 */
+		this.name = name;
+
+		/**
+		 * The template source
+		 *
+		 * @property source
+		 * @type {string}
+		 */
+		this.source = source;
+
+
+		/**
+		 * The method that is called when the Dom.Component instance is created.
+		 * 
+		 * @property initCallback
+		 * @type {[type]}
+		 */
+		this.initCallback = initCallback;
+
+		/**
+		 * The Dom.Renderer instance that is used to render the component. This is also the
+		 * renderer in which this component will be automatically registered as a helper.
+		 *
 		 * @property renderer
 		 * @type {Dom.Renderer}
 		 */
-		this.renderer = renderer;
+		this.renderer = renderer ? renderer : (App() ? App().config(&#x27;renderer&#x27;) : null);
 
 		/**
-		 * @property morph
-		 * @type {HTMLBarsMorph}
-		 */
-		this.morph = morph;
-
-		/**
-		 * The name of the action on the view
+		 * Indicates whether this component is already registere in a Dom.Renderer as a helper.
 		 * 
-		 * @property actionName
-		 * @type {string}
-		 */
-		this.actionName = actionName;
-
-		/**
-		 * The function to call when the action is executed
-		 * 
-		 * @property actionHandler
-		 * @type {function}
-		 */
-		this.actionHandler = actionHandler;
-
-		/**
-		 * @property options
-		 * @type {object}
-		 */
-		this.options = _.defaults(options, {
-			preventDefault: true
-		});
-
-		/**
-		 * The parameters that will be passed along to the action handler.
-		 * 
-		 * @property parameters
-		 * @type {array}
-		 */
-		this.parameters = parameters;
-
-		/**
-		 * @property view
-		 * @type {Dom.View}
-		 */
-		this.view = view;
-
-
-		/**
-		 * The name of the event that is listened to on the element.
-		 * When not specifically configured in the binding itself, a default
-		 * event will be decided on, based on the element tag name. 
-		 * 
-		 * @property eventName
-		 * @type {string}
-		 */
-		this.eventName = options.on ? options.on : ActionBinding.getDefaultEventName(morph.element);
-
-		/**
-		 * Indicator whether the binding is applied
-		 * to the element
-		 * 
-		 * @property isListening
+		 * @property isRegistered
 		 * @type {Boolean}
 		 */
-		this.isListening = false;
+		this.isRegistered = false;
 
-
-		/**
-		 * @property $element
-		 * @type {jQuery}
-		 */
-		this.$element = null;
-
-		/**
-		 * The unique identifier for this ActionBinding. This is used
-		 * by the Helper to retrieve this instance and automatically
-		 * generated in the constructor.
-		 * 
-		 * @property id
-		 * @type {string}
-		 */
-		this.id = ActionBinding.register(this);
-
-		// Store this binding on the element
-		morph.element.setAttribute(&#x27;data-chicken-action&#x27;, this.id);
-
-
-
-
+		// Register helper (only when there is already a renderer)
+		// When there is no helper yet, we assume it is because the application is
+		// not created yet. In that case, the Application will register all components
+		// when it is started.
+		if (this.renderer) this.registerHelper();
 
 	}
 
-	apply() {
 
-		// Already applied?
-		if (this.isListening === true) return this;
-		this.isListening = true;
+	registerHelper(renderer = null) {
 
+		// Renderer given?
+		if (renderer) this.renderer = renderer;
 
-		// Get element
-		this.$element = $(this.morph.element);
-		this.$element.on(this.eventName, (e) =&gt; {
+		// Register the helper
+		renderer.helpers[this.name] = (params, attributeHash, options, morph, renderer, scope, visitor) =&gt; {
 
-			// Prevent default?
-			if (this.options.preventDefault) e.preventDefault();
+			// Call the component hook
+			renderer.hooks.component(morph, renderer, scope, this.name, params, attributeHash, options, visitor);
 
-			// Call the handler
-			var params = _.flatten([
-				_.map(this.parameters, (value) =&gt; {
-					return this.renderer.hooks.getValue(value);
-				}), 
-				this, 
-				this.view
-			]);
-			this.actionHandler.apply(this.view, params);
-
-		});
-
-		return this;
+		}; 
 
 	}
 
 }
 
-ActionBinding.registry = new Map();
-ActionBinding.register = (binding) =&gt; {
-
-	// Generate id
-	var id = Uuid.raw();
-	ActionBinding.registry.set(id, binding);
-	return id;
-
-};
-ActionBinding.get = (id) =&gt; {
-	return ActionBinding.registry.get(id);
-};
-
-
-ActionBinding.getDefaultEventName = (element) =&gt; {
-
-	// Specific one for this tag?
-	var eventName = ActionBinding.DefaultEventNames[element.tagName.toLowerCase()];
-
-	// Or the old click.
-	if (!eventName) eventName = &#x27;click&#x27;;
-	return eventName;
-
-
-};
-ActionBinding.DefaultEventNames = {
-
-	input: &#x27;change keyup paste&#x27;,
-	select: &#x27;change&#x27;,
-	form: &#x27;submit&#x27;	
-};
+module.exports = ComponentDefinition;
 
 
 
-module.exports = ActionBinding;
+
     </pre>
 </div>
 

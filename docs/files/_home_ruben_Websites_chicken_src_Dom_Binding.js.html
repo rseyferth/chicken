@@ -43,6 +43,8 @@
             
                 <li><a href="../classes/Application.html">Application</a></li>
             
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
+            
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
                 <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
@@ -54,6 +56,8 @@
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
                 <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
             
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
             
@@ -132,7 +136,6 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import _ from &#x27;underscore&#x27;;
 import $ from &#x27;jquery&#x27;;
 
 /**
@@ -183,9 +186,9 @@ class Binding
 		 * updated. These morphs are provides by the HTMLBars package.
 		 * 
 		 * @property morphs
-		 * @type {Array} 
+		 * @type {Set} 
 		 */
-		this.morphs = [];
+		this.morphs = new Set();
 
 
 		////////////////
@@ -195,7 +198,7 @@ class Binding
 		this.observable.observe(path, () =&gt; {
 
 			// Trigger updates for all morphs
-			_.each(this.morphs, (morph) =&gt; {
+			this.morphs.forEach((morph) =&gt; {
 				morph.isDirty = true;
 			});
 
@@ -239,11 +242,14 @@ class Binding
 	 */
 	addMorph(morph) {
 
+		// Is this an already bound morph?
+		if (this.morphs.has(morph)) return;
+
 		//////////////////////////////////////////
 		// Add the morph, for data-&gt;dom binding //
 		//////////////////////////////////////////
 
-		this.morphs.push(morph);
+		this.morphs.add(morph);
 
 
 		///////////////////////////////////////////
@@ -280,8 +286,13 @@ Binding.TwoWay = {
 
 			// Listen to key up, etc
 			var $element = $(morph.element);
+			var lastValue = $element.val();
 			$element.on(&#x27;keyup change paste&#x27;, () =&gt; {
-				binding.setValue($element.val(), morph);
+				var v = $element.val();
+				if (v !== lastValue) {
+					binding.setValue(v, morph);
+					lastValue = v;
+				}
 			});
 
 		}
