@@ -84,7 +84,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(45);
+	var _ObservableArray = __webpack_require__(49);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -100,11 +100,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
-	var _Component = __webpack_require__(54);
+	var _Component = __webpack_require__(43);
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _ComponentDefinition = __webpack_require__(55);
+	var _ComponentDefinition = __webpack_require__(46);
 
 	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
 
@@ -112,7 +112,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Element2 = _interopRequireDefault(_Element);
 
-	var _Helpers = __webpack_require__(43);
+	var _Helpers = __webpack_require__(47);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -120,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Renderer2 = _interopRequireDefault(_Renderer);
 
-	var _View = __webpack_require__(51);
+	var _View = __webpack_require__(44);
 
 	var _View2 = _interopRequireDefault(_View);
 
@@ -128,7 +128,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
 
-	var _App = __webpack_require__(52);
+	var _App = __webpack_require__(45);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -140,31 +140,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Utils = __webpack_require__(44);
+	var _Utils = __webpack_require__(48);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
-	var _Action = __webpack_require__(49);
+	var _Action = __webpack_require__(53);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
-	var _Controller2 = __webpack_require__(50);
+	var _Controller2 = __webpack_require__(54);
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
-	var _Request = __webpack_require__(53);
+	var _Request = __webpack_require__(55);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
-	var _Route = __webpack_require__(47);
+	var _Route = __webpack_require__(51);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _RouteMatch = __webpack_require__(48);
+	var _RouteMatch = __webpack_require__(52);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
-	var _Router = __webpack_require__(46);
+	var _Router = __webpack_require__(50);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -392,11 +392,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Router = __webpack_require__(46);
+	var _Router = __webpack_require__(50);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
-	var _Component = __webpack_require__(54);
+	var _Component = __webpack_require__(43);
 
 	var _Component2 = _interopRequireDefault(_Component);
 
@@ -557,11 +557,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Find initial view containers
 				this.findViewContainers();
-
-				// Register defined components
-				_Component2.default.registry.forEach(function (def) {
-					def.registerHelper(_this3.config('renderer'));
-				});
 
 				// Listen to browser's address bar
 				this.history.listen(function (location) {
@@ -858,9 +853,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 	exports.locationsAreEqual = exports.Actions = exports.useQueries = exports.useBeforeUnload = exports.useBasename = exports.createMemoryHistory = exports.createHashHistory = exports.createHistory = undefined;
 
 	var _LocationUtils = __webpack_require__(9);
@@ -898,7 +891,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Actions2 = __webpack_require__(14);
 
-	var _Actions3 = _interopRequireDefault(_Actions2);
+	var _Actions = _interopRequireWildcard(_Actions2);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -908,7 +903,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.useBasename = _useBasename3.default;
 	exports.useBeforeUnload = _useBeforeUnload3.default;
 	exports.useQueries = _useQueries3.default;
-	exports.Actions = _Actions3.default;
+	exports.Actions = _Actions;
 
 /***/ },
 /* 9 */
@@ -916,9 +911,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 	exports.locationsAreEqual = exports.statesAreEqual = exports.createLocation = exports.createQuery = undefined;
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
@@ -929,7 +922,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _invariant2 = _interopRequireDefault(_invariant);
 
-	var _PathUtils = __webpack_require__(12);
+	var _warning = __webpack_require__(12);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _PathUtils = __webpack_require__(13);
 
 	var _Actions = __webpack_require__(14);
 
@@ -945,6 +942,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  var key = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
 	  var object = typeof input === 'string' ? (0, _PathUtils.parsePath)(input) : input;
+
+	  process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(!object.path, 'Location descriptor objects should have a `pathname`, not a `path`.') : void 0;
 
 	  var pathname = object.pathname || '/';
 	  var search = object.search || '';
@@ -979,9 +978,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  if (typeofA === 'object') {
 	    !!(isDate(a) && isDate(b)) ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'You must not store Date objects in location state') : (0, _invariant2.default)(false) : void 0;
 
-	    if (!Array.isArray(a)) return Object.keys(a).every(function (key) {
-	      return statesAreEqual(a[key], b[key]);
-	    });
+	    if (!Array.isArray(a)) {
+	      var keysofA = Object.keys(a);
+	      var keysofB = Object.keys(b);
+	      return keysofA.length === keysofB.length && keysofA.every(function (key) {
+	        return statesAreEqual(a[key], b[key]);
+	      });
+	    }
 
 	    return Array.isArray(b) && a.length === b.length && a.every(function (item, index) {
 	      return statesAreEqual(item, b[index]);
@@ -1228,22 +1231,83 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 12 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	'use strict';
+
+	/**
+	 * Similar to invariant but only logs a warning if the condition is not met.
+	 * This can be used to log issues in development environments in critical
+	 * paths. Removing the logging code for production environments will keep the
+	 * same logic and follow the same code paths.
+	 */
+
+	var warning = function() {};
+
+	if (process.env.NODE_ENV !== 'production') {
+	  warning = function(condition, format, args) {
+	    var len = arguments.length;
+	    args = new Array(len > 2 ? len - 2 : 0);
+	    for (var key = 2; key < len; key++) {
+	      args[key - 2] = arguments[key];
+	    }
+	    if (format === undefined) {
+	      throw new Error(
+	        '`warning(condition, format, ...args)` requires a warning ' +
+	        'message argument'
+	      );
+	    }
+
+	    if (format.length < 10 || (/^[s\W]*$/).test(format)) {
+	      throw new Error(
+	        'The warning format should be able to uniquely identify this ' +
+	        'warning. Please, use a more descriptive format than: ' + format
+	      );
+	    }
+
+	    if (!condition) {
+	      var argIndex = 0;
+	      var message = 'Warning: ' +
+	        format.replace(/%s/g, function() {
+	          return args[argIndex++];
+	        });
+	      if (typeof console !== 'undefined') {
+	        console.error(message);
+	      }
+	      try {
+	        // This error was thrown as a convenience so that you can use this stack
+	        // to find the callsite that caused this warning to fire.
+	        throw new Error(message);
+	      } catch(x) {}
+	    }
+	  };
+	}
+
+	module.exports = warning;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
+
+/***/ },
+/* 13 */
+/***/ function(module, exports, __webpack_require__) {
+
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-	exports.createPath = exports.parsePath = exports.getQueryStringValueFromPath = exports.stripQueryStringValueFromPath = exports.addQueryStringValueToPath = exports.isAbsolutePath = undefined;
+	exports.__esModule = true;
+	exports.createPath = exports.parsePath = exports.getQueryStringValueFromPath = exports.stripQueryStringValueFromPath = exports.addQueryStringValueToPath = undefined;
 
-	var _warning = __webpack_require__(13);
+	var _warning = __webpack_require__(12);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var isAbsolutePath = exports.isAbsolutePath = function isAbsolutePath(path) {
-	  return typeof path === 'string' && path.charAt(0) === '/';
-	};
 
 	var addQueryStringValueToPath = exports.addQueryStringValueToPath = function addQueryStringValueToPath(path, key, value) {
 	  var _parsePath = parsePath(path);
@@ -1338,81 +1402,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
 
 /***/ },
-/* 13 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
-
-	'use strict';
-
-	/**
-	 * Similar to invariant but only logs a warning if the condition is not met.
-	 * This can be used to log issues in development environments in critical
-	 * paths. Removing the logging code for production environments will keep the
-	 * same logic and follow the same code paths.
-	 */
-
-	var warning = function() {};
-
-	if (process.env.NODE_ENV !== 'production') {
-	  warning = function(condition, format, args) {
-	    var len = arguments.length;
-	    args = new Array(len > 2 ? len - 2 : 0);
-	    for (var key = 2; key < len; key++) {
-	      args[key - 2] = arguments[key];
-	    }
-	    if (format === undefined) {
-	      throw new Error(
-	        '`warning(condition, format, ...args)` requires a warning ' +
-	        'message argument'
-	      );
-	    }
-
-	    if (format.length < 10 || (/^[s\W]*$/).test(format)) {
-	      throw new Error(
-	        'The warning format should be able to uniquely identify this ' +
-	        'warning. Please, use a more descriptive format than: ' + format
-	      );
-	    }
-
-	    if (!condition) {
-	      var argIndex = 0;
-	      var message = 'Warning: ' +
-	        format.replace(/%s/g, function() {
-	          return args[argIndex++];
-	        });
-	      if (typeof console !== 'undefined') {
-	        console.error(message);
-	      }
-	      try {
-	        // This error was thrown as a convenience so that you can use this stack
-	        // to find the callsite that caused this warning to fire.
-	        throw new Error(message);
-	      } catch(x) {}
-	    }
-	  };
-	}
-
-	module.exports = warning;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(10)))
-
-/***/ },
 /* 14 */
 /***/ function(module, exports) {
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 	/**
 	 * Indicates that navigation was caused by a call to history.push.
 	 */
@@ -1439,9 +1434,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -1540,9 +1533,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 	var canUseDOM = exports.canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
 
 /***/ },
@@ -1551,9 +1542,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 	exports.go = exports.replaceLocation = exports.pushLocation = exports.startListener = exports.getUserConfirmation = exports.getCurrentLocation = undefined;
 
 	var _LocationUtils = __webpack_require__(9);
@@ -1562,12 +1551,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _DOMStateStorage = __webpack_require__(19);
 
-	var _PathUtils = __webpack_require__(12);
+	var _PathUtils = __webpack_require__(13);
 
-	/* eslint-disable no-alert */
-
+	var _ExecutionEnvironment = __webpack_require__(16);
 
 	var PopStateEvent = 'popstate';
+	var HashChangeEvent = 'hashchange';
+
+	var needsHashchangeListener = _ExecutionEnvironment.canUseDOM && !(0, _DOMUtils.supportsPopstateOnHashchange)();
 
 	var _createLocation = function _createLocation(historyState) {
 	  var key = historyState && historyState.key;
@@ -1586,7 +1577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    historyState = window.history.state || {};
 	  } catch (error) {
 	    // IE 11 sometimes throws when accessing window.history.state
-	    // See https://github.com/mjackson/history/pull/289
+	    // See https://github.com/ReactTraining/history/pull/289
 	    historyState = {};
 	  }
 
@@ -1595,7 +1586,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var getUserConfirmation = exports.getUserConfirmation = function getUserConfirmation(message, callback) {
 	  return callback(window.confirm(message));
-	};
+	}; // eslint-disable-line no-alert
 
 	var startListener = exports.startListener = function startListener(listener) {
 	  var handlePopState = function handlePopState(event) {
@@ -1605,8 +1596,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  (0, _DOMUtils.addEventListener)(window, PopStateEvent, handlePopState);
 
+	  var handleUnpoppedHashChange = function handleUnpoppedHashChange() {
+	    return listener(getCurrentLocation());
+	  };
+
+	  if (needsHashchangeListener) {
+	    (0, _DOMUtils.addEventListener)(window, HashChangeEvent, handleUnpoppedHashChange);
+	  }
+
 	  return function () {
-	    return (0, _DOMUtils.removeEventListener)(window, PopStateEvent, handlePopState);
+	    (0, _DOMUtils.removeEventListener)(window, PopStateEvent, handlePopState);
+
+	    if (needsHashchangeListener) {
+	      (0, _DOMUtils.removeEventListener)(window, HashChangeEvent, handleUnpoppedHashChange);
+	    }
 	  };
 	};
 
@@ -1642,9 +1645,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 	var addEventListener = exports.addEventListener = function addEventListener(node, event, listener) {
 	  return node.addEventListener ? node.addEventListener(event, listener, false) : node.attachEvent('on' + event, listener);
 	};
@@ -1675,27 +1676,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	  return window.navigator.userAgent.indexOf('Firefox') === -1;
 	};
 
+	/**
+	 * Returns true if browser fires popstate on hash change.
+	 * IE10 and IE11 do not.
+	 */
+	var supportsPopstateOnHashchange = exports.supportsPopstateOnHashchange = function supportsPopstateOnHashchange() {
+	  return window.navigator.userAgent.indexOf('Trident') === -1;
+	};
+
 /***/ },
 /* 19 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 	exports.readState = exports.saveState = undefined;
 
-	var _warning = __webpack_require__(13);
+	var _warning = __webpack_require__(12);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-	var QuotaExceededErrors = ['QuotaExceededError', 'QUOTA_EXCEEDED_ERR']; /* eslint-disable no-empty */
+	var QuotaExceededErrors = {
+	  QuotaExceededError: true,
+	  QUOTA_EXCEEDED_ERR: true
+	};
 
+	var SecurityErrors = {
+	  SecurityError: true
+	};
 
-	var SecurityError = 'SecurityError';
 	var KeyPrefix = '@@History/';
 
 	var createKey = function createKey(key) {
@@ -1707,6 +1719,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // Session storage is not available or hidden.
 	    // sessionStorage is undefined in Internet Explorer when served via file protocol.
 	    process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, '[history] Unable to save state; sessionStorage is not available') : void 0;
+
 	    return;
 	  }
 
@@ -1717,7 +1730,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      window.sessionStorage.setItem(createKey(key), JSON.stringify(state));
 	    }
 	  } catch (error) {
-	    if (error.name === SecurityError) {
+	    if (SecurityErrors[error.name]) {
 	      // Blocking cookies in Chrome/Firefox/Safari throws SecurityError on any
 	      // attempt to access window.sessionStorage.
 	      process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, '[history] Unable to save state; sessionStorage is not available due to security settings') : void 0;
@@ -1725,7 +1738,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      return;
 	    }
 
-	    if (QuotaExceededErrors.indexOf(error.name) >= 0 && window.sessionStorage.length === 0) {
+	    if (QuotaExceededErrors[error.name] && window.sessionStorage.length === 0) {
 	      // Safari "private mode" throws QuotaExceededError.
 	      process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, '[history] Unable to save state; sessionStorage is not available in Safari private mode') : void 0;
 
@@ -1741,7 +1754,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  try {
 	    json = window.sessionStorage.getItem(createKey(key));
 	  } catch (error) {
-	    if (error.name === SecurityError) {
+	    if (SecurityErrors[error.name]) {
 	      // Blocking cookies in Chrome/Firefox/Safari throws SecurityError on any
 	      // attempt to access window.sessionStorage.
 	      process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, '[history] Unable to read state; sessionStorage is not available due to security settings') : void 0;
@@ -1768,9 +1781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 	exports.replaceLocation = exports.pushLocation = exports.getCurrentLocation = exports.go = exports.getUserConfirmation = undefined;
 
 	var _BrowserProtocol = __webpack_require__(17);
@@ -1790,7 +1801,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _LocationUtils = __webpack_require__(9);
 
-	var _PathUtils = __webpack_require__(12);
+	var _PathUtils = __webpack_require__(13);
 
 	var getCurrentLocation = exports.getCurrentLocation = function getCurrentLocation() {
 	  return (0, _LocationUtils.createLocation)(window.location);
@@ -1812,13 +1823,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 
 	var _AsyncUtils = __webpack_require__(22);
 
-	var _PathUtils = __webpack_require__(12);
+	var _PathUtils = __webpack_require__(13);
 
 	var _runTransitionHook = __webpack_require__(23);
 
@@ -1829,8 +1838,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _LocationUtils = __webpack_require__(9);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
 
 	var createHistory = function createHistory() {
 	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
@@ -1857,12 +1864,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  var updateLocation = function updateLocation(nextLocation) {
-	    currentLocation = nextLocation;
-
 	    var currentIndex = getCurrentIndex();
 
+	    currentLocation = nextLocation;
+
 	    if (currentLocation.action === _Actions.PUSH) {
-	      allKeys = [].concat(_toConsumableArray(allKeys.slice(0, currentIndex + 1)), [currentLocation.key]);
+	      allKeys = [].concat(allKeys.slice(0, currentIndex + 1), [currentLocation.key]);
 	    } else if (currentLocation.action === _Actions.REPLACE) {
 	      allKeys[currentIndex] = currentLocation.key;
 	    }
@@ -1997,12 +2004,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	"use strict";
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
+	exports.__esModule = true;
 	var loopAsync = exports.loopAsync = function loopAsync(turns, work, callback) {
 	  var currentTurn = 0,
 	      isDone = false;
@@ -2044,7 +2046,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	    if (isDone) {
 	      // This means the loop finished synchronously.
-	      callback.apply(undefined, _toConsumableArray(doneArgs));
+	      callback.apply(undefined, doneArgs);
 	      return;
 	    }
 
@@ -2063,11 +2065,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 
-	var _warning = __webpack_require__(13);
+	var _warning = __webpack_require__(12);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -2094,13 +2094,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _warning = __webpack_require__(13);
+	var _warning = __webpack_require__(12);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -2126,31 +2124,67 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var DefaultQueryKey = '_k';
 
+	var addLeadingSlash = function addLeadingSlash(path) {
+	  return path.charAt(0) === '/' ? path : '/' + path;
+	};
+
+	var HashPathCoders = {
+	  hashbang: {
+	    encodePath: function encodePath(path) {
+	      return path.charAt(0) === '!' ? path : '!' + path;
+	    },
+	    decodePath: function decodePath(path) {
+	      return path.charAt(0) === '!' ? path.substring(1) : path;
+	    }
+	  },
+	  noslash: {
+	    encodePath: function encodePath(path) {
+	      return path.charAt(0) === '/' ? path.substring(1) : path;
+	    },
+	    decodePath: addLeadingSlash
+	  },
+	  slash: {
+	    encodePath: addLeadingSlash,
+	    decodePath: addLeadingSlash
+	  }
+	};
+
 	var createHashHistory = function createHashHistory() {
 	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 	  !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'Hash history needs a DOM') : (0, _invariant2.default)(false) : void 0;
 
 	  var queryKey = options.queryKey;
+	  var hashType = options.hashType;
 
 
 	  process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(queryKey !== false, 'Using { queryKey: false } no longer works. Instead, just don\'t ' + 'use location state if you don\'t want a key in your URL query string') : void 0;
 
 	  if (typeof queryKey !== 'string') queryKey = DefaultQueryKey;
 
+	  if (hashType == null) hashType = 'slash';
+
+	  if (!(hashType in HashPathCoders)) {
+	    process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(false, 'Invalid hash type: %s', hashType) : void 0;
+
+	    hashType = 'slash';
+	  }
+
+	  var pathCoder = HashPathCoders[hashType];
+
 	  var getUserConfirmation = HashProtocol.getUserConfirmation;
 
 
 	  var getCurrentLocation = function getCurrentLocation() {
-	    return HashProtocol.getCurrentLocation(queryKey);
+	    return HashProtocol.getCurrentLocation(pathCoder, queryKey);
 	  };
 
 	  var pushLocation = function pushLocation(location) {
-	    return HashProtocol.pushLocation(location, queryKey);
+	    return HashProtocol.pushLocation(location, pathCoder, queryKey);
 	  };
 
 	  var replaceLocation = function replaceLocation(location) {
-	    return HashProtocol.replaceLocation(location, queryKey);
+	    return HashProtocol.replaceLocation(location, pathCoder, queryKey);
 	  };
 
 	  var history = (0, _createHistory2.default)(_extends({
@@ -2165,7 +2199,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      stopListener = void 0;
 
 	  var startListener = function startListener(listener, before) {
-	    if (++listenerCount === 1) stopListener = HashProtocol.startListener(history.transitionTo, queryKey);
+	    if (++listenerCount === 1) stopListener = HashProtocol.startListener(history.transitionTo, pathCoder, queryKey);
 
 	    var unlisten = before ? history.listenBefore(listener) : history.listen(listener);
 
@@ -2193,7 +2227,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  var createHref = function createHref(path) {
-	    return '#' + history.createHref(path);
+	    return '#' + pathCoder.encodePath(history.createHref(path));
 	  };
 
 	  return _extends({}, history, {
@@ -2213,9 +2247,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 	exports.replaceLocation = exports.pushLocation = exports.startListener = exports.getCurrentLocation = exports.go = exports.getUserConfirmation = undefined;
 
 	var _BrowserProtocol = __webpack_require__(17);
@@ -2233,7 +2265,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 	});
 
-	var _warning = __webpack_require__(13);
+	var _warning = __webpack_require__(12);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -2243,7 +2275,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _DOMStateStorage = __webpack_require__(19);
 
-	var _PathUtils = __webpack_require__(12);
+	var _PathUtils = __webpack_require__(13);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2253,8 +2285,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // We can't use window.location.hash here because it's not
 	  // consistent across browsers - Firefox will pre-decode it!
 	  var href = window.location.href;
-	  var index = href.indexOf('#');
-	  return index === -1 ? '' : href.substring(index + 1);
+	  var hashIndex = href.indexOf('#');
+	  return hashIndex === -1 ? '' : href.substring(hashIndex + 1);
 	};
 
 	var pushHashPath = function pushHashPath(path) {
@@ -2262,23 +2294,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var replaceHashPath = function replaceHashPath(path) {
-	  var i = window.location.href.indexOf('#');
+	  var hashIndex = window.location.href.indexOf('#');
 
-	  window.location.replace(window.location.href.slice(0, i >= 0 ? i : 0) + '#' + path);
+	  window.location.replace(window.location.href.slice(0, hashIndex >= 0 ? hashIndex : 0) + '#' + path);
 	};
 
-	var ensureSlash = function ensureSlash() {
-	  var path = getHashPath();
-
-	  if ((0, _PathUtils.isAbsolutePath)(path)) return true;
-
-	  replaceHashPath('/' + path);
-
-	  return false;
-	};
-
-	var getCurrentLocation = exports.getCurrentLocation = function getCurrentLocation(queryKey) {
-	  var path = getHashPath();
+	var getCurrentLocation = exports.getCurrentLocation = function getCurrentLocation(pathCoder, queryKey) {
+	  var path = pathCoder.decodePath(getHashPath());
 	  var key = (0, _PathUtils.getQueryStringValueFromPath)(path, queryKey);
 
 	  var state = void 0;
@@ -2295,20 +2317,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var prevLocation = void 0;
 
-	var startListener = exports.startListener = function startListener(listener, queryKey) {
+	var startListener = exports.startListener = function startListener(listener, pathCoder, queryKey) {
 	  var handleHashChange = function handleHashChange() {
-	    if (!ensureSlash()) return; // Hash path must always begin with a /
+	    var path = getHashPath();
+	    var encodedPath = pathCoder.encodePath(path);
 
-	    var currentLocation = getCurrentLocation(queryKey);
+	    if (path !== encodedPath) {
+	      // Always be sure we have a properly-encoded hash.
+	      replaceHashPath(encodedPath);
+	    } else {
+	      var currentLocation = getCurrentLocation(pathCoder, queryKey);
 
-	    if (prevLocation && currentLocation.key && prevLocation.key === currentLocation.key) return; // Ignore extraneous hashchange events
+	      if (prevLocation && currentLocation.key && prevLocation.key === currentLocation.key) return; // Ignore extraneous hashchange events
 
-	    prevLocation = currentLocation;
+	      prevLocation = currentLocation;
 
-	    listener(currentLocation);
+	      listener(currentLocation);
+	    }
 	  };
 
-	  ensureSlash();
+	  // Ensure the hash is encoded properly.
+	  var path = getHashPath();
+	  var encodedPath = pathCoder.encodePath(path);
+
+	  if (path !== encodedPath) replaceHashPath(encodedPath);
+
 	  (0, _DOMUtils.addEventListener)(window, HashChangeEvent, handleHashChange);
 
 	  return function () {
@@ -2316,11 +2349,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 	};
 
-	var updateLocation = function updateLocation(location, queryKey, updateHash) {
+	var updateLocation = function updateLocation(location, pathCoder, queryKey, updateHash) {
 	  var state = location.state;
 	  var key = location.key;
 
-	  var path = (0, _PathUtils.createPath)(location);
+
+	  var path = pathCoder.encodePath((0, _PathUtils.createPath)(location));
 
 	  if (state !== undefined) {
 	    path = (0, _PathUtils.addQueryStringValueToPath)(path, queryKey, key);
@@ -2332,8 +2366,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  updateHash(path);
 	};
 
-	var pushLocation = exports.pushLocation = function pushLocation(location, queryKey) {
-	  return updateLocation(location, queryKey, function (path) {
+	var pushLocation = exports.pushLocation = function pushLocation(location, pathCoder, queryKey) {
+	  return updateLocation(location, pathCoder, queryKey, function (path) {
 	    if (getHashPath() !== path) {
 	      pushHashPath(path);
 	    } else {
@@ -2342,8 +2376,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  });
 	};
 
-	var replaceLocation = exports.replaceLocation = function replaceLocation(location, queryKey) {
-	  return updateLocation(location, queryKey, function (path) {
+	var replaceLocation = exports.replaceLocation = function replaceLocation(location, pathCoder, queryKey) {
+	  return updateLocation(location, pathCoder, queryKey, function (path) {
 	    if (getHashPath() !== path) replaceHashPath(path);
 	  });
 	};
@@ -2355,13 +2389,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
-	var _warning = __webpack_require__(13);
+	var _warning = __webpack_require__(12);
 
 	var _warning2 = _interopRequireDefault(_warning);
 
@@ -2371,7 +2403,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _LocationUtils = __webpack_require__(9);
 
-	var _PathUtils = __webpack_require__(12);
+	var _PathUtils = __webpack_require__(13);
 
 	var _createHistory = __webpack_require__(21);
 
@@ -2489,7 +2521,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    return storage[key];
 	  };
 
-	  return history;
+	  return _extends({}, history, {
+	    canGo: canGo
+	  });
 	};
 
 	exports.default = createMemoryHistory;
@@ -2501,9 +2535,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -2511,7 +2543,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _runTransitionHook2 = _interopRequireDefault(_runTransitionHook);
 
-	var _PathUtils = __webpack_require__(12);
+	var _PathUtils = __webpack_require__(13);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -2549,7 +2581,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      var normalizedPathname = pname.charAt(0) === '/' ? pname.slice(1) : pname;
 	      var pathname = normalizedBasename + normalizedPathname;
 
-	      return _extends({}, location, {
+	      return _extends({}, object, {
 	        pathname: pathname
 	      });
 	    };
@@ -2617,9 +2649,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	/* WEBPACK VAR INJECTION */(function(process) {'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -2703,9 +2733,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	Object.defineProperty(exports, "__esModule", {
-	  value: true
-	});
+	exports.__esModule = true;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -2717,7 +2745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _LocationUtils = __webpack_require__(9);
 
-	var _PathUtils = __webpack_require__(12);
+	var _PathUtils = __webpack_require__(13);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4309,7 +4337,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Helpers = __webpack_require__(43);
+	var _Component = __webpack_require__(43);
+
+	var _Component2 = _interopRequireDefault(_Component);
+
+	var _ComponentDefinition = __webpack_require__(46);
+
+	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
+
+	var _Helpers = __webpack_require__(47);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -4444,6 +4480,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			},
 
 			lookupHelper: function lookupHelper(renderer, scope, helperName) {
+
+				// Is there a component?
+				if (_Component2.default.registry.has(helperName)) {
+					return _Component2.default.registry.get(helperName);
+				}
+
 				if (!renderer.helpers[helperName]) {
 					throw new Error('There is no helper registered with the name "' + helperName + '"');
 				}
@@ -4452,16 +4494,86 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			invokeHelper: function invokeHelper(morph, renderer, scope, visitor, params, attributeHash, helper, options) {
 
-				// Call it with its own context
+				// Is it a component?
+				if (helper instanceof _ComponentDefinition2.default) {
+
+					// Call component hook
+					return {
+						value: _this.hooks.component(morph, renderer, scope, helper, params, attributeHash, options, visitor)
+					};
+				}
+
+				// Call the helper with its own context
 				return {
 					value: helper.apply(_this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor])
 				};
 			},
 
-			component: function component() /*morph, renderer, scope, tagName, params, attrs, options, visitor*/{
-				//				console.log('Component', tagName, params, attrs);
+			component: function component(morph, renderer, scope, tagName, params, attributeHash, options, visitor) {
+
+				////////////////////////////////////////////////////////////////
+				// Is the component already created, and is this a re-render? //
+				////////////////////////////////////////////////////////////////
+
+				var state = morph.getState();
+				if (state.component) {
+
+					state.component.scheduleRevalidate();
+					return;
+				}
+
+				///////////////////////////////////
+				// Create the component instance //
+				///////////////////////////////////
+
+				// Get definition
+				var definition = _Component2.default.registry.get(tagName);
+
+				// Create a new scope and use the component as self
+				var newScope = renderer.hooks.createScope(renderer, scope);
+				newScope.self = component;
+
+				// Create it
+				var component = new _Component2.default(definition.name, definition.source, morph, newScope, params, attributeHash, visitor, options, definition.initCallback, _this);
+
+				// Set the data
+				component.with(attributeHash);
+
+				// Now render it.
+				component.renderSync();
+
+				// Store it.
+				state.component = component;
 			},
 
+			/**
+	   * Check if the given path is a known class (component, or block, inline)
+	   *
+	   * @method hooks.classify
+	   * @param  {Dom.Renderer} renderer 
+	   * @param  {Object} scope    
+	   * @param  {string} path     
+	   * @return {string}          
+	   */
+			classify: function classify(renderer, scope, path) {
+
+				console.log(scope);
+
+				// Is this a known component?
+				if (_Component2.default.registry.has(path)) return 'component';
+
+				// Nothing known.
+				return false;
+			},
+
+			getBlock: function getBlock(scope, key) {
+
+				return scope.blocks[key];
+			},
+
+			/**
+	   * Keywords are a sort of commands in your .hbs templates
+	   */
 			keywords: _underscore2.default.defaults({
 
 				/**
@@ -4498,12 +4610,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Create action binding
 					morph.actionBindings = new _ActionBinding2.default(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
-				},
-
-				component: function component() /*morph, renderer, scope, params, hash, template, inverse, visitor, isRerender = false*/{
-
-					//console.log(' jojojojo');
-
 				}
 
 			}, _htmlbarsStandalone2.default.Runtime.Hooks.Default.keywords)
@@ -5021,6 +5127,790 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _htmlbarsStandalone = __webpack_require__(39);
+
+	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
+
+	var _View2 = __webpack_require__(44);
+
+	var _View3 = _interopRequireDefault(_View2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Dom
+	 */
+	var Component = function (_View) {
+		_inherits(Component, _View);
+
+		/**
+	  * @class Dom.Component
+	  * @extends Dom.View
+	  */
+		function Component(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates) {
+			var initCallback = arguments.length <= 8 || arguments[8] === undefined ? null : arguments[8];
+			var renderer = arguments.length <= 9 || arguments[9] === undefined ? null : arguments[9];
+
+			_classCallCheck(this, Component);
+
+			var _this = _possibleConstructorReturn(this, (Component.__proto__ || Object.getPrototypeOf(Component)).call(this, source, initCallback, renderer));
+
+			_this.name = name;
+
+			_this.morph = morph;
+
+			_this.scope = scope;
+
+			_this.parameters = parameters;
+			_this.attributeHash = attributeHash;
+			_this.visitor = visitor;
+
+			_this.subTemplates = subTemplates;
+
+			_this.templateString = '<h1>Hoi</h1>{{yield}}';
+
+			return _this;
+		}
+
+		_createClass(Component, [{
+			key: 'renderSync',
+			value: function renderSync() {
+				var _this2 = this;
+
+				// Create block
+				var block = _htmlbarsStandalone2.default.Util.Template.blockFor(_htmlbarsStandalone2.default.Runtime.render, this.templateString, {
+					scope: this.scope
+				});
+				console.log(this.scope);
+
+				// Render it.
+				this.renderer.hooks.block(this.morph, this.renderer, this.scope, this.name, this.parameters, this.attributeHash, this.subTemplates.default, this.subTemplates.inverse, this.visitor);
+
+				return;
+
+				// Create the template
+				try {
+
+					// Render it into the morph
+
+					console.log(this.getTemplate());
+					this.renderResult = this.getTemplate().render(this, this.renderer, {
+						scope: this.scope,
+						template: this.subTemplates.default
+					});
+					this.documentFragment = this.renderResult.fragment;
+				} catch (error) {
+					this.rejectPromise('render', error);
+					return;
+				}
+
+				// Study the object
+				this.study(function () {
+					_this2.scheduleRevalidate();
+				});
+
+				this.morph.setNode(this.documentFragment);
+			}
+		}, {
+			key: 'getTemplate',
+			value: function getTemplate() {
+
+				// Create
+				if (!this.template) {
+					this.template = _htmlbarsStandalone2.default.Util.Template.blockFor(_htmlbarsStandalone2.default.Runtime.render, this.templateString, {});
+					console.log('template', this.template);
+				}
+				return this.template;
+			}
+		}]);
+
+		return Component;
+	}(_View3.default);
+
+	Component.registry = new Map();
+
+	module.exports = Component;
+
+/***/ },
+/* 44 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _htmlbarsStandalone = __webpack_require__(39);
+
+	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
+
+	var _App = __webpack_require__(45);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	var _Observable2 = __webpack_require__(30);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	var _Binding = __webpack_require__(40);
+
+	var _Binding2 = _interopRequireDefault(_Binding);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Dom
+	 */
+	var View = function (_Observable) {
+		_inherits(View, _Observable);
+
+		/**
+	  * ## Creating a View
+	  * 
+	  * A View is the part where your HTML and data come together. A View
+	  * can be created directly:
+	  *
+	  * 	var view = new Chicken.Dom.View(source);
+	  *
+	  * Or shortly:
+	  *
+	  * 	var view = Chicken.view(source);
+	  *
+	  * A View can be created with three different `source` types:
+	  * - HTML string
+	  * - Name of a view template
+	  * - And URL to a view template
+	  *
+	  * ## HTML
+	  *
+	  * The following example should be self-explanatory:
+	  *
+	  * 	Chicken.application($('#application'))
+	  * 		.routes(function() {
+	  *
+	  *			this.route('/', () => {
+	  *
+	  *				return Chicken.view('<h1>{{ title }}</h1>')
+	  *					.with('title', 'Page title');
+	  * 
+	  *			});
+	  * 
+	  * 		});
+	  *
+	  * Note: The `source` parameter is recognized as HTML when it starts with an HTML tag.
+	  *
+	  * ## By name
+	  *
+	  * If you want to put your templates in separate files, you can use 'names' to
+	  * link to them. Use `.` in the name in place of a path seperator. Some examples:
+	  *
+	  * 	Chicken.view('home');               // Will open /views/home.hbs
+	  * 	Chicken.view('product.index');      // Will open /views/product/index.hbs
+	  * 	Chicken.view('a.b.c.d');            // Will open /views/a/b/c/d.hbs
+	  *
+	  * You can configure the default path and extension in your Application configuration.
+	  *
+	  * Note: Only use lowercase, numbers, and dashes in your names (`/[a-z0-9\-]/`)
+	  *
+	  *
+	  * ## By URL
+	  *
+	  * This is pretty self-explanatory; the principle is the same as 'by name', only 
+	  * here you pass a relative or absolute url instead:
+	  *
+	  * 	Chicken.view('/weird-location/template.xxx');
+	  * 	Chicken.view('//my-domain.com/chicken-templates/welcome.hbs');
+	  * 
+	  * @class Dom.View
+	  * @extends Core.Observable
+	  *
+	  * @constructor
+	  * @param {string} source   			The source for the view
+	  * @param {Dom.Renderer} renderer 		The Renderer instance that will be used by HTMLBars
+	  */
+		function View(source) {
+			var initCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+			var renderer = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+			_classCallCheck(this, View);
+
+			/**
+	   * Promises for data to load, keyed by the key
+	   * as provided in the `with` method
+	   * 
+	   * @property dataPromises
+	   * @type {Object}
+	   */
+			var _this = _possibleConstructorReturn(this, (View.__proto__ || Object.getPrototypeOf(View)).call(this));
+
+			_this.dataPromises = {};
+
+			/**
+	   * All promises that need to resolve for the 
+	   * page to load.
+	   *
+	   * @property loadPromises
+	   * @type {Array}
+	   */
+			_this.loadPromises = [];
+
+			/**
+	   * @property templateString
+	   * @type {string}
+	   */
+			_this.templateString = null;
+
+			/**
+	   * @property template
+	   * @type {HTMLBars template}
+	   */
+			_this.template = null;
+
+			/**
+	   * @property templateUrl
+	   * @type {string}
+	   */
+			_this.templateUrl = null;
+
+			/**
+	   * @property actions
+	   * @type {Object}
+	   */
+			_this.actions = {};
+
+			/**
+	   * @property renderer
+	   * @type {Dom.Renderer}
+	   */
+			_this.renderer = renderer ? renderer : (0, _App2.default)().config('renderer');
+
+			/**
+	   * The RenderResult gotten back from the Template rendering.
+	   * 
+	   * @property renderResult
+	   * @type {HTMLBars.RenderResult}
+	   */
+			_this.renderResult = null;
+
+			/**
+	   * The DocumentFragment that is the rendered view.
+	   * 
+	   * @property documentFragment
+	   * @type {DocumentFragment}
+	   */
+			_this.documentFragment = null;
+
+			/**
+	   * The jQuery version of the DocumentFragment, that can be 
+	   * used to manipulate the view's contents.
+	   * 
+	   * @property $element
+	   * @type {jQuery}
+	   */
+			_this.$element = null;
+
+			//////////////////////////
+			// Check out the source //
+			//////////////////////////
+
+			// Is it HTML?
+			if (/^\<[a-z\!]/.test(source)) {
+
+				// Use code now
+				_this.templateString = source;
+			}
+
+			// Name?
+			else if (/[a-z0-9\-]+\./.test) {
+
+					// Is it cached?
+					if (View.TemplateCache.has(source)) {
+
+						// Use it.
+						_this.templateString = View.TemplateCache.get(source);
+					} else {
+
+						// Load template
+						var url = (0, _App2.default)().uri((0, _App2.default)().config('viewPath'), source.split(/\./).join('/'), '.' + (0, _App2.default)().config('viewExtension'));
+						_this.templateUrl = url;
+					}
+				}
+
+				// Url.
+				else {
+
+						// Load it
+						_this.templateUrl = url;
+					}
+
+			// Definition callback?
+			if (initCallback) {
+				initCallback.apply(_this);
+			}
+
+			return _this;
+		}
+
+		_createClass(View, [{
+			key: 'loadTemplate',
+			value: function loadTemplate() {
+				var _this2 = this;
+
+				// Already loading or loaded?
+				if (this._promises.has('template')) {
+					return this.getPromise('template');
+				}
+
+				// Promise.
+				var promise = this.promise('template', function (resolve, reject) {
+
+					// Do we have the template already?
+					if (_this2.templateString) {
+						resolve(_this2.templateString);
+						return;
+					}
+
+					// Load it.
+					_jquery2.default.ajax(_this2.templateUrl).then(function (result) {
+
+						// Set template code
+						_this2.templateString = result;
+
+						// We're done.
+						resolve(result);
+					}).fail(function (error) {
+
+						reject(error.responseText);
+					});
+				});
+
+				// Add and return
+				this.loadPromises.push(promise);
+				return promise;
+			}
+
+			/**
+	   * To add data to the view, you can use the **with** method. The simplest way is to
+	   * call it using a **key** and a **value**:
+	   *
+	   * 	Chicken.view('page').with('title', 'Page title')
+	   *
+	   * You can also add a promise-returning method, such as:
+	   *
+	   * 	Chicken.view('product.index')
+	   * 		.with('products', Chicken.api('/products'));
+	   *
+	   * The view will then wait for the Api call to finish, before showing, so that you
+	   * can use the `products` collection your view.
+	   *
+	   * The same goes for a single model:
+	   *
+	   * 	Chicken.view('product.show')
+	   * 		.with('product', Chicken.api('/product/' + this.parameters.get('id')));
+	   * 
+	   * When you have multiple data variables you want to pass to the view, you
+	   * can also use object notation:
+	   *
+	   * 	Chicken.view('product.index')
+	   * 		.with({
+	   * 			products: Chicken.api('/products'),
+	   * 			categories: Chicken.api('/categories')
+	   * 		});
+	   *
+	   * 
+	   * 
+	   * @method with
+	   * @param  {...mixed} args   This method can be called in two ways. See documentation
+	   * @chainable
+	   */
+
+		}, {
+			key: 'with',
+			value: function _with() {
+				var _this3 = this;
+
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
+				}
+
+				// Is it a single object hash?
+				if (args.length === 1 && _typeof(args[0]) === 'object') {
+
+					// Do an each
+					_underscore2.default.each(args[0], function (value, key) {
+						_this3.with(key, value);
+					});
+				} else {
+
+					// Use key/value
+					var key = args[0];
+					var value = args[1];
+
+					// Is the key a string?
+
+					if (typeof key !== 'string') throw new TypeError('[Dom.View] The "with" method accepts either a key, value or hash-object as arguments.');
+
+					// Is the data a promise?
+					if (value instanceof Promise) {
+
+						// Add to promises
+						this.dataPromises[key] = value;
+						this.loadPromises.push(value);
+						value.then(function (result) {
+							_this3.set(key, result, true, true);
+						});
+					} else {
+
+						// Is it a Binding?
+						if (value instanceof _Binding2.default) {
+							value = value.getValue();
+						}
+
+						// Set it now (convert to observables, and do not trigger updates)
+						this.set(key, value, true, true);
+					}
+				}
+
+				return this;
+			}
+		}, {
+			key: 'action',
+			value: function action(key, callback) {
+
+				this.actions[key] = callback;
+				return this;
+			}
+
+			/**
+	   * Render the view!
+	   *
+	   * @method render
+	   * @return {Promise}  The 'render' promise is returned. The 'added' promise will be called
+	   *                    when the view is added to the DOM.
+	   **/
+
+		}, {
+			key: 'render',
+			value: function render() {
+				var _this4 = this;
+
+				// Make sure the template is loaded
+				this.loadTemplate();
+
+				// We make the 'render' promise.
+				return this.promise('render', function () {
+
+					/////////////////////////////////////////
+					// Wait for all loadPromises to finish //
+					/////////////////////////////////////////
+
+					Promise.all(_this4.loadPromises).then(function () {
+
+						_this4.renderSync();
+					});
+				});
+			}
+
+			/**
+	   * Render the view synchronously. Only use this when you know all
+	   * the data is already loaded!
+	   *
+	   * @method renderSync
+	   * @chainable
+	   */
+
+		}, {
+			key: 'renderSync',
+			value: function renderSync() {
+				var _this5 = this;
+
+				/////////////////////
+				// Create template //
+				/////////////////////
+
+				try {
+					this.renderResult = this.getTemplate().render(this, this.renderer);
+				} catch (error) {
+					this.rejectPromise('render', error);
+					return;
+				}
+
+				// Localize and be done!
+				this.documentFragment = this.renderResult.fragment;
+				this.resolvePromise('render', this.documentFragment);
+
+				//////////////////
+				// Revalidating //
+				//////////////////
+
+				// Have a look at the data, and revalidate the result whenever a change
+				// occurs. The 'dirtying' of elements (morphs) is handled by the Renderer
+				// and Binding classes.				
+
+				// Study the object
+				this.study(function () {
+					_this5.scheduleRevalidate();
+				});
+
+				return this;
+			}
+		}, {
+			key: 'getTemplate',
+			value: function getTemplate() {
+
+				// Create
+				if (!this.template) {
+					this.template = _htmlbarsStandalone2.default.Compiler.compile(this.templateString);
+				}
+				return this.template;
+			}
+
+			/**
+	   * Have the rendered view be revalidated when it's convenient.
+	   * 
+	   * @method scheduleRevalidate
+	   * @chainable
+	   */
+
+		}, {
+			key: 'scheduleRevalidate',
+			value: function scheduleRevalidate() {
+				var _this6 = this;
+
+				// Not already pending?
+				if (!this.revalidateTimeout) {
+
+					// Wait a bit.
+					this.revalidateTimeout = setTimeout(function () {
+
+						// Revalidate!
+						_this6.revalidate();
+					}, View.RevalidationDelay);
+				}
+
+				return this;
+			}
+
+			/**
+	   * Revalidate the rendered view. Revalidation means the updating of 
+	   * 'dirty' elements (morphs). The dirtying is done by the Bindings, set up
+	   * by the Renderer.
+	   *
+	   * If your binding is valid, and components work as the should, you shouldn't 
+	   * need to call this method. If you do though, it is better to call
+	   * `scheduleRevalidate` instead, to prevent undue calls.
+	   * 
+	   * @method revalidate
+	   * @chainable
+	   */
+
+		}, {
+			key: 'revalidate',
+			value: function revalidate() {
+				if (this.renderResult) this.renderResult.revalidate();
+				this.revalidateTimeout = false;
+				return this;
+			}
+
+			/**
+	   * Set the contents of this view in given $target element
+	   * 
+	   * @method addToDom
+	   * @param {jQuery} $target    The $target for the view to render in. The contents will be completely replaced
+	   *                            by this view.
+	   */
+
+		}, {
+			key: 'addToDOM',
+			value: function addToDOM($target) {
+
+				// Add to dom
+				var $view = (0, _jquery2.default)('<view/>');
+				$view.html(this.documentFragment);
+				$target.html($view);
+
+				// Get the element
+				this.$element = $view;
+
+				// Done!
+				this.resolvePromise('added', this);
+			}
+
+			/**
+	   * Add the view to the ViewContainer, replacing previous contents
+	   * and making sure the ViewContainer knows it's gotten the view.
+	   * 
+	   * @method addToContainer
+	   * @param {Dom.ViewContainer} viewContainer 
+	   */
+
+		}, {
+			key: 'addToContainer',
+			value: function addToContainer(viewContainer) {
+
+				// Set view
+				viewContainer.setView(this);
+
+				// Add to DOM
+				this.addToDOM(viewContainer.$element);
+			}
+		}]);
+
+		return View;
+	}(_Observable3.default);
+
+	/**
+	 * The TemplateCache is used to cache templates by their name. When you are
+	 * building your application for production, you can also use this to bundle
+	 * the templates.
+	 * 
+	 * @property TemplateCache
+	 * @static
+	 * @type {Map}
+	 */
+
+
+	View.TemplateCache = new Map();
+
+	/**
+	 * The number of milliseconds to wait before revalidating your views after
+	 * a change in the data has occured.
+	 *
+	 * This value can be very low, as it is mostly used to bundle changes together
+	 * that occur semi-simultaneously.
+	 * 
+	 * @property RevalidationDelay
+	 * @static
+	 * @type {Number}
+	 */
+	View.RevalidationDelay = 3;
+
+	module.exports = View;
+
+/***/ },
+/* 45 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _ClassMap = __webpack_require__(32);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = function () {
+		return _ClassMap2.default.get('Application').getInstance();
+	};
+
+/***/ },
+/* 46 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _App = __webpack_require__(45);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	var _Component = __webpack_require__(43);
+
+	var _Component2 = _interopRequireDefault(_Component);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Dom
+	 */
+	var ComponentDefinition = function () {
+		function ComponentDefinition(name, source, initCallback) {
+			var renderer = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+
+			_classCallCheck(this, ComponentDefinition);
+
+			/**
+	   * The name of the component. This is also the name you use
+	   * in your templates, to insert the component.
+	   * 
+	   * @property name
+	   * @type {string}
+	   */
+			this.name = name;
+
+			/**
+	   * The template source
+	   *
+	   * @property source
+	   * @type {string}
+	   */
+			this.source = source;
+
+			/**
+	   * The method that is called when the Dom.Component instance is created.
+	   * 
+	   * @property initCallback
+	   * @type {[type]}
+	   */
+			this.initCallback = initCallback;
+
+			/**
+	   * The Dom.Renderer instance that is used to render the component. This is also the
+	   * renderer in which this component will be automatically registered as a helper.
+	   *
+	   * @property renderer
+	   * @type {Dom.Renderer}
+	   */
+			this.renderer = renderer ? renderer : (0, _App2.default)() ? (0, _App2.default)().config('renderer') : null;
+		}
+
+		_createClass(ComponentDefinition, [{
+			key: 'create',
+			value: function create() {
+
+				// Create the component
+				var component = new _Component2.default(this.name, this.source, this.initCallback, this.renderer);
+				console.log(component);
+			}
+		}]);
+
+		return ComponentDefinition;
+	}();
+
+	module.exports = ComponentDefinition;
+
+/***/ },
+/* 47 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint no-console: ["error", { allow: ["log"] }] */
 
 	var _underscore = __webpack_require__(2);
@@ -5039,7 +5929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Utils = __webpack_require__(44);
+	var _Utils = __webpack_require__(48);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
@@ -5220,7 +6110,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Helpers;
 
 /***/ },
-/* 44 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5235,7 +6125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(45);
+	var _ObservableArray = __webpack_require__(49);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -5290,7 +6180,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 45 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5748,7 +6638,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ObservableArray;
 
 /***/ },
-/* 46 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5767,11 +6657,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Route = __webpack_require__(47);
+	var _Route = __webpack_require__(51);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _Request = __webpack_require__(53);
+	var _Request = __webpack_require__(55);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -5988,9 +6878,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					//@TODO What to do?
 
-				}, function (error) {
-
-					throw new Error('[Routing.Router] Executing route failed: ' + error);
 				});
 
 				return routeMatch;
@@ -6032,7 +6919,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Router;
 
 /***/ },
-/* 47 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6051,7 +6938,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _RouteMatch = __webpack_require__(48);
+	var _RouteMatch = __webpack_require__(52);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
@@ -6483,7 +7370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Route;
 
 /***/ },
-/* 48 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6494,7 +7381,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Action = __webpack_require__(49);
+	var _Action = __webpack_require__(53);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
@@ -6644,7 +7531,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = RouteMatch;
 
 /***/ },
-/* 49 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6659,11 +7546,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _Controller = __webpack_require__(50);
+	var _Controller = __webpack_require__(54);
 
 	var _Controller2 = _interopRequireDefault(_Controller);
 
-	var _View = __webpack_require__(51);
+	var _View = __webpack_require__(44);
 
 	var _View2 = _interopRequireDefault(_View);
 
@@ -6962,7 +7849,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Action;
 
 /***/ },
-/* 50 */
+/* 54 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -7061,576 +7948,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Controller;
 
 /***/ },
-/* 51 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _htmlbarsStandalone = __webpack_require__(39);
-
-	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
-
-	var _App = __webpack_require__(52);
-
-	var _App2 = _interopRequireDefault(_App);
-
-	var _Observable2 = __webpack_require__(30);
-
-	var _Observable3 = _interopRequireDefault(_Observable2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Dom
-	 */
-	var View = function (_Observable) {
-		_inherits(View, _Observable);
-
-		/**
-	  * ## Creating a View
-	  * 
-	  * A View is the part where your HTML and data come together. A View
-	  * can be created directly:
-	  *
-	  * 	var view = new Chicken.Dom.View(source);
-	  *
-	  * Or shortly:
-	  *
-	  * 	var view = Chicken.view(source);
-	  *
-	  * A View can be created with three different `source` types:
-	  * - HTML string
-	  * - Name of a view template
-	  * - And URL to a view template
-	  *
-	  * ## HTML
-	  *
-	  * The following example should be self-explanatory:
-	  *
-	  * 	Chicken.application($('#application'))
-	  * 		.routes(function() {
-	  *
-	  *			this.route('/', () => {
-	  *
-	  *				return Chicken.view('<h1>{{ title }}</h1>')
-	  *					.with('title', 'Page title');
-	  * 
-	  *			});
-	  * 
-	  * 		});
-	  *
-	  * Note: The `source` parameter is recognized as HTML when it starts with an HTML tag.
-	  *
-	  * ## By name
-	  *
-	  * If you want to put your templates in separate files, you can use 'names' to
-	  * link to them. Use `.` in the name in place of a path seperator. Some examples:
-	  *
-	  * 	Chicken.view('home');               // Will open /views/home.hbs
-	  * 	Chicken.view('product.index');      // Will open /views/product/index.hbs
-	  * 	Chicken.view('a.b.c.d');            // Will open /views/a/b/c/d.hbs
-	  *
-	  * You can configure the default path and extension in your Application configuration.
-	  *
-	  * Note: Only use lowercase, numbers, and dashes in your names (`/[a-z0-9\-]/`)
-	  *
-	  *
-	  * ## By URL
-	  *
-	  * This is pretty self-explanatory; the principle is the same as 'by name', only 
-	  * here you pass a relative or absolute url instead:
-	  *
-	  * 	Chicken.view('/weird-location/template.xxx');
-	  * 	Chicken.view('//my-domain.com/chicken-templates/welcome.hbs');
-	  * 
-	  * @class Dom.View
-	  * @extends Core.Observable
-	  *
-	  * @constructor
-	  * @param {string} source   			The source for the view
-	  * @param {Dom.Renderer} renderer 		The Renderer instance that will be used by HTMLBars
-	  */
-		function View(source) {
-			var initCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-			var renderer = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-
-			_classCallCheck(this, View);
-
-			/**
-	   * Promises for data to load, keyed by the key
-	   * as provided in the `with` method
-	   * 
-	   * @property dataPromises
-	   * @type {Object}
-	   */
-			var _this = _possibleConstructorReturn(this, (View.__proto__ || Object.getPrototypeOf(View)).call(this));
-
-			_this.dataPromises = {};
-
-			/**
-	   * All promises that need to resolve for the 
-	   * page to load.
-	   *
-	   * @property loadPromises
-	   * @type {Array}
-	   */
-			_this.loadPromises = [];
-
-			/**
-	   * @property templateString
-	   * @type {string}
-	   */
-			_this.templateString = null;
-
-			/**
-	   * @property template
-	   * @type {HTMLBars template}
-	   */
-			_this.template = null;
-
-			/**
-	   * @property templateUrl
-	   * @type {string}
-	   */
-			_this.templateUrl = null;
-
-			/**
-	   * @property actions
-	   * @type {Object}
-	   */
-			_this.actions = {};
-
-			/**
-	   * @property renderer
-	   * @type {Dom.Renderer}
-	   */
-			_this.renderer = renderer ? renderer : (0, _App2.default)().config('renderer');
-
-			/**
-	   * The RenderResult gotten back from the Template rendering.
-	   * 
-	   * @property renderResult
-	   * @type {HTMLBars.RenderResult}
-	   */
-			_this.renderResult = null;
-
-			/**
-	   * The DocumentFragment that is the rendered view.
-	   * 
-	   * @property documentFragment
-	   * @type {DocumentFragment}
-	   */
-			_this.documentFragment = null;
-
-			/**
-	   * The jQuery version of the DocumentFragment, that can be 
-	   * used to manipulate the view's contents.
-	   * 
-	   * @property $element
-	   * @type {jQuery}
-	   */
-			_this.$element = null;
-
-			//////////////////////////
-			// Check out the source //
-			//////////////////////////
-
-			// Is it HTML?
-			if (/^\<[a-z\!]/.test(source)) {
-
-				// Use code now
-				_this.templateString = source;
-			}
-
-			// Name?
-			else if (/[a-z0-9\-]+\./.test) {
-
-					// Is it cached?
-					if (View.TemplateCache.has(source)) {
-
-						// Use it.
-						_this.templateString = View.TemplateCache.get(source);
-					} else {
-
-						// Load template
-						var url = (0, _App2.default)().uri((0, _App2.default)().config('viewPath'), source.split(/\./).join('/'), '.' + (0, _App2.default)().config('viewExtension'));
-						_this.templateUrl = url;
-					}
-				}
-
-				// Url.
-				else {
-
-						// Load it
-						_this.templateUrl = url;
-					}
-
-			// Definition callback?
-			if (initCallback) {
-				initCallback.apply(_this);
-			}
-
-			return _this;
-		}
-
-		_createClass(View, [{
-			key: 'loadTemplate',
-			value: function loadTemplate() {
-				var _this2 = this;
-
-				// Already loading or loaded?
-				if (this._promises.has('template')) {
-					return this.getPromise('template');
-				}
-
-				// Promise.
-				var promise = this.promise('template', function (resolve, reject) {
-
-					// Do we have the template already?
-					if (_this2.templateString) {
-						resolve(_this2.templateString);
-						return;
-					}
-
-					// Load it.
-					_jquery2.default.ajax(_this2.templateUrl).then(function (result) {
-
-						// Set template code
-						_this2.templateString = result;
-
-						// We're done.
-						resolve(result);
-					}).fail(function (error) {
-
-						reject(error.responseText);
-					});
-				});
-
-				// Add and return
-				this.loadPromises.push(promise);
-				return promise;
-			}
-
-			/**
-	   * To add data to the view, you can use the **with** method. The simplest way is to
-	   * call it using a **key** and a **value**:
-	   *
-	   * 	Chicken.view('page').with('title', 'Page title')
-	   *
-	   * You can also add a promise-returning method, such as:
-	   *
-	   * 	Chicken.view('product.index')
-	   * 		.with('products', Chicken.api('/products'));
-	   *
-	   * The view will then wait for the Api call to finish, before showing, so that you
-	   * can use the `products` collection your view.
-	   *
-	   * The same goes for a single model:
-	   *
-	   * 	Chicken.view('product.show')
-	   * 		.with('product', Chicken.api('/product/' + this.parameters.get('id')));
-	   * 
-	   * When you have multiple data variables you want to pass to the view, you
-	   * can also use object notation:
-	   *
-	   * 	Chicken.view('product.index')
-	   * 		.with({
-	   * 			products: Chicken.api('/products'),
-	   * 			categories: Chicken.api('/categories')
-	   * 		});
-	   *
-	   * 
-	   * 
-	   * @method with
-	   * @param  {...mixed} args   This method can be called in two ways. See documentation
-	   * @chainable
-	   */
-
-		}, {
-			key: 'with',
-			value: function _with() {
-				var _this3 = this;
-
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
-
-				// Is it a single object hash?
-				if (args.length === 1 && _typeof(args[0]) === 'object') {
-
-					// Do an each
-					_underscore2.default.each(args[0], function (value, key) {
-						_this3.with(key, value);
-					});
-				} else {
-
-					// Use key/value
-					var key = args[0];
-					var value = args[1];
-
-					// Is the key a string?
-
-					if (typeof key !== 'string') throw new TypeError('[Dom.View] The "with" method accepts either a key, value or hash-object as arguments.');
-
-					// Is the data a promise?
-					if (value instanceof Promise) {
-
-						// Add to promises
-						this.dataPromises[key] = value;
-						this.loadPromises.push(value);
-						value.then(function (result) {
-							_this3.set(key, result, true, true);
-						});
-					} else {
-
-						// Set it now (convert to observables, and do not trigger updates)
-						this.set(key, value, true, true);
-					}
-				}
-
-				return this;
-			}
-		}, {
-			key: 'action',
-			value: function action(key, callback) {
-
-				this.actions[key] = callback;
-				return this;
-			}
-
-			/**
-	   * Render the view!
-	   *
-	   * @method render
-	   * @return {Promise}  The 'render' promise is returned. The 'added' promise will be called
-	   *                    when the view is added to the DOM.
-	   **/
-
-		}, {
-			key: 'render',
-			value: function render() {
-				var _this4 = this;
-
-				// Make sure the template is loaded
-				this.loadTemplate();
-
-				// We make the 'render' promise.
-				return this.promise('render', function () {
-
-					/////////////////////////////////////////
-					// Wait for all loadPromises to finish //
-					/////////////////////////////////////////
-
-					Promise.all(_this4.loadPromises).then(function () {
-
-						_this4.renderSync();
-					});
-				});
-			}
-
-			/**
-	   * Render the view synchronously. Only use this when you know all
-	   * the data is already loaded!
-	   *
-	   * @method renderSync
-	   * @chainable
-	   */
-
-		}, {
-			key: 'renderSync',
-			value: function renderSync() {
-				var _this5 = this;
-
-				/////////////////////
-				// Create template //
-				/////////////////////
-
-				this.template = _htmlbarsStandalone2.default.Compiler.compile(this.templateString);
-				try {
-					this.renderResult = this.template.render(this, this.renderer);
-				} catch (error) {
-					this.rejectPromise('render', error);
-					return;
-				}
-
-				// Localize and be done!
-				this.documentFragment = this.renderResult.fragment;
-				this.resolvePromise('render', this.documentFragment);
-
-				//////////////////
-				// Revalidating //
-				//////////////////
-
-				// Have a look at the data, and revalidate the result whenever a change
-				// occurs. The 'dirtying' of elements (morphs) is handled by the Renderer
-				// and Binding classes.				
-
-				// Study the object
-				this.study(function () {
-					_this5.scheduleRevalidate();
-				});
-
-				return this;
-			}
-
-			/**
-	   * Have the rendered view be revalidated when it's convenient.
-	   * 
-	   * @method scheduleRevalidate
-	   * @chainable
-	   */
-
-		}, {
-			key: 'scheduleRevalidate',
-			value: function scheduleRevalidate() {
-				var _this6 = this;
-
-				// Not already pending?
-				if (!this.revalidateTimeout) {
-
-					// Wait a bit.
-					this.revalidateTimeout = setTimeout(function () {
-
-						// Revalidate!
-						_this6.revalidate();
-					}, View.RevalidationDelay);
-				}
-
-				return this;
-			}
-
-			/**
-	   * Revalidate the rendered view. Revalidation means the updating of 
-	   * 'dirty' elements (morphs). The dirtying is done by the Bindings, set up
-	   * by the Renderer.
-	   *
-	   * If your binding is valid, and components work as the should, you shouldn't 
-	   * need to call this method. If you do though, it is better to call
-	   * `scheduleRevalidate` instead, to prevent undue calls.
-	   * 
-	   * @method revalidate
-	   * @chainable
-	   */
-
-		}, {
-			key: 'revalidate',
-			value: function revalidate() {
-				this.renderResult.revalidate();
-				this.revalidateTimeout = false;
-				return this;
-			}
-
-			/**
-	   * Set the contents of this view in given $target element
-	   * 
-	   * @method addToDom
-	   * @param {jQuery} $target    The $target for the view to render in. The contents will be completely replaced
-	   *                            by this view.
-	   */
-
-		}, {
-			key: 'addToDOM',
-			value: function addToDOM($target) {
-
-				// Add to dom
-				var $view = (0, _jquery2.default)('<view/>');
-				$view.html(this.documentFragment);
-				$target.html($view);
-
-				// Get the element
-				this.$element = $view;
-
-				// Done!
-				this.resolvePromise('added', this);
-			}
-
-			/**
-	   * Add the view to the ViewContainer, replacing previous contents
-	   * and making sure the ViewContainer knows it's gotten the view.
-	   * 
-	   * @method addToContainer
-	   * @param {Dom.ViewContainer} viewContainer 
-	   */
-
-		}, {
-			key: 'addToContainer',
-			value: function addToContainer(viewContainer) {
-
-				// Set view
-				viewContainer.setView(this);
-
-				// Add to DOM
-				this.addToDOM(viewContainer.$element);
-			}
-		}]);
-
-		return View;
-	}(_Observable3.default);
-
-	/**
-	 * The TemplateCache is used to cache templates by their name. When you are
-	 * building your application for production, you can also use this to bundle
-	 * the templates.
-	 * 
-	 * @property TemplateCache
-	 * @static
-	 * @type {Map}
-	 */
-
-
-	View.TemplateCache = new Map();
-
-	/**
-	 * The number of milliseconds to wait before revalidating your views after
-	 * a change in the data has occured.
-	 *
-	 * This value can be very low, as it is mostly used to bundle changes together
-	 * that occur semi-simultaneously.
-	 * 
-	 * @property RevalidationDelay
-	 * @static
-	 * @type {Number}
-	 */
-	View.RevalidationDelay = 3;
-
-	module.exports = View;
-
-/***/ },
-/* 52 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _ClassMap = __webpack_require__(32);
-
-	var _ClassMap2 = _interopRequireDefault(_ClassMap);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	module.exports = function () {
-		return _ClassMap2.default.get('Application').getInstance();
-	};
-
-/***/ },
-/* 53 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7690,160 +8008,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = Request;
-
-/***/ },
-/* 54 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _View2 = __webpack_require__(51);
-
-	var _View3 = _interopRequireDefault(_View2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Dom
-	 */
-	var Component = function (_View) {
-		_inherits(Component, _View);
-
-		/**
-	  * @class Dom.Component
-	  * @extends Dom.View
-	  */
-		function Component(name, source) {
-			var initCallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-			var renderer = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
-
-			_classCallCheck(this, Component);
-
-			var _this = _possibleConstructorReturn(this, (Component.__proto__ || Object.getPrototypeOf(Component)).call(this, source, initCallback, renderer));
-
-			_this.name = name;
-
-			return _this;
-		}
-
-		return Component;
-	}(_View3.default);
-
-	Component.registry = new Map();
-
-	Component.initializeFromHelper = function () /*definition, params, attributesHash, options*/{
-
-		//	console.log(definition, params, attributesHash, options);
-
-
-	};
-
-	module.exports = Component;
-
-/***/ },
-/* 55 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _App = __webpack_require__(52);
-
-	var _App2 = _interopRequireDefault(_App);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Dom
-	 */
-	var ComponentDefinition = function () {
-		function ComponentDefinition(name, source, initCallback) {
-			var renderer = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
-
-			_classCallCheck(this, ComponentDefinition);
-
-			/**
-	   * The name of the component. This is also the name you use
-	   * in your templates, to insert the component.
-	   * 
-	   * @property name
-	   * @type {string}
-	   */
-			this.name = name;
-
-			/**
-	   * The template source
-	   *
-	   * @property source
-	   * @type {string}
-	   */
-			this.source = source;
-
-			/**
-	   * The method that is called when the Dom.Component instance is created.
-	   * 
-	   * @property initCallback
-	   * @type {[type]}
-	   */
-			this.initCallback = initCallback;
-
-			/**
-	   * The Dom.Renderer instance that is used to render the component. This is also the
-	   * renderer in which this component will be automatically registered as a helper.
-	   *
-	   * @property renderer
-	   * @type {Dom.Renderer}
-	   */
-			this.renderer = renderer ? renderer : (0, _App2.default)() ? (0, _App2.default)().config('renderer') : null;
-
-			/**
-	   * Indicates whether this component is already registere in a Dom.Renderer as a helper.
-	   * 
-	   * @property isRegistered
-	   * @type {Boolean}
-	   */
-			this.isRegistered = false;
-
-			// Register helper (only when there is already a renderer)
-			// When there is no helper yet, we assume it is because the application is
-			// not created yet. In that case, the Application will register all components
-			// when it is started.
-			if (this.renderer) this.registerHelper();
-		}
-
-		_createClass(ComponentDefinition, [{
-			key: 'registerHelper',
-			value: function registerHelper() {
-				var _this = this;
-
-				var renderer = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-
-
-				// Renderer given?
-				if (renderer) this.renderer = renderer;
-
-				// Register the helper
-				renderer.helpers[this.name] = function (params, attributeHash, options, morph, renderer, scope, visitor) {
-
-					// Call the component hook
-					renderer.hooks.component(morph, renderer, scope, _this.name, params, attributeHash, options, visitor);
-				};
-			}
-		}]);
-
-		return ComponentDefinition;
-	}();
-
-	module.exports = ComponentDefinition;
 
 /***/ }
 /******/ ])

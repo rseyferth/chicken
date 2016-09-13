@@ -219,10 +219,6 @@ class Router extends Obj
 			
 			//@TODO What to do?
 
-		}, (error) => {
-
-			throw new Error('[Routing.Router] Executing route failed: ' + error);
-
 		});
 
 		return routeMatch;

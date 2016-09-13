@@ -160,11 +160,6 @@ class Application extends Observable {
 		// Find initial view containers
 		this.findViewContainers();
 
-		// Register defined components
-		Component.registry.forEach((def) => {
-			def.registerHelper(this.config('renderer'));
-		});
-
 		// Listen to browser's address bar
 		this.history.listen((location) => {
 			this.router.handle(location);

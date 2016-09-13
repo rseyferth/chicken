@@ -1,4 +1,5 @@
 import App from '~/Helpers/App';
+import Component from '~/Dom/Component';
 
 /**
  * @module Dom
@@ -43,37 +44,22 @@ class ComponentDefinition
 		 */
 		this.renderer = renderer ? renderer : (App() ? App().config('renderer') : null);
 
-		/**
-		 * Indicates whether this component is already registere in a Dom.Renderer as a helper.
-		 * 
-		 * @property isRegistered
-		 * @type {Boolean}
-		 */
-		this.isRegistered = false;
-
-		// Register helper (only when there is already a renderer)
-		// When there is no helper yet, we assume it is because the application is
-		// not created yet. In that case, the Application will register all components
-		// when it is started.
-		if (this.renderer) this.registerHelper();
 
 	}
 
 
-	registerHelper(renderer = null) {
+	create() {
 
-		// Renderer given?
-		if (renderer) this.renderer = renderer;
+		// Create the component
+		let component = new Component(this.name, this.source, this.initCallback, this.renderer);
+		console.log(component);
 
-		// Register the helper
-		renderer.helpers[this.name] = (params, attributeHash, options, morph, renderer, scope, visitor) => {
 
-			// Call the component hook
-			renderer.hooks.component(morph, renderer, scope, this.name, params, attributeHash, options, visitor);
-
-		}; 
 
 	}
+
+
+
 
 }
 

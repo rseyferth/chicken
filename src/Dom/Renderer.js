@@ -4,6 +4,8 @@ import HTMLBars from 'htmlbars-standalone';
 import Observable from '~/Core/Observable';
 import Binding from '~/Dom/Binding';
 import ActionBinding from '~/Dom/ActionBinding';
+import Component from '~/Dom/Component';
+import ComponentDefinition from '~/Dom/ComponentDefinition';
 import Helpers from '~/Dom/Helpers';
 
 /**
@@ -136,6 +138,12 @@ class Renderer
 			},
 
 			lookupHelper: (renderer, scope, helperName) => {
+				
+				// Is there a component?
+				if (Component.registry.has(helperName)) {
+					return Component.registry.get(helperName);
+				}
+
 				if (!renderer.helpers[helperName]) {
 					throw new Error('There is no helper registered with the name "' + helperName + '"');
 				}
@@ -144,18 +152,107 @@ class Renderer
 
 			invokeHelper: (morph, renderer, scope, visitor, params, attributeHash, helper, options) => {
 				
-				// Call it with its own context
+				// Is it a component?
+				if (helper instanceof ComponentDefinition) {
+
+					// Call component hook
+					return {
+						value: this.hooks.component(morph, renderer, scope, helper, params, attributeHash, options, visitor)
+					};
+
+				} 
+
+				// Call the helper with its own context
 				return { 
 					value: helper.apply(this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor])
 				};
 
 			},
 
-			component: (/*morph, renderer, scope, tagName, params, attrs, options, visitor*/) => {
-//				console.log('Component', tagName, params, attrs);
+			component: (morph, renderer, scope, tagName, params, attributeHash, options, visitor) => {
+
+				////////////////////////////////////////////////////////////////
+				// Is the component already created, and is this a re-render? //
+				////////////////////////////////////////////////////////////////
+
+				let state = morph.getState();
+				if (state.component) {
+
+					state.component.scheduleRevalidate();
+					return;
+
+				} 			
+
+
+				///////////////////////////////////
+				// Create the component instance //
+				///////////////////////////////////
+
+				// Get definition
+				let definition = Component.registry.get(tagName);
+				
+				// Create a new scope and use the component as self
+				var newScope = renderer.hooks.createScope(renderer, scope);
+				newScope.self = component;
+				
+				// Create it
+				let component = new Component(
+					definition.name, 
+					definition.source, 
+					morph,
+					newScope,
+					params,
+					attributeHash,
+					visitor,
+					options,
+					definition.initCallback, 
+					this);
+				
+				// Set the data
+				component.with(attributeHash);
+
+				// Now render it.
+				component.renderSync();
+								
+				// Store it.
+				state.component = component;
+
 			},
 
 
+			/**
+			 * Check if the given path is a known class (component, or block, inline)
+			 *
+			 * @method hooks.classify
+			 * @param  {Dom.Renderer} renderer 
+			 * @param  {Object} scope    
+			 * @param  {string} path     
+			 * @return {string}          
+			 */
+			classify: (renderer, scope, path) => {
+	
+				console.log(scope);
+
+				// Is this a known component?
+				if (Component.registry.has(path)) return 'component';
+
+				// Nothing known.
+				return false;
+
+			},
+
+
+
+			getBlock: (scope, key) => {
+
+				return scope.blocks[key];
+
+			},
+
+
+			/**
+			 * Keywords are a sort of commands in your .hbs templates
+			 */
 			keywords: _.defaults({
 
 				/**
@@ -195,13 +292,6 @@ class Renderer
 
 					// Create action binding
 					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
-
-				},
-
-
-				component: (/*morph, renderer, scope, params, hash, template, inverse, visitor, isRerender = false*/) => {
-
-					//console.log(' jojojojo');
 
 				}
 

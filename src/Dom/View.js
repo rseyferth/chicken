@@ -4,6 +4,7 @@ import HTMLBars from 'htmlbars-standalone';
 
 import App from '~/Helpers/App';
 import Observable from '~/Core/Observable';
+import Binding from '~/Dom/Binding';
 
 /**
  * @module Dom
@@ -326,6 +327,11 @@ class View extends Observable
 
 			} else {
 
+				// Is it a Binding?
+				if (value instanceof Binding) {
+					value = value.getValue();
+				}
+
 				// Set it now (convert to observables, and do not trigger updates)
 				this.set(key, value, true, true);
 
@@ -391,9 +397,8 @@ class View extends Observable
 		// Create template //
 		/////////////////////
 
-		this.template = HTMLBars.Compiler.compile(this.templateString);
 		try {
-			this.renderResult = this.template.render(this, this.renderer);
+			this.renderResult = this.getTemplate().render(this, this.renderer);
 		} catch (error) {
 			this.rejectPromise('render', error);
 			return;
@@ -418,6 +423,17 @@ class View extends Observable
 
 
 		return this;
+
+	}
+
+
+	getTemplate() {
+
+		// Create
+		if (!this.template) {
+			this.template = HTMLBars.Compiler.compile(this.templateString);
+		}
+		return this.template;
 
 	}
 
@@ -462,7 +478,7 @@ class View extends Observable
 	 * @chainable
 	 */
 	revalidate() {
-		this.renderResult.revalidate();
+		if (this.renderResult) this.renderResult.revalidate();
 		this.revalidateTimeout = false;
 		return this;
 	}
