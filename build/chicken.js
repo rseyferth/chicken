@@ -6050,10 +6050,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _uuidLib = __webpack_require__(45);
-
-	var _uuidLib2 = _interopRequireDefault(_uuidLib);
-
 	var _queryString = __webpack_require__(5);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
@@ -6093,10 +6089,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		_createClass(Helpers, [{
 			key: 'action',
-			value: function action(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
+			value: function action(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
 
 				// There should be an ActionBinding for this element
-				var element = options.element;
+				var element = blocks.element;
 				if (element && element.getAttribute('data-chicken-action')) {
 
 					// Get the action
@@ -6118,12 +6114,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}, {
 			key: 'each',
-			value: function each(params, attributeHash, options /* , morph, renderer, scope, visitor */) {
+			value: function each(params, attributeHash, blocks, morph /*, renderer, scope, visitor*/) {
+
+				// Check uid for this each-block
+				var eachUid = _Utils2.default.uidFor(morph);
 
 				// Get the value
 				var list = this._getValue(params[0]);
 				_Utils2.default.each(list, function (item, i) {
-					options.template.yieldItem('each-item-' + _uuidLib2.default.raw(), [item, i]);
+
+					// Get a unique id for the item.
+					var uid = _Utils2.default.uidFor(item);
+					var itemKey = 'each:' + eachUid + ':' + i + ':' + uid;
+
+					// Render item
+					blocks.template.yieldItem(itemKey, [item, i]);
 				});
 			}
 
@@ -6133,11 +6138,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}, {
 			key: 'if',
-			value: function _if(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
+			value: function _if(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
 
 				// Get the value
 				var value = this._getValue(params[0]);
-				return this._ifUnless(params, options, _Utils2.default.isTruthlike(value));
+				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(value));
 			}
 
 			/**
@@ -6146,22 +6151,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}, {
 			key: 'unless',
-			value: function unless(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
+			value: function unless(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
 
 				// Get the value
 				var value = this._getValue(params[0]);
-				return this._ifUnless(params, options, !_Utils2.default.isTruthlike(value));
+				return this._ifUnless(params, blocks, !_Utils2.default.isTruthlike(value));
 			}
 		}, {
 			key: '_ifUnless',
-			value: function _ifUnless(params, options, show) {
+			value: function _ifUnless(params, blocks, show) {
 
 				// Is the param truth-like?
 				if (show) {
 
 					// Is it a yielding-if?
-					if (options.template.yield) {
-						options.template.yield();
+					if (blocks.template.yield) {
+						blocks.template.yield();
 
 						// Or parameter-if?
 					} else {
@@ -6170,8 +6175,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Render the inverse yield
-					if (options.inverse.yield) {
-						options.inverse.yield();
+					if (blocks.inverse.yield) {
+						blocks.inverse.yield();
 
 						// Or the inverse param
 					} else {
@@ -6186,7 +6191,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}, {
 			key: 'concat',
-			value: function concat(params /*, attributeHash, options, morph, renderer, scope, visitor*/) {
+			value: function concat(params /*, attributeHash, blocks, morph, renderer, scope, visitor*/) {
 
 				return this._getValues(params).join();
 			}
@@ -6197,12 +6202,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}, {
 			key: 'log',
-			value: function log(params /*, attributeHash, options, morph, renderer, scope, visitor*/) {
+			value: function log(params /*, attributeHash, blocks, morph, renderer, scope, visitor*/) {
 				console.log.apply(console, this._getValues(params));
 			}
 		}, {
 			key: 'query-params',
-			value: function queryParams(params, attributeHash /*, options, morph, renderer, scope, visitor*/) {
+			value: function queryParams(params, attributeHash /*, blocks, morph, renderer, scope, visitor*/) {
 				return _queryString2.default.stringify(this._getHashValues(attributeHash));
 			}
 
@@ -6264,16 +6269,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+	var _uid = 0;
+	var UniqueIdKey = '___chicken_' + +new Date();
+
 	/**
 	 * @module Helpers
 	 */
-	module.exports = {
+	var Utils = {
 
 		/**
 	  * @class Helpers.Utils
 	  * @static
 	  */
 
+		/**
+	  * @method each
+	  * @static
+	  * 
+	  * @param  {Object}   obj      
+	  * @param  {Function} callback 
+	  * @param  {Object}   context  
+	  */
 		each: function each(obj, callback, context) {
 			if (obj instanceof _Observable2.default) {
 				obj = obj.attributes;
@@ -6283,6 +6299,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			return _underscore2.default.each(obj, callback, context);
 		},
 
+		/**
+	  * Determine whether given value is truthlike
+	  * 
+	  * @method isTruthlike
+	  * @static
+	  *	 
+	  * @param  {mixed} value 
+	  * @return {boolean}
+	  */
 		isTruthlike: function isTruthlike(value) {
 
 			// Null/undef
@@ -6308,9 +6333,52 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			// Do it natively
 			return !!value;
-		}
+		},
 
+		/**
+	  * Get a unique string identifier for given object or variable. 
+	  *  
+	  * @param  {mixed} obj 
+	  * @return {string}
+	  */
+		uidFor: function uidFor(obj) {
+
+			// Already set for this object?
+			if (obj && obj[UniqueIdKey] !== undefined) return obj[UniqueIdKey];
+
+			// Non-existing things?
+			if (obj === undefined) return '(undefined)';
+			if (obj === null) return '(null)';
+
+			// Check what type the value is
+			var type = typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
+			switch (type) {
+
+				case 'number':
+				case 'string':
+					return type + ':' + obj;
+
+				case 'boolean':
+					return obj ? '(true)' : '(false)';
+
+			}
+
+			// Is it a standard object?
+			if (obj === Object) return '(Object)';
+			if (obj === Array) return '(Array)';
+
+			// Store the id on the obj
+			var uid = Utils.uid();
+			obj[UniqueIdKey] = uid;
+			return uid;
+		},
+
+		uid: function uid() {
+			return '*' + ++_uid + '*';
+		}
 	};
+
+	module.exports = Utils;
 
 /***/ },
 /* 52 */

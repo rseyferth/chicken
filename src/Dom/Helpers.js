@@ -1,7 +1,6 @@
 /* eslint no-console: ["error", { allow: ["log"] }] */
 
 import _ from 'underscore';
-import Uuid from 'uuid-lib';
 import QueryString from 'query-string';
 
 import ActionBinding from '~/Dom/ActionBinding';
@@ -28,10 +27,10 @@ class Helpers
 	// Actions //
 	/////////////
 
-	action(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
+	action(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
 		
 		// There should be an ActionBinding for this element
-		let element = options.element;
+		let element = blocks.element;
 		if (element && element.getAttribute('data-chicken-action')) {
 			
 			// Get the action
@@ -54,13 +53,22 @@ class Helpers
 	/**
 	 * @method each
 	 */
-	each(params, attributeHash, options/* , morph, renderer, scope, visitor */) {
+	each(params, attributeHash, blocks, morph /*, renderer, scope, visitor*/) {
 
-
+		// Check uid for this each-block
+		var eachUid = Utils.uidFor(morph);
+		
 		// Get the value
 		let list = this._getValue(params[0]);
 		Utils.each(list, (item, i) => {
-			options.template.yieldItem('each-item-' + Uuid.raw(), [item, i]);
+
+			// Get a unique id for the item.
+			let uid = Utils.uidFor(item);
+			let itemKey = 'each:' + eachUid + ':' + i + ':' + uid;
+			
+			// Render item
+			blocks.template.yieldItem(itemKey, [item, i]);
+
 		});
 		
 	}
@@ -68,33 +76,33 @@ class Helpers
 	/**
 	 * @method if	 
 	 */
-	if(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
+	if(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
 
 		// Get the value
 		let value = this._getValue(params[0]);
-		return this._ifUnless(params, options, Utils.isTruthlike(value));		
+		return this._ifUnless(params, blocks, Utils.isTruthlike(value));		
 
 	}
 
 	/**
 	 * @method unless
 	 */
-	unless(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
+	unless(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
 
 		// Get the value
 		let value = this._getValue(params[0]);
-		return this._ifUnless(params, options, !Utils.isTruthlike(value));
+		return this._ifUnless(params, blocks, !Utils.isTruthlike(value));
 
 	}
 
-	_ifUnless(params, options, show) {
+	_ifUnless(params, blocks, show) {
 
 		// Is the param truth-like?
 		if (show) {
 
 			// Is it a yielding-if?
-			if (options.template.yield) {
-				options.template.yield();
+			if (blocks.template.yield) {
+				blocks.template.yield();
 
 			// Or parameter-if?
 			} else {
@@ -104,8 +112,8 @@ class Helpers
 		} else {
 
 			// Render the inverse yield
-			if (options.inverse.yield) {
-				options.inverse.yield();
+			if (blocks.inverse.yield) {
+				blocks.inverse.yield();
 			
 			// Or the inverse param
 			} else {
@@ -120,7 +128,7 @@ class Helpers
 	// Values //
 	////////////
 
-	concat(params/*, attributeHash, options, morph, renderer, scope, visitor*/) {
+	concat(params/*, attributeHash, blocks, morph, renderer, scope, visitor*/) {
 
 		return this._getValues(params).join();
 
@@ -132,11 +140,11 @@ class Helpers
 	// Debug //
 	///////////
 
-	log(params/*, attributeHash, options, morph, renderer, scope, visitor*/) {
+	log(params/*, attributeHash, blocks, morph, renderer, scope, visitor*/) {
 		console.log.apply(console, this._getValues(params));
 	}
 
-	'query-params'(params, attributeHash /*, options, morph, renderer, scope, visitor*/) {
+	'query-params'(params, attributeHash /*, blocks, morph, renderer, scope, visitor*/) {
 		return QueryString.stringify(this._getHashValues(attributeHash));		
 	}
 
