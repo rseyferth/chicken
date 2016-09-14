@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/erik/Www/chicken/src/Helpers/Utils.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,91 +132,69 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Helpers/Utils.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
-
-    
-</div>
+import Observable from &#x27;~/Core/Observable&#x27;;
+import ObservableArray from &#x27;~/Core/ObservableArray&#x27;;
 
 
+/**
+ * @module Helpers
+ */
+module.exports = {
 
-<div class="box intro">
-    
-</div>
+	/**
+	 * @class Helpers.Utils
+	 * @static
+	 */
 
 
+	each: (obj, callback, context) =&gt; {
+		if (obj instanceof Observable) {
+			obj = obj.attributes;
+		} else if (obj instanceof ObservableArray) {
+			obj = obj.items;
+		}
+		return _.each(obj, callback, context);
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+	},
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ActionBinding.html">
-                        Dom.ActionBinding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Component.html">
-                        Dom.Component
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Helpers.html">
-                        Dom.Helpers
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+	isTruthlike: (value) =&gt; {
+
+		// Null/undef
+		if (value === null || value === undefined) return false;
+
+		// Bool?
+		if (value === true) return true;
+		if (value === false) return false;
+
+		// 0 and 1?
+		if (value === 1 || value === &#x27;1&#x27;) return true;
+		if (value === 0 || value === &#x27;0&#x27;) return false;
+
+		// Array?
+		if (Array.isArray(value) || value instanceof ObservableArray) {
+			return value.length &gt; 0;
+		}
+
+		// Object
+		if (typeof value === &#x27;object&#x27; &amp;&amp; value.contructor === Object) {
+			return _.key(value).length &gt; 0;
+		}
+
+		// Do it natively
+		return !!value;
+
+	}
+
+
+};
+    </pre>
 </div>
 
                     </div>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/erik/Www/chicken/src/Core/Obj.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,91 +132,205 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Core/Obj.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
+var promiseCount = 0;
 
-    
-</div>
+/**
+ * @module Core
+ */
+class Obj {
+
+	/**
+	 * Basic object that can trigger events
+	 *
+	 * @class Core.Obj
+	 * @constructor
+	 */
+	constructor() {
+		
+		// Init values
+		this._listeners = new Map();
+		this._promises = new Map();
+
+	}
+
+	////////////////////
+	// Public methods //
+	////////////////////
+
+	promise(key, callback) {
+
+		
+		// Do the callback
+		var promise = this._getPromiseInfo(key);
+		callback.apply(null, [promise.resolve, promise.reject]);
+		return promise.promise;
+
+	}
+
+	resolvePromise(key, ...args) {
+		this._getPromiseInfo(key).resolve.apply(this, args);
+		return this;
+	}
+	rejectPromise(key, ...args) {
+		this._getPromiseInfo(key).reject.apply(this, args);
+		return this;
+	}
+
+	getPromise(key) {
+		return this._getPromiseInfo(key).promise;
+	}
+
+	_getPromiseInfo(key) {
+
+		// Was the promise already defined
+		if (!this._promises.has(key)) {
+
+			// Store it
+			var p = {};
+			p.promise = new Promise((resolve, reject) =&gt; {
+				p.resolve = resolve;
+				p.reject = reject;		
+				p.id = promiseCount++;
+			});
+			this._promises.set(key, p);
+
+		}
+		return this._promises.get(key);
+		
+
+	}
+
+	when(...args) {
+
+		// The last one should be a callback
+		var successCallback = args.pop();
+		var failCallback = (error) =&gt; {
+			throw new Error(&#x27;Uncaught promise failure for &#x27; + args.join(&#x27;, &#x27;) + &#x27;: &#x27; + error);
+		};
+		if (args.length &gt; 1 &amp;&amp; typeof _.last(args) === &#x27;function&#x27;) {
+			failCallback = successCallback;
+			successCallback = args.pop();
+		}
+
+		// Collect promises
+		var promises = [];
+		_.each(args, (arg) =&gt; {
+			promises.push(this._getPromiseInfo(arg).promise);
+		});
+
+		// One?
+		if (promises.length === 1) {
+
+			// Simple.
+			promises[0].then(successCallback, failCallback);
+
+		} else {
+
+			// When all are done
+			Promise.all(promises).then(successCallback, failCallback);
+
+		}
+
+		return this;
+
+	}
 
 
 
-<div class="box intro">
-    
-</div>
+	/**
+	 * Add listener for chosen event
+	 *
+	 * @method on
+	 * @param  {string}   eventName The event name to listen for.
+	 * @param  {Function} callback  The function to call when the event occurs. Depending on the event, this 
+	 *                              callback can receive 0 or more arguments when called.
+	 * @example
+	 * 		obj.on(&#x27;message&#x27;, function(message) {
+	 * 			console.log(message);
+	 * 		});
+	 * @chainable
+	 */
+	on(eventName, callback) {
+
+		// Get the set
+		if (!this._listeners.has(eventName)) {
+			this._listeners.set(eventName, new Set());
+		}
+		var events = this._listeners.get(eventName);
+		
+		// Add callback
+		events.add(callback);
+
+		// Chain
+		return this;
+
+	}
+
+	/**
+	 * Remove a previously added listener for chosen event
+	 *
+	 * @method off
+	 * @param  {string}   eventName The event name to remove listener for
+	 * @param  {Function} callback  The previously added callback to remove from listeners
+	 * @chainable
+	 */
+	off(eventName, callback) {
+
+		// Get the callbacks
+		var callbacks = this._listeners.get(eventName);
+		if (callbacks === undefined) return this;
+
+		// Remove callback
+		callbacks.delete(callback);
+
+		return this;
+
+	}
+
+	/**
+	 * Trigger calling of all registered callbacks for given event
+	 * with given arguments.
+	 *
+	 * @method trigger
+	 * @param  {string}    eventName The event name to trigger callbacks for
+	 * @param  {...mixed}  args      Zero or more arguments to pass along to each callback
+	 * @chainable
+	 */
+	trigger(eventName, ...args) {
+
+		// Get the callbacks
+		var callbacks = this._listeners.get(eventName);
+		if (callbacks === undefined) return this;
+
+		// Loop and call
+		callbacks.forEach((cb) =&gt; {
+			cb.apply(this, args);			
+		});	
+
+
+		return this;
+	}
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+	/////////////////////
+	// Private methods //
+	/////////////////////
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ActionBinding.html">
-                        Dom.ActionBinding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Component.html">
-                        Dom.Component
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Helpers.html">
-                        Dom.Helpers
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+
+
+
+}
+
+module.exports = Obj;
+    </pre>
 </div>
 
                     </div>

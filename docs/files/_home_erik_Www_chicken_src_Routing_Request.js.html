@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/erik/Www/chicken/src/Routing/Request.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,91 +132,68 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Routing/Request.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
+/**
+ * @module Routing
+ */
+class Request
+{
 
-    
-</div>
+	/**
+	 * @class Routing.Request
+	 *
+	 * @constructor
+	 * @param {object} 			location 		The location received from the History library
+	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
+	 */
+	constructor(location, application = null) {
+
+		// Guess application if not given
+		if (!application) application = ClassMap.get(&#x27;Application&#x27;).getInstance();
+
+		// Parse the uri 
+		let uri = Request.cleanUri(location.pathname);
+		
+		// Strip of base part
+		var baseUrl = Request.cleanUri(application.settings.get(&#x27;baseUrl&#x27;));
+		if (uri.length &gt;= baseUrl.length &amp;&amp; uri.substr(0, baseUrl.length)) {
+			uri = uri.substr(baseUrl.length);
+		}
+
+		// Add the / back again
+		uri = &#x27;/&#x27; + uri;
+
+		/**
+		 * @property uri
+		 * @type {string}
+		 */
+		this.uri = uri;
+
+	}
 
 
-
-<div class="box intro">
-    
-</div>
+	
 
 
+}
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+Request.cleanUri = (uri) =&gt; {
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ActionBinding.html">
-                        Dom.ActionBinding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Component.html">
-                        Dom.Component
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Helpers.html">
-                        Dom.Helpers
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+	if (/^\//.test(uri)) uri = uri.substr(1);
+	if (/\/$/.test(uri)) uri = uri.substr(0, uri.length - 1);
+	return uri;
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+};
+
+
+module.exports = Request;
+
+    </pre>
 </div>
 
                     </div>

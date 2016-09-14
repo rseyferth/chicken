@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/erik/Www/chicken/src/Dom/Component.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,91 +132,122 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Dom/Component.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import HTMLBars from &#x27;htmlbars-standalone&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
+import View from &#x27;~/Dom/View&#x27;;
 
-    
-</div>
+/**
+ * @module Dom
+ */
+class Component extends View
+{
+
+	/**
+	 * @class Dom.Component
+	 * @extends Dom.View
+	 */
+	constructor(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates, initCallback = null, renderer = null) {
+
+		super(source, initCallback, renderer);
+
+		this.name = name;
+
+		this.morph = morph;
+
+		this.scope = scope;
+
+		this.parameters = parameters;
+		this.attributeHash = attributeHash;
+		this.visitor = visitor;
+
+		this.subTemplates = subTemplates;
+
+
+		this.templateString = &#x27;&lt;h1&gt;Hoi&lt;/h1&gt;{{yield}}&#x27;;
+
+	}
+
+
+	renderSync() {
+
+		// Create block
+		let block = HTMLBars.Util.Template.blockFor(
+			HTMLBars.Runtime.render,
+			this.templateString,
+			{
+				scope: this.scope
+			}
+		);
+		console.log(this.scope);
+
+		// Render it.
+		this.renderer.hooks.block(this.morph, this.renderer, this.scope, this.name, this.parameters, this.attributeHash, this.subTemplates.default, this.subTemplates.inverse, this.visitor);
+
+		return;
+
+		// Create the template
+		try {
+
+			// Render it into the morph
+			
+			console.log(this.getTemplate());
+			this.renderResult = this.getTemplate().render(this, this.renderer, {
+				scope: this.scope,
+				template: this.subTemplates.default
+			});
+			this.documentFragment = this.renderResult.fragment;
+
+		} catch (error) {
+			this.rejectPromise(&#x27;render&#x27;, error);
+			return;
+		}
+
+
+		// Study the object
+		this.study(() =&gt; {
+			this.scheduleRevalidate();
+		});
+
+
+		this.morph.setNode(this.documentFragment);
+
+	}
+
+
+	getTemplate() {
+
+		// Create
+		if (!this.template) {
+			this.template = HTMLBars.Util.Template.blockFor(
+				HTMLBars.Runtime.render,
+				this.templateString,
+				{
+
+				});
+			console.log(&#x27;template&#x27;, this.template);
+		}
+		return this.template;
+
+	}
 
 
 
-<div class="box intro">
-    
-</div>
+}
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ActionBinding.html">
-                        Dom.ActionBinding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Component.html">
-                        Dom.Component
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Helpers.html">
-                        Dom.Helpers
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+
+Component.registry = new Map();
+
+
+module.exports = Component;
+    </pre>
 </div>
 
                     </div>

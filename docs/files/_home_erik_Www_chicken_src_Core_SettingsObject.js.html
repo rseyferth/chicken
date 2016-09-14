@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/erik/Www/chicken/src/Core/SettingsObject.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,91 +132,81 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Core/SettingsObject.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
+import Observable from &#x27;~/Core/Observable&#x27;;
+import Chainable from &#x27;~/Helpers/Chainable&#x27;;
 
-    
-</div>
+/**
+ * @module Core
+ */
+class SettingsObject extends Observable
+{
+
+	/**
+	 * @class Core.SettingsObject
+	 * @extends Core.Observable
+	 *
+	 * @constructor
+	 * @param {object}  defaultSettings  	Initialize with these default settings
+	 * @param {array}   [allowedKeys] 		Optional array of allowed keys. By default all keys are allowed	 
+	 */
+	constructor(defaultSettings = {}, allowedKeys = []) {
+		
+		// Instantiate with default settings
+		super(defaultSettings);
+
+		/**
+		 * @property allowedKeys
+		 * @type Array
+		 */
+		this.allowedKeys = allowedKeys;
+		
+	}
+
+	/**
+	 * Apply given settings
+	 *
+	 * @method apply
+	 * @param {object} 	settings	A hash-object with keys and values
+	 * @chainable
+	 */
+	apply(settings) {
+
+		// Apply each key individually
+		_.each(settings, (value, key) =&gt; {
+			this.set(key, value);			
+		});
+
+		return this;
+
+	}
 
 
+	// Extra check for allowedKeys.
+	set(key, value) {
 
-<div class="box intro">
-    
-</div>
+		// Is it allowed?
+		if (this.allowedKeys &amp;&amp; this.allowedKeys.length &gt; 0 &amp;&amp; !_.contains(this.allowedKeys,key)) {
+			throw new Error(&#x27;This SettingsObject does not have a setting for &quot;&#x27; + key + &#x27;&quot;. The allowed settings are: &#x27; + this.allowedKeys.join(&#x27;, &#x27;));
+		}
+
+		// Do it.
+		return super.set(key, value);
+	
+
+	} 
 
 
+}
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ActionBinding.html">
-                        Dom.ActionBinding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Component.html">
-                        Dom.Component
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Helpers.html">
-                        Dom.Helpers
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
-
-    <div class="yui3-u-1-2">
-        
-    </div>
+module.exports = Chainable(SettingsObject);
+    </pre>
 </div>
 
                     </div>

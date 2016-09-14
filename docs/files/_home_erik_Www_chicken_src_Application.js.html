@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/erik/Www/chicken/src/Application.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,91 +132,268 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Application.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+//////////////////////
+// Vendor libraries //
+//////////////////////
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
+import QueryString from &#x27;query-string&#x27;;
+import { createHistory } from &#x27;history&#x27;;		// https://www.npmjs.com/package/history
+import $ from &#x27;jquery&#x27;;
+import _ from &#x27;underscore&#x27;;
 
-    
-</div>
+/////////////////////
+// Chicken classes //
+/////////////////////
+
+import Observable from &#x27;~/Core/Observable&#x27;;
+import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
+import ViewContainer from &#x27;~/Dom/ViewContainer&#x27;;
+import Renderer from &#x27;~/Dom/Renderer&#x27;;
+import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
+import Router from &#x27;~/Routing/Router&#x27;;
+import Component from &#x27;~/Dom/Component&#x27;;
+
+//////////////////////
+// Class definitino //
+//////////////////////
+
+var __instance = undefined;
+
+class Application extends Observable {
+
+	/**
+	 * The Application class is 
+	 *
+	 * @class Application
+	 * @extends Core.Observable
+	 */
+	constructor($app, settings, history) {
+
+		// Basics
+		super();
+		__instance = this;
+
+		////////////////
+		// Properties //
+		////////////////
+
+		/**
+		 * The jQuery element that is the Application
+		 * 
+		 * @property $app
+		 * @type {jQuery}
+		 */
+		this.$app = $app ? $app : $(&#x27;#application&#x27;);
+
+
+		/**
+		 * All ViewContainers in the application. This is automatically
+		 * kept up to date to contain all and only still existing containers.
+		 *
+		 * @property viewContainers
+		 * @type {Map}
+		 */
+		this.viewContainers = new Map();
 
 
 
-<div class="box intro">
-    
-</div>
+		/**
+		 * @property router
+		 * @type {Routing.Router}
+		 */
+		this.router = new Router(this);
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+		/**
+		 * @property settings
+		 * @type {Core.SettingsObject}
+		 */
+		this.settings = SettingsObject.create({
+			baseUrl: &#x27;/&#x27;,
+			
+			viewPath: &#x27;views&#x27;,
+			viewExtension: &#x27;hbs&#x27;,
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ActionBinding.html">
-                        Dom.ActionBinding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Component.html">
-                        Dom.Component
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Helpers.html">
-                        Dom.Helpers
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+			renderer: settings.renderer === undefined ? new Renderer() : null
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+		}, [ &#x27;baseUrl&#x27;, &#x27;viewPath&#x27;, &#x27;viewExtension&#x27;, &#x27;renderer&#x27; ]).apply(settings);
+
+		
+
+		/**
+		 * @property history
+		 * @type {History}
+		 */
+		this.history = history ? history : createHistory();
+
+
+
+
+	}
+
+	findViewContainers($element = null) {
+
+		// No element to look in?
+		if (!$element) $element = this.$app;
+
+		// Find view containers
+		$element.find(ViewContainer.ElementSelector).each((index, el) =&gt; {
+
+			// Create view container
+			var vc = new ViewContainer($(el), this);
+
+			// Already known?
+			if (this.viewContainers.has(vc.name)) {
+				throw new Error(&#x27;There is already a view named &quot;&#x27; + vc.name + &#x27;&quot;. It is not possible to have two views with the same name at the same time.&#x27;);
+			}
+
+			// Store it.
+			this.viewContainers.set(vc.name, vc);
+
+			// Initialize
+			vc.initialize();
+
+		});
+		
+		return this;
+
+	}
+
+	updateViewContainers($lookForNewOnesIn = null) {
+
+		// Check if all old ones are still there
+		
+
+		// Look for new ones
+		if ($lookForNewOnesIn) this.findViewContainers($lookForNewOnesIn);
+
+		return this;
+
+	}
+
+	getViewContainer(key) {
+		return this.viewContainers.get(key);
+	}
+
+
+
+
+
+	routes(callback) {
+
+		// Run callback with router
+		callback.apply(this.router, []);
+		return this;
+
+	}
+
+
+	start() {
+
+		// Find initial view containers
+		this.findViewContainers();
+
+		// Listen to browser&#x27;s address bar
+		this.history.listen((location) =&gt; {
+			this.router.handle(location);
+		});
+
+		// Start with current location
+		this.router.handle(this.history.getCurrentLocation());
+
+
+		return this;
+
+	}
+
+	goto(uri, query = null) {
+
+		// Check the query
+		if (query) {
+
+			// Is it a hash?
+			if (typeof query !== &#x27;string&#x27;) {
+				query = QueryString.stringify(query);
+			}
+
+		}
+
+		// Change the history state
+		history.push({
+			pathname: uri,
+			search: query
+		});
+
+		return this;
+
+
+	}
+
+
+
+
+	config(...args) {
+
+		// Get all?
+		if (args.length === 0) {
+			return this.settings;
+		} 
+
+		// Get one?
+		else if (args.length === 1) {
+			return this.settings.get(args[0]);
+		}
+
+		// Set?
+		else {
+			return this.settings.set(args[0], args[1]);
+		}
+
+	}
+
+
+	uri(...args) {
+
+		// Add baseUrl
+		args.unshift(this.settings.get(&#x27;baseUrl&#x27;) === &#x27;/&#x27; ? &#x27;&#x27; : this.settings.get(&#x27;baseUrl&#x27;));
+		var url = args.join(&#x27;/&#x27;);
+
+		// Was the last one an extension?
+		if (/^\.[a-z]+$/.test(_.last(args))) {
+
+			// Replace last slash
+			url = url.replace(/\/\.[a-z]+$/, _.last(args));
+
+		}
+		return url;
+
+	}
+
+
+
+
+}
+
+
+Application.getInstance = () =&gt; {
+	return __instance;
+};
+
+
+
+ClassMap.register(&#x27;Application&#x27;, Application);
+
+
+
+
+
+module.exports = Application;
+    </pre>
 </div>
 
                     </div>

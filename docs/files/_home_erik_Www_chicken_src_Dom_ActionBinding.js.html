@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/erik/Www/chicken/src/Dom/ActionBinding.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,91 +132,191 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Dom/ActionBinding.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
+import $ from &#x27;jquery&#x27;;
+import Uuid from &#x27;uuid-lib&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
+/**
+ * @module Dom
+ */
+class ActionBinding
+{
 
-    
-</div>
+	/**
+	 * @class Dom.ActionBinding
+	 * 
+	 * @constructor
+	 */
+	constructor(renderer, morph, actionName, actionHandler, parameters, options, view) {
+
+		/**
+		 * @property renderer
+		 * @type {Dom.Renderer}
+		 */
+		this.renderer = renderer;
+
+		/**
+		 * @property morph
+		 * @type {HTMLBarsMorph}
+		 */
+		this.morph = morph;
+
+		/**
+		 * The name of the action on the view
+		 * 
+		 * @property actionName
+		 * @type {string}
+		 */
+		this.actionName = actionName;
+
+		/**
+		 * The function to call when the action is executed
+		 * 
+		 * @property actionHandler
+		 * @type {function}
+		 */
+		this.actionHandler = actionHandler;
+
+		/**
+		 * @property options
+		 * @type {object}
+		 */
+		this.options = _.defaults(options, {
+			preventDefault: true
+		});
+
+		/**
+		 * The parameters that will be passed along to the action handler.
+		 * 
+		 * @property parameters
+		 * @type {array}
+		 */
+		this.parameters = parameters;
+
+		/**
+		 * @property view
+		 * @type {Dom.View}
+		 */
+		this.view = view;
+
+
+		/**
+		 * The name of the event that is listened to on the element.
+		 * When not specifically configured in the binding itself, a default
+		 * event will be decided on, based on the element tag name. 
+		 * 
+		 * @property eventName
+		 * @type {string}
+		 */
+		this.eventName = options.on ? options.on : ActionBinding.getDefaultEventName(morph.element);
+
+		/**
+		 * Indicator whether the binding is applied
+		 * to the element
+		 * 
+		 * @property isListening
+		 * @type {Boolean}
+		 */
+		this.isListening = false;
+
+
+		/**
+		 * @property $element
+		 * @type {jQuery}
+		 */
+		this.$element = null;
+
+		/**
+		 * The unique identifier for this ActionBinding. This is used
+		 * by the Helper to retrieve this instance and automatically
+		 * generated in the constructor.
+		 * 
+		 * @property id
+		 * @type {string}
+		 */
+		this.id = ActionBinding.register(this);
+
+		// Store this binding on the element
+		morph.element.setAttribute(&#x27;data-chicken-action&#x27;, this.id);
 
 
 
-<div class="box intro">
-    
-</div>
+
+
+	}
+
+	apply() {
+
+		// Already applied?
+		if (this.isListening === true) return this;
+		this.isListening = true;
+
+
+		// Get element
+		this.$element = $(this.morph.element);
+		this.$element.on(this.eventName, (e) =&gt; {
+
+			// Prevent default?
+			if (this.options.preventDefault) e.preventDefault();
+
+			// Call the handler
+			var params = _.flatten([
+				_.map(this.parameters, (value) =&gt; {
+					return this.renderer.hooks.getValue(value);
+				}), 
+				this, 
+				this.view
+			]);
+			this.actionHandler.apply(this.view, params);
+
+		});
+
+		return this;
+
+	}
+
+}
+
+ActionBinding.registry = new Map();
+ActionBinding.register = (binding) =&gt; {
+
+	// Generate id
+	var id = Uuid.raw();
+	ActionBinding.registry.set(id, binding);
+	return id;
+
+};
+ActionBinding.get = (id) =&gt; {
+	return ActionBinding.registry.get(id);
+};
+
+
+ActionBinding.getDefaultEventName = (element) =&gt; {
+
+	// Specific one for this tag?
+	var eventName = ActionBinding.DefaultEventNames[element.tagName.toLowerCase()];
+
+	// Or the old click.
+	if (!eventName) eventName = &#x27;click&#x27;;
+	return eventName;
+
+
+};
+ActionBinding.DefaultEventNames = {
+
+	input: &#x27;change keyup paste&#x27;,
+	select: &#x27;change&#x27;,
+	form: &#x27;submit&#x27;	
+};
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
-
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ActionBinding.html">
-                        Dom.ActionBinding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Component.html">
-                        Dom.Component
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Helpers.html">
-                        Dom.Helpers
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
-
-    <div class="yui3-u-1-2">
-        
-    </div>
+module.exports = ActionBinding;
+    </pre>
 </div>
 
                     </div>

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/erik/Www/chicken/src/Core/ComputedProperty.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,91 +132,128 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Core/ComputedProperty.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
+/**
+ * @module Core
+ */
+class ComputedProperty
+{
 
-    
-</div>
+	/**
+	 * @class Core.ComputedProperty
+	 * 
+	 * @constructor
+	 * @param  {Array}   			dependencies 
+	 * @param  {Function} 			callback     	 
+	 */
+	constructor(dependencies, callback) {
+
+		/**
+		 * The Observable instance that this computed attribute is
+		 * a part of.
+		 * 
+		 * @property observable
+		 * @type {Core.Observable}
+		 */
+		this.observable = null;
+
+		/**
+		 * The attribute name within the Observable that this ComputedProperty
+		 * represents.
+		 * 
+		 * @property name
+		 * @type {string}
+		 */
+		this.name = null;
+
+		/**
+		 * The names of the attributes that this compution depends on. These
+		 * attributes will also be injected into the callback.
+		 *
+		 * @property dependencies
+		 * @type {array}
+		 */
+		this.dependencies = dependencies;
+
+		/**
+		 * The compution function that is called when the value is requested.
+		 *
+		 * @property callback
+		 * @type {Function}
+		 */
+		this.callback = callback;
+
+	}
+
+	/**
+	 * Get the current computed value 
+	 *
+	 * @method getValue
+	 * @return {mixed}
+	 */
+	getValue() {
+
+		// Get dependency values
+		var args = [];
+		_.each(this.dependencies, (dep) =&gt; {
+			args.push(this.observable.get(dep));
+		});	
+
+		// Do the callback
+		return this.callback.apply(this.observable, args);
+
+	}
+
+	/**
+	 * Alias of &#x60;getValue&#x60;
+	 * 
+	 * @method toString
+	 * @return {mixed}
+	 */
+	toString() {
+		return this.getValue();
+	}
+
+
+	/**
+	 * Make this property part of an Observable object, and 
+	 * start watching for changes.
+	 * 
+	 * @method initialize
+	 * @param {string} name 					The name op the property
+	 * @param {Core.Observable} observable 		The observable instance this property is a part of
+	 * @chainable
+	 */
+	initialize(name, observable) {
+
+		// Localize
+		this.name = name;
+		this.observable = observable;
+
+		// Watch the properties
+		this.observable.observe(this.dependencies, () =&gt; {
+			this.observable._scheduleAttributeChanged(this.name);
+		});
+
+		return this;
+
+	}
 
 
 
-<div class="box intro">
-    
-</div>
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+}
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ActionBinding.html">
-                        Dom.ActionBinding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Component.html">
-                        Dom.Component
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Helpers.html">
-                        Dom.Helpers
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
+module.exports = ComputedProperty;
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+    </pre>
 </div>
 
                     </div>

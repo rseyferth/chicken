@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Dom</title>
+    <title>/home/erik/Www/chicken/src/Routing/Controller.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -132,91 +132,90 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Dom Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Routing/Controller.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+ * @module Routing
+ */
+class Controller
+{
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Dom_ViewContainer.js.html#l9"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Dom&#x2F;ViewContainer.js:9</code></a>
-        </div>
-    
+	/**
+	 * @class Routing.Controller
+	 * 
+	 * @constructor
+	 * @param {Routing.Action} action  The routing action that leads to the creation of this controller
+	 */
+	constructor(action, application) {
 
-    
-</div>
+		/**
+		 * @property action
+		 * @type {Routing.Action}
+		 */
+		this.action = action;
+
+		/**
+		 * @property application
+		 * @type {Application}
+		 */
+		this.application = application;
+
+	}
 
 
 
-<div class="box intro">
-    
-</div>
+	////////////////
+	// Properties //
+	////////////////
+
+
+	/**
+	 * Request parameters
+	 * 
+	 * @property parameters
+	 * @type {Map}
+	 */
+	get parameters() {
+		return this.action.parameters;
+	}
+
+	/**
+	 * The ViewContainer into which this controller action will render
+	 * 
+	 * @property viewContainer
+	 * @type {Dom.ViewContainer}
+	 */
+	get viewContainer() {
+		return this.action.viewContainer;
+	}
+
+	/**
+	 * @property request
+	 * @type {Routing.Request}
+	 */
+	get request() {
+		return this.action.request;
+	}
+
+	/**
+	 * @property route
+	 * @type {Routing.Route} 
+	 */
+	get route() {
+		return this.action.route;
+	}
+
+
+}
+
+Controller.registry = new Map();
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
-
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ActionBinding.html">
-                        Dom.ActionBinding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Binding.html">
-                        Dom.Binding
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Component.html">
-                        Dom.Component
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Element.html">
-                        Dom.Element
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Helpers.html">
-                        Dom.Helpers
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.Renderer.html">
-                        Dom.Renderer
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.View.html">
-                        Dom.View
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Dom.ViewContainer.html">
-                        Dom.ViewContainer
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
-
-    <div class="yui3-u-1-2">
-        
-    </div>
+module.exports = Controller;
+    </pre>
 </div>
 
                     </div>
