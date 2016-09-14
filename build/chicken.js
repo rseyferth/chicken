@@ -7,7 +7,7 @@
 		exports["Chicken"] = factory(require("$"), require("_"), require("XRegExp"), require("HTMLBars"));
 	else
 		root["Chicken"] = factory(root["$"], root["_"], root["XRegExp"], root["HTMLBars"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_42__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_43__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -72,7 +72,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Application2 = _interopRequireDefault(_Application);
 
-	var _ComputedProperty = __webpack_require__(36);
+	var _ComputedProperty = __webpack_require__(37);
 
 	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
 
@@ -84,87 +84,87 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(52);
+	var _ObservableArray = __webpack_require__(53);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
-	var _SettingsObject = __webpack_require__(37);
+	var _SettingsObject = __webpack_require__(38);
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _ActionBinding = __webpack_require__(44);
+	var _ActionBinding = __webpack_require__(45);
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Binding = __webpack_require__(43);
+	var _Binding = __webpack_require__(44);
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
-	var _Component = __webpack_require__(46);
+	var _Component = __webpack_require__(47);
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _ComponentDefinition = __webpack_require__(49);
+	var _ComponentDefinition = __webpack_require__(50);
 
 	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
 
-	var _Element = __webpack_require__(40);
+	var _Element = __webpack_require__(41);
 
 	var _Element2 = _interopRequireDefault(_Element);
 
-	var _Helpers = __webpack_require__(50);
+	var _Helpers = __webpack_require__(51);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
-	var _Renderer = __webpack_require__(41);
+	var _Renderer = __webpack_require__(42);
 
 	var _Renderer2 = _interopRequireDefault(_Renderer);
 
-	var _View = __webpack_require__(47);
+	var _View = __webpack_require__(48);
 
 	var _View2 = _interopRequireDefault(_View);
 
-	var _ViewContainer = __webpack_require__(39);
+	var _ViewContainer = __webpack_require__(40);
 
 	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
 
-	var _App = __webpack_require__(48);
+	var _App = __webpack_require__(49);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Chainable = __webpack_require__(38);
+	var _Chainable = __webpack_require__(39);
 
 	var _Chainable2 = _interopRequireDefault(_Chainable);
 
-	var _ClassMap = __webpack_require__(35);
+	var _ClassMap = __webpack_require__(36);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Utils = __webpack_require__(51);
+	var _Utils = __webpack_require__(52);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
-	var _Action = __webpack_require__(56);
+	var _Action = __webpack_require__(57);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
-	var _Controller2 = __webpack_require__(57);
+	var _Controller2 = __webpack_require__(58);
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
-	var _Request = __webpack_require__(58);
+	var _Request = __webpack_require__(59);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
-	var _Route = __webpack_require__(54);
+	var _Route = __webpack_require__(55);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _RouteMatch = __webpack_require__(55);
+	var _RouteMatch = __webpack_require__(56);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
-	var _Router = __webpack_require__(53);
+	var _Router = __webpack_require__(54);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -383,23 +383,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _SettingsObject = __webpack_require__(37);
+	var _SettingsObject = __webpack_require__(38);
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _ViewContainer = __webpack_require__(39);
+	var _ViewContainer = __webpack_require__(40);
 
 	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
 
-	var _Renderer = __webpack_require__(41);
+	var _Renderer = __webpack_require__(42);
 
 	var _Renderer2 = _interopRequireDefault(_Renderer);
 
-	var _ClassMap = __webpack_require__(35);
+	var _ClassMap = __webpack_require__(36);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Router = __webpack_require__(53);
+	var _Router = __webpack_require__(54);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -3046,11 +3046,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _ClassMap = __webpack_require__(35);
+	var _Reference = __webpack_require__(35);
+
+	var _Reference2 = _interopRequireDefault(_Reference);
+
+	var _ClassMap = __webpack_require__(36);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _ComputedProperty = __webpack_require__(36);
+	var _ComputedProperty = __webpack_require__(37);
 
 	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
 
@@ -3236,7 +3240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (parts.length === 0) {
 
 					// Is it computed?
-					if (value instanceof _ComputedProperty2.default) {
+					if (value instanceof _ComputedProperty2.default || value instanceof _Reference2.default) {
 						return value.getValue();
 					}
 
@@ -3338,14 +3342,31 @@ return /******/ (function(modules) { // webpackBootstrap
 					if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 				}
 
-				// Store the value
-				this.attributes[key] = value;
+				// Is there a current value that is a reference?
+				if (this.attributes[key] instanceof _Reference2.default && !(value instanceof _Reference2.default)) {
+
+					// Write the referenced value
+					this.attributes[key].setValue(value);
+				} else {
+
+					// Store the value
+					this.attributes[key] = value;
+				}
 
 				// Is the value observable?
 				if (Observable.isObservable(value)) {
 
 					// Study the object
 					value.study(function () {
+						_this2._scheduleAttributeChanged(key);
+					});
+				}
+
+				// Is the value a reference?
+				if (value instanceof _Reference2.default) {
+
+					// Study the object
+					value.watch(function () {
 						_this2._scheduleAttributeChanged(key);
 					});
 				}
@@ -3944,6 +3965,47 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 35 */
 /***/ function(module, exports) {
 
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Reference = function () {
+		function Reference(observable, path) {
+			_classCallCheck(this, Reference);
+
+			this.observable = observable;
+			this.path = path;
+		}
+
+		_createClass(Reference, [{
+			key: "getValue",
+			value: function getValue() {
+				return this.observable.get(this.path);
+			}
+		}, {
+			key: "setValue",
+			value: function setValue(value) {
+				this.observable.set(this.path, value);
+				return this;
+			}
+		}, {
+			key: "watch",
+			value: function watch(callback) {
+				this.observable.observe(this.path, callback);
+			}
+		}]);
+
+		return Reference;
+	}();
+
+	module.exports = Reference;
+
+/***/ },
+/* 36 */
+/***/ function(module, exports) {
+
 	'use strict';
 
 	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
@@ -3975,7 +4037,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ClassMap;
 
 /***/ },
-/* 36 */
+/* 37 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4111,7 +4173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ComputedProperty;
 
 /***/ },
-/* 37 */
+/* 38 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4128,7 +4190,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _Chainable = __webpack_require__(38);
+	var _Chainable = __webpack_require__(39);
 
 	var _Chainable2 = _interopRequireDefault(_Chainable);
 
@@ -4218,7 +4280,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = (0, _Chainable2.default)(SettingsObject);
 
 /***/ },
-/* 38 */
+/* 39 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -4237,7 +4299,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 39 */
+/* 40 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4246,7 +4308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _Element2 = __webpack_require__(40);
+	var _Element2 = __webpack_require__(41);
 
 	var _Element3 = _interopRequireDefault(_Element2);
 
@@ -4401,7 +4463,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ViewContainer;
 
 /***/ },
-/* 40 */
+/* 41 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4481,7 +4543,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Element;
 
 /***/ },
-/* 41 */
+/* 42 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4490,7 +4552,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _htmlbarsStandalone = __webpack_require__(42);
+	var _htmlbarsStandalone = __webpack_require__(43);
 
 	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
 
@@ -4498,27 +4560,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _Binding = __webpack_require__(43);
+	var _Binding = __webpack_require__(44);
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
-	var _ActionBinding = __webpack_require__(44);
+	var _ActionBinding = __webpack_require__(45);
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Component = __webpack_require__(46);
+	var _Component = __webpack_require__(47);
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _ComponentDefinition = __webpack_require__(49);
+	var _ComponentDefinition = __webpack_require__(50);
 
 	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
 
-	var _Helpers = __webpack_require__(50);
+	var _Helpers = __webpack_require__(51);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
-	var _View = __webpack_require__(47);
+	var _View = __webpack_require__(48);
 
 	var _View2 = _interopRequireDefault(_View);
 
@@ -4669,11 +4731,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (parentScope.self instanceof _View2.default) {
 
 					// Bubble the actions
-					scope.actions = Object.create(parentScope.actions, parentScope.self.actions);
+					scope.actions = _underscore2.default.extend(scope.actions, parentScope.self.actions);
 
 					// No a component?
 					if (!(parentScope.self instanceof _Component2.default)) {
 						scope.view = parentScope.self;
+					} else {
+						scope.component = parentScope.self;
 					}
 				}
 
@@ -4732,9 +4796,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				var component = new _Component2.default(definition.name, definition.source, morph, newScope, params, attributeHash, visitor, options, definition.initCallback, _this);
 				newScope.self = component;
 
-				// Set the data
-				component.with(attributeHash);
-
 				// Now render it.
 				component.render();
 
@@ -4775,6 +4836,41 @@ return /******/ (function(modules) { // webpackBootstrap
 				return null;
 			},
 
+			getActionScope: function getActionScope(scope, key) {
+
+				// Check the scope
+				if (scope.actions && scope.actions[key]) {
+
+					return scope;
+				} else if (scope.locals.actions && scope.locals.actions[key]) {
+
+					// Use local action
+					return scope.locals;
+				} else if (scope.self.actions && scope.self.actions[key]) {
+
+					// Use that
+					return scope.self;
+				} else if (scope.view && scope.view.actions && scope.view.actions[key]) {
+
+					// Use the veiw
+					return scope.view;
+				} else {
+
+					return false;
+				}
+			},
+
+			getAction: function getAction(scope, key) {
+
+				var appliedScope = _this.hooks.getActionScope(scope, key);
+				if (appliedScope) {
+
+					// Get the action
+					return appliedScope.actions[key];
+				}
+				return false;
+			},
+
 			keywords: _underscore2.default.defaults({
 
 				/**
@@ -4790,31 +4886,18 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (morph.actionBindings) return;
 
 					// Get action scope
-					var appliedScope = void 0;
-					if (scope.localPresent['actions'] && scope.locals.actions[params[0]]) {
-
-						// Use local action
-						appliedScope = scope.locals;
-					} else if (scope.self.actions && scope.self.actions[params[0]]) {
-
-						// Use that
-						appliedScope = scope.self;
-					} else if (scope.view && scope.view.actions && scope.view.actions[params[0]]) {
-
-						// Use the veiw
-						appliedScope = scope.view;
-					} else {
+					var actionCallback = renderer.hooks.getAction(scope, params[0]);
+					if (!actionCallback) {
 
 						// Undefined action.
 						throw new Error('Could not find action "' + params[0] + '" within the scope');
 					}
 
 					// Get action
-					var actionCallback = appliedScope.actions[params[0]];
 					var parameters = params.slice(1);
 
 					// Create action binding
-					morph.actionBindings = new _ActionBinding2.default(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
+					morph.actionBindings = new _ActionBinding2.default(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
 				}
 
 			}, _htmlbarsStandalone2.default.Runtime.Hooks.Default.keywords)
@@ -4844,13 +4927,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Renderer;
 
 /***/ },
-/* 42 */
+/* 43 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_42__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_43__;
 
 /***/ },
-/* 43 */
+/* 44 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -4860,6 +4943,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _jquery = __webpack_require__(1);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Reference = __webpack_require__(35);
+
+	var _Reference2 = _interopRequireDefault(_Reference);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4957,6 +5044,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				return this.observable.set(this.path, value);
+			}
+		}, {
+			key: 'getReference',
+			value: function getReference() {
+				if (!this.reference) {
+					this.reference = new _Reference2.default(this.observable, this.path);
+				}
+				return this.reference;
 			}
 
 			/**
@@ -5072,7 +5167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Binding;
 
 /***/ },
-/* 44 */
+/* 45 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5087,7 +5182,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _uuidLib = __webpack_require__(45);
+	var _uuidLib = __webpack_require__(46);
 
 	var _uuidLib2 = _interopRequireDefault(_uuidLib);
 
@@ -5258,7 +5353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ActionBinding;
 
 /***/ },
-/* 45 */
+/* 46 */
 /***/ function(module, exports) {
 
 	var validator = new RegExp("^[a-z0-9]{32}$", "i");
@@ -5327,18 +5422,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 46 */
+/* 47 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _htmlbarsStandalone = __webpack_require__(42);
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _htmlbarsStandalone = __webpack_require__(43);
 
 	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
 
-	var _View2 = __webpack_require__(47);
+	var _Obj = __webpack_require__(34);
+
+	var _Obj2 = _interopRequireDefault(_Obj);
+
+	var _View2 = __webpack_require__(48);
 
 	var _View3 = _interopRequireDefault(_View2);
 
@@ -5366,7 +5473,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			_classCallCheck(this, Component);
 
-			var _this = _possibleConstructorReturn(this, (Component.__proto__ || Object.getPrototypeOf(Component)).call(this, source, initCallback, renderer));
+			var _this = _possibleConstructorReturn(this, (Component.__proto__ || Object.getPrototypeOf(Component)).call(this, source, null, renderer));
 
 			_this.name = name;
 
@@ -5375,18 +5482,63 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.scope = scope;
 
 			_this.parameters = parameters;
-			_this.attributeHash = attributeHash;
+			_this.attributes = attributeHash;
 			_this.visitor = visitor;
 
 			_this.subTemplates = subTemplates;
+
+			_this.tagName = 'div';
+			_this.cssClass = false;
+
+			_this.element = null;
+
+			// Make attributes available
+			_this.with(_this.attributes);
+
+			// Dom event listeners
+			_this.dom = new _Obj2.default();
+
+			// Definition callback?
+			if (initCallback) {
+				initCallback.apply(_this);
+			}
 
 			return _this;
 		}
 
 		_createClass(Component, [{
+			key: 'sendAction',
+			value: function sendAction() {
+				var _this2 = this;
+
+				var name = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+
+				// No name given?
+				if (name === null) {
+					name = this.attributes.action;
+				}
+
+				// Get the callback.
+				var actionScope = this.renderer.hooks.getActionScope(this.scope, name);
+				if (!actionScope) throw new Error('[Component ' + this.name + '] Could not find action "' + name + '" within the scope');
+				var callback = actionScope.actions[name];
+
+				// Now call it.
+
+				for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+					args[_key - 1] = arguments[_key];
+				}
+
+				var params = _underscore2.default.flatten([_underscore2.default.map(args, function (value) {
+					return _this2.renderer.hooks.getValue(value);
+				}), this, actionScope]);
+				callback.apply(actionScope instanceof _View3.default ? actionScope : this, params);
+			}
+		}, {
 			key: 'renderSync',
 			value: function renderSync() {
-				var _this2 = this;
+				var _this3 = this;
 
 				// Create the template
 				try {
@@ -5404,10 +5556,56 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Study the object
 				this.study(function () {
-					_this2.scheduleRevalidate();
+					_this3.scheduleRevalidate();
 				});
 
-				this.morph.setNode(this.documentFragment);
+				// Create the element
+				this.element = document.createElement(this.tagName);
+				_underscore2.default.each(this.attributes, function (value, attr) {
+					_this3.element.setAttribute(attr, value);
+				});
+				this.$element = (0, _jquery2.default)(this.element);
+				this.$element.append(this.documentFragment);
+
+				// CSS class
+				if (this.cssClass) this.$element.addClass(this.cssClass);
+
+				// Trigger beforeAdded
+				this.trigger('beforeAdd', this.$element);
+
+				// Put element in result
+				this.morph.setNode(this.$element[0]);
+
+				// Done.
+				this.trigger('added', this.$element);
+				this.resolvePromise('render', this.documentFragment);
+
+				// Enable DOM events
+				this.enableDomEvents();
+			}
+		}, {
+			key: 'enableDomEvents',
+			value: function enableDomEvents() {
+				var _this4 = this;
+
+				// Loop through callbacks
+				this.dom._listeners.forEach(function (callbacks, name) {
+
+					// Proper event?
+					if (!_underscore2.default.contains(Component.DomEventNames, name)) {
+						throw new Error('The "' + name + '" event is not a valid DOM event.');
+					}
+
+					// Listen and connect.
+					_this4.$element.on(name, function () {
+						for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+							args[_key2] = arguments[_key2];
+						}
+
+						args.unshift(name);
+						_this4.dom.trigger.apply(_this4.dom, args);
+					});
+				});
 			}
 		}, {
 			key: 'getSubTemplate',
@@ -5424,12 +5622,29 @@ return /******/ (function(modules) { // webpackBootstrap
 		return Component;
 	}(_View3.default);
 
+	Component.DomEventNames = [
+
+	// Touch events
+	'touchStart', 'touchMove', 'touchEnd', 'touchCancel',
+
+	// Keyboard
+	'keyDown', 'keyUp', 'keyPress',
+
+	// Mouse
+	'mouseDown', 'mouseUp', 'contextMenu', 'click', 'doubleClick', 'mouseMove', 'focusIn', 'focusOut', 'mouseEnter', 'mouseLeave',
+
+	// Form
+	'submit', 'change', 'focusIn', 'focusOut', 'input',
+
+	// HTML5
+	'dragStart', 'drag', 'dragEnter', 'dragLeave', 'dragOver', 'dragEnd', 'drop'];
+
 	Component.registry = new Map();
 
 	module.exports = Component;
 
 /***/ },
-/* 47 */
+/* 48 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -5446,11 +5661,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _htmlbarsStandalone = __webpack_require__(42);
+	var _htmlbarsStandalone = __webpack_require__(43);
 
 	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
 
-	var _App = __webpack_require__(48);
+	var _App = __webpack_require__(49);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -5458,7 +5673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _Binding = __webpack_require__(43);
+	var _Binding = __webpack_require__(44);
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
@@ -5625,35 +5840,40 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Check out the source //
 			//////////////////////////
 
-			// Is it HTML?
-			if (/^\<[a-z\!]/.test(source)) {
-
-				// Use code now
-				_this.templateString = source;
+			// No template (just yield)?
+			if (source === false) {
+				_this.templateString = '{{yield}}';
 			}
 
-			// Name?
-			else if (/[a-z0-9\-]+\./.test) {
+			// Is it HTML?		
+			else if (/^\<[a-z\!]/.test(source)) {
 
-					// Is it cached?
-					if (View.TemplateCache.has(source)) {
-
-						// Use it.
-						_this.templateString = View.TemplateCache.get(source);
-					} else {
-
-						// Load template
-						var url = (0, _App2.default)().uri((0, _App2.default)().config('viewPath'), source.split(/\./).join('/'), '.' + (0, _App2.default)().config('viewExtension'));
-						_this.templateUrl = url;
-					}
+					// Use code now
+					_this.templateString = source;
 				}
 
-				// Url.
-				else {
+				// Name?
+				else if (/[a-z0-9\-]+\./.test(source) || /^[a-zA-Z]+$/.test(source)) {
 
-						// Load it
-						_this.templateUrl = url;
+						// Is it cached?
+						if (View.TemplateCache.has(source)) {
+
+							// Use it.
+							_this.templateString = View.TemplateCache.get(source);
+						} else {
+
+							// Load template
+							var url = (0, _App2.default)().uri((0, _App2.default)().config('viewPath'), source.split(/\./).join('/'), '.' + (0, _App2.default)().config('viewExtension'));
+							_this.templateUrl = url;
+						}
 					}
+
+					// Url.
+					else {
+
+							// Load it
+							_this.templateUrl = url;
+						}
 
 			// Definition callback?
 			if (initCallback) {
@@ -5775,7 +5995,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Is it a Binding?
 						if (value instanceof _Binding2.default) {
-							value = value.getValue();
+
+							// Use value
+							value = value.getReference();
 						}
 
 						// Set it now (convert to observables, and do not trigger updates)
@@ -6000,12 +6222,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = View;
 
 /***/ },
-/* 48 */
+/* 49 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _ClassMap = __webpack_require__(35);
+	var _ClassMap = __webpack_require__(36);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
@@ -6016,12 +6238,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ },
-/* 49 */
+/* 50 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _App = __webpack_require__(48);
+	var _App = __webpack_require__(49);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -6075,7 +6297,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ComponentDefinition;
 
 /***/ },
-/* 50 */
+/* 51 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6090,11 +6312,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
-	var _ActionBinding = __webpack_require__(44);
+	var _ActionBinding = __webpack_require__(45);
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Utils = __webpack_require__(51);
+	var _Utils = __webpack_require__(52);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
@@ -6284,7 +6506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Helpers;
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6299,7 +6521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(52);
+	var _ObservableArray = __webpack_require__(53);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -6417,7 +6639,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Utils;
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6434,7 +6656,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _ClassMap = __webpack_require__(35);
+	var _ClassMap = __webpack_require__(36);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
@@ -6875,7 +7097,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ObservableArray;
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6890,15 +7112,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _SettingsObject = __webpack_require__(37);
+	var _SettingsObject = __webpack_require__(38);
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Route = __webpack_require__(54);
+	var _Route = __webpack_require__(55);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _Request = __webpack_require__(58);
+	var _Request = __webpack_require__(59);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -7156,7 +7378,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Router;
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7175,7 +7397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _RouteMatch = __webpack_require__(55);
+	var _RouteMatch = __webpack_require__(56);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
@@ -7607,7 +7829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Route;
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7618,7 +7840,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Action = __webpack_require__(56);
+	var _Action = __webpack_require__(57);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
@@ -7768,7 +7990,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = RouteMatch;
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7783,11 +8005,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _Controller = __webpack_require__(57);
+	var _Controller = __webpack_require__(58);
 
 	var _Controller2 = _interopRequireDefault(_Controller);
 
-	var _View = __webpack_require__(47);
+	var _View = __webpack_require__(48);
 
 	var _View2 = _interopRequireDefault(_View);
 
@@ -8086,7 +8308,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Action;
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -8185,12 +8407,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Controller;
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _ClassMap = __webpack_require__(35);
+	var _ClassMap = __webpack_require__(36);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 

@@ -170,8 +170,13 @@ class View extends Observable
 		// Check out the source //
 		//////////////////////////
 
-		// Is it HTML?
-		if (/^\<[a-z\!]/.test(source)) {
+		// No template (just yield)?
+		if (source === false) {
+			this.templateString = '{{yield}}';
+		}
+
+		// Is it HTML?		
+		else if (/^\<[a-z\!]/.test(source)) {
 
 			// Use code now
 			this.templateString = source;
@@ -179,7 +184,7 @@ class View extends Observable
 		} 
 		
 		// Name?
-		else if (/[a-z0-9\-]+\./.test) {
+		else if (/[a-z0-9\-]+\./.test(source) || /^[a-zA-Z]+$/.test(source)) {
 
 			// Is it cached?
 			if (View.TemplateCache.has(source)) {
@@ -329,7 +334,9 @@ class View extends Observable
 
 				// Is it a Binding?
 				if (value instanceof Binding) {
-					value = value.getValue();
+				
+					// Use value
+					value = value.getReference();
 				}
 
 				// Set it now (convert to observables, and do not trigger updates)

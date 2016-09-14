@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import Obj from '~/Core/Obj';
+import Reference from '~/Core/Reference';
 import ClassMap from '~/Helpers/ClassMap';
 import ComputedProperty from '~/Core/ComputedProperty';
 
@@ -170,7 +171,7 @@ class Observable extends Obj {
 		if (parts.length === 0) {
 
 			// Is it computed?
-			if (value instanceof ComputedProperty) {
+			if (value instanceof ComputedProperty || value instanceof Reference) {
 				return value.getValue();
 			}
 
@@ -224,7 +225,6 @@ class Observable extends Obj {
 		}
 
 
-
 		// Is there a dot in there?
 		if (typeof key === 'string' && key.match(/\.[\w]/)) {		
 			
@@ -272,14 +272,34 @@ class Observable extends Obj {
 
 		}
 
-		// Store the value
-		this.attributes[key] = value;
+		// Is there a current value that is a reference?
+		if (this.attributes[key] instanceof Reference && !(value instanceof Reference)) {
+		
+			// Write the referenced value
+			this.attributes[key].setValue(value);
+
+		} else {
+
+			// Store the value
+			this.attributes[key] = value;
+
+		}
 
 		// Is the value observable?
 		if (Observable.isObservable(value)) {
 
 			// Study the object
 			value.study(() => {
+				this._scheduleAttributeChanged(key);
+			});
+
+		}
+
+		// Is the value a reference?
+		if (value instanceof Reference) {
+
+			// Study the object
+			value.watch(() => {
 				this._scheduleAttributeChanged(key);
 			});
 

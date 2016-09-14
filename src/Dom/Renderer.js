@@ -155,11 +155,14 @@ class Renderer
 				if (parentScope.self instanceof View) {
 					
 					// Bubble the actions
-					scope.actions = Object.create(parentScope.actions, parentScope.self.actions);
+					scope.actions = _.extend(scope.actions, parentScope.self.actions);
+
 
 					// No a component?
 					if (!(parentScope.self instanceof Component)) {
 						scope.view = parentScope.self;
+					} else {
+						scope.component = parentScope.self;
 					}
 
 				}
@@ -236,9 +239,6 @@ class Renderer
 					this);
 				newScope.self = component;
 				
-				// Set the data
-				component.with(attributeHash);
-
 				// Now render it.
 				component.render();
 								
@@ -285,6 +285,50 @@ class Renderer
 
 			},
 
+			getActionScope: (scope, key) => {
+
+				// Check the scope
+				if (scope.actions && scope.actions[key]) {
+
+					return scope;
+
+				} else if (scope.locals.actions && scope.locals.actions[key]) {
+
+					// Use local action
+					return scope.locals;
+
+				} else if (scope.self.actions && scope.self.actions[key]) {
+
+					// Use that
+					return scope.self;
+
+				} else if (scope.view && scope.view.actions && scope.view.actions[key]) {
+
+					// Use the veiw
+					return scope.view;
+
+				} else {
+
+					return false;
+
+				}
+
+
+			},
+
+			getAction: (scope, key) => {
+
+				let appliedScope = this.hooks.getActionScope(scope, key);
+				if (appliedScope) {
+					
+					// Get the action
+					return appliedScope.actions[key];
+
+				}
+				return false;
+
+			},
+
 
 			keywords: _.defaults({
 
@@ -301,23 +345,8 @@ class Renderer
 					if (morph.actionBindings) return;
 					
 					// Get action scope
-					let appliedScope;
-					if (scope.localPresent['actions'] && scope.locals.actions[params[0]]) {
-
-						// Use local action
-						appliedScope = scope.locals;
-
-					} else if (scope.self.actions && scope.self.actions[params[0]]) {
-
-						// Use that
-						appliedScope = scope.self;
-
-					} else if (scope.view && scope.view.actions && scope.view.actions[params[0]]) {
-
-						// Use the veiw
-						appliedScope = scope.view;
-
-					} else {
+					let actionCallback = renderer.hooks.getAction(scope, params[0]);
+					if (!actionCallback) {
 
 						// Undefined action.
 						throw new Error('Could not find action "' + params[0] + '" within the scope');
@@ -325,11 +354,10 @@ class Renderer
 					}
 
 					// Get action
-					let actionCallback = appliedScope.actions[params[0]];
 					let parameters = params.slice(1);
 
 					// Create action binding
-					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
+					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
 
 				}
 

@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+import Reference from '~/Core/Reference';
+
 /**
  * @module Dom
  */
@@ -92,6 +94,13 @@ class Binding
 
 	}
 
+
+	getReference() {
+		if (!this.reference) {
+			this.reference = new Reference(this.observable, this.path);
+		}
+		return this.reference;
+	}
 
 
 	/**
