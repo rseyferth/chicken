@@ -4518,6 +4518,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
+	var _View = __webpack_require__(47);
+
+	var _View2 = _interopRequireDefault(_View);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -4648,6 +4652,34 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 			},
 
+			createFreshScope: function createFreshScope() {
+				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
+			},
+
+			createChildScope: function createChildScope(parentScope) {
+
+				// Create a new scope extending the parent
+				var scope = Object.create(parentScope);
+				scope.locals = Object.create(parentScope.locals);
+				scope.localPresent = Object.create(parentScope.localPresent);
+				scope.blocks = Object.create(parentScope.blocks);
+				scope.actions = Object.create(parentScope.actions);
+
+				// Check is parent is a view
+				if (parentScope.self instanceof _View2.default) {
+
+					// Bubble the actions
+					scope.actions = Object.create(parentScope.actions, parentScope.self.actions);
+
+					// No a component?
+					if (!(parentScope.self instanceof _Component2.default)) {
+						scope.view = parentScope.self;
+					}
+				}
+
+				return scope;
+			},
+
 			lookupHelper: function lookupHelper(renderer, scope, helperName) {
 
 				if (!renderer.helpers[helperName]) {
@@ -4767,6 +4799,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Use that
 						appliedScope = scope.self;
+					} else if (scope.view && scope.view.actions && scope.view.actions[params[0]]) {
+
+						// Use the veiw
+						appliedScope = scope.view;
 					} else {
 
 						// Undefined action.

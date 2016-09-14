@@ -7,6 +7,7 @@ import ActionBinding from '~/Dom/ActionBinding';
 import Component from '~/Dom/Component';
 import ComponentDefinition from '~/Dom/ComponentDefinition';
 import Helpers from '~/Dom/Helpers';
+import View from '~/Dom/View';
 
 /**
  * @module Dom
@@ -137,6 +138,38 @@ class Renderer
 							
 			},
 
+			createFreshScope: () => {
+				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
+			},
+
+			createChildScope: (parentScope) => {
+
+				// Create a new scope extending the parent
+				var scope = Object.create(parentScope);
+				scope.locals = Object.create(parentScope.locals);
+				scope.localPresent = Object.create(parentScope.localPresent);
+				scope.blocks = Object.create(parentScope.blocks);
+				scope.actions = Object.create(parentScope.actions);
+
+				// Check is parent is a view
+				if (parentScope.self instanceof View) {
+					
+					// Bubble the actions
+					scope.actions = Object.create(parentScope.actions, parentScope.self.actions);
+
+					// No a component?
+					if (!(parentScope.self instanceof Component)) {
+						scope.view = parentScope.self;
+					}
+
+				}
+
+				return scope;
+
+
+			},
+
+
 			lookupHelper: (renderer, scope, helperName) => {
 				
 				if (!renderer.helpers[helperName]) {
@@ -266,7 +299,7 @@ class Renderer
 					
 					// Check binding
 					if (morph.actionBindings) return;
-
+					
 					// Get action scope
 					let appliedScope;
 					if (scope.localPresent['actions'] && scope.locals.actions[params[0]]) {
@@ -278,6 +311,11 @@ class Renderer
 
 						// Use that
 						appliedScope = scope.self;
+
+					} else if (scope.view && scope.view.actions && scope.view.actions[params[0]]) {
+
+						// Use the veiw
+						appliedScope = scope.view;
 
 					} else {
 
