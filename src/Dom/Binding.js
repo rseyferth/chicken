@@ -61,7 +61,7 @@ class Binding
 
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
-				morph.isDirty = true;
+				morph.isDirty = true;				
 			});
 
 		});

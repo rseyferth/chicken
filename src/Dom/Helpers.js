@@ -54,7 +54,8 @@ class Helpers
 	/**
 	 * @method each
 	 */
-	each(params, attributeHash, options /*, morph, renderer, scope, visitor*/) {
+	each(params, attributeHash, options/* , morph, renderer, scope, visitor */) {
+
 
 		// Get the value
 		let list = this._getValue(params[0]);

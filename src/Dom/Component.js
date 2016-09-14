@@ -29,34 +29,15 @@ class Component extends View
 		this.subTemplates = subTemplates;
 
 
-		this.templateString = '<h1>Hoi</h1>{{yield}}';
-
 	}
 
 
 	renderSync() {
 
-		// Create block
-		let block = HTMLBars.Util.Template.blockFor(
-			HTMLBars.Runtime.render,
-			this.templateString,
-			{
-				scope: this.scope
-			}
-		);
-		console.log(this.scope);
-
-		// Render it.
-		this.renderer.hooks.block(this.morph, this.renderer, this.scope, this.name, this.parameters, this.attributeHash, this.subTemplates.default, this.subTemplates.inverse, this.visitor);
-
-		return;
-
 		// Create the template
 		try {
 
-			// Render it into the morph
-			
-			console.log(this.getTemplate());
+			// Render it
 			this.renderResult = this.getTemplate().render(this, this.renderer, {
 				scope: this.scope,
 				template: this.subTemplates.default
@@ -80,22 +61,20 @@ class Component extends View
 	}
 
 
-	getTemplate() {
 
-		// Create
-		if (!this.template) {
-			this.template = HTMLBars.Util.Template.blockFor(
-				HTMLBars.Runtime.render,
-				this.templateString,
-				{
+	getSubTemplate(key) {
 
-				});
-			console.log('template', this.template);
-		}
-		return this.template;
+		let block = HTMLBars.Util.Template.blockFor(
+			HTMLBars.Runtime.render,
+			this.subTemplates[key],
+			{
+				scope: this.scope
+			}
+		);
+
+		return block;
 
 	}
-
 
 
 }

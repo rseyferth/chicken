@@ -440,22 +440,15 @@ class Observable extends Obj {
 		//////////////////////////////
 
 		let parts = key.split(/\./);
-		let currentPart = parts.shift();
-		if (parts.length > 0) {
+		if (parts.length > 1) {
 
-			// Do the sub thing
-			var sub = this.attributes[currentPart];
-			if (sub === undefined) {
-
-				// Create new observable
-				this.set(currentPart, {}, true);
-				sub = this.attributes[currentPart];
-
-			}
+			// Get the object concerned
+			let objKey = parts.pop();
+			let obj = this.get(parts.join('.'));
 
 			// Is it an observable?
-			if (Observable.isObservable(sub)) {
-				return sub.observe(parts.join('.'), callback);				
+			if (Observable.isObservable(obj) && obj.observe) {
+				return obj.observe(objKey, callback);				
 			}
 
 			throw new Error('Cannot observe property of non-existing object');

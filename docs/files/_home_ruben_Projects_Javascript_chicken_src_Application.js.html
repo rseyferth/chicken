@@ -43,6 +43,8 @@
             
                 <li><a href="../classes/Application.html">Application</a></li>
             
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
+            
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
                 <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
@@ -51,11 +53,23 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
+            
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
             
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -74,6 +88,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="../modules/Core.html">Core</a></li>
+            
+                <li><a href="../modules/Data.html">Data</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -124,7 +140,8 @@
 // Vendor libraries //
 //////////////////////
 
-import { createHistory } from &#x27;history&#x27;;
+import QueryString from &#x27;query-string&#x27;;
+import { createHistory } from &#x27;history&#x27;;		// https://www.npmjs.com/package/history
 import $ from &#x27;jquery&#x27;;
 import _ from &#x27;underscore&#x27;;
 
@@ -135,9 +152,9 @@ import _ from &#x27;underscore&#x27;;
 import Observable from &#x27;~/Core/Observable&#x27;;
 import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
 import ViewContainer from &#x27;~/Dom/ViewContainer&#x27;;
+import Renderer from &#x27;~/Dom/Renderer&#x27;;
 import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 import Router from &#x27;~/Routing/Router&#x27;;
-
 
 //////////////////////
 // Class definitino //
@@ -151,7 +168,7 @@ class Application extends Observable {
 	 * The Application class is 
 	 *
 	 * @class Application
-	 * @extend Core.Observable
+	 * @extends Core.Observable
 	 */
 	constructor($app, settings, history) {
 
@@ -199,11 +216,13 @@ class Application extends Observable {
 			baseUrl: &#x27;/&#x27;,
 			
 			viewPath: &#x27;views&#x27;,
-			viewExtension: &#x27;hbs&#x27;
+			viewExtension: &#x27;hbs&#x27;,
 
-		}, [ &#x27;baseUrl&#x27;, &#x27;viewPath&#x27;, &#x27;viewExtension&#x27; ]).apply(settings);
+			renderer: settings.renderer === undefined ? new Renderer() : null
 
+		}, [ &#x27;baseUrl&#x27;, &#x27;viewPath&#x27;, &#x27;viewExtension&#x27;, &#x27;renderer&#x27; ]).apply(settings);
 
+		
 
 		/**
 		 * @property history
@@ -287,7 +306,34 @@ class Application extends Observable {
 		this.router.handle(this.history.getCurrentLocation());
 
 
+		return this;
+
 	}
+
+	goto(uri, query = null) {
+
+		// Check the query
+		if (query) {
+
+			// Is it a hash?
+			if (typeof query !== &#x27;string&#x27;) {
+				query = QueryString.stringify(query);
+			}
+
+		}
+
+		// Change the history state
+		history.push({
+			pathname: uri,
+			search: query
+		});
+
+		return this;
+
+
+	}
+
+
 
 
 	config(...args) {

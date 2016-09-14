@@ -17,7 +17,6 @@ import ViewContainer from '~/Dom/ViewContainer';
 import Renderer from '~/Dom/Renderer';
 import ClassMap from '~/Helpers/ClassMap';
 import Router from '~/Routing/Router';
-import Component from '~/Dom/Component';
 
 //////////////////////
 // Class definitino //

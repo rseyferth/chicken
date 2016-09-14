@@ -174,6 +174,12 @@ var Chicken = {
 
 	},
 
+	observable: (data = null) => {
+
+		return new Observable(data);
+
+	},
+
 
 	view: (...args) => {
 

@@ -43,6 +43,8 @@
             
                 <li><a href="../classes/Application.html">Application</a></li>
             
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
+            
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
                 <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
@@ -51,11 +53,23 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
+            
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
             
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -74,6 +88,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="../modules/Core.html">Core</a></li>
+            
+                <li><a href="../modules/Data.html">Data</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -175,7 +191,7 @@ class SettingsObject extends Observable
 	set(key, value) {
 
 		// Is it allowed?
-		if (this.allowedKeys &amp;&amp; this.allowedKeys.length &gt; 0 &amp;&amp; !this.allowedKeys.includes(key)) {
+		if (this.allowedKeys &amp;&amp; this.allowedKeys.length &gt; 0 &amp;&amp; !_.contains(this.allowedKeys,key)) {
 			throw new Error(&#x27;This SettingsObject does not have a setting for &quot;&#x27; + key + &#x27;&quot;. The allowed settings are: &#x27; + this.allowedKeys.join(&#x27;, &#x27;));
 		}
 

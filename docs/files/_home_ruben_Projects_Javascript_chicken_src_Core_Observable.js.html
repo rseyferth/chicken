@@ -43,6 +43,8 @@
             
                 <li><a href="../classes/Application.html">Application</a></li>
             
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
+            
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
                 <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
@@ -51,11 +53,23 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
+            
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
             
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -74,6 +88,8 @@
             <ul id="api-modules" class="apis modules">
             
                 <li><a href="../modules/Core.html">Core</a></li>
+            
+                <li><a href="../modules/Data.html">Data</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -123,6 +139,7 @@
 import _ from &#x27;underscore&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
 import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
+import ComputedProperty from &#x27;~/Core/ComputedProperty&#x27;;
 
 /**
  * @module Core
@@ -204,9 +221,16 @@ class Observable extends Obj {
 		
 		/**
 		 * @attribute attributes
-		 * @type {Map}
+		 * @type {object}
 		 */
-		this.attributes = new Map();
+		this.attributes = {};
+
+
+
+
+		// Scheduling
+		this._scheduleAttributesChangedTimeout = false;
+		this._scheduleAttributesChangedAttributes = null;
 
 
 		////////////////////
@@ -236,10 +260,10 @@ class Observable extends Obj {
 		let currentPart = parts.shift(); 
 
 		// No deep shit?
-		if (parts.length === 0) return this.attributes.has(currentPart);
+		if (parts.length === 0) return this.attributes[currentPart] !== undefined;
 
 		// Look deeper
-		let value = this.attributes.get(currentPart);
+		let value = this.attributes[currentPart];
 
 		// No value
 		if (value === undefined) {
@@ -275,10 +299,20 @@ class Observable extends Obj {
 		let currentPart = parts.shift();
 
 		// Get value
-		let value = this.attributes.get(currentPart);
+		let value = this.attributes[currentPart];
+
+		// Nothing?
+		if (value === undefined) return;
 
 		// Value found?
-		if (value === undefined || parts.length === 0) {
+		if (parts.length === 0) {
+
+			// Is it computed?
+			if (value instanceof ComputedProperty) {
+				return value.getValue();
+			}
+
+			// Return the value as is.
 			return value;
 		}
 
@@ -314,9 +348,20 @@ class Observable extends Obj {
 	set(key, value, convertToObservables = false, doNotNotify = false) {
 
 		// Convert?
-		if (convertToObservables === true &amp;&amp; typeof value === &#x27;object&#x27; &amp;&amp; value.constructor === Object) {
-			value = new Observable(value);
+		if (convertToObservables === true &amp;&amp; typeof value === &#x27;object&#x27; &amp;&amp; value !== null) {
+			if (value.constructor === Object) {
+				value = new Observable(value);
+			} else if (Array.isArray(value)) {
+				value = ClassMap.create(&#x27;ObservableArray&#x27;, [value]);
+			}
 		}
+
+		// Is it a computed attribute
+		if (value instanceof ComputedProperty) {
+			value.initialize(key, this);
+		}
+
+
 
 		// Is there a dot in there?
 		if (typeof key === &#x27;string&#x27; &amp;&amp; key.match(/\.[\w]/)) {		
@@ -328,8 +373,8 @@ class Observable extends Obj {
 			let parts = key.split(/\./);
 			let currentPart = parts.shift();
 			
-			// Does the first key exist?
-			if (!this.attributes.has(currentPart)) {
+			// Does the first key not exist?
+			if (this.attributes[currentPart] === undefined) {
 
 				// Should it be an array?
 				let newValue;
@@ -347,11 +392,11 @@ class Observable extends Obj {
 
 				// Study it
 				newValue.study(() =&gt; {
-					this._triggerAttributeChanged(currentPart);
+					this._scheduleAttributeChanged(currentPart);
 				});
 				
 				// Store it
-				this.attributes.set(currentPart, newValue);
+				this.attributes[currentPart] = newValue;
 
 			
 
@@ -366,20 +411,20 @@ class Observable extends Obj {
 		}
 
 		// Store the value
-		this.attributes.set(key, value);
+		this.attributes[key] = value;
 
 		// Is the value observable?
 		if (Observable.isObservable(value)) {
 
 			// Study the object
 			value.study(() =&gt; {
-				this._triggerAttributeChanged(key);
+				this._scheduleAttributeChanged(key);
 			});
 
 		}
 
 		// Update attribute
-		if (!doNotNotify) this._triggerAttributeChanged(key, value);
+		if (!doNotNotify) this._scheduleAttributeChanged(key);
 
 		return this;
 
@@ -392,10 +437,10 @@ class Observable extends Obj {
 		_.each(obj, (value, key) =&gt; {
 
 			// Is the value an array or object?
-			if ((Array.isArray(value) || typeof value === &#x27;object&#x27;) &amp;&amp; value !== null &amp;&amp; convertToObservables === true) {
+			if ((Array.isArray(value) || (typeof value === &#x27;object&#x27; &amp;&amp; value !== null &amp;&amp; value.constructor === Object)) &amp;&amp; convertToObservables === true) {
 
 				// Do I have this value?
-				if (this.attributes.has(key) &amp;&amp; Observable.isObservable(this.attributes.get(key))) {
+				if (this.attributes[key] !== undefined &amp;&amp; Observable.isObservable(this.attributes[key])) {
 
 					// Import
 					var obj = this.attributes.get(key);
@@ -407,12 +452,12 @@ class Observable extends Obj {
 					if (Array.isArray(value)) {
 						
 						// Put a new observable array in there
-						this.attributes.set(key, ClassMap.create(&#x27;ObservableArray&#x27;, [value]));
+						this.attributes[key] = ClassMap.create(&#x27;ObservableArray&#x27;, [value]);
 
 					} else {
 
 						// Put a new observable in there
-						this.attributes.set(key, new Observable(value));
+						this.attributes[key] = new Observable(value);
 
 					}
 
@@ -509,13 +554,49 @@ class Observable extends Obj {
 	 * 	obj.set(&#x27;foo&#x27;, &#x27;boo&#x27;); // Will alert &#x27;Changed: boo&#x27;
 	 * 	
 	 * @method observe
-	 * @param  {string}   key      The name of the attribute to observe
+	 * @param  {string|array}   key      The name of the attribute to observe
 	 * @param  {Function} callback 
 	 * @chainable
 	 */
-	observe(key, callback) {
+	observe(keyOrKeys, callback) {
+		
+		////////////////////
+		// More than one? //
+		////////////////////
 
-		// Get the set
+		if (Array.isArray(keyOrKeys)) {
+			_.each(keyOrKeys, (key) =&gt; {
+				this.observe(key, callback);
+			});
+			return this;
+		}
+		var key = keyOrKeys;
+
+
+		//////////////////////////////
+		// Does the key have a dot? //
+		//////////////////////////////
+
+		let parts = key.split(/\./);
+		if (parts.length &gt; 1) {
+
+			// Get the object concerned
+			let objKey = parts.pop();
+			let obj = this.get(parts.join(&#x27;.&#x27;));
+
+			// Is it an observable?
+			if (Observable.isObservable(obj) &amp;&amp; obj.observe) {
+				return obj.observe(objKey, callback);				
+			}
+
+			throw new Error(&#x27;Cannot observe property of non-existing object&#x27;);
+			
+		}
+
+		//////////////////
+		// Add observer //
+		//////////////////
+		
 		if (!this.observers.has(key)) {
 			this.observers.set(key, new Set());
 		}
@@ -550,11 +631,17 @@ class Observable extends Obj {
 
 	}
 
-
+	/**
+	 * Get the Observable including all its children
+	 * as a native object.
+	 *
+	 * @method toObject
+	 * @return {object}
+	 */
 	toObject() { 
 
 		var obj = {};
-		this.attributes.forEach((item, key) =&gt; {
+		_.each(this.attributes, (item, key) =&gt; {
 
 			// Observable?
 			if (Observable.isObservable(item)) {
@@ -591,43 +678,71 @@ class Observable extends Obj {
 	// Private methods //
 	/////////////////////
 
-	_triggerAttributeChanged(key, value, calledFromObjectChanged = false) {
+	_scheduleAttributeChanged(key) {
 
-		// Listeners?
-		var observers = this.observers.get(key);
-		if (observers !== undefined) {
+		// Already something scheduled?
+		if (!this._scheduleAttributesChangedTimeout) {
 
-			// Call them
-			observers.forEach((observer) =&gt; {
+			// Schedule it
+			this._scheduleAttributesChangedAttributes = [];
+			this._scheduleAttributesChangedTimeout = setTimeout(() =&gt; {
+
+				// Trigger it now!
+				this._scheduleAttributesChangedTimeout = false;
+				this._triggerAttributesChanged();
+
+			}, Observable.AttributeChangedDelay);
+
+		}
+
+		// Add attribute to the set
+		this._scheduleAttributesChangedAttributes.push(key);
+
+	}
+
+	_triggerAttributesChanged() {
+
+		// Clear for next time.
+		if (this._scheduleAttributesChangedTimeout) clearTimeout(this._scheduleAttributesChangedTimeout);
+		this._scheduleAttributesChangedTimeout = false;		
+
+		// Check my attributes
+		var attrs = _.unique(this._scheduleAttributesChangedAttributes);
+		if (attrs) {
+
+			// Collect the observers, using a Set to make sure the same observer can&#x27;t be called twice
+			var combinedObservers = new Set();
+			_.each(attrs, (attr) =&gt; {
+				
+				// Get observers
+				var attrObservers = this.observers.get(attr);
+				if (attrObservers) {
+					attrObservers.forEach((observer) =&gt; {
+
+						// Add it.
+						combinedObservers.add(observer);
+
+					});
+				}
+
+			});
+
+			// Did we have any observers?
+			combinedObservers.forEach((observer) =&gt; {
+
+				// Now call it.
 				observer.apply(this);
+
 			});
 
+			// Students as well.
+			this.trigger(Observable.Events.Change, attrs);
+
+
 		}
 
-		// Trigger object change?
-		if (calledFromObjectChanged === false) {
-			this._triggerObjectChanged([key], true);
-		}
 
 	}
-
-	_triggerObjectChanged(changedAttributes, calledFromAttributeChanged = false) {
-
-		// Trigger change event
-		this.trigger(Observable.Events.Change, changedAttributes);
-
-		// Called from attribute?
-		if (calledFromAttributeChanged === false) {
-
-			// Call individual attributes
-			changedAttributes.forEach((value, key) =&gt; {
-				this._triggerAttributeChanged(key, value, true);
-			});
-
-		}
-
-	}
-
 
 
 	isObservable() {
@@ -668,6 +783,8 @@ Observable.isObservable = (obj) =&gt; {
 
 };
 
+
+Observable.AttributeChangedDelay = 1;
 
 ClassMap.register(&#x27;Observable&#x27;, Observable);
 

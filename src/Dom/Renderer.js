@@ -139,11 +139,6 @@ class Renderer
 
 			lookupHelper: (renderer, scope, helperName) => {
 				
-				// Is there a component?
-				if (Component.registry.has(helperName)) {
-					return Component.registry.get(helperName);
-				}
-
 				if (!renderer.helpers[helperName]) {
 					throw new Error('There is no helper registered with the name "' + helperName + '"');
 				}
@@ -193,7 +188,6 @@ class Renderer
 				
 				// Create a new scope and use the component as self
 				var newScope = renderer.hooks.createScope(renderer, scope);
-				newScope.self = component;
 				
 				// Create it
 				let component = new Component(
@@ -207,12 +201,13 @@ class Renderer
 					options,
 					definition.initCallback, 
 					this);
+				newScope.self = component;
 				
 				// Set the data
 				component.with(attributeHash);
 
 				// Now render it.
-				component.renderSync();
+				component.render();
 								
 				// Store it.
 				state.component = component;
@@ -231,8 +226,6 @@ class Renderer
 			 */
 			classify: (renderer, scope, path) => {
 	
-				console.log(scope);
-
 				// Is this a known component?
 				if (Component.registry.has(path)) return 'component';
 
@@ -245,14 +238,21 @@ class Renderer
 
 			getBlock: (scope, key) => {
 
-				return scope.blocks[key];
+				// Is the block known?
+				let block = scope.blocks[key];
+				if (block) return block;
+
+				// Are we inside a component?
+				if (scope.self instanceof Component) {
+					return scope.self.getSubTemplate(key);
+				}
+				
+				// Nothing there
+				return null;
 
 			},
 
 
-			/**
-			 * Keywords are a sort of commands in your .hbs templates
-			 */
 			keywords: _.defaults({
 
 				/**
