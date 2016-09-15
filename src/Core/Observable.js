@@ -471,7 +471,7 @@ class Observable extends Obj {
 				return obj.observe(objKey, callback);				
 			}
 
-			throw new Error('Cannot observe property of non-existing object');
+			throw new Error('Cannot observe property of non-existing object: ' + key);
 			
 		}
 

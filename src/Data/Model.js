@@ -17,4 +17,7 @@ class Model extends Observable
 
 }
 
+Model.registry = new Map();
+
+
 module.exports = Model;

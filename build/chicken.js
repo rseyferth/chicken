@@ -84,13 +84,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(53);
+	var _ObservableArray = __webpack_require__(54);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
 	var _SettingsObject = __webpack_require__(38);
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
+
+	var _Model2 = __webpack_require__(61);
+
+	var _Model3 = _interopRequireDefault(_Model2);
+
+	var _ModelDefinition = __webpack_require__(62);
+
+	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
+
+	var _Api = __webpack_require__(66);
+
+	var _Api2 = _interopRequireDefault(_Api);
+
+	var _JsonApi = __webpack_require__(67);
+
+	var _JsonApi2 = _interopRequireDefault(_JsonApi);
 
 	var _ActionBinding = __webpack_require__(45);
 
@@ -104,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _ComponentDefinition = __webpack_require__(50);
+	var _ComponentDefinition = __webpack_require__(51);
 
 	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
 
@@ -112,7 +128,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Element2 = _interopRequireDefault(_Element);
 
-	var _Helpers = __webpack_require__(51);
+	var _Helpers = __webpack_require__(52);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -140,31 +156,31 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Utils = __webpack_require__(52);
+	var _Utils = __webpack_require__(53);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
-	var _Action = __webpack_require__(57);
+	var _Action = __webpack_require__(58);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
-	var _Controller2 = __webpack_require__(58);
+	var _Controller2 = __webpack_require__(59);
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
-	var _Request = __webpack_require__(59);
+	var _Request = __webpack_require__(60);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
-	var _Route = __webpack_require__(55);
+	var _Route = __webpack_require__(56);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _RouteMatch = __webpack_require__(56);
+	var _RouteMatch = __webpack_require__(57);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
-	var _Router = __webpack_require__(54);
+	var _Router = __webpack_require__(55);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -191,6 +207,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	/////////////////////
 
 	// Core
+
+
+	// Data
 
 
 	// Dom
@@ -220,6 +239,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			Observable: _Observable2.default,
 			ObservableArray: _ObservableArray2.default,
 			SettingsObject: _SettingsObject2.default
+		},
+
+		Data: {
+			Api: {
+				Api: _Api2.default,
+				JsonApi: _JsonApi2.default
+			},
+			Model: _Model3.default,
+			ModelDefinition: _ModelDefinition2.default
 		},
 
 		Dom: {
@@ -275,6 +303,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		},
 
+		api: function api() {
+			var key = arguments.length <= 0 || arguments[0] === undefined ? 'default' : arguments[0];
+
+			return _Application2.default.getInstance().apis[key];
+		},
+
+
 		////////////////////////
 		// Easy instantiators //
 		////////////////////////
@@ -313,6 +348,38 @@ return /******/ (function(modules) { // webpackBootstrap
 			_Component2.default.registry.set(name, def);
 
 			return def;
+		},
+
+		model: function model(name, configCallback) {
+			var methods = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+
+			// Create class
+			var ChickenModel = function (_Model) {
+				_inherits(ChickenModel, _Model);
+
+				function ChickenModel() {
+					var initValues = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+					_classCallCheck(this, ChickenModel);
+
+					return _possibleConstructorReturn(this, (ChickenModel.__proto__ || Object.getPrototypeOf(ChickenModel)).call(this, initValues));
+				}
+
+				return ChickenModel;
+			}(_Model3.default);
+
+			// Add given methods to prototype
+			if (methods) {
+				_jquery2.default.extend(ChickenModel.prototype, methods);
+			}
+
+			// Configure it.
+			ChickenModel.definition = new _ModelDefinition2.default(name, configCallback);
+			ChickenModel.modelName = name;
+
+			// Store it.
+			_Model3.default.registry.set(name, ChickenModel);
 		},
 
 		computed: function computed(dependencies, callback) {
@@ -399,7 +466,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Router = __webpack_require__(54);
+	var _Router = __webpack_require__(55);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -471,6 +538,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Routing.Router}
 	   */
 			_this.router = new _Router2.default(_this);
+
+			/**
+	   * One or more Data.Api.Api instances
+	   * 
+	   * @property apis
+	   * @type {Object}
+	   */
+			_this.apis = {};
 
 			/**
 	   * @property settings
@@ -551,6 +626,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Run callback with router
 				callback.apply(this.router, []);
+				return this;
+			}
+		}, {
+			key: 'addApi',
+			value: function addApi(apiInstance) {
+				var key = arguments.length <= 1 || arguments[1] === undefined ? 'default' : arguments[1];
+
+				this.apis[key] = apiInstance;
 				return this;
 			}
 		}, {
@@ -3538,7 +3621,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						return obj.observe(objKey, callback);
 					}
 
-					throw new Error('Cannot observe property of non-existing object');
+					throw new Error('Cannot observe property of non-existing object: ' + key);
 				}
 
 				//////////////////
@@ -4572,11 +4655,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _ComponentDefinition = __webpack_require__(50);
+	var _ComponentDefinition = __webpack_require__(51);
 
 	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
 
-	var _Helpers = __webpack_require__(51);
+	var _Helpers = __webpack_require__(52);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -5677,6 +5760,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
+	var _ApiCall = __webpack_require__(50);
+
+	var _ApiCall2 = _interopRequireDefault(_ApiCall);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -5836,6 +5923,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.$element = null;
 
+			/**
+	   * @property apiCalls
+	   * @type {Array}
+	   */
+			_this.apiCalls = [];
+
 			//////////////////////////
 			// Check out the source //
 			//////////////////////////
@@ -5982,27 +6075,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					if (typeof key !== 'string') throw new TypeError('[Dom.View] The "with" method accepts either a key, value or hash-object as arguments.');
 
-					// Is the data a promise?
-					if (value instanceof Promise) {
+					// Is it an Api call?
+					if (value instanceof _ApiCall2.default) {
 
-						// Add to promises
-						this.dataPromises[key] = value;
-						this.loadPromises.push(value);
-						value.then(function (result) {
+						// Get the promise and add to api calls list
+						this.apiCalls.push(value);
+						var promise = this.dataPromises[key] = value.getPromise('complete');
+						this.loadPromises.push(promise);
+						promise.then(function (result) {
 							_this3.set(key, result, true, true);
 						});
-					} else {
-
-						// Is it a Binding?
-						if (value instanceof _Binding2.default) {
-
-							// Use value
-							value = value.getReference();
-						}
-
-						// Set it now (convert to observables, and do not trigger updates)
-						this.set(key, value, true, true);
 					}
+
+					// Is the data a promise?
+					else if (value instanceof Promise) {
+
+							// Add to promises
+							this.dataPromises[key] = value;
+							this.loadPromises.push(value);
+							value.then(function (result) {
+								_this3.set(key, result, true, true);
+							});
+						} else {
+
+							// Is it a Binding?
+							if (value instanceof _Binding2.default) {
+
+								// Use value
+								value = value.getReference();
+							}
+
+							// Set it now (convert to observables, and do not trigger updates)
+							this.set(key, value, true, true);
+						}
 				}
 
 				return this;
@@ -6033,6 +6138,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// We make the 'render' promise.
 				return this.promise('render', function () {
+
+					// Start api calls.
+					_underscore2.default.invoke(_this4.apiCalls, 'execute');
 
 					/////////////////////////////////////////
 					// Wait for all loadPromises to finish //
@@ -6243,6 +6351,129 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _queryString = __webpack_require__(5);
+
+	var _queryString2 = _interopRequireDefault(_queryString);
+
+	var _Obj2 = __webpack_require__(34);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Data.Api
+	 */
+	var ApiCall = function (_Obj) {
+		_inherits(ApiCall, _Obj);
+
+		/**
+	  * @class ApiCall 
+	  * 
+	  * @constructor 
+	  * @param  {Data.Api.Api} api 	The Api instance this call originates from
+	  * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+	  * @param  {string} uri			The uri to call
+	  * @param  {Object} data        
+	  * @param  {Object} ajaxOptions 	 
+	  */
+		function ApiCall(api, method, uri) {
+			var data = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+			var ajaxOptions = arguments.length <= 4 || arguments[4] === undefined ? {} : arguments[4];
+
+			_classCallCheck(this, ApiCall);
+
+			var _this = _possibleConstructorReturn(this, (ApiCall.__proto__ || Object.getPrototypeOf(ApiCall)).call(this));
+
+			_this.api = api;
+
+			_this.method = method;
+			_this.uri = uri;
+			_this.data = data;
+			_this.ajaxOptions = ajaxOptions;
+			_this.queryParams = {};
+
+			_this.modelClass = null;
+
+			return _this;
+		}
+
+		/**
+	  * Execute the Api Call
+	  *
+	  * @method execute
+	  * @return {Promise}
+	  */
+
+
+		_createClass(ApiCall, [{
+			key: 'execute',
+			value: function execute() {
+				var _this2 = this;
+
+				// Make a promise
+				return this.promise('complete', function (resolve, reject) {
+
+					// Combine options
+					var queryString = _queryString2.default.stringify(_this2.queryParams);
+					if (queryString.length > 0) queryString = '?' + queryString;
+					var options = _jquery2.default.extend({
+
+						url: _this2.api.makeUrl(_this2.uri) + queryString,
+						method: _this2.method,
+						data: _this2.data
+
+					}, _this2.ajaxOptions);
+
+					// Make the call
+					_this2.api.ajax(options).then(function (result) {
+
+						resolve(_this2.api.deserialize(result, _this2));
+					}).fail(function (error) {
+
+						reject(error);
+					});
+				});
+			}
+		}, {
+			key: 'query',
+			value: function query(keyOrHash) {
+				var value = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+				// Is it a key / value?
+				if (typeof keyOrHash === 'string') {
+					this.queryParams[keyOrHash] = value;
+				} else {
+					_jquery2.default.extend(this.queryParams, keyOrHash);
+				}
+				return this;
+			}
+		}]);
+
+		return ApiCall;
+	}(_Obj3.default);
+
+	module.exports = ApiCall;
+
+/***/ },
+/* 51 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var _App = __webpack_require__(49);
 
 	var _App2 = _interopRequireDefault(_App);
@@ -6297,7 +6528,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ComponentDefinition;
 
 /***/ },
-/* 51 */
+/* 52 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6316,7 +6547,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Utils = __webpack_require__(52);
+	var _Utils = __webpack_require__(53);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
@@ -6506,7 +6737,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Helpers;
 
 /***/ },
-/* 52 */
+/* 53 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6521,7 +6752,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(53);
+	var _ObservableArray = __webpack_require__(54);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -6639,7 +6870,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Utils;
 
 /***/ },
-/* 53 */
+/* 54 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -6863,8 +7094,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function add() {
 				var _this4 = this;
 
+				// Is the last value a boolean?
+				var doNotNotify = false;
+
 				for (var _len = arguments.length, values = Array(_len), _key = 0; _key < _len; _key++) {
 					values[_key] = arguments[_key];
+				}
+
+				if (values.length > 1 && typeof values[values.length - 1] === 'boolean') {
+					doNotNotify = values.pop();
 				}
 
 				// Add items
@@ -6882,8 +7120,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 
 				// Trigger events
-				this.trigger(ObservableArray.Events.Change);
-				this.trigger(ObservableArray.Events.Add, values);
+				if (!doNotNotify) {
+					this.trigger(ObservableArray.Events.Change);
+					this.trigger(ObservableArray.Events.Add, values);
+				}
 
 				return this;
 			}
@@ -7097,7 +7337,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ObservableArray;
 
 /***/ },
-/* 54 */
+/* 55 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7116,11 +7356,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Route = __webpack_require__(55);
+	var _Route = __webpack_require__(56);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _Request = __webpack_require__(59);
+	var _Request = __webpack_require__(60);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -7378,7 +7618,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Router;
 
 /***/ },
-/* 55 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7397,7 +7637,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _RouteMatch = __webpack_require__(56);
+	var _RouteMatch = __webpack_require__(57);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
@@ -7829,7 +8069,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Route;
 
 /***/ },
-/* 56 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -7840,7 +8080,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Action = __webpack_require__(57);
+	var _Action = __webpack_require__(58);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
@@ -7990,7 +8230,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = RouteMatch;
 
 /***/ },
-/* 57 */
+/* 58 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8005,7 +8245,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _Controller = __webpack_require__(58);
+	var _Controller = __webpack_require__(59);
 
 	var _Controller2 = _interopRequireDefault(_Controller);
 
@@ -8308,7 +8548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Action;
 
 /***/ },
-/* 58 */
+/* 59 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -8407,7 +8647,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Controller;
 
 /***/ },
-/* 59 */
+/* 60 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8467,6 +8707,1741 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = Request;
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _Observable2 = __webpack_require__(33);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Data
+	 */
+	var Model = function (_Observable) {
+		_inherits(Model, _Observable);
+
+		function Model() {
+			var initValues = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+			var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
+			_classCallCheck(this, Model);
+
+			return _possibleConstructorReturn(this, (Model.__proto__ || Object.getPrototypeOf(Model)).call(this, initValues, convertToObservables));
+		}
+
+		return Model;
+	}(_Observable3.default);
+
+	Model.registry = new Map();
+
+	module.exports = Model;
+
+/***/ },
+/* 62 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _inflection = __webpack_require__(63);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _ModelAttribute = __webpack_require__(64);
+
+	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
+
+	var _Relationship = __webpack_require__(65);
+
+	var _Relationship2 = _interopRequireDefault(_Relationship);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Data
+	 */
+	var ModelDefinition = function () {
+		function ModelDefinition(name, callback) {
+			_classCallCheck(this, ModelDefinition);
+
+			this.name = name;
+
+			this.apiUri = '/' + _inflection2.default.underscore(_inflection2.default.pluralize(name));
+			this.defaultApi = 'default';
+
+			this.attributes = {};
+			this.attributeNames = [];
+			this.relationships = {};
+
+			this.computedAttributes = {};
+
+			callback.apply(this, [this]);
+		}
+
+		_createClass(ModelDefinition, [{
+			key: 'attribute',
+			value: function attribute(name, type) {
+				var attr = new _ModelAttribute2.default(name, type);
+				this.attributeNames.push(name);
+				this.attributes[name] = attr;
+				return attr;
+			}
+		}, {
+			key: 'computed',
+			value: function computed(name, dependencies, callback) {
+
+				this.computedAttributes[name] = {
+					dependencies: dependencies,
+					callback: callback
+				};
+				return true;
+			}
+
+			//////////////////////
+			// Column defitions //
+			//////////////////////
+
+		}, {
+			key: 'integer',
+			value: function integer(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Integer);
+				return attr;
+			}
+		}, {
+			key: 'string',
+			value: function string(name, size) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Integer);
+				attr.size = size;
+				return attr;
+			}
+		}, {
+			key: 'date',
+			value: function date(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Date);
+				return attr;
+			}
+
+			//////////////////////
+			// Column shortcuts //
+			//////////////////////
+
+		}, {
+			key: 'timestamps',
+			value: function timestamps() {
+				this.attribute('createdAt', _ModelAttribute2.default.DateTime);
+				this.attribute('updatedAt', _ModelAttribute2.default.DateTime);
+				return this;
+			}
+
+			///////////////////
+			// Relationships //
+			///////////////////
+
+		}, {
+			key: 'relationship',
+			value: function relationship(name) {
+				var rel = new _Relationship2.default(name, this.name);
+				this.relationships[name] = rel;
+				return rel;
+			}
+
+			/////////
+			// Api //
+			/////////
+
+		}, {
+			key: 'getApiUri',
+			value: function getApiUri() {
+				var id = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+				var uri = this.apiUri;
+				if (id) uri += '/' + id;
+				return uri;
+			}
+		}]);
+
+		return ModelDefinition;
+	}();
+
+	module.exports = ModelDefinition;
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
+	 * inflection
+	 * Copyright(c) 2011 Ben Lin <ben@dreamerslab.com>
+	 * MIT Licensed
+	 *
+	 * @fileoverview
+	 * A port of inflection-js to node.js module.
+	 */
+
+	( function ( root, factory ){
+	  if( true ){
+	    !(__WEBPACK_AMD_DEFINE_ARRAY__ = [], __WEBPACK_AMD_DEFINE_FACTORY__ = (factory), __WEBPACK_AMD_DEFINE_RESULT__ = (typeof __WEBPACK_AMD_DEFINE_FACTORY__ === 'function' ? (__WEBPACK_AMD_DEFINE_FACTORY__.apply(exports, __WEBPACK_AMD_DEFINE_ARRAY__)) : __WEBPACK_AMD_DEFINE_FACTORY__), __WEBPACK_AMD_DEFINE_RESULT__ !== undefined && (module.exports = __WEBPACK_AMD_DEFINE_RESULT__));
+	  }else if( typeof exports === 'object' ){
+	    module.exports = factory();
+	  }else{
+	    root.inflection = factory();
+	  }
+	}( this, function (){
+
+	  /**
+	   * @description This is a list of nouns that use the same form for both singular and plural.
+	   *              This list should remain entirely in lower case to correctly match Strings.
+	   * @private
+	   */
+	  var uncountable_words = [
+	    // 'access',
+	    'accommodation',
+	    'adulthood',
+	    'advertising',
+	    'advice',
+	    'aggression',
+	    'aid',
+	    'air',
+	    'aircraft',
+	    'alcohol',
+	    'anger',
+	    'applause',
+	    'arithmetic',
+	    // 'art',
+	    'assistance',
+	    'athletics',
+	    // 'attention',
+
+	    'bacon',
+	    'baggage',
+	    // 'ballet',
+	    // 'beauty',
+	    'beef',
+	    // 'beer',
+	    // 'behavior',
+	    'biology',
+	    // 'billiards',
+	    'blood',
+	    'botany',
+	    // 'bowels',
+	    'bread',
+	    // 'business',
+	    'butter',
+
+	    'carbon',
+	    'cardboard',
+	    'cash',
+	    'chalk',
+	    'chaos',
+	    'chess',
+	    'crossroads',
+	    'countryside',
+
+	    // 'damage',
+	    'dancing',
+	    // 'danger',
+	    'deer',
+	    // 'delight',
+	    // 'dessert',
+	    'dignity',
+	    'dirt',
+	    // 'distribution',
+	    'dust',
+
+	    'economics',
+	    'education',
+	    'electricity',
+	    // 'employment',
+	    // 'energy',
+	    'engineering',
+	    'enjoyment',
+	    // 'entertainment',
+	    'envy',
+	    'equipment',
+	    'ethics',
+	    'evidence',
+	    'evolution',
+
+	    // 'failure',
+	    // 'faith',
+	    'fame',
+	    'fiction',
+	    // 'fish',
+	    'flour',
+	    'flu',
+	    'food',
+	    // 'freedom',
+	    // 'fruit',
+	    'fuel',
+	    'fun',
+	    // 'funeral',
+	    'furniture',
+
+	    'gallows',
+	    'garbage',
+	    'garlic',
+	    // 'gas',
+	    'genetics',
+	    // 'glass',
+	    'gold',
+	    'golf',
+	    'gossip',
+	    'grammar',
+	    // 'grass',
+	    'gratitude',
+	    'grief',
+	    // 'ground',
+	    'guilt',
+	    'gymnastics',
+
+	    // 'hair',
+	    'happiness',
+	    'hardware',
+	    'harm',
+	    'hate',
+	    'hatred',
+	    'health',
+	    'heat',
+	    // 'height',
+	    'help',
+	    'homework',
+	    'honesty',
+	    'honey',
+	    'hospitality',
+	    'housework',
+	    'humour',
+	    'hunger',
+	    'hydrogen',
+
+	    'ice',
+	    'importance',
+	    'inflation',
+	    'information',
+	    // 'injustice',
+	    'innocence',
+	    // 'intelligence',
+	    'iron',
+	    'irony',
+
+	    'jam',
+	    // 'jealousy',
+	    // 'jelly',
+	    'jewelry',
+	    // 'joy',
+	    'judo',
+	    // 'juice',
+	    // 'justice',
+
+	    'karate',
+	    // 'kindness',
+	    'knowledge',
+
+	    // 'labour',
+	    'lack',
+	    // 'land',
+	    'laughter',
+	    'lava',
+	    'leather',
+	    'leisure',
+	    'lightning',
+	    'linguine',
+	    'linguini',
+	    'linguistics',
+	    'literature',
+	    'litter',
+	    'livestock',
+	    'logic',
+	    'loneliness',
+	    // 'love',
+	    'luck',
+	    'luggage',
+
+	    'macaroni',
+	    'machinery',
+	    'magic',
+	    // 'mail',
+	    'management',
+	    'mankind',
+	    'marble',
+	    'mathematics',
+	    'mayonnaise',
+	    'measles',
+	    // 'meat',
+	    // 'metal',
+	    'methane',
+	    'milk',
+	    'money',
+	    // 'moose',
+	    'mud',
+	    'music',
+	    'mumps',
+
+	    'nature',
+	    'news',
+	    'nitrogen',
+	    'nonsense',
+	    'nurture',
+	    'nutrition',
+
+	    'obedience',
+	    'obesity',
+	    // 'oil',
+	    'oxygen',
+
+	    // 'paper',
+	    // 'passion',
+	    'pasta',
+	    'patience',
+	    // 'permission',
+	    'physics',
+	    'poetry',
+	    'pollution',
+	    'poverty',
+	    // 'power',
+	    'pride',
+	    // 'production',
+	    // 'progress',
+	    // 'pronunciation',
+	    'psychology',
+	    'publicity',
+	    'punctuation',
+
+	    // 'quality',
+	    // 'quantity',
+	    'quartz',
+
+	    'racism',
+	    // 'rain',
+	    // 'recreation',
+	    'relaxation',
+	    'reliability',
+	    'research',
+	    'respect',
+	    'revenge',
+	    'rice',
+	    'rubbish',
+	    'rum',
+
+	    'safety',
+	    // 'salad',
+	    // 'salt',
+	    // 'sand',
+	    // 'satire',
+	    'scenery',
+	    'seafood',
+	    'seaside',
+	    'series',
+	    'shame',
+	    'sheep',
+	    'shopping',
+	    // 'silence',
+	    'sleep',
+	    // 'slang'
+	    'smoke',
+	    'smoking',
+	    'snow',
+	    'soap',
+	    'software',
+	    'soil',
+	    // 'sorrow',
+	    // 'soup',
+	    'spaghetti',
+	    // 'speed',
+	    'species',
+	    // 'spelling',
+	    // 'sport',
+	    'steam',
+	    // 'strength',
+	    'stuff',
+	    'stupidity',
+	    // 'success',
+	    // 'sugar',
+	    'sunshine',
+	    'symmetry',
+
+	    // 'tea',
+	    'tennis',
+	    'thirst',
+	    'thunder',
+	    'timber',
+	    // 'time',
+	    // 'toast',
+	    // 'tolerance',
+	    // 'trade',
+	    'traffic',
+	    'transportation',
+	    // 'travel',
+	    'trust',
+
+	    // 'understanding',
+	    'underwear',
+	    'unemployment',
+	    'unity',
+	    // 'usage',
+
+	    'validity',
+	    'veal',
+	    'vegetation',
+	    'vegetarianism',
+	    'vengeance',
+	    'violence',
+	    // 'vision',
+	    'vitality',
+
+	    'warmth',
+	    // 'water',
+	    'wealth',
+	    'weather',
+	    // 'weight',
+	    'welfare',
+	    'wheat',
+	    // 'whiskey',
+	    // 'width',
+	    'wildlife',
+	    // 'wine',
+	    'wisdom',
+	    // 'wood',
+	    // 'wool',
+	    // 'work',
+
+	    // 'yeast',
+	    'yoga',
+
+	    'zinc',
+	    'zoology'
+	  ];
+
+	  /**
+	   * @description These rules translate from the singular form of a noun to its plural form.
+	   * @private
+	   */
+
+	  var regex = {
+	    plural : {
+	      men       : new RegExp( '^(m|wom)en$'                    , 'gi' ),
+	      people    : new RegExp( '(pe)ople$'                      , 'gi' ),
+	      children  : new RegExp( '(child)ren$'                    , 'gi' ),
+	      tia       : new RegExp( '([ti])a$'                       , 'gi' ),
+	      analyses  : new RegExp( '((a)naly|(b)a|(d)iagno|(p)arenthe|(p)rogno|(s)ynop|(t)he)ses$','gi' ),
+	      hives     : new RegExp( '(hi|ti)ves$'                    , 'gi' ),
+	      curves    : new RegExp( '(curve)s$'                      , 'gi' ),
+	      lrves     : new RegExp( '([lr])ves$'                     , 'gi' ),
+	      foves     : new RegExp( '([^fo])ves$'                    , 'gi' ),
+	      movies    : new RegExp( '(m)ovies$'                      , 'gi' ),
+	      aeiouyies : new RegExp( '([^aeiouy]|qu)ies$'             , 'gi' ),
+	      series    : new RegExp( '(s)eries$'                      , 'gi' ),
+	      xes       : new RegExp( '(x|ch|ss|sh)es$'                , 'gi' ),
+	      mice      : new RegExp( '([m|l])ice$'                    , 'gi' ),
+	      buses     : new RegExp( '(bus)es$'                       , 'gi' ),
+	      oes       : new RegExp( '(o)es$'                         , 'gi' ),
+	      shoes     : new RegExp( '(shoe)s$'                       , 'gi' ),
+	      crises    : new RegExp( '(cris|ax|test)es$'              , 'gi' ),
+	      octopi    : new RegExp( '(octop|vir)i$'                  , 'gi' ),
+	      aliases   : new RegExp( '(alias|canvas|status|campus)es$', 'gi' ),
+	      summonses : new RegExp( '^(summons)es$'                  , 'gi' ),
+	      oxen      : new RegExp( '^(ox)en'                        , 'gi' ),
+	      matrices  : new RegExp( '(matr)ices$'                    , 'gi' ),
+	      vertices  : new RegExp( '(vert|ind)ices$'                , 'gi' ),
+	      feet      : new RegExp( '^feet$'                         , 'gi' ),
+	      teeth     : new RegExp( '^teeth$'                        , 'gi' ),
+	      geese     : new RegExp( '^geese$'                        , 'gi' ),
+	      quizzes   : new RegExp( '(quiz)zes$'                     , 'gi' ),
+	      whereases : new RegExp( '^(whereas)es$'                  , 'gi' ),
+	      criteria  : new RegExp( '^(criteri)a$'                   , 'gi' ),
+	      genera    : new RegExp( '^genera$'                       , 'gi' ),
+	      ss        : new RegExp( 'ss$'                            , 'gi' ),
+	      s         : new RegExp( 's$'                             , 'gi' )
+	    },
+
+	    singular : {
+	      man       : new RegExp( '^(m|wom)an$'                  , 'gi' ),
+	      person    : new RegExp( '(pe)rson$'                    , 'gi' ),
+	      child     : new RegExp( '(child)$'                     , 'gi' ),
+	      ox        : new RegExp( '^(ox)$'                       , 'gi' ),
+	      axis      : new RegExp( '(ax|test)is$'                 , 'gi' ),
+	      octopus   : new RegExp( '(octop|vir)us$'               , 'gi' ),
+	      alias     : new RegExp( '(alias|status|canvas|campus)$', 'gi' ),
+	      summons   : new RegExp( '^(summons)$'                  , 'gi' ),
+	      bus       : new RegExp( '(bu)s$'                       , 'gi' ),
+	      buffalo   : new RegExp( '(buffal|tomat|potat)o$'       , 'gi' ),
+	      tium      : new RegExp( '([ti])um$'                    , 'gi' ),
+	      sis       : new RegExp( 'sis$'                         , 'gi' ),
+	      ffe       : new RegExp( '(?:([^f])fe|([lr])f)$'        , 'gi' ),
+	      hive      : new RegExp( '(hi|ti)ve$'                   , 'gi' ),
+	      aeiouyy   : new RegExp( '([^aeiouy]|qu)y$'             , 'gi' ),
+	      x         : new RegExp( '(x|ch|ss|sh)$'                , 'gi' ),
+	      matrix    : new RegExp( '(matr)ix$'                    , 'gi' ),
+	      vertex    : new RegExp( '(vert|ind)ex$'                , 'gi' ),
+	      mouse     : new RegExp( '([m|l])ouse$'                 , 'gi' ),
+	      foot      : new RegExp( '^foot$'                       , 'gi' ),
+	      tooth     : new RegExp( '^tooth$'                      , 'gi' ),
+	      goose     : new RegExp( '^goose$'                      , 'gi' ),
+	      quiz      : new RegExp( '(quiz)$'                      , 'gi' ),
+	      whereas   : new RegExp( '^(whereas)$'                  , 'gi' ),
+	      criterion : new RegExp( '^(criteri)on$'                , 'gi' ),
+	      genus     : new RegExp( '^genus$'                      , 'gi' ),
+	      s         : new RegExp( 's$'                           , 'gi' ),
+	      common    : new RegExp( '$'                            , 'gi' )
+	    }
+	  };
+
+	  var plural_rules = [
+
+	    // do not replace if its already a plural word
+	    [ regex.plural.men       ],
+	    [ regex.plural.people    ],
+	    [ regex.plural.children  ],
+	    [ regex.plural.tia       ],
+	    [ regex.plural.analyses  ],
+	    [ regex.plural.hives     ],
+	    [ regex.plural.curves    ],
+	    [ regex.plural.lrves     ],
+	    [ regex.plural.foves     ],
+	    [ regex.plural.aeiouyies ],
+	    [ regex.plural.series    ],
+	    [ regex.plural.movies    ],
+	    [ regex.plural.xes       ],
+	    [ regex.plural.mice      ],
+	    [ regex.plural.buses     ],
+	    [ regex.plural.oes       ],
+	    [ regex.plural.shoes     ],
+	    [ regex.plural.crises    ],
+	    [ regex.plural.octopi    ],
+	    [ regex.plural.aliases   ],
+	    [ regex.plural.summonses ],
+	    [ regex.plural.oxen      ],
+	    [ regex.plural.matrices  ],
+	    [ regex.plural.feet      ],
+	    [ regex.plural.teeth     ],
+	    [ regex.plural.geese     ],
+	    [ regex.plural.quizzes   ],
+	    [ regex.plural.whereases ],
+	    [ regex.plural.criteria  ],
+	    [ regex.plural.genera    ],
+
+	    // original rule
+	    [ regex.singular.man      , '$1en' ],
+	    [ regex.singular.person   , '$1ople' ],
+	    [ regex.singular.child    , '$1ren' ],
+	    [ regex.singular.ox       , '$1en' ],
+	    [ regex.singular.axis     , '$1es' ],
+	    [ regex.singular.octopus  , '$1i' ],
+	    [ regex.singular.alias    , '$1es' ],
+	    [ regex.singular.summons  , '$1es' ],
+	    [ regex.singular.bus      , '$1ses' ],
+	    [ regex.singular.buffalo  , '$1oes' ],
+	    [ regex.singular.tium     , '$1a' ],
+	    [ regex.singular.sis      , 'ses' ],
+	    [ regex.singular.ffe      , '$1$2ves' ],
+	    [ regex.singular.hive     , '$1ves' ],
+	    [ regex.singular.aeiouyy  , '$1ies' ],
+	    [ regex.singular.matrix   , '$1ices' ],
+	    [ regex.singular.vertex   , '$1ices' ],
+	    [ regex.singular.x        , '$1es' ],
+	    [ regex.singular.mouse    , '$1ice' ],
+	    [ regex.singular.foot     , 'feet' ],
+	    [ regex.singular.tooth    , 'teeth' ],
+	    [ regex.singular.goose    , 'geese' ],
+	    [ regex.singular.quiz     , '$1zes' ],
+	    [ regex.singular.whereas  , '$1es' ],
+	    [ regex.singular.criterion, '$1a' ],
+	    [ regex.singular.genus    , 'genera' ],
+
+	    [ regex.singular.s     , 's' ],
+	    [ regex.singular.common, 's' ]
+	  ];
+
+	  /**
+	   * @description These rules translate from the plural form of a noun to its singular form.
+	   * @private
+	   */
+	  var singular_rules = [
+
+	    // do not replace if its already a singular word
+	    [ regex.singular.man     ],
+	    [ regex.singular.person  ],
+	    [ regex.singular.child   ],
+	    [ regex.singular.ox      ],
+	    [ regex.singular.axis    ],
+	    [ regex.singular.octopus ],
+	    [ regex.singular.alias   ],
+	    [ regex.singular.summons ],
+	    [ regex.singular.bus     ],
+	    [ regex.singular.buffalo ],
+	    [ regex.singular.tium    ],
+	    [ regex.singular.sis     ],
+	    [ regex.singular.ffe     ],
+	    [ regex.singular.hive    ],
+	    [ regex.singular.aeiouyy ],
+	    [ regex.singular.x       ],
+	    [ regex.singular.matrix  ],
+	    [ regex.singular.mouse   ],
+	    [ regex.singular.foot    ],
+	    [ regex.singular.tooth   ],
+	    [ regex.singular.goose   ],
+	    [ regex.singular.quiz    ],
+	    [ regex.singular.whereas ],
+	    [ regex.singular.criterion ],
+	    [ regex.singular.genus ],
+
+	    // original rule
+	    [ regex.plural.men      , '$1an' ],
+	    [ regex.plural.people   , '$1rson' ],
+	    [ regex.plural.children , '$1' ],
+	    [ regex.plural.genera   , 'genus'],
+	    [ regex.plural.criteria , '$1on'],
+	    [ regex.plural.tia      , '$1um' ],
+	    [ regex.plural.analyses , '$1$2sis' ],
+	    [ regex.plural.hives    , '$1ve' ],
+	    [ regex.plural.curves   , '$1' ],
+	    [ regex.plural.lrves    , '$1f' ],
+	    [ regex.plural.foves    , '$1fe' ],
+	    [ regex.plural.movies   , '$1ovie' ],
+	    [ regex.plural.aeiouyies, '$1y' ],
+	    [ regex.plural.series   , '$1eries' ],
+	    [ regex.plural.xes      , '$1' ],
+	    [ regex.plural.mice     , '$1ouse' ],
+	    [ regex.plural.buses    , '$1' ],
+	    [ regex.plural.oes      , '$1' ],
+	    [ regex.plural.shoes    , '$1' ],
+	    [ regex.plural.crises   , '$1is' ],
+	    [ regex.plural.octopi   , '$1us' ],
+	    [ regex.plural.aliases  , '$1' ],
+	    [ regex.plural.summonses, '$1' ],
+	    [ regex.plural.oxen     , '$1' ],
+	    [ regex.plural.matrices , '$1ix' ],
+	    [ regex.plural.vertices , '$1ex' ],
+	    [ regex.plural.feet     , 'foot' ],
+	    [ regex.plural.teeth    , 'tooth' ],
+	    [ regex.plural.geese    , 'goose' ],
+	    [ regex.plural.quizzes  , '$1' ],
+	    [ regex.plural.whereases, '$1' ],
+
+	    [ regex.plural.ss, 'ss' ],
+	    [ regex.plural.s , '' ]
+	  ];
+
+	  /**
+	   * @description This is a list of words that should not be capitalized for title case.
+	   * @private
+	   */
+	  var non_titlecased_words = [
+	    'and', 'or', 'nor', 'a', 'an', 'the', 'so', 'but', 'to', 'of', 'at','by',
+	    'from', 'into', 'on', 'onto', 'off', 'out', 'in', 'over', 'with', 'for'
+	  ];
+
+	  /**
+	   * @description These are regular expressions used for converting between String formats.
+	   * @private
+	   */
+	  var id_suffix         = new RegExp( '(_ids|_id)$', 'g' );
+	  var underbar          = new RegExp( '_', 'g' );
+	  var space_or_underbar = new RegExp( '[\ _]', 'g' );
+	  var uppercase         = new RegExp( '([A-Z])', 'g' );
+	  var underbar_prefix   = new RegExp( '^_' );
+
+	  var inflector = {
+
+	  /**
+	   * A helper method that applies rules based replacement to a String.
+	   * @private
+	   * @function
+	   * @param {String} str String to modify and return based on the passed rules.
+	   * @param {Array: [RegExp, String]} rules Regexp to match paired with String to use for replacement
+	   * @param {Array: [String]} skip Strings to skip if they match
+	   * @param {String} override String to return as though this method succeeded (used to conform to APIs)
+	   * @returns {String} Return passed String modified by passed rules.
+	   * @example
+	   *
+	   *     this._apply_rules( 'cows', singular_rules ); // === 'cow'
+	   */
+	    _apply_rules : function ( str, rules, skip, override ){
+	      if( override ){
+	        str = override;
+	      }else{
+	        var ignore = ( inflector.indexOf( skip, str.toLowerCase()) > -1 );
+
+	        if( !ignore ){
+	          var i = 0;
+	          var j = rules.length;
+
+	          for( ; i < j; i++ ){
+	            if( str.match( rules[ i ][ 0 ])){
+	              if( rules[ i ][ 1 ] !== undefined ){
+	                str = str.replace( rules[ i ][ 0 ], rules[ i ][ 1 ]);
+	              }
+	              break;
+	            }
+	          }
+	        }
+	      }
+
+	      return str;
+	    },
+
+
+
+	  /**
+	   * This lets us detect if an Array contains a given element.
+	   * @public
+	   * @function
+	   * @param {Array} arr The subject array.
+	   * @param {Object} item Object to locate in the Array.
+	   * @param {Number} from_index Starts checking from this position in the Array.(optional)
+	   * @param {Function} compare_func Function used to compare Array item vs passed item.(optional)
+	   * @returns {Number} Return index position in the Array of the passed item.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.indexOf([ 'hi','there' ], 'guys' ); // === -1
+	   *     inflection.indexOf([ 'hi','there' ], 'hi' ); // === 0
+	   */
+	    indexOf : function ( arr, item, from_index, compare_func ){
+	      if( !from_index ){
+	        from_index = -1;
+	      }
+
+	      var index = -1;
+	      var i     = from_index;
+	      var j     = arr.length;
+
+	      for( ; i < j; i++ ){
+	        if( arr[ i ]  === item || compare_func && compare_func( arr[ i ], item )){
+	          index = i;
+	          break;
+	        }
+	      }
+
+	      return index;
+	    },
+
+
+
+	  /**
+	   * This function adds pluralization support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @param {String} plural Overrides normal output with said String.(optional)
+	   * @returns {String} Singular English language nouns are returned in plural form.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.pluralize( 'person' ); // === 'people'
+	   *     inflection.pluralize( 'octopus' ); // === 'octopi'
+	   *     inflection.pluralize( 'Hat' ); // === 'Hats'
+	   *     inflection.pluralize( 'person', 'guys' ); // === 'guys'
+	   */
+	    pluralize : function ( str, plural ){
+	      return inflector._apply_rules( str, plural_rules, uncountable_words, plural );
+	    },
+
+
+
+	  /**
+	   * This function adds singularization support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @param {String} singular Overrides normal output with said String.(optional)
+	   * @returns {String} Plural English language nouns are returned in singular form.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.singularize( 'people' ); // === 'person'
+	   *     inflection.singularize( 'octopi' ); // === 'octopus'
+	   *     inflection.singularize( 'Hats' ); // === 'Hat'
+	   *     inflection.singularize( 'guys', 'person' ); // === 'person'
+	   */
+	    singularize : function ( str, singular ){
+	      return inflector._apply_rules( str, singular_rules, uncountable_words, singular );
+	    },
+
+
+	  /**
+	   * This function will pluralize or singularlize a String appropriately based on an integer value
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @param {Number} count The number to base pluralization off of.
+	   * @param {String} singular Overrides normal output with said String.(optional)
+	   * @param {String} plural Overrides normal output with said String.(optional)
+	   * @returns {String} English language nouns are returned in the plural or singular form based on the count.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.inflect( 'people' 1 ); // === 'person'
+	   *     inflection.inflect( 'octopi' 1 ); // === 'octopus'
+	   *     inflection.inflect( 'Hats' 1 ); // === 'Hat'
+	   *     inflection.inflect( 'guys', 1 , 'person' ); // === 'person'
+	   *     inflection.inflect( 'person', 2 ); // === 'people'
+	   *     inflection.inflect( 'octopus', 2 ); // === 'octopi'
+	   *     inflection.inflect( 'Hat', 2 ); // === 'Hats'
+	   *     inflection.inflect( 'person', 2, null, 'guys' ); // === 'guys'
+	   */
+	    inflect : function ( str, count, singular, plural ){
+	      count = parseInt( count, 10 );
+
+	      if( isNaN( count )) return str;
+
+	      if( count === 0 || count > 1 ){
+	        return inflector._apply_rules( str, plural_rules, uncountable_words, plural );
+	      }else{
+	        return inflector._apply_rules( str, singular_rules, uncountable_words, singular );
+	      }
+	    },
+
+
+
+	  /**
+	   * This function adds camelization support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @param {Boolean} low_first_letter Default is to capitalize the first letter of the results.(optional)
+	   *                                 Passing true will lowercase it.
+	   * @returns {String} Lower case underscored words will be returned in camel case.
+	   *                  additionally '/' is translated to '::'
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.camelize( 'message_properties' ); // === 'MessageProperties'
+	   *     inflection.camelize( 'message_properties', true ); // === 'messageProperties'
+	   */
+	    camelize : function ( str, low_first_letter ){
+	      var str_path = str.split( '/' );
+	      var i        = 0;
+	      var j        = str_path.length;
+	      var str_arr, init_x, k, l, first;
+
+	      for( ; i < j; i++ ){
+	        str_arr = str_path[ i ].split( '_' );
+	        k       = 0;
+	        l       = str_arr.length;
+
+	        for( ; k < l; k++ ){
+	          if( k !== 0 ){
+	            str_arr[ k ] = str_arr[ k ].toLowerCase();
+	          }
+
+	          first = str_arr[ k ].charAt( 0 );
+	          first = low_first_letter && i === 0 && k === 0
+	            ? first.toLowerCase() : first.toUpperCase();
+	          str_arr[ k ] = first + str_arr[ k ].substring( 1 );
+	        }
+
+	        str_path[ i ] = str_arr.join( '' );
+	      }
+
+	      return str_path.join( '::' );
+	    },
+
+
+
+	  /**
+	   * This function adds underscore support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @param {Boolean} all_upper_case Default is to lowercase and add underscore prefix.(optional)
+	   *                  Passing true will return as entered.
+	   * @returns {String} Camel cased words are returned as lower cased and underscored.
+	   *                  additionally '::' is translated to '/'.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.underscore( 'MessageProperties' ); // === 'message_properties'
+	   *     inflection.underscore( 'messageProperties' ); // === 'message_properties'
+	   *     inflection.underscore( 'MP', true ); // === 'MP'
+	   */
+	    underscore : function ( str, all_upper_case ){
+	      if( all_upper_case && str === str.toUpperCase()) return str;
+
+	      var str_path = str.split( '::' );
+	      var i        = 0;
+	      var j        = str_path.length;
+
+	      for( ; i < j; i++ ){
+	        str_path[ i ] = str_path[ i ].replace( uppercase, '_$1' );
+	        str_path[ i ] = str_path[ i ].replace( underbar_prefix, '' );
+	      }
+
+	      return str_path.join( '/' ).toLowerCase();
+	    },
+
+
+
+	  /**
+	   * This function adds humanize support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @param {Boolean} low_first_letter Default is to capitalize the first letter of the results.(optional)
+	   *                                 Passing true will lowercase it.
+	   * @returns {String} Lower case underscored words will be returned in humanized form.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.humanize( 'message_properties' ); // === 'Message properties'
+	   *     inflection.humanize( 'message_properties', true ); // === 'message properties'
+	   */
+	    humanize : function ( str, low_first_letter ){
+	      str = str.toLowerCase();
+	      str = str.replace( id_suffix, '' );
+	      str = str.replace( underbar, ' ' );
+
+	      if( !low_first_letter ){
+	        str = inflector.capitalize( str );
+	      }
+
+	      return str;
+	    },
+
+
+
+	  /**
+	   * This function adds capitalization support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @returns {String} All characters will be lower case and the first will be upper.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.capitalize( 'message_properties' ); // === 'Message_properties'
+	   *     inflection.capitalize( 'message properties', true ); // === 'Message properties'
+	   */
+	    capitalize : function ( str ){
+	      str = str.toLowerCase();
+
+	      return str.substring( 0, 1 ).toUpperCase() + str.substring( 1 );
+	    },
+
+
+
+	  /**
+	   * This function replaces underscores with dashes in the string.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @returns {String} Replaces all spaces or underscores with dashes.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.dasherize( 'message_properties' ); // === 'message-properties'
+	   *     inflection.dasherize( 'Message Properties' ); // === 'Message-Properties'
+	   */
+	    dasherize : function ( str ){
+	      return str.replace( space_or_underbar, '-' );
+	    },
+
+
+
+	  /**
+	   * This function adds titleize support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @returns {String} Capitalizes words as you would for a book title.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.titleize( 'message_properties' ); // === 'Message Properties'
+	   *     inflection.titleize( 'message properties to keep' ); // === 'Message Properties to Keep'
+	   */
+	    titleize : function ( str ){
+	      str         = str.toLowerCase().replace( underbar, ' ' );
+	      var str_arr = str.split( ' ' );
+	      var i       = 0;
+	      var j       = str_arr.length;
+	      var d, k, l;
+
+	      for( ; i < j; i++ ){
+	        d = str_arr[ i ].split( '-' );
+	        k = 0;
+	        l = d.length;
+
+	        for( ; k < l; k++){
+	          if( inflector.indexOf( non_titlecased_words, d[ k ].toLowerCase()) < 0 ){
+	            d[ k ] = inflector.capitalize( d[ k ]);
+	          }
+	        }
+
+	        str_arr[ i ] = d.join( '-' );
+	      }
+
+	      str = str_arr.join( ' ' );
+	      str = str.substring( 0, 1 ).toUpperCase() + str.substring( 1 );
+
+	      return str;
+	    },
+
+
+
+	  /**
+	   * This function adds demodulize support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @returns {String} Removes module names leaving only class names.(Ruby style)
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.demodulize( 'Message::Bus::Properties' ); // === 'Properties'
+	   */
+	    demodulize : function ( str ){
+	      var str_arr = str.split( '::' );
+
+	      return str_arr[ str_arr.length - 1 ];
+	    },
+
+
+
+	  /**
+	   * This function adds tableize support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @returns {String} Return camel cased words into their underscored plural form.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.tableize( 'MessageBusProperty' ); // === 'message_bus_properties'
+	   */
+	    tableize : function ( str ){
+	      str = inflector.underscore( str );
+	      str = inflector.pluralize( str );
+
+	      return str;
+	    },
+
+
+
+	  /**
+	   * This function adds classification support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @returns {String} Underscored plural nouns become the camel cased singular form.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.classify( 'message_bus_properties' ); // === 'MessageBusProperty'
+	   */
+	    classify : function ( str ){
+	      str = inflector.camelize( str );
+	      str = inflector.singularize( str );
+
+	      return str;
+	    },
+
+
+
+	  /**
+	   * This function adds foreign key support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @param {Boolean} drop_id_ubar Default is to seperate id with an underbar at the end of the class name,
+	                                 you can pass true to skip it.(optional)
+	   * @returns {String} Underscored plural nouns become the camel cased singular form.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.foreign_key( 'MessageBusProperty' ); // === 'message_bus_property_id'
+	   *     inflection.foreign_key( 'MessageBusProperty', true ); // === 'message_bus_propertyid'
+	   */
+	    foreign_key : function ( str, drop_id_ubar ){
+	      str = inflector.demodulize( str );
+	      str = inflector.underscore( str ) + (( drop_id_ubar ) ? ( '' ) : ( '_' )) + 'id';
+
+	      return str;
+	    },
+
+
+
+	  /**
+	   * This function adds ordinalize support to every String object.
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @returns {String} Return all found numbers their sequence like '22nd'.
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.ordinalize( 'the 1 pitch' ); // === 'the 1st pitch'
+	   */
+	    ordinalize : function ( str ){
+	      var str_arr = str.split( ' ' );
+	      var i       = 0;
+	      var j       = str_arr.length;
+
+	      for( ; i < j; i++ ){
+	        var k = parseInt( str_arr[ i ], 10 );
+
+	        if( !isNaN( k )){
+	          var ltd = str_arr[ i ].substring( str_arr[ i ].length - 2 );
+	          var ld  = str_arr[ i ].substring( str_arr[ i ].length - 1 );
+	          var suf = 'th';
+
+	          if( ltd != '11' && ltd != '12' && ltd != '13' ){
+	            if( ld === '1' ){
+	              suf = 'st';
+	            }else if( ld === '2' ){
+	              suf = 'nd';
+	            }else if( ld === '3' ){
+	              suf = 'rd';
+	            }
+	          }
+
+	          str_arr[ i ] += suf;
+	        }
+	      }
+
+	      return str_arr.join( ' ' );
+	    },
+
+	  /**
+	   * This function performs multiple inflection methods on a string
+	   * @public
+	   * @function
+	   * @param {String} str The subject string.
+	   * @param {Array} arr An array of inflection methods.
+	   * @returns {String}
+	   * @example
+	   *
+	   *     var inflection = require( 'inflection' );
+	   *
+	   *     inflection.transform( 'all job', [ 'pluralize', 'capitalize', 'dasherize' ]); // === 'All-jobs'
+	   */
+	    transform : function ( str, arr ){
+	      var i = 0;
+	      var j = arr.length;
+
+	      for( ;i < j; i++ ){
+	        var method = arr[ i ];
+
+	        if( this.hasOwnProperty( method )){
+	          str = this[ method ]( str );
+	        }
+	      }
+
+	      return str;
+	    }
+	  };
+
+	/**
+	 * @public
+	 */
+	  inflector.version = '1.10.0';
+
+	  return inflector;
+	}));
+
+
+/***/ },
+/* 64 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ModelAttribute = function () {
+		function ModelAttribute(name, type) {
+			_classCallCheck(this, ModelAttribute);
+
+			this.name = name;
+			this.type = type;
+
+			this.isPrimaryKey = false;
+
+			this.size = null;
+		}
+
+		_createClass(ModelAttribute, [{
+			key: 'primary',
+			value: function primary() {
+				var isPrimaryKey = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+				this.isPrimaryKey = isPrimaryKey;
+				return this;
+			}
+		}]);
+
+		return ModelAttribute;
+	}();
+
+	ModelAttribute.Number = 'Number';
+	ModelAttribute.Integer = 'Integer';
+	ModelAttribute.String = 'String';
+	ModelAttribute.Enum = 'Enum';
+
+	ModelAttribute.Date = 'Date';
+	ModelAttribute.DateTime = 'DateTime';
+
+	module.exports = ModelAttribute;
+
+/***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _inflection = __webpack_require__(63);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Relationship = function () {
+		function Relationship(name, localModel) {
+			_classCallCheck(this, Relationship);
+
+			this.name = name;
+
+			this.type = null;
+
+			this.localModel = localModel;
+
+			this.localKey = null;
+
+			this.remoteModel = null;
+			this.remoteKey = null;
+
+			this.pivotModel = null;
+		}
+
+		_createClass(Relationship, [{
+			key: 'hasMany',
+			value: function hasMany(remoteModel) {
+				var localKey = arguments.length <= 1 || arguments[1] === undefined ? 'id' : arguments[1];
+				var remoteKey = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+
+				// Basics
+				this.type = Relationship.HasMany;
+				this.remoteModel = remoteModel;
+
+				// Guess/store the keys
+				if (!this.localKey) this.localKey = localKey;
+				if (remoteKey || !this.remoteKey) {
+					this.remoteKey = remoteKey ? remoteKey : _inflection2.default.underscore(_inflection2.default.singularize(this.localModel));
+				}
+
+				return this;
+			}
+		}]);
+
+		return Relationship;
+	}();
+
+	Relationship.HasMany = 'HasMany';
+	Relationship.HasOne = 'BelongsTo'; // Practically the same.
+	Relationship.BelongsTo = 'BelongsTo';
+
+	Relationship.HasManyThrough = 'HasManyThrough';
+	Relationship.BelongsToMany = 'BelongsToMany';
+
+	module.exports = Relationship;
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Model = __webpack_require__(61);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
+	var _ApiCall = __webpack_require__(50);
+
+	var _ApiCall2 = _interopRequireDefault(_ApiCall);
+
+	var _SettingsObject = __webpack_require__(38);
+
+	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Api = function () {
+		function Api(options) {
+			_classCallCheck(this, Api);
+
+			if (new.target === Api) {
+				throw new TypeError('It is not possible to instantiate the abstract Api class');
+			}
+
+			this.settings = new _SettingsObject2.default(options, {
+				baseUrl: '/api'
+			});
+		}
+
+		_createClass(Api, [{
+			key: 'deserialize',
+			value: function deserialize() /* data, apiCall */{
+				throw new Error('The Api implementation should have a deserialize method.');
+			}
+
+			//////////////////
+			// HTTP methods //
+			//////////////////
+
+		}, {
+			key: 'call',
+			value: function call(method, uri) {
+				var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+				var ajaxOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
+
+				// Create api call
+				return new _ApiCall2.default(this, method, uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'get',
+			value: function get(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('get', uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'post',
+			value: function post(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('post', uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'put',
+			value: function put(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('put', uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'patch',
+			value: function patch(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('patch', uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'delete',
+			value: function _delete(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('delete', uri, data, ajaxOptions);
+			}
+
+			////////////////////
+			// Helper methods //
+			////////////////////
+
+		}, {
+			key: 'makeUrl',
+			value: function makeUrl(uri) {
+				return this.settings.get('baseUrl') + uri;
+			}
+		}, {
+			key: 'ajax',
+			value: function ajax(options) {
+				options.dataType = 'json';
+				return _jquery2.default.ajax(options);
+			}
+
+			///////////////////
+			// Model methods //
+			///////////////////
+
+		}, {
+			key: 'one',
+			value: function one(modelName, id) {
+
+				// Get uri from model
+				var ModelClass = _Model2.default.registry.get(modelName);
+				var uri = ModelClass.definition.getApiUri(id);
+
+				// Make the call
+				var call = this.get(uri);
+				call.modelClass = ModelClass;
+				return call;
+			}
+		}, {
+			key: 'all',
+			value: function all(modelName) {
+
+				// Get uri from model
+				var ModelClass = _Model2.default.registry.get(modelName);
+				var uri = ModelClass.definition.getApiUri();
+
+				// Make the call
+				var call = this.get(uri);
+				call.modelClass = ModelClass;
+				return call;
+			}
+		}]);
+
+		return Api;
+	}();
+
+	module.exports = Api;
+
+/***/ },
+/* 67 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _inflection = __webpack_require__(63);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _Api2 = __webpack_require__(66);
+
+	var _Api3 = _interopRequireDefault(_Api2);
+
+	var _JsonApiCall = __webpack_require__(68);
+
+	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
+
+	var _Model = __webpack_require__(61);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
+	var _Collection = __webpack_require__(69);
+
+	var _Collection2 = _interopRequireDefault(_Collection);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var JsonApi = function (_Api) {
+		_inherits(JsonApi, _Api);
+
+		function JsonApi(baseUrl) {
+			_classCallCheck(this, JsonApi);
+
+			return _possibleConstructorReturn(this, (JsonApi.__proto__ || Object.getPrototypeOf(JsonApi)).call(this, baseUrl));
+		}
+
+		_createClass(JsonApi, [{
+			key: 'call',
+			value: function call(method, uri) {
+				var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+				var ajaxOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
+
+				// Create api call
+				return new _JsonApiCall2.default(this, method, uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'deserialize',
+			value: function deserialize(result, apiCall) {
+
+				// Is the result an object or an array
+				var data = result.data;
+				if (data === undefined || data === null) throw new Error('No data received from Api');
+				if (data instanceof Array) {
+
+					return this.deserializeCollection(data, apiCall);
+				} else if (data instanceof Object) {
+
+					return this.deserializeModel(data, apiCall);
+				}
+
+				// Don't know...
+				throw new TypeError('Unrecognized data received from Api');
+			}
+		}, {
+			key: 'deserializeModel',
+			value: function deserializeModel(data, apiCall) {
+
+				// Look for the type of model
+				var resourceType = data.type;
+				var modelClass = _Model2.default;
+				if (resourceType) {
+					var modelName = _inflection2.default.singularize(_inflection2.default.capitalize(resourceType));
+					if (_Model2.default.registry.has(modelName)) {
+						modelClass = _Model2.default.registry.get(modelName);
+					}
+				}
+
+				// Collect attributes
+				var attributes = {};
+				_.each(data.attributes, function (value, key) {
+					attributes[_inflection2.default.camelize(key, true)] = value;
+				});
+				if (data.id) attributes.id = data.id;
+
+				// Instantiate
+				var model = new modelClass(attributes, false);
+
+				return model;
+			}
+		}, {
+			key: 'deserializeCollection',
+			value: function deserializeCollection(data, apiCall) {
+				var _this2 = this;
+
+				// Make a collection
+				var collection = new _Collection2.default(apiCall.modelClass);
+
+				// Add records
+				_.each(data, function (recordData) {
+					collection.add(_this2.deserializeModel(recordData), true);
+				});
+
+				return collection;
+			}
+		}]);
+
+		return JsonApi;
+	}(_Api3.default);
+
+	module.exports = JsonApi;
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _ApiCall2 = __webpack_require__(50);
+
+	var _ApiCall3 = _interopRequireDefault(_ApiCall2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Data.Api
+	 */
+	var JsonApiCall = function (_ApiCall) {
+		_inherits(JsonApiCall, _ApiCall);
+
+		function JsonApiCall() {
+			_classCallCheck(this, JsonApiCall);
+
+			return _possibleConstructorReturn(this, (JsonApiCall.__proto__ || Object.getPrototypeOf(JsonApiCall)).apply(this, arguments));
+		}
+
+		_createClass(JsonApiCall, [{
+			key: 'include',
+			value: function include(relations) {
+				return this.query('include', relations);
+			}
+		}]);
+
+		return JsonApiCall;
+	}(_ApiCall3.default);
+
+	module.exports = JsonApiCall;
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _ObservableArray2 = __webpack_require__(54);
+
+	var _ObservableArray3 = _interopRequireDefault(_ObservableArray2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Collection = function (_ObservableArray) {
+		_inherits(Collection, _ObservableArray);
+
+		function Collection() {
+			var modelClass = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+			_classCallCheck(this, Collection);
+
+			var _this = _possibleConstructorReturn(this, (Collection.__proto__ || Object.getPrototypeOf(Collection)).call(this));
+
+			_this.modelClass = null;
+
+			return _this;
+		}
+
+		return Collection;
+	}(_ObservableArray3.default);
+
+	module.exports = Collection;
 
 /***/ }
 /******/ ])

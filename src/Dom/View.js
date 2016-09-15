@@ -5,6 +5,7 @@ import HTMLBars from 'htmlbars-standalone';
 import App from '~/Helpers/App';
 import Observable from '~/Core/Observable';
 import Binding from '~/Dom/Binding';
+import ApiCall from '~/Data/Api/ApiCall';
 
 /**
  * @module Dom
@@ -163,6 +164,12 @@ class View extends Observable
 		this.$element = null;
 
 
+		/**
+		 * @property apiCalls
+		 * @type {Array}
+		 */
+		this.apiCalls = [];
+
 
 
 
@@ -320,8 +327,21 @@ class View extends Observable
 			// Is the key a string?
 			if (typeof key !== 'string') throw new TypeError('[Dom.View] The "with" method accepts either a key, value or hash-object as arguments.');
 
+			// Is it an Api call?
+			if (value instanceof ApiCall) {
+
+				// Get the promise and add to api calls list
+				this.apiCalls.push(value);
+				let promise = this.dataPromises[key] = value.getPromise('complete');
+				this.loadPromises.push(promise);
+				promise.then((result) => {
+					this.set(key, result, true, true);
+				});
+
+			}
+
 			// Is the data a promise?
-			if (value instanceof Promise) {
+			else if (value instanceof Promise) {
 
 				// Add to promises
 				this.dataPromises[key] = value;
@@ -373,6 +393,9 @@ class View extends Observable
 
 		// We make the 'render' promise.
 		return this.promise('render', () => {
+
+			// Start api calls.
+			_.invoke(this.apiCalls, 'execute');
 
 			/////////////////////////////////////////
 			// Wait for all loadPromises to finish //

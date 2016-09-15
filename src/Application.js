@@ -71,6 +71,16 @@ class Application extends Observable {
 
 
 		/**
+		 * One or more Data.Api.Api instances
+		 * 
+		 * @property apis
+		 * @type {Object}
+		 */
+		this.apis = {};
+
+
+
+		/**
 		 * @property settings
 		 * @type {Core.SettingsObject}
 		 */
@@ -151,6 +161,12 @@ class Application extends Observable {
 		callback.apply(this.router, []);
 		return this;
 
+	}
+
+
+	addApi(apiInstance, key = 'default') {
+		this.apis[key] = apiInstance;
+		return this;
 	}
 
 

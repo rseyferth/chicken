@@ -59,6 +59,8 @@ class ObservableArray extends Obj
 				// Just add the value (don't notify)
 				this.items.push(value);
 
+
+
 			}
 
 		});	
@@ -205,6 +207,12 @@ class ObservableArray extends Obj
 	 */
 	add(...values) {
 
+		// Is the last value a boolean?
+		let doNotNotify = false;
+		if (values.length > 1 && typeof values[values.length - 1] === 'boolean') {
+			doNotNotify = values.pop();
+		}
+
 		// Add items
 		_.each(values, (value) => {
 			
@@ -221,8 +229,10 @@ class ObservableArray extends Obj
 		});
 
 		// Trigger events
-		this.trigger(ObservableArray.Events.Change);
-		this.trigger(ObservableArray.Events.Add, values);
+		if (!doNotNotify) {
+			this.trigger(ObservableArray.Events.Change);
+			this.trigger(ObservableArray.Events.Add, values);
+		}
 
 		return this;
 

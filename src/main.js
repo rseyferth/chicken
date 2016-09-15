@@ -30,6 +30,13 @@ import Observable from '~/Core/Observable';
 import ObservableArray from '~/Core/ObservableArray';
 import SettingsObject from '~/Core/SettingsObject';
 
+// Data
+import Model from '~/Data/Model';
+import ModelDefinition from '~/Data/ModelDefinition';
+
+import Api from '~/Data/Api/Api';
+import JsonApi from '~/Data/Api/JsonApi';
+
 // Dom
 import ActionBinding from '~/Dom/ActionBinding';
 import Binding from '~/Dom/Binding';
@@ -76,6 +83,15 @@ var Chicken = {
 		Observable: Observable,
 		ObservableArray: ObservableArray,
 		SettingsObject: SettingsObject
+	},
+
+	Data: {
+		Api: {
+			Api: Api,
+			JsonApi: JsonApi
+		},
+		Model: Model,
+		ModelDefinition: ModelDefinition
 	},
 
 	Dom: {
@@ -131,6 +147,10 @@ var Chicken = {
 
 	},
 
+	api(key = 'default') {
+		return Application.getInstance().apis[key];
+	},
+
 	////////////////////////
 	// Easy instantiators //
 	////////////////////////
@@ -164,6 +184,29 @@ var Chicken = {
 		Component.registry.set(name, def);
 
 		return def;
+
+	},
+
+	model: (name, configCallback, methods = null) => {
+
+		// Create class
+		var ChickenModel = class extends Model {
+			constructor(initValues = null) {
+				super(initValues);
+			}
+		};
+
+		// Add given methods to prototype
+		if (methods) {
+			$.extend(ChickenModel.prototype, methods);
+		}
+
+		// Configure it.
+		ChickenModel.definition = new ModelDefinition(name, configCallback);
+		ChickenModel.modelName = name;
+
+		// Store it.
+		Model.registry.set(name, ChickenModel);
 
 	},
 
