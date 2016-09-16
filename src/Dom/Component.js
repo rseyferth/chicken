@@ -190,10 +190,6 @@ Component.DomEventNames = [
 ];
 
 
-
-
-
 Component.registry = new Map();
-
 
 module.exports = Component;

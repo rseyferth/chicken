@@ -48,6 +48,8 @@ import Renderer from '~/Dom/Renderer';
 import View from '~/Dom/View';
 import ViewContainer from '~/Dom/ViewContainer';
 
+import LinkTo from '~/Dom/Components/LinkTo';
+
 // Helpers
 import App from '~/Helpers/App';
 import Chainable from '~/Helpers/Chainable';
@@ -209,8 +211,7 @@ var Chicken = {
 		Model.registry.set(name, ChickenModel);
 
 	},
-
-
+	
 	computed: (dependencies, callback) => {
 
 		return new ComputedProperty(dependencies, callback);
@@ -234,5 +235,10 @@ var Chicken = {
 
 
 };
+
+
+// Register components
+Chicken.component('link-to', LinkTo);
+
 
 module.exports = Chicken;

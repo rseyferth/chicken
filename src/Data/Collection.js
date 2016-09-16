@@ -64,15 +64,10 @@ class Collection extends ObservableArray
 			return item.get('id');			
 		});
 		let overlap = _.intersection(currentIds, this.originalIds);
-		if (overlap.length !== this.originalIds.length) return true;
 
-		// Maybe one of the models is dirty
-		for (let i in this.items) {
-			if (this.items[i].isDirty()) return true;
-		}
+		// Are any of the id's different?
+		return overlap.length !== this.originalIds.length;
 
-		// Nope.
-		return false;
 
 	}
 

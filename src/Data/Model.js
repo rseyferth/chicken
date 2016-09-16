@@ -65,6 +65,14 @@ class Model extends Observable
 	}
 
 
+	/////////////////////////
+	// Information methods //
+	/////////////////////////
+
+	isNew() {
+		return !this.get('id');
+	}
+
 
 	/////////////////
 	// Get and set //
@@ -250,6 +258,15 @@ class Model extends Observable
 	///////////////////////
 
 	/**
+	 * @method resetDirty
+	 * @chainable
+	 */
+	resetDirty() {
+		this.state.set('dirty', false);
+	}
+
+
+	/**
 	 * @method getDirty
 	 * @return {Object} Key/value hash containing dirty attributes
 	 */
@@ -295,7 +312,9 @@ class Model extends Observable
 			// Has it changed
 			let oldValue = this.originalValues[key];
 			let newValue = this.uncastValue(key, this.attributes[key]);
-
+			if (oldValue != newValue) {
+				console.log('diff', key, oldValue, '!=', newValue);
+			}
 			return oldValue != newValue;
 
 		} else {
@@ -448,6 +467,14 @@ Model.getFromStore = (modelName, id) => {
 	if (!Model.stores.has(modelName)) return null;
 	let store = Model.getStore(modelName);
 	return store.get(id);
+
+};
+
+Model.create = (modelName, initValues = {}) => {
+
+	let ModelClass = Model.registry.get(modelName);
+	if (!ModelClass) return new Model(initValues);
+	return new ModelClass(initValues);
 
 };
 

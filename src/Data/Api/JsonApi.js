@@ -28,24 +28,21 @@ class JsonApi extends Api
 		// Make settings
 		let settings = $.extend({
 			includeRelated: true,
-			includeRelatedData: false,
-			uri: '/' + inflection.pluralize(inflection.underscore(model.getDefinition().name)) + '/' + model.get('id')
+			includeRelatedData: false
 		}, options);
+		if (!settings.uri) settings.uri = model.getApiUri();		
 
 		// Make the data
 		let data = {
 			data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
 		};
 
+		// Check method
+		let method = model.isNew() ? 'post' : 'patch';
+
 		// Do the call
-		let apiCall = this.post(settings.uri, JSON.stringify(data));
-
-		// Process result if it's successful
-		apiCall.getPromise('complete').then((result) => {
-
-			// Deserializing the result will automatically update the record in the store.
-			this.deserialize(result);
-		});
+		let apiCall = this.call(method, settings.uri, JSON.stringify(data));
+		
 
 		// Return it
 		return apiCall;
@@ -67,7 +64,10 @@ class JsonApi extends Api
 			// Attributes?
 			let attr = model.getAttributesForApi();
 			if (_.size(attr) > 0) {
-				data.attributes = attr;
+				data.attributes = {};
+				_.each(attr, (value, key) => {
+					data.attributes[inflection.underscore(key)] = value;
+				});
 			}
 
 			// Add model guid now, if it hasn't been added before

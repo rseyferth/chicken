@@ -55,7 +55,7 @@ class ModelAttribute {
 			// Date or date time
 			case ModelAttribute.Date:
 			case ModelAttribute.DateTime:
-				return value ? moment(value) : value;
+				return value; // ? moment(value) : value;
 
 			default:
 				return value;

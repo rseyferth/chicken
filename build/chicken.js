@@ -144,6 +144,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
 
+	var _LinkTo = __webpack_require__(72);
+
+	var _LinkTo2 = _interopRequireDefault(_LinkTo);
+
 	var _App = __webpack_require__(49);
 
 	var _App2 = _interopRequireDefault(_App);
@@ -403,6 +407,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 	};
+
+	// Register components
+	Chicken.component('link-to', _LinkTo2.default);
 
 	module.exports = Chicken;
 
@@ -8869,6 +8876,16 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this.state.get('busy');
 			}
 
+			/////////////////////////
+			// Information methods //
+			/////////////////////////
+
+		}, {
+			key: 'isNew',
+			value: function isNew() {
+				return !this.get('id');
+			}
+
 			/////////////////
 			// Get and set //
 			/////////////////
@@ -9052,6 +9069,17 @@ return /******/ (function(modules) { // webpackBootstrap
 			///////////////////////
 
 			/**
+	   * @method resetDirty
+	   * @chainable
+	   */
+
+		}, {
+			key: 'resetDirty',
+			value: function resetDirty() {
+				this.state.set('dirty', false);
+			}
+
+			/**
 	   * @method getDirty
 	   * @return {Object} Key/value hash containing dirty attributes
 	   */
@@ -9103,7 +9131,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Has it changed
 					var oldValue = this.originalValues[key];
 					var newValue = this.uncastValue(key, this.attributes[key]);
-
+					if (oldValue != newValue) {
+						console.log('diff', key, oldValue, '!=', newValue);
+					}
 					return oldValue != newValue;
 				} else {
 
@@ -9258,6 +9288,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		if (!Model.stores.has(modelName)) return null;
 		var store = Model.getStore(modelName);
 		return store.get(id);
+	};
+
+	Model.create = function (modelName) {
+		var initValues = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+
+		var ModelClass = Model.registry.get(modelName);
+		if (!ModelClass) return new Model(initValues);
+		return new ModelClass(initValues);
 	};
 
 	/**
@@ -10519,15 +10558,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					return item.get('id');
 				});
 				var overlap = _underscore2.default.intersection(currentIds, this.originalIds);
-				if (overlap.length !== this.originalIds.length) return true;
 
-				// Maybe one of the models is dirty
-				for (var i in this.items) {
-					if (this.items[i].isDirty()) return true;
-				}
-
-				// Nope.
-				return false;
+				// Are any of the id's different?
+				return overlap.length !== this.originalIds.length;
 			}
 		}]);
 
@@ -10743,7 +10776,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Date or date time
 					case ModelAttribute.Date:
 					case ModelAttribute.DateTime:
-						return value ? (0, _moment2.default)(value) : value;
+						return value; // ? moment(value) : value;
 
 					default:
 						return value;
@@ -11115,29 +11148,24 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'saveModel',
 			value: function saveModel(model, options) {
-				var _this2 = this;
 
 				// Make settings
 				var settings = _jquery2.default.extend({
 					includeRelated: true,
-					includeRelatedData: false,
-					uri: '/' + _inflection2.default.pluralize(_inflection2.default.underscore(model.getDefinition().name)) + '/' + model.get('id')
+					includeRelatedData: false
 				}, options);
+				if (!settings.uri) settings.uri = model.getApiUri();
 
 				// Make the data
 				var data = {
 					data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
 				};
 
+				// Check method
+				var method = model.isNew() ? 'post' : 'patch';
+
 				// Do the call
-				var apiCall = this.post(settings.uri, JSON.stringify(data));
-
-				// Process result if it's successful
-				apiCall.getPromise('complete').then(function (result) {
-
-					// Deserializing the result will automatically update the record in the store.
-					_this2.deserialize(result);
-				});
+				var apiCall = this.call(method, settings.uri, JSON.stringify(data));
 
 				// Return it
 				return apiCall;
@@ -11147,7 +11175,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function serialize(model) {
 				var includeRelated = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
-				var _this3 = this;
+				var _this2 = this;
 
 				var includeRelatedData = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 				var includedModelGuids = arguments.length <= 3 || arguments[3] === undefined ? [] : arguments[3];
@@ -11166,7 +11194,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Attributes?
 					var attr = model.getAttributesForApi();
 					if (_underscore2.default.size(attr) > 0) {
-						data.attributes = attr;
+						data.attributes = {};
+						_underscore2.default.each(attr, function (value, key) {
+							data.attributes[_inflection2.default.underscore(key)] = value;
+						});
 					}
 
 					// Add model guid now, if it hasn't been added before
@@ -11197,7 +11228,7 @@ return /******/ (function(modules) { // webpackBootstrap
 												if (!includeRelatedData) includedModelGuids.push(_Utils2.default.uidFor(item));
 
 												// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-												return _this3.serialize(item, true, includeRelatedData, includedModelGuids);
+												return _this2.serialize(item, true, includeRelatedData, includedModelGuids);
 											}) };
 									}
 								} else if (relatedData instanceof _Model2.default) {
@@ -11207,7 +11238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 									// We always insert the related model
 									// @TODO Implement check wheter this relationship's local key has changed
-									relationships[key] = { data: _this3.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
+									relationships[key] = { data: _this2.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
 								} else {
 									// What is this
 									throw new TypeError('Unrecognized data found in model\'s relationship ' + key);
@@ -11225,14 +11256,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'deserialize',
 			value: function deserialize(result, apiCall) {
-				var _this4 = this;
+				var _this3 = this;
 
 				// Check included data
 				if (result.included) {
 
 					// Loop and store them in the model stores
 					_underscore2.default.each(result.included, function (recordData) {
-						_this4.deserializeModel(recordData);
+						_this3.deserializeModel(recordData);
 					});
 				}
 
@@ -11253,7 +11284,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'deserializeModel',
 			value: function deserializeModel(data /* , apiCall */) {
-				var _this5 = this;
+				var _this4 = this;
 
 				// Look for the type of model
 				var resourceType = data.type;
@@ -11302,7 +11333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 								// Loop and add
 								_underscore2.default.each(rel.data, function (relData) {
-									var relatedModel = _this5._getRelatedModel(relData);
+									var relatedModel = _this4._getRelatedModel(relData);
 									if (relatedModel) {
 
 										// Add to model
@@ -11312,7 +11343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							} else if (rel.data instanceof Object) {
 
 								// Get the one
-								var relatedModel = _this5._getRelatedModel(rel.data);
+								var relatedModel = _this4._getRelatedModel(rel.data);
 								if (relatedModel) {
 
 									// Set it
@@ -11331,14 +11362,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'deserializeCollection',
 			value: function deserializeCollection(data, apiCall) {
-				var _this6 = this;
+				var _this5 = this;
 
 				// Make a collection
 				var collection = new _Collection2.default(apiCall.modelClass);
 
 				// Add records
 				_underscore2.default.each(data, function (recordData) {
-					collection.addFromApi(_this6.deserializeModel(recordData), true);
+					collection.addFromApi(_this5.deserializeModel(recordData), true);
 				});
 
 				return collection;
@@ -11409,6 +11440,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_ApiCall3.default);
 
 	module.exports = JsonApiCall;
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _ComponentDefinition = __webpack_require__(51);
+
+	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	module.exports = new _ComponentDefinition2.default('link-to', '<a href="{{uri}}">{{yield}}</a>', function () {});
 
 /***/ }
 /******/ ])
