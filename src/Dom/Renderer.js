@@ -76,7 +76,7 @@ class Renderer
 					}
 
 					// Create a binding
-					var binding = new Binding(this, appliedScope, path);
+					var binding = new Binding(this, appliedScope, path, scope.view ? scope.view : scope.self);
 
 					// Store it
 					appliedScope._bindings[path] = binding;

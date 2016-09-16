@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ApiCall.html">ApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
@@ -52,6 +54,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -90,6 +94,8 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
+            
+                <li><a href="../modules/Data.Api.html">Data.Api</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -143,6 +149,7 @@ import HTMLBars from &#x27;htmlbars-standalone&#x27;;
 import App from &#x27;~/Helpers/App&#x27;;
 import Observable from &#x27;~/Core/Observable&#x27;;
 import Binding from &#x27;~/Dom/Binding&#x27;;
+import ApiCall from &#x27;~/Data/Api/ApiCall&#x27;;
 
 /**
  * @module Dom
@@ -301,6 +308,12 @@ class View extends Observable
 		this.$element = null;
 
 
+		/**
+		 * @property apiCalls
+		 * @type {Array}
+		 */
+		this.apiCalls = [];
+
 
 
 
@@ -308,8 +321,13 @@ class View extends Observable
 		// Check out the source //
 		//////////////////////////
 
-		// Is it HTML?
-		if (/^\&lt;[a-z\!]/.test(source)) {
+		// No template (just yield)?
+		if (source === false) {
+			this.templateString = &#x27;{{yield}}&#x27;;
+		}
+
+		// Is it HTML?		
+		else if (/^\&lt;[a-z\!]/.test(source)) {
 
 			// Use code now
 			this.templateString = source;
@@ -317,7 +335,7 @@ class View extends Observable
 		} 
 		
 		// Name?
-		else if (/[a-z0-9\-]+\./.test) {
+		else if (/[a-z0-9\-]+\./.test(source) || /^[a-zA-Z]+$/.test(source)) {
 
 			// Is it cached?
 			if (View.TemplateCache.has(source)) {
@@ -453,8 +471,21 @@ class View extends Observable
 			// Is the key a string?
 			if (typeof key !== &#x27;string&#x27;) throw new TypeError(&#x27;[Dom.View] The &quot;with&quot; method accepts either a key, value or hash-object as arguments.&#x27;);
 
+			// Is it an Api call?
+			if (value instanceof ApiCall) {
+
+				// Get the promise and add to api calls list
+				this.apiCalls.push(value);
+				let promise = this.dataPromises[key] = value.getPromise(&#x27;complete&#x27;);
+				this.loadPromises.push(promise);
+				promise.then((result) =&gt; {
+					this.set(key, result, true, true);
+				});
+
+			}
+
 			// Is the data a promise?
-			if (value instanceof Promise) {
+			else if (value instanceof Promise) {
 
 				// Add to promises
 				this.dataPromises[key] = value;
@@ -467,7 +498,9 @@ class View extends Observable
 
 				// Is it a Binding?
 				if (value instanceof Binding) {
-					value = value.getValue();
+				
+					// Use value
+					value = value.getReference();
 				}
 
 				// Set it now (convert to observables, and do not trigger updates)
@@ -504,6 +537,9 @@ class View extends Observable
 
 		// We make the &#x27;render&#x27; promise.
 		return this.promise(&#x27;render&#x27;, () =&gt; {
+
+			// Start api calls.
+			_.invoke(this.apiCalls, &#x27;execute&#x27;);
 
 			/////////////////////////////////////////
 			// Wait for all loadPromises to finish //
@@ -554,11 +590,11 @@ class View extends Observable
 		// occurs. The &#x27;dirtying&#x27; of elements (morphs) is handled by the Renderer
 		// and Binding classes.				
 		
-		// Study the object
+/*		// Study the object
 		this.study(() =&gt; {
 			this.scheduleRevalidate();
 		});
-
+*/
 
 		return this;
 

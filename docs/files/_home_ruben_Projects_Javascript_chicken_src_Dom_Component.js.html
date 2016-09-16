@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ApiCall.html">ApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
@@ -52,6 +54,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -90,6 +94,8 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
+            
+                <li><a href="../modules/Data.Api.html">Data.Api</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -136,8 +142,12 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+import $ from &#x27;jquery&#x27;;
+import _ from &#x27;underscore&#x27;;
 import HTMLBars from &#x27;htmlbars-standalone&#x27;;
 
+
+import Obj from &#x27;~/Core/Obj&#x27;;
 import View from &#x27;~/Dom/View&#x27;;
 
 /**
@@ -152,7 +162,7 @@ class Component extends View
 	 */
 	constructor(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates, initCallback = null, renderer = null) {
 
-		super(source, initCallback, renderer);
+		super(source, null, renderer);
 
 		this.name = name;
 
@@ -161,15 +171,59 @@ class Component extends View
 		this.scope = scope;
 
 		this.parameters = parameters;
-		this.attributeHash = attributeHash;
+		this.attributes = attributeHash;
 		this.visitor = visitor;
 
 		this.subTemplates = subTemplates;
 
+		this.tagName = &#x27;div&#x27;;
+		this.cssClass = false;
+
+		this.element = null;
+
+
+		// Make attributes available
+		this.with(this.attributes);
+
+
+		// Dom event listeners
+		this.dom = new Obj();
+
+
+		// Definition callback?
+		if (initCallback) {
+			initCallback.apply(this);
+		}
+
 
 	}
 
+	sendAction(name = null, ...args) {
 
+		// No name given?
+		if (name === null) {
+			name = this.attributes.action;
+		}
+
+		// Get the callback.
+		let actionScope = this.renderer.hooks.getActionScope(this.scope, name);
+		if (!actionScope) throw new Error(&#x27;[Component &#x27; + this.name + &#x27;] Could not find action &quot;&#x27; + name + &#x27;&quot; within the scope&#x27;);
+		let callback = actionScope.actions[name];
+
+		// Now call it.
+		var params = _.flatten([
+			_.map(args, (value) =&gt; {
+				return this.renderer.hooks.getValue(value);
+			}), 
+			this,	
+			actionScope
+		]);
+		callback.apply(actionScope instanceof View ? actionScope : this, params);
+
+
+	}
+
+	
 	renderSync() {
 
 		// Create the template
@@ -193,8 +247,50 @@ class Component extends View
 			this.scheduleRevalidate();
 		});
 
+		// Create the element
+		this.element = document.createElement(this.tagName);
+		_.each(this.attributes, (value, attr) =&gt; {
+			this.element.setAttribute(attr, value);
+		});
+		this.$element = $(this.element);
+		this.$element.append(this.documentFragment);
 
-		this.morph.setNode(this.documentFragment);
+		// CSS class
+		if (this.cssClass) this.$element.addClass(this.cssClass);
+
+		// Trigger beforeAdded
+		this.trigger(&#x27;beforeAdd&#x27;, this.$element);
+
+		// Put element in result
+		this.morph.setNode(this.$element[0]);
+
+
+		// Done.
+		this.trigger(&#x27;added&#x27;, this.$element);
+		this.resolvePromise(&#x27;render&#x27;, this.documentFragment);
+
+		// Enable DOM events
+		this.enableDomEvents();
+
+	}
+
+	enableDomEvents() {
+
+		// Loop through callbacks
+		this.dom._listeners.forEach((callbacks, name) =&gt; {
+			
+			// Proper event?
+			if (!_.contains(Component.DomEventNames, name)) {
+				throw new Error(&#x27;The &quot;&#x27; + name + &#x27;&quot; event is not a valid DOM event.&#x27;);
+			}
+
+			// Listen and connect.
+			this.$element.on(name, (...args) =&gt; {
+				args.unshift(name);
+				this.dom.trigger.apply(this.dom, args);				
+			});
+
+		});
 
 	}
 
@@ -217,6 +313,25 @@ class Component extends View
 
 }
 
+
+Component.DomEventNames = [
+	
+	// Touch events
+	&#x27;touchStart&#x27;, &#x27;touchMove&#x27;, &#x27;touchEnd&#x27;, &#x27;touchCancel&#x27;,
+
+	// Keyboard
+	&#x27;keyDown&#x27;, &#x27;keyUp&#x27;, &#x27;keyPress&#x27;,
+
+	// Mouse
+	&#x27;mouseDown&#x27;, &#x27;mouseUp&#x27;, &#x27;contextMenu&#x27;, &#x27;click&#x27;, &#x27;doubleClick&#x27;, &#x27;mouseMove&#x27;, &#x27;focusIn&#x27;, &#x27;focusOut&#x27;, &#x27;mouseEnter&#x27;, &#x27;mouseLeave&#x27;,
+
+	// Form
+	&#x27;submit&#x27;, &#x27;change&#x27;, &#x27;focusIn&#x27;, &#x27;focusOut&#x27;, &#x27;input&#x27;,
+
+	// HTML5
+	&#x27;dragStart&#x27;, &#x27;drag&#x27;, &#x27;dragEnter&#x27;, &#x27;dragLeave&#x27;, &#x27;dragOver&#x27;, &#x27;dragEnd&#x27;, &#x27;drop&#x27;
+
+];
 
 
 

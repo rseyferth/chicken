@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ApiCall.html">ApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
@@ -52,6 +54,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -90,6 +94,8 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
+            
+                <li><a href="../modules/Data.Api.html">Data.Api</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -145,6 +151,7 @@ import ActionBinding from &#x27;~/Dom/ActionBinding&#x27;;
 import Component from &#x27;~/Dom/Component&#x27;;
 import ComponentDefinition from &#x27;~/Dom/ComponentDefinition&#x27;;
 import Helpers from &#x27;~/Dom/Helpers&#x27;;
+import View from &#x27;~/Dom/View&#x27;;
 
 /**
  * @module Dom
@@ -213,7 +220,7 @@ class Renderer
 					}
 
 					// Create a binding
-					var binding = new Binding(this, appliedScope, path);
+					var binding = new Binding(this, appliedScope, path, scope.view ? scope.view : scope.self);
 
 					// Store it
 					appliedScope._bindings[path] = binding;
@@ -274,6 +281,41 @@ class Renderer
 				});
 							
 			},
+
+			createFreshScope: () =&gt; {
+				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
+			},
+
+			createChildScope: (parentScope) =&gt; {
+
+				// Create a new scope extending the parent
+				var scope = Object.create(parentScope);
+				scope.locals = Object.create(parentScope.locals);
+				scope.localPresent = Object.create(parentScope.localPresent);
+				scope.blocks = Object.create(parentScope.blocks);
+				scope.actions = Object.create(parentScope.actions);
+
+				// Check is parent is a view
+				if (parentScope.self instanceof View) {
+					
+					// Bubble the actions
+					scope.actions = _.extend(scope.actions, parentScope.self.actions);
+
+
+					// No a component?
+					if (!(parentScope.self instanceof Component)) {
+						scope.view = parentScope.self;
+					} else {
+						scope.component = parentScope.self;
+					}
+
+				}
+
+				return scope;
+
+
+			},
+
 
 			lookupHelper: (renderer, scope, helperName) =&gt; {
 				
@@ -341,9 +383,6 @@ class Renderer
 					this);
 				newScope.self = component;
 				
-				// Set the data
-				component.with(attributeHash);
-
 				// Now render it.
 				component.render();
 								
@@ -390,6 +429,50 @@ class Renderer
 
 			},
 
+			getActionScope: (scope, key) =&gt; {
+
+				// Check the scope
+				if (scope.actions &amp;&amp; scope.actions[key]) {
+
+					return scope;
+
+				} else if (scope.locals.actions &amp;&amp; scope.locals.actions[key]) {
+
+					// Use local action
+					return scope.locals;
+
+				} else if (scope.self.actions &amp;&amp; scope.self.actions[key]) {
+
+					// Use that
+					return scope.self;
+
+				} else if (scope.view &amp;&amp; scope.view.actions &amp;&amp; scope.view.actions[key]) {
+
+					// Use the veiw
+					return scope.view;
+
+				} else {
+
+					return false;
+
+				}
+
+
+			},
+
+			getAction: (scope, key) =&gt; {
+
+				let appliedScope = this.hooks.getActionScope(scope, key);
+				if (appliedScope) {
+					
+					// Get the action
+					return appliedScope.actions[key];
+
+				}
+				return false;
+
+			},
+
 
 			keywords: _.defaults({
 
@@ -404,20 +487,10 @@ class Renderer
 					
 					// Check binding
 					if (morph.actionBindings) return;
-
+					
 					// Get action scope
-					let appliedScope;
-					if (scope.localPresent[&#x27;actions&#x27;] &amp;&amp; scope.locals.actions[params[0]]) {
-
-						// Use local action
-						appliedScope = scope.locals;
-
-					} else if (scope.self.actions &amp;&amp; scope.self.actions[params[0]]) {
-
-						// Use that
-						appliedScope = scope.self;
-
-					} else {
+					let actionCallback = renderer.hooks.getAction(scope, params[0]);
+					if (!actionCallback) {
 
 						// Undefined action.
 						throw new Error(&#x27;Could not find action &quot;&#x27; + params[0] + &#x27;&quot; within the scope&#x27;);
@@ -425,11 +498,10 @@ class Renderer
 					}
 
 					// Get action
-					let actionCallback = appliedScope.actions[params[0]];
 					let parameters = params.slice(1);
 
 					// Create action binding
-					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
+					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
 
 				}
 

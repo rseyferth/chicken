@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ApiCall.html">ApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
@@ -52,6 +54,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -90,6 +94,8 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
+            
+                <li><a href="../modules/Data.Api.html">Data.Api</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -196,6 +202,8 @@ class ObservableArray extends Obj
 
 				// Just add the value (don&#x27;t notify)
 				this.items.push(value);
+
+
 
 			}
 
@@ -343,28 +351,46 @@ class ObservableArray extends Obj
 	 */
 	add(...values) {
 
+		// Is the last value a boolean?
+		let doNotNotify = false;
+		if (values.length &gt; 1 &amp;&amp; typeof values[values.length - 1] === &#x27;boolean&#x27;) {
+			doNotNotify = values.pop();
+		}
+
 		// Add items
 		_.each(values, (value) =&gt; {
 			
-			// Add it.
-			this.items.push(value);
-
-			// Is it observable?
-			if (ObservableArray.isObservable(value)) {
-				value.on(&#x27;change&#x27;, () =&gt; {
-					this.trigger(&#x27;change&#x27;);
-				});
-			}
+			this._add(value);
 
 		});
 
 		// Trigger events
-		this.trigger(ObservableArray.Events.Change);
-		this.trigger(ObservableArray.Events.Add, values);
+		if (!doNotNotify) {
+			this.trigger(ObservableArray.Events.Change);
+			this.trigger(ObservableArray.Events.Add, values);
+		}
 
 		return this;
 
 	}
+
+
+	_add(value) {
+
+		// Add it.
+		this.items.push(value);
+
+		// Is it observable?
+		if (ObservableArray.isObservable(value)) {
+			value.on(&#x27;change&#x27;, () =&gt; {
+				this.trigger(&#x27;change&#x27;);
+			});
+		}
+
+		return this;
+
+	}
+
 
 	/**
 	 * Delete one or more items from the array

@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("$"), require("_"), require("XRegExp"), require("HTMLBars"));
+		module.exports = factory(require("$"), require("_"), require("XRegExp"), require("HTMLBars"), require("moment"));
 	else if(typeof define === 'function' && define.amd)
-		define(["$", "_", "XRegExp", "HTMLBars"], factory);
+		define(["$", "_", "XRegExp", "HTMLBars", "moment"], factory);
 	else if(typeof exports === 'object')
-		exports["Chicken"] = factory(require("$"), require("_"), require("XRegExp"), require("HTMLBars"));
+		exports["Chicken"] = factory(require("$"), require("_"), require("XRegExp"), require("HTMLBars"), require("moment"));
 	else
-		root["Chicken"] = factory(root["$"], root["_"], root["XRegExp"], root["HTMLBars"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_43__) {
+		root["Chicken"] = factory(root["$"], root["_"], root["XRegExp"], root["HTMLBars"], root["moment"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_43__, __WEBPACK_EXTERNAL_MODULE_67__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -96,15 +96,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelDefinition = __webpack_require__(62);
+	var _ModelDefinition = __webpack_require__(65);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
 
-	var _Api = __webpack_require__(66);
+	var _Api = __webpack_require__(69);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
-	var _JsonApi = __webpack_require__(67);
+	var _JsonApi = __webpack_require__(70);
 
 	var _JsonApi2 = _interopRequireDefault(_JsonApi);
 
@@ -491,7 +491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Class definitino //
 	//////////////////////
 
-	var __instance = undefined;
+	var _instance = undefined;
 
 	var Application = function (_Observable) {
 		_inherits(Application, _Observable);
@@ -510,7 +510,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Basics
 
 
-			__instance = _this;
+			_instance = _this;
 
 			////////////////
 			// Properties //
@@ -721,7 +721,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_Observable3.default);
 
 	Application.getInstance = function () {
-		return __instance;
+		return _instance;
 	};
 
 	_ClassMap2.default.register('Application', Application);
@@ -3276,10 +3276,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				var currentPart = parts.shift();
 
 				// No deep shit?
-				if (parts.length === 0) return this.attributes[currentPart] !== undefined;
+				if (parts.length === 0) return this._has(currentPart) !== undefined;
 
 				// Look deeper
-				var value = this.attributes[currentPart];
+				var value = this._get(currentPart);
 
 				// No value
 				if (value === undefined) {
@@ -3295,6 +3295,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					return false;
 				}
+			}
+		}, {
+			key: '_has',
+			value: function _has(key) {
+				return this.attributes[key] !== undefined;
 			}
 
 			/**
@@ -3314,7 +3319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var currentPart = parts.shift();
 
 				// Get value
-				var value = this.attributes[currentPart];
+				var value = this._get(currentPart);
 
 				// Nothing?
 				if (value === undefined) return;
@@ -3340,6 +3345,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					throw new Error('The found value for ' + key + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)));
 				}
+			}
+		}, {
+			key: '_get',
+			value: function _get(key) {
+				return this.attributes[key];
 			}
 
 			/**
@@ -3425,6 +3435,50 @@ return /******/ (function(modules) { // webpackBootstrap
 					if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 				}
 
+				// Now set the attribute
+				this.setAttribute(key, value, convertToObservables, doNotNotify);
+
+				return this;
+			}
+		}, {
+			key: 'setAttribute',
+			value: function setAttribute(key, value) {
+				var _this3 = this;
+
+				var convertToObservables = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+				var doNotNotify = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+
+
+				// Set it
+				this._set(key, value);
+
+				// Is the value observable?
+				if (Observable.isObservable(value)) {
+
+					// Study the object
+					value.study(function () {
+						_this3._scheduleAttributeChanged(key);
+					});
+				}
+
+				// Is the value a reference?
+				if (value instanceof _Reference2.default) {
+
+					// Study the object
+					value.watch(function () {
+						_this3._scheduleAttributeChanged(key);
+					});
+				}
+
+				// Update attribute
+				if (!doNotNotify) this._scheduleAttributeChanged(key);
+
+				return this;
+			}
+		}, {
+			key: '_set',
+			value: function _set(key, value) {
+
 				// Is there a current value that is a reference?
 				if (this.attributes[key] instanceof _Reference2.default && !(value instanceof _Reference2.default)) {
 
@@ -3435,34 +3489,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Store the value
 					this.attributes[key] = value;
 				}
-
-				// Is the value observable?
-				if (Observable.isObservable(value)) {
-
-					// Study the object
-					value.study(function () {
-						_this2._scheduleAttributeChanged(key);
-					});
-				}
-
-				// Is the value a reference?
-				if (value instanceof _Reference2.default) {
-
-					// Study the object
-					value.watch(function () {
-						_this2._scheduleAttributeChanged(key);
-					});
-				}
-
-				// Update attribute
-				if (!doNotNotify) this._scheduleAttributeChanged(key);
-
 				return this;
 			}
 		}, {
 			key: 'import',
 			value: function _import(obj) {
-				var _this3 = this;
+				var _this4 = this;
 
 				var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 				var doNotNotify = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
@@ -3475,10 +3507,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					if ((Array.isArray(value) || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value !== null && value.constructor === Object) && convertToObservables === true) {
 
 						// Do I have this value?
-						if (_this3.attributes[key] !== undefined && Observable.isObservable(_this3.attributes[key])) {
+						if (_this4.attributes[key] !== undefined && Observable.isObservable(_this4.attributes[key])) {
 
 							// Import
-							var obj = _this3.attributes.get(key);
+							var obj = _this4.attributes.get(key);
 							obj.import(value, convertToObservables, doNotNotify);
 						} else {
 
@@ -3486,17 +3518,17 @@ return /******/ (function(modules) { // webpackBootstrap
 							if (Array.isArray(value)) {
 
 								// Put a new observable array in there
-								_this3.attributes[key] = _ClassMap2.default.create('ObservableArray', [value]);
+								_this4._set(key, _ClassMap2.default.create('ObservableArray', [value]));
 							} else {
 
 								// Put a new observable in there
-								_this3.attributes[key] = new Observable(value);
+								_this4._set(key, new Observable(value));
 							}
 						}
 					} else {
 
 						// Just set the value (don't notify)
-						_this3.set(key, value, convertToObservables, true);
+						_this4.set(key, value, convertToObservables, true);
 					}
 				});
 
@@ -3591,7 +3623,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'observe',
 			value: function observe(keyOrKeys, callback) {
-				var _this4 = this;
+				var _this5 = this;
 
 				////////////////////
 				// More than one? //
@@ -3599,7 +3631,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				if (Array.isArray(keyOrKeys)) {
 					_underscore2.default.each(keyOrKeys, function (key) {
-						_this4.observe(key, callback);
+						_this5.observe(key, callback);
 					});
 					return this;
 				}
@@ -3713,7 +3745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_scheduleAttributeChanged',
 			value: function _scheduleAttributeChanged(key) {
-				var _this5 = this;
+				var _this6 = this;
 
 				// Already something scheduled?
 				if (!this._scheduleAttributesChangedTimeout) {
@@ -3723,8 +3755,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					this._scheduleAttributesChangedTimeout = setTimeout(function () {
 
 						// Trigger it now!
-						_this5._scheduleAttributesChangedTimeout = false;
-						_this5._triggerAttributesChanged();
+						_this6._scheduleAttributesChangedTimeout = false;
+						_this6._triggerAttributesChanged();
 					}, Observable.AttributeChangedDelay);
 				}
 
@@ -3734,7 +3766,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_triggerAttributesChanged',
 			value: function _triggerAttributesChanged() {
-				var _this6 = this;
+				var _this7 = this;
 
 				// Clear for next time.
 				if (this._scheduleAttributesChangedTimeout) clearTimeout(this._scheduleAttributesChangedTimeout);
@@ -3749,7 +3781,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					_underscore2.default.each(attrs, function (attr) {
 
 						// Get observers
-						var attrObservers = _this6.observers.get(attr);
+						var attrObservers = _this7.observers.get(attr);
 						if (attrObservers) {
 							attrObservers.forEach(function (observer) {
 
@@ -3763,7 +3795,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					combinedObservers.forEach(function (observer) {
 
 						// Now call it.
-						observer.apply(_this6);
+						observer.apply(_this7);
 					});
 
 					// Students as well.
@@ -4114,6 +4146,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			var c = this.get(className);
 			if (c === undefined) throw new Error('The ' + className + ' class is not registered in the ClassMap');
 			return new (Function.prototype.bind.apply(c, [null].concat(_toConsumableArray(args))))();
+		},
+		isA: function isA(obj, className) {
+			var c = ClassMap.get(className);
+			if (c === undefined) throw new Error('The ' + className + ' class is not registered in the ClassMap');
+			return obj instanceof c;
 		}
 	};
 
@@ -4740,7 +4777,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 
 					// Create a binding
-					var binding = new _Binding2.default(_this, appliedScope, path);
+					var binding = new _Binding2.default(_this, appliedScope, path, scope.view ? scope.view : scope.self);
 
 					// Store it
 					appliedScope._bindings[path] = binding;
@@ -5047,8 +5084,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param  {Dom.Renderer} 							renderer   
 	  * @param  {Core.Observable|Core.ObservableArray} 	observable 
 	  * @param  {string} 								path       	
+	  * @param  {Dom.View}								view
 	  */
-		function Binding(renderer, observable, path) {
+		function Binding(renderer, observable, path, view) {
 			var _this = this;
 
 			_classCallCheck(this, Binding);
@@ -5088,6 +5126,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			this.morphs = new Set();
 
+			this.view = view;
+
 			////////////////
 			// Now watch! //
 			////////////////
@@ -5097,6 +5137,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Trigger updates for all morphs
 				_this.morphs.forEach(function (morph) {
 					morph.isDirty = true;
+					_this.view.scheduleRevalidate();
 				});
 			});
 		}
@@ -6164,7 +6205,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'renderSync',
 			value: function renderSync() {
-				var _this5 = this;
 
 				/////////////////////
 				// Create template //
@@ -6189,10 +6229,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				// occurs. The 'dirtying' of elements (morphs) is handled by the Renderer
 				// and Binding classes.				
 
-				// Study the object
-				this.study(function () {
-					_this5.scheduleRevalidate();
-				});
+				/*		// Study the object
+	   		this.study(() => {
+	   			this.scheduleRevalidate();
+	   		});
+	   */
 
 				return this;
 			}
@@ -6217,7 +6258,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'scheduleRevalidate',
 			value: function scheduleRevalidate() {
-				var _this6 = this;
+				var _this5 = this;
 
 				// Not already pending?
 				if (!this.revalidateTimeout) {
@@ -6226,7 +6267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					this.revalidateTimeout = setTimeout(function () {
 
 						// Revalidate!
-						_this6.revalidate();
+						_this5.revalidate();
 					}, View.RevalidationDelay);
 				}
 
@@ -7108,21 +7149,30 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Add items
 				_underscore2.default.each(values, function (value) {
 
-					// Add it.
-					_this4.items.push(value);
-
-					// Is it observable?
-					if (ObservableArray.isObservable(value)) {
-						value.on('change', function () {
-							_this4.trigger('change');
-						});
-					}
+					_this4._add(value);
 				});
 
 				// Trigger events
 				if (!doNotNotify) {
 					this.trigger(ObservableArray.Events.Change);
 					this.trigger(ObservableArray.Events.Add, values);
+				}
+
+				return this;
+			}
+		}, {
+			key: '_add',
+			value: function _add(value) {
+				var _this5 = this;
+
+				// Add it.
+				this.items.push(value);
+
+				// Is it observable?
+				if (ObservableArray.isObservable(value)) {
+					value.on('change', function () {
+						_this5.trigger('change');
+					});
 				}
 
 				return this;
@@ -8714,9 +8764,41 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get2 = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	var _inflection = __webpack_require__(62);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _App = __webpack_require__(49);
+
+	var _App2 = _interopRequireDefault(_App);
+
 	var _Observable2 = __webpack_require__(33);
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	var _ModelStore = __webpack_require__(63);
+
+	var _ModelStore2 = _interopRequireDefault(_ModelStore);
+
+	var _Collection = __webpack_require__(64);
+
+	var _Collection2 = _interopRequireDefault(_Collection);
+
+	var _ClassMap = __webpack_require__(36);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8732,156 +8814,468 @@ return /******/ (function(modules) { // webpackBootstrap
 	var Model = function (_Observable) {
 		_inherits(Model, _Observable);
 
+		/**
+	  * The Model class is an extension of Observable, and is used
+	  * to hold data that is received from an Api, and save that data, etc.
+	  * 
+	  * @class Data.Model
+	  *
+	  * @constructor
+	  * @param  {Object}  initValues           
+	  * @param  {Boolean} convertToObservables 
+	  */
 		function Model() {
 			var initValues = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 			var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 			_classCallCheck(this, Model);
 
-			return _possibleConstructorReturn(this, (Model.__proto__ || Object.getPrototypeOf(Model)).call(this, initValues, convertToObservables));
+			/**
+	   * The original values as received from the Api
+	   * 
+	   * @property originalValues
+	   * @type {object}
+	   */
+			var _this = _possibleConstructorReturn(this, (Model.__proto__ || Object.getPrototypeOf(Model)).call(this, initValues, convertToObservables));
+
+			_this.originalValues = initValues;
+
+			_this.related = {};
+
+			_this.state = new _Observable3.default({
+				busy: false,
+				saving: false,
+				dirty: false
+			});
+			_this.state.study(function () {
+				_this._scheduleAttributeChanged('is');
+			});
+
+			return _this;
 		}
 
-		return Model;
-	}(_Observable3.default);
+		///////////
+		// State //
+		///////////
 
-	Model.registry = new Map();
-
-	module.exports = Model;
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _inflection = __webpack_require__(63);
-
-	var _inflection2 = _interopRequireDefault(_inflection);
-
-	var _ModelAttribute = __webpack_require__(64);
-
-	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
-
-	var _Relationship = __webpack_require__(65);
-
-	var _Relationship2 = _interopRequireDefault(_Relationship);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Data
-	 */
-	var ModelDefinition = function () {
-		function ModelDefinition(name, callback) {
-			_classCallCheck(this, ModelDefinition);
-
-			this.name = name;
-
-			this.apiUri = '/' + _inflection2.default.underscore(_inflection2.default.pluralize(name));
-			this.defaultApi = 'default';
-
-			this.attributes = {};
-			this.attributeNames = [];
-			this.relationships = {};
-
-			this.computedAttributes = {};
-
-			callback.apply(this, [this]);
-		}
-
-		_createClass(ModelDefinition, [{
-			key: 'attribute',
-			value: function attribute(name, type) {
-				var attr = new _ModelAttribute2.default(name, type);
-				this.attributeNames.push(name);
-				this.attributes[name] = attr;
-				return attr;
+		_createClass(Model, [{
+			key: 'getIs',
+			value: function getIs() {
+				return this.state;
 			}
 		}, {
-			key: 'computed',
-			value: function computed(name, dependencies, callback) {
-
-				this.computedAttributes[name] = {
-					dependencies: dependencies,
-					callback: callback
-				};
-				return true;
+			key: 'isBusy',
+			value: function isBusy() {
+				return this.state.get('busy');
 			}
 
-			//////////////////////
-			// Column defitions //
-			//////////////////////
+			/////////////////
+			// Get and set //
+			/////////////////
+
 
 		}, {
-			key: 'integer',
-			value: function integer(name) {
-				var attr = this.attribute(name, _ModelAttribute2.default.Integer);
-				return attr;
-			}
-		}, {
-			key: 'string',
-			value: function string(name, size) {
-				var attr = this.attribute(name, _ModelAttribute2.default.Integer);
-				attr.size = size;
-				return attr;
-			}
-		}, {
-			key: 'date',
-			value: function date(name) {
-				var attr = this.attribute(name, _ModelAttribute2.default.Date);
-				return attr;
-			}
+			key: '_get',
+			value: function _get(key) {
 
-			//////////////////////
-			// Column shortcuts //
-			//////////////////////
+				// Is there a getter?
+				var methodName = 'get' + _inflection2.default.capitalize(key);
+				if (this[methodName] && typeof this[methodName] === 'function') {
+					return this[methodName].apply(this, [this.attributes[key]]);
+				}
 
+				// Is it a relationship?
+				if (this.related[key]) return this.related[key];
+
+				// Nothing special. Do basics
+				return _get2(Model.prototype.__proto__ || Object.getPrototypeOf(Model.prototype), '_get', this).call(this, key);
+			}
 		}, {
-			key: 'timestamps',
-			value: function timestamps() {
-				this.attribute('createdAt', _ModelAttribute2.default.DateTime);
-				this.attribute('updatedAt', _ModelAttribute2.default.DateTime);
+			key: '_set',
+			value: function _set(key, value) {
+
+				// Cast if necessary
+				value = this.castValue(key, value);
+
+				// Continue with it
+				_get2(Model.prototype.__proto__ || Object.getPrototypeOf(Model.prototype), '_set', this).call(this, key, value);
+
+				// Is dirty?
+				if (this.state) {
+					this._scheduleUpdateDirty();
+				}
+
 				return this;
+			}
+		}, {
+			key: 'getForApi',
+			value: function getForApi(key) {
+
+				// Get value
+				var value = this.uncastValue(key, this.attributes[key]);
+				return value;
+			}
+		}, {
+			key: 'castValue',
+			value: function castValue(key, value) {
+
+				// Do we need to cast it?
+				var attributeDefinition = this.getAttributeDefinition(key);
+				if (attributeDefinition) {
+					value = attributeDefinition.cast(value);
+				}
+
+				return value;
+			}
+		}, {
+			key: 'uncastValue',
+			value: function uncastValue(key, value) {
+
+				// Do we need to uncast it?
+				var attributeDefinition = this.getAttributeDefinition(key);
+				if (attributeDefinition) {
+					value = attributeDefinition.uncast(value);
+				}
+
+				return value;
+			}
+
+			/////////////////////////
+			// Api related methods //
+			/////////////////////////
+
+		}, {
+			key: 'setAttributesFromApi',
+			value: function setAttributesFromApi(attributes) {
+				var _this2 = this;
+
+				// Loop through them and set values that are not dirty
+				_underscore2.default.each(attributes, function (value, key) {
+
+					// Dirty?
+					if (_this2.isDirty(key)) return;
+
+					// Set it, and see this as a non-dirty value
+					_this2.setAttribute(key, value);
+					_this2.originalValues[key] = _this2.uncastValue(key, _this2.attributes[key]);
+				});
+				return this;
+			}
+		}, {
+			key: 'getAttributesForApi',
+			value: function getAttributesForApi() {
+				var _this3 = this;
+
+				var onlyDirty = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+
+				// Which attributes to use?
+				var attr = onlyDirty ? this.getDirty() : _jquery2.default.extend(this.attributes);
+				attr = _underscore2.default.mapObject(attr, function (value, key) {
+
+					// Do we need to cast it?
+					var attributeDefinition = _this3.getAttributeDefinition(key);
+					if (attributeDefinition) {
+						value = attributeDefinition.cast(value);
+					}
+
+					return value;
+				});
+				delete attr.id;
+				return attr;
+			}
+		}, {
+			key: 'getApi',
+			value: function getApi() {
+
+				// Check model definition
+				var apiName = this.getDefinition() ? this.getDefinition().api : null;
+				return (0, _App2.default)().apis[apiName];
+			}
+		}, {
+			key: 'getApiUri',
+			value: function getApiUri() {
+
+				// Check definition
+				var def = this.getDefinition();
+				if (!def) throw new Error('Cannot guess the ApiUri for a model that has no ModelDefinition');
+
+				// Get api uri
+				return def.getApiUri(this.get('id'));
+			}
+		}, {
+			key: 'save',
+			value: function save() {
+				var _this4 = this;
+
+				var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+
+				// Make settings
+				var settings = _jquery2.default.extend({
+					uri: null,
+					includeRelated: true,
+					includeRelatedData: false
+				}, options);
+
+				// Busy?
+				if (this.isBusy()) throw new Error('Model has not completed its last action');
+				this.state.set('busy', true);
+				this.state.set('saving', true);
+
+				// Create the call
+				if (!settings.uri) settings.uri = this.getApiUri();
+				var apiCall = this.getApi().saveModel(this, settings);
+
+				// Handle it.
+				apiCall.getPromise('complete').then(function () {
+
+					// No longer dirty!
+					_this4.resetDirty();
+
+					// No longer busy
+					_this4.state.set('busy', false);
+					_this4.state.set('saving', false);
+				}, function () {
+
+					// No longer busy
+					_this4.state.set('busy', false);
+					_this4.state.set('saving', false);
+				});
+
+				// Done.
+				return apiCall.execute();
+			}
+
+			///////////////////////
+			// Dirtying of model //
+			///////////////////////
+
+			/**
+	   * @method getDirty
+	   * @return {Object} Key/value hash containing dirty attributes
+	   */
+
+		}, {
+			key: 'getDirty',
+			value: function getDirty() {
+				var _this5 = this;
+
+				// Get dirty values
+				var dirty = {};
+				_underscore2.default.each(this.attributes, function (value, key) {
+
+					// Not in original or changed?
+					if (_this5.isDirty(key)) {
+
+						// Then it's dirty
+						dirty[key] = value;
+					}
+				});
+
+				return dirty;
+			}
+
+			/**
+	   * Determine whether the model, or a specific attribute is dirty
+	   * (meaning it has been changed since initialization or Api update)
+	   * 
+	   * @method isDirty
+	   * @param  {string}  [key]    Optional attribute name
+	   * @return {Boolean}     
+	   */
+
+		}, {
+			key: 'isDirty',
+			value: function isDirty() {
+				var key = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+
+				// Specific key?
+				if (key) {
+
+					// None at all?
+					if (this.attributes[key] === undefined) return false;
+
+					// Is it new?
+					if (this.attributes[key] && this.originalValues[key] === undefined) return true;
+
+					// Has it changed
+					var oldValue = this.originalValues[key];
+					var newValue = this.uncastValue(key, this.attributes[key]);
+
+					return oldValue != newValue;
+				} else {
+
+					// Loop to see if anything is dirty
+					for (var _key in this.attributes) {
+						if (this.isDirty(_key)) return true;
+					}
+					return false;
+				}
+			}
+		}, {
+			key: 'updateDirty',
+			value: function updateDirty() {
+
+				this.state.set('dirty', this.isDirty());
+				return this;
+			}
+		}, {
+			key: '_scheduleUpdateDirty',
+			value: function _scheduleUpdateDirty() {
+				var _this6 = this;
+
+				// Already going?
+				if (this._scheduleUpdateDirtyTimeout) return;
+
+				// Wait a bit
+				this._scheduleUpdateDirtyTimeout = setTimeout(function () {
+					_this6.updateDirty();
+					_this6._scheduleUpdateDirtyTimeout = null;
+				}, Model.UpdateDirtyDelay);
 			}
 
 			///////////////////
 			// Relationships //
 			///////////////////
 
+			/**
+	   * Set the given model as the value of a relationship
+	   * 
+	   * @method setRelatedModel
+	   * @param {string} relationshipName 
+	   * @param {Data.Model} relatedModel    
+	   * @chainable
+	   */
+
 		}, {
-			key: 'relationship',
-			value: function relationship(name) {
-				var rel = new _Relationship2.default(name, this.name);
-				this.relationships[name] = rel;
-				return rel;
+			key: 'setRelatedModel',
+			value: function setRelatedModel(relationshipName, relatedModel) {
+
+				// Set it
+				this.related[relationshipName] = relatedModel;
+				return this;
 			}
 
-			/////////
-			// Api //
-			/////////
+			/**
+	   * Add the given model to a relationship collection
+	   *
+	   * @method addRelatedModel
+	   * @param {string} relationshipName 
+	   * @param {Data.Model} relatedModel     
+	   * @param {boolean} fromApi		
+	   * @chainable
+	   */
 
 		}, {
-			key: 'getApiUri',
-			value: function getApiUri() {
-				var id = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+			key: 'addRelatedModel',
+			value: function addRelatedModel(relationshipName, relatedModel) {
+				var fromApi = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
-				var uri = this.apiUri;
-				if (id) uri += '/' + id;
-				return uri;
+
+				// Check if collection exists
+				if (this.related[relationshipName] === undefined) {
+
+					// Make collection
+					this.related[relationshipName] = new _Collection2.default(relatedModel.constructor);
+				}
+
+				// Is it a valid collection?
+				else if (!this.related instanceof _Collection2.default) {
+						throw new TypeError('Tried to add a related model to an existing object that is not a Collection');
+					}
+
+				// Add model
+				var coll = this.related[relationshipName];
+				if (fromApi) {
+					coll.addFromApi(relatedModel);
+				} else {
+					coll.add(relatedModel);
+				}
+
+				return this;
+			}
+
+			//////////////////////
+			// Model definition //
+			//////////////////////
+
+			/**
+	   * Get this model's ModelDefinition. 
+	   * Can be undefined for non-defined Models.
+	   *
+	   * @method getDefinition
+	   * @return {Data.ModelDefinition}
+	   */
+
+		}, {
+			key: 'getDefinition',
+			value: function getDefinition() {
+				return this.constructor.definition;
+			}
+
+			/**
+	   * Get the definition for given attribute key. 
+	   * Can be undefined for non-defined Models, or if the
+	   * attribute is not defined in the ModelDefinition.
+	   *
+	   * @method getAttributeDefinition
+	   * @param  {string} key
+	   * @return {Data.ModelAttribute}  
+	   */
+
+		}, {
+			key: 'getAttributeDefinition',
+			value: function getAttributeDefinition(key) {
+
+				// Check if the model has a definition at all
+				var def = this.getDefinition();
+				if (!def) return;
+
+				// Get the attribute
+				return def.attributes[key];
 			}
 		}]);
 
-		return ModelDefinition;
-	}();
+		return Model;
+	}(_Observable3.default);
 
-	module.exports = ModelDefinition;
+	Model.registry = new Map();
+
+	Model.stores = new Map();
+
+	Model.getStore = function (modelName) {
+		if (!Model.stores.has(modelName)) {
+			Model.stores.set(modelName, new _ModelStore2.default(modelName));
+		}
+		return Model.stores.get(modelName);
+	};
+
+	Model.getFromStore = function (modelName, id) {
+
+		// Is there a store?
+		if (!Model.stores.has(modelName)) return null;
+		var store = Model.getStore(modelName);
+		return store.get(id);
+	};
+
+	/**
+	 * The number of milliseconds to delay checking whether the 
+	 * model has dirty attributes, after it an attribute has been changed.
+	 * 
+	 * @property UpdateDirtyDelay
+	 * @static
+	 * @type {Number}
+	 */
+	Model.UpdateDirtyDelay = 100;
+
+	_ClassMap2.default.register('Model', Model);
+
+	module.exports = Model;
 
 /***/ },
-/* 63 */
+/* 62 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -9970,12 +10364,323 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 64 */
-/***/ function(module, exports) {
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _Obj2 = __webpack_require__(34);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var ModelStore = function (_Obj) {
+		_inherits(ModelStore, _Obj);
+
+		function ModelStore(modelName) {
+			_classCallCheck(this, ModelStore);
+
+			var _this = _possibleConstructorReturn(this, (ModelStore.__proto__ || Object.getPrototypeOf(ModelStore)).call(this));
+
+			_this.modelName = modelName;
+
+			_this.records = {};
+
+			return _this;
+		}
+
+		_createClass(ModelStore, [{
+			key: 'has',
+			value: function has(id) {
+				return this.records[id] !== undefined;
+			}
+		}, {
+			key: 'set',
+			value: function set(id, model) {
+				this.records[id] = model;
+				return this;
+			}
+		}, {
+			key: 'get',
+			value: function get(id) {
+				return this.records[id] ? this.records[id] : null;
+			}
+		}, {
+			key: 'forget',
+			value: function forget(id) {
+				delete this.records[id];
+				return this;
+			}
+		}]);
+
+		return ModelStore;
+	}(_Obj3.default);
+
+	module.exports = ModelStore;
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _ObservableArray2 = __webpack_require__(54);
+
+	var _ObservableArray3 = _interopRequireDefault(_ObservableArray2);
+
+	var _ClassMap = __webpack_require__(36);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Collection = function (_ObservableArray) {
+		_inherits(Collection, _ObservableArray);
+
+		function Collection() {
+			var modelClass = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+			_classCallCheck(this, Collection);
+
+			var _this = _possibleConstructorReturn(this, (Collection.__proto__ || Object.getPrototypeOf(Collection)).call(this));
+
+			_this.modelClass = modelClass;
+
+			_this.itemsById = {};
+			_this.originalIds = [];
+
+			return _this;
+		}
+
+		_createClass(Collection, [{
+			key: 'addFromApi',
+			value: function addFromApi(item) {
+
+				// Add it
+				this.add(item);
+
+				// Store id as original id
+				var id = item.get('id');
+				if (id && !_underscore2.default.contains(this.originalIds, id)) {
+					this.originalIds.push(id);
+				}
+
+				return this;
+			}
+		}, {
+			key: '_add',
+			value: function _add(value) {
+
+				// Is value a model?
+				if (!_ClassMap2.default.isA(value, 'Model')) {
+					throw new TypeError('You cannot add non-Model values to a Collection');
+				}
+
+				// Not already in there?
+				var modelId = value.get('id');
+				if (!modelId || !this.itemsById[modelId]) {
+
+					// Store it and add it
+					this.items.push(value);
+					if (modelId) {
+						this.itemsById[modelId] = value;
+					}
+				}
+
+				return this;
+			}
+		}, {
+			key: 'isDirty',
+			value: function isDirty() {
+
+				// Compare item id's
+				var currentIds = _underscore2.default.map(this.items, function (item) {
+					return item.get('id');
+				});
+				var overlap = _underscore2.default.intersection(currentIds, this.originalIds);
+				if (overlap.length !== this.originalIds.length) return true;
+
+				// Maybe one of the models is dirty
+				for (var i in this.items) {
+					if (this.items[i].isDirty()) return true;
+				}
+
+				// Nope.
+				return false;
+			}
+		}]);
+
+		return Collection;
+	}(_ObservableArray3.default);
+
+	module.exports = Collection;
+
+/***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _inflection = __webpack_require__(62);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _ModelAttribute = __webpack_require__(66);
+
+	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
+
+	var _Relationship = __webpack_require__(68);
+
+	var _Relationship2 = _interopRequireDefault(_Relationship);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Data
+	 */
+	var ModelDefinition = function () {
+		function ModelDefinition(name, callback) {
+			_classCallCheck(this, ModelDefinition);
+
+			this.name = name;
+
+			this.apiUri = '/' + _inflection2.default.underscore(_inflection2.default.pluralize(name));
+			this.api = 'default';
+
+			this.attributes = {};
+			this.attributeNames = [];
+			this.relationships = {};
+
+			this.computedAttributes = {};
+
+			callback.apply(this, [this]);
+		}
+
+		_createClass(ModelDefinition, [{
+			key: 'attribute',
+			value: function attribute(name, type) {
+				var attr = new _ModelAttribute2.default(name, type);
+				this.attributeNames.push(name);
+				this.attributes[name] = attr;
+				return attr;
+			}
+		}, {
+			key: 'computed',
+			value: function computed(name, dependencies, callback) {
+
+				this.computedAttributes[name] = {
+					dependencies: dependencies,
+					callback: callback
+				};
+				return true;
+			}
+
+			//////////////////////
+			// Column defitions //
+			//////////////////////
+
+		}, {
+			key: 'integer',
+			value: function integer(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Integer);
+				return attr;
+			}
+		}, {
+			key: 'string',
+			value: function string(name, size) {
+				var attr = this.attribute(name, _ModelAttribute2.default.String);
+				attr.size = size;
+				return attr;
+			}
+		}, {
+			key: 'date',
+			value: function date(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Date);
+				return attr;
+			}
+
+			//////////////////////
+			// Column shortcuts //
+			//////////////////////
+
+		}, {
+			key: 'timestamps',
+			value: function timestamps() {
+				this.attribute('createdAt', _ModelAttribute2.default.DateTime);
+				this.attribute('updatedAt', _ModelAttribute2.default.DateTime);
+				return this;
+			}
+
+			///////////////////
+			// Relationships //
+			///////////////////
+
+		}, {
+			key: 'relationship',
+			value: function relationship(name) {
+				var rel = new _Relationship2.default(name, this.name);
+				this.relationships[name] = rel;
+				return rel;
+			}
+
+			/////////
+			// Api //
+			/////////
+
+		}, {
+			key: 'getApiUri',
+			value: function getApiUri() {
+				var id = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+				var uri = this.apiUri;
+				if (id) uri += '/' + id;
+				return uri;
+			}
+		}]);
+
+		return ModelDefinition;
+	}();
+
+	module.exports = ModelDefinition;
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _moment = __webpack_require__(67);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -9999,6 +10704,99 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.isPrimaryKey = isPrimaryKey;
 				return this;
 			}
+
+			/**
+	   * Cast given (database) value for use in the application,
+	   * according to the type of this attribute
+	   * 
+	   * @method cast
+	   * @param  {mixed} value 
+	   * @return {mixed}       
+	   */
+
+		}, {
+			key: 'cast',
+			value: function cast(value) {
+
+				switch (this.type) {
+
+					////////////////
+					// Primitives //
+					////////////////
+
+					// Number
+					case ModelAttribute.Number:
+						return value instanceof Number ? value : Number.parseFloat(value);
+
+					// Integer
+					case ModelAttribute.Integer:
+						return Number.isInteger(value) ? value : Number.parseInt(value);
+
+					// String
+					case ModelAttribute.String:
+						return value instanceof String ? value : '' + value;
+
+					///////////
+					// Dates //
+					///////////
+
+					// Date or date time
+					case ModelAttribute.Date:
+					case ModelAttribute.DateTime:
+						return value ? (0, _moment2.default)(value) : value;
+
+					default:
+						return value;
+
+				}
+			}
+
+			/**
+	   * Cast given application value back for use in the database/api.
+	   *
+	   * @method uncast
+	   * @param  {mixed} value 
+	   * @return {mixed}       
+	   */
+
+		}, {
+			key: 'uncast',
+			value: function uncast(value) {
+
+				switch (this.type) {
+
+					////////////////
+					// Primitives //
+					////////////////
+
+					// Number
+					case ModelAttribute.Number:
+						return value instanceof Number ? value : Number.parseFloat(value);
+
+					// Integer
+					case ModelAttribute.Integer:
+						return Number.isInteger(value) ? value : Number.parseInt(value);
+
+					// String
+					case ModelAttribute.String:
+						return value instanceof String ? value : '' + value;
+
+					///////////
+					// Dates //
+					///////////
+
+					// Date or date time
+					case ModelAttribute.Date:
+						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD') : value;
+
+					case ModelAttribute.DateTime:
+						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD HH:mm:ss') : value;
+
+					default:
+						return value;
+
+				}
+			}
 		}]);
 
 		return ModelAttribute;
@@ -10015,14 +10813,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelAttribute;
 
 /***/ },
-/* 65 */
+/* 67 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_67__;
+
+/***/ },
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _inflection = __webpack_require__(63);
+	var _inflection = __webpack_require__(62);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
@@ -10082,7 +10886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Relationship;
 
 /***/ },
-/* 66 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10229,6 +11033,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				call.modelClass = ModelClass;
 				return call;
 			}
+		}, {
+			key: 'saveModel',
+			value: function saveModel() /* uri, model */{
+				throw new Error('The Api implementation should have a saveModel method.');
+			}
 		}]);
 
 		return Api;
@@ -10237,22 +11046,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Api;
 
 /***/ },
-/* 67 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _inflection = __webpack_require__(63);
+	var _inflection = __webpack_require__(62);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _Api2 = __webpack_require__(66);
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Api2 = __webpack_require__(69);
 
 	var _Api3 = _interopRequireDefault(_Api2);
 
-	var _JsonApiCall = __webpack_require__(68);
+	var _JsonApiCall = __webpack_require__(71);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
@@ -10260,9 +11077,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(69);
+	var _Collection = __webpack_require__(64);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
+
+	var _Utils = __webpack_require__(53);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -10292,8 +11113,128 @@ return /******/ (function(modules) { // webpackBootstrap
 				return new _JsonApiCall2.default(this, method, uri, data, ajaxOptions);
 			}
 		}, {
+			key: 'saveModel',
+			value: function saveModel(model, options) {
+				var _this2 = this;
+
+				// Make settings
+				var settings = _jquery2.default.extend({
+					includeRelated: true,
+					includeRelatedData: false,
+					uri: '/' + _inflection2.default.pluralize(_inflection2.default.underscore(model.getDefinition().name)) + '/' + model.get('id')
+				}, options);
+
+				// Make the data
+				var data = {
+					data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
+				};
+
+				// Do the call
+				var apiCall = this.post(settings.uri, JSON.stringify(data));
+
+				// Process result if it's successful
+				apiCall.getPromise('complete').then(function (result) {
+
+					// Deserializing the result will automatically update the record in the store.
+					_this2.deserialize(result);
+				});
+
+				// Return it
+				return apiCall;
+			}
+		}, {
+			key: 'serialize',
+			value: function serialize(model) {
+				var includeRelated = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
+
+				var _this3 = this;
+
+				var includeRelatedData = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+				var includedModelGuids = arguments.length <= 3 || arguments[3] === undefined ? [] : arguments[3];
+
+
+				// Basics: type and id
+				var data = {
+					type: _inflection2.default.pluralize(_inflection2.default.underscore(model.getDefinition().name))
+				};
+				var id = model.get('id');
+				if (id) data.id = id;
+
+				// Was this model already added before? Then we skip attributes and relationships
+				if (!_underscore2.default.contains(includedModelGuids, _Utils2.default.uidFor(model))) {
+
+					// Attributes?
+					var attr = model.getAttributesForApi();
+					if (_underscore2.default.size(attr) > 0) {
+						data.attributes = attr;
+					}
+
+					// Add model guid now, if it hasn't been added before
+					includedModelGuids.push(_Utils2.default.uidFor(model));
+
+					// @TODO Check wheter the reverse of a relationship was already included
+					// e.g. In case of author > books > author, the last 'author' should be skipped, even
+					// when the 'book' model has it defined.
+
+					// Include related?
+					if (includeRelated) {
+						(function () {
+
+							// Loop through relationships
+							var relationships = {};
+							_underscore2.default.each(model.related, function (relatedData, key) {
+
+								// Is it a collection?
+								if (relatedData instanceof _Collection2.default) {
+
+									// Is dirty?
+									if (relatedData.isDirty()) {
+
+										// Add them all
+										relationships[key] = { data: _underscore2.default.map(relatedData.items, function (item) {
+
+												// Store original model to prevent recursive loop
+												if (!includeRelatedData) includedModelGuids.push(_Utils2.default.uidFor(item));
+
+												// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
+												return _this3.serialize(item, true, includeRelatedData, includedModelGuids);
+											}) };
+									}
+								} else if (relatedData instanceof _Model2.default) {
+
+									// Store original model to prevent recursive loop
+									if (!includeRelatedData) includedModelGuids.push(_Utils2.default.uidFor(model));
+
+									// We always insert the related model
+									// @TODO Implement check wheter this relationship's local key has changed
+									relationships[key] = { data: _this3.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
+								} else {
+									// What is this
+									throw new TypeError('Unrecognized data found in model\'s relationship ' + key);
+								}
+							});
+							if (_underscore2.default.size(relationships) > 0) {
+								data.relationships = relationships;
+							}
+						})();
+					}
+				}
+
+				return data;
+			}
+		}, {
 			key: 'deserialize',
 			value: function deserialize(result, apiCall) {
+				var _this4 = this;
+
+				// Check included data
+				if (result.included) {
+
+					// Loop and store them in the model stores
+					_underscore2.default.each(result.included, function (recordData) {
+						_this4.deserializeModel(recordData);
+					});
+				}
 
 				// Is the result an object or an array
 				var data = result.data;
@@ -10311,44 +11252,112 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: 'deserializeModel',
-			value: function deserializeModel(data, apiCall) {
+			value: function deserializeModel(data /* , apiCall */) {
+				var _this5 = this;
 
 				// Look for the type of model
 				var resourceType = data.type;
 				var modelClass = _Model2.default;
-				if (resourceType) {
-					var modelName = _inflection2.default.singularize(_inflection2.default.capitalize(resourceType));
-					if (_Model2.default.registry.has(modelName)) {
-						modelClass = _Model2.default.registry.get(modelName);
-					}
+				if (!resourceType) {
+					throw new TypeError('Api result did not specity the record type');
+				}
+				var modelName = _inflection2.default.singularize(_inflection2.default.capitalize(resourceType));
+				if (_Model2.default.registry.has(modelName)) {
+					modelClass = _Model2.default.registry.get(modelName);
 				}
 
 				// Collect attributes
 				var attributes = {};
-				_.each(data.attributes, function (value, key) {
+				_underscore2.default.each(data.attributes, function (value, key) {
 					attributes[_inflection2.default.camelize(key, true)] = value;
 				});
-				if (data.id) attributes.id = data.id;
 
-				// Instantiate
-				var model = new modelClass(attributes, false);
+				// Check if the model is already in the store
+				var store = _Model2.default.getStore(modelName);
+				var model = void 0;
+				if (!store.has(data.id)) {
+
+					// Create a new model.
+					attributes.id = data.id;
+					model = new modelClass(attributes);
+					store.set(data.id, model);
+				} else {
+
+					// Get and use the model
+					model = store.get(data.id);
+
+					// Set the attributes (not overwriting dirty ones)
+					model.setAttributesFromApi(attributes);
+				}
+
+				// Check relationships records.
+				if (data.relationships) {
+					_underscore2.default.each(data.relationships, function (rel, relationshipName) {
+
+						// Is there data?
+						if (rel.data) {
+
+							// Is it one record?
+							if (rel.data instanceof Array) {
+
+								// Loop and add
+								_underscore2.default.each(rel.data, function (relData) {
+									var relatedModel = _this5._getRelatedModel(relData);
+									if (relatedModel) {
+
+										// Add to model
+										model.addRelatedModel(relationshipName, relatedModel, true);
+									}
+								});
+							} else if (rel.data instanceof Object) {
+
+								// Get the one
+								var relatedModel = _this5._getRelatedModel(rel.data);
+								if (relatedModel) {
+
+									// Set it
+									model.setRelatedModel(relationshipName, relatedModel);
+								}
+							} else {
+
+								throw new TypeError('Unrecognized relationship data received from Api');
+							}
+						}
+					});
+				}
 
 				return model;
 			}
 		}, {
 			key: 'deserializeCollection',
 			value: function deserializeCollection(data, apiCall) {
-				var _this2 = this;
+				var _this6 = this;
 
 				// Make a collection
 				var collection = new _Collection2.default(apiCall.modelClass);
 
 				// Add records
-				_.each(data, function (recordData) {
-					collection.add(_this2.deserializeModel(recordData), true);
+				_underscore2.default.each(data, function (recordData) {
+					collection.addFromApi(_this6.deserializeModel(recordData), true);
 				});
 
 				return collection;
+			}
+		}, {
+			key: '_getRelatedModel',
+			value: function _getRelatedModel(relationshipData) {
+
+				// Check data integrity
+				var relType = relationshipData.type;
+				var relId = relationshipData.id;
+				if (!relType) throw new TypeError('Api result did not specify the relationship type');
+				if (!relId) throw new TypeError('Api result did not specify the relationship record id');
+
+				// Find model in store
+				relType = _inflection2.default.singularize(_inflection2.default.capitalize(relType));
+				var relModel = _Model2.default.getFromStore(relType, relId);
+
+				return relModel;
 			}
 		}]);
 
@@ -10358,16 +11367,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApi;
 
 /***/ },
-/* 68 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
 
 	var _ApiCall2 = __webpack_require__(50);
 
@@ -10404,44 +11409,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_ApiCall3.default);
 
 	module.exports = JsonApiCall;
-
-/***/ },
-/* 69 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _ObservableArray2 = __webpack_require__(54);
-
-	var _ObservableArray3 = _interopRequireDefault(_ObservableArray2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Collection = function (_ObservableArray) {
-		_inherits(Collection, _ObservableArray);
-
-		function Collection() {
-			var modelClass = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-
-			_classCallCheck(this, Collection);
-
-			var _this = _possibleConstructorReturn(this, (Collection.__proto__ || Object.getPrototypeOf(Collection)).call(this));
-
-			_this.modelClass = null;
-
-			return _this;
-		}
-
-		return Collection;
-	}(_ObservableArray3.default);
-
-	module.exports = Collection;
 
 /***/ }
 /******/ ])

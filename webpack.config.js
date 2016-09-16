@@ -13,7 +13,8 @@ module.exports = {
 		underscore: '_',
 		jquery: '$',
 		xregexp: 'XRegExp',
-		'htmlbars-standalone': 'HTMLBars'
+		'htmlbars-standalone': 'HTMLBars',
+		moment: 'moment'
 	},
 
 	module: {

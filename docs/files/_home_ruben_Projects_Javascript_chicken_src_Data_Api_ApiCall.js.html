@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Projects/Javascript/chicken/src/Routing/Request.js</title>
+    <title>/home/ruben/Projects/Javascript/chicken/src/Data/Api/ApiCall.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -138,67 +138,102 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Routing/Request.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Data/Api/ApiCall.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
+import $ from &#x27;jquery&#x27;;
+import QueryString from &#x27;query-string&#x27;;
+
+import Obj from &#x27;~/Core/Obj&#x27;;
 
 /**
- * @module Routing
+ * @module Data.Api
  */
-class Request
-{
+class ApiCall extends Obj {
 
 	/**
-	 * @class Routing.Request
-	 *
-	 * @constructor
-	 * @param {object} 			location 		The location received from the History library
-	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
+	 * @class ApiCall 
+	 * 
+	 * @constructor 
+	 * @param  {Data.Api.Api} api 	The Api instance this call originates from
+	 * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+	 * @param  {string} uri			The uri to call
+	 * @param  {Object} data        
+	 * @param  {Object} ajaxOptions 	 
 	 */
-	constructor(location, application = null) {
+	constructor(api, method, uri, data = {}, ajaxOptions = {}) {
 
-		// Guess application if not given
-		if (!application) application = ClassMap.get(&#x27;Application&#x27;).getInstance();
+		super();
 
-		// Parse the uri 
-		let uri = Request.cleanUri(location.pathname);
-		
-		// Strip of base part
-		var baseUrl = Request.cleanUri(application.settings.get(&#x27;baseUrl&#x27;));
-		if (uri.length &gt;= baseUrl.length &amp;&amp; uri.substr(0, baseUrl.length)) {
-			uri = uri.substr(baseUrl.length);
-		}
+		this.api = api;
 
-		// Add the / back again
-		uri = &#x27;/&#x27; + uri;
-
-		/**
-		 * @property uri
-		 * @type {string}
-		 */
+		this.method = method;
 		this.uri = uri;
+		this.data = data;
+		this.ajaxOptions = ajaxOptions;
+		this.queryParams = {};
+
+		this.modelClass = null;
+
+	}
+
+	/**
+	 * Execute the Api Call
+	 *
+	 * @method execute
+	 * @return {Promise}
+	 */
+	execute() {
+
+		// Make a promise
+		return this.promise(&#x27;complete&#x27;, (resolve, reject) =&gt; {
+
+			// Combine options
+			let queryString = QueryString.stringify(this.queryParams);
+			if (queryString.length &gt; 0) queryString = &#x27;?&#x27; + queryString;
+			let options = $.extend({
+				
+				url: this.api.makeUrl(this.uri) + queryString,
+				method: this.method,
+				data: this.data
+				
+			}, this.ajaxOptions);
+
+			// Make the call
+			this.api.ajax(options)
+				.then((result) =&gt; {
+
+					resolve(this.api.deserialize(result, this));
+					
+				}).fail((error) =&gt; {
+
+					reject(error);
+
+				});
+
+
+		});
 
 	}
 
 
-	
+	query(keyOrHash, value = null) {
+
+		// Is it a key / value?
+		if (typeof keyOrHash === &#x27;string&#x27;) {
+			this.queryParams[keyOrHash] = value;
+		} else {
+			$.extend(this.queryParams, keyOrHash);
+		}
+		return this;
+
+
+	}
 
 
 }
-
-Request.cleanUri = (uri) =&gt; {
-
-	if (/^\//.test(uri)) uri = uri.substr(1);
-	if (/\/$/.test(uri)) uri = uri.substr(0, uri.length - 1);
-	return uri;
-
-};
-
-
-module.exports = Request;
-
+module.exports = ApiCall;
     </pre>
 </div>
 

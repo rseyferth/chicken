@@ -100,6 +100,11 @@ class Api {
 	}
 
 
+	saveModel(/* uri, model */) {
+		throw new Error('The Api implementation should have a saveModel method.');		
+	}
+
+
 
 
 

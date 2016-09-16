@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ApiCall.html">ApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
@@ -52,6 +54,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -90,6 +94,8 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
+            
+                <li><a href="../modules/Data.Api.html">Data.Api</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -160,7 +166,7 @@ import Router from &#x27;~/Routing/Router&#x27;;
 // Class definitino //
 //////////////////////
 
-var __instance = undefined;
+var _instance = undefined;
 
 class Application extends Observable {
 
@@ -174,7 +180,7 @@ class Application extends Observable {
 
 		// Basics
 		super();
-		__instance = this;
+		_instance = this;
 
 		////////////////
 		// Properties //
@@ -205,6 +211,16 @@ class Application extends Observable {
 		 * @type {Routing.Router}
 		 */
 		this.router = new Router(this);
+
+
+
+		/**
+		 * One or more Data.Api.Api instances
+		 * 
+		 * @property apis
+		 * @type {Object}
+		 */
+		this.apis = {};
 
 
 
@@ -289,6 +305,12 @@ class Application extends Observable {
 		callback.apply(this.router, []);
 		return this;
 
+	}
+
+
+	addApi(apiInstance, key = &#x27;default&#x27;) {
+		this.apis[key] = apiInstance;
+		return this;
 	}
 
 
@@ -380,7 +402,7 @@ class Application extends Observable {
 
 
 Application.getInstance = () =&gt; {
-	return __instance;
+	return _instance;
 };
 
 

@@ -216,15 +216,7 @@ class ObservableArray extends Obj
 		// Add items
 		_.each(values, (value) => {
 			
-			// Add it.
-			this.items.push(value);
-
-			// Is it observable?
-			if (ObservableArray.isObservable(value)) {
-				value.on('change', () => {
-					this.trigger('change');
-				});
-			}
+			this._add(value);
 
 		});
 
@@ -237,6 +229,24 @@ class ObservableArray extends Obj
 		return this;
 
 	}
+
+
+	_add(value) {
+
+		// Add it.
+		this.items.push(value);
+
+		// Is it observable?
+		if (ObservableArray.isObservable(value)) {
+			value.on('change', () => {
+				this.trigger('change');
+			});
+		}
+
+		return this;
+
+	}
+
 
 	/**
 	 * Delete one or more items from the array

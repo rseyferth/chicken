@@ -14,7 +14,7 @@ class ModelDefinition
 		this.name = name;
 
 		this.apiUri = '/' + inflection.underscore(inflection.pluralize(name));
-		this.defaultApi = 'default';
+		this.api = 'default';
 
 		this.attributes = {};
 		this.attributeNames = [];
@@ -27,6 +27,8 @@ class ModelDefinition
 
 
 	}
+
+		
 
 
 	attribute(name, type) {
@@ -58,7 +60,7 @@ class ModelDefinition
 	}
 
 	string(name, size) {
-		let attr = this.attribute(name, ModelAttribute.Integer);
+		let attr = this.attribute(name, ModelAttribute.String);
 		attr.size = size;
 		return attr;
 	}

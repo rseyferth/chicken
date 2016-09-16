@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Projects/Javascript/chicken/src/Routing/Request.js</title>
+    <title>/home/ruben/Projects/Javascript/chicken/src/Data/ModelAttribute.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -138,67 +138,143 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Routing/Request.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Data/ModelAttribute.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
+import moment from &#x27;moment&#x27;;
 
-/**
- * @module Routing
- */
-class Request
-{
+class ModelAttribute {
+
+	constructor(name, type) {
+
+		this.name = name;
+		this.type = type;
+
+
+		this.isPrimaryKey = false;
+
+		this.size = null;
+
+	}
+
+	primary(isPrimaryKey = true) {
+		this.isPrimaryKey = isPrimaryKey;
+		return this;
+	}
 
 	/**
-	 * @class Routing.Request
-	 *
-	 * @constructor
-	 * @param {object} 			location 		The location received from the History library
-	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
+	 * Cast given (database) value for use in the application,
+	 * according to the type of this attribute
+	 * 
+	 * @method cast
+	 * @param  {mixed} value 
+	 * @return {mixed}       
 	 */
-	constructor(location, application = null) {
+	cast(value) {
 
-		// Guess application if not given
-		if (!application) application = ClassMap.get(&#x27;Application&#x27;).getInstance();
+		switch (this.type) {
 
-		// Parse the uri 
-		let uri = Request.cleanUri(location.pathname);
-		
-		// Strip of base part
-		var baseUrl = Request.cleanUri(application.settings.get(&#x27;baseUrl&#x27;));
-		if (uri.length &gt;= baseUrl.length &amp;&amp; uri.substr(0, baseUrl.length)) {
-			uri = uri.substr(baseUrl.length);
+			////////////////
+			// Primitives //
+			////////////////
+
+			// Number
+			case ModelAttribute.Number: 
+				return value instanceof Number ? value : Number.parseFloat(value);
+
+			// Integer
+			case ModelAttribute.Integer:
+				return Number.isInteger(value) ? value : Number.parseInt(value);
+
+			// String
+			case ModelAttribute.String:
+				return value instanceof String ? value : &#x27;&#x27; + value;
+
+
+			///////////
+			// Dates //
+			///////////
+
+			// Date or date time
+			case ModelAttribute.Date:
+			case ModelAttribute.DateTime:
+				return value ? moment(value) : value;
+
+			default:
+				return value;
+
 		}
 
-		// Add the / back again
-		uri = &#x27;/&#x27; + uri;
+	}
 
-		/**
-		 * @property uri
-		 * @type {string}
-		 */
-		this.uri = uri;
+	/**
+	 * Cast given application value back for use in the database/api.
+	 *
+	 * @method uncast
+	 * @param  {mixed} value 
+	 * @return {mixed}       
+	 */
+	uncast(value) {
+
+		switch (this.type) {
+
+			////////////////
+			// Primitives //
+			////////////////
+
+			// Number
+			case ModelAttribute.Number: 
+				return value instanceof Number ? value : Number.parseFloat(value);
+
+			// Integer
+			case ModelAttribute.Integer:
+				return Number.isInteger(value) ? value : Number.parseInt(value);
+
+			// String
+			case ModelAttribute.String:
+				return value instanceof String ? value : &#x27;&#x27; + value;
+
+
+			///////////
+			// Dates //
+			///////////
+
+			// Date or date time
+			case ModelAttribute.Date:
+				return moment.isMoment(value) ? value.format(&#x27;YYYY-MM-DD&#x27;) : value;
+
+			case ModelAttribute.DateTime:
+				return moment.isMoment(value) ? value.format(&#x27;YYYY-MM-DD HH:mm:ss&#x27;) : value;
+
+			default:
+				return value;
+
+		}
+
 
 	}
 
 
-	
+
+
 
 
 }
 
-Request.cleanUri = (uri) =&gt; {
-
-	if (/^\//.test(uri)) uri = uri.substr(1);
-	if (/\/$/.test(uri)) uri = uri.substr(0, uri.length - 1);
-	return uri;
-
-};
 
 
-module.exports = Request;
 
+
+ModelAttribute.Number = &#x27;Number&#x27;;
+ModelAttribute.Integer = &#x27;Integer&#x27;;
+ModelAttribute.String = &#x27;String&#x27;;
+ModelAttribute.Enum = &#x27;Enum&#x27;;
+
+ModelAttribute.Date = &#x27;Date&#x27;;
+ModelAttribute.DateTime = &#x27;DateTime&#x27;;
+
+module.exports = ModelAttribute;
     </pre>
 </div>
 

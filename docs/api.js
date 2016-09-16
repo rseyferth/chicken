@@ -1,12 +1,14 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
+        "ApiCall",
         "Application",
         "Core.ComputedProperty",
         "Core.Obj",
         "Core.Observable",
         "Core.ObservableArray",
         "Core.SettingsObject",
+        "Data.Model",
         "Dom.ActionBinding",
         "Dom.Binding",
         "Dom.Component",
@@ -26,6 +28,7 @@ YUI.add("yuidoc-meta", function(Y) {
     "modules": [
         "Core",
         "Data",
+        "Data.Api",
         "Dom",
         "Helpers",
         "Routing"
@@ -38,6 +41,10 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "Data",
             "name": "Data"
+        },
+        {
+            "displayName": "Data.Api",
+            "name": "Data.Api"
         },
         {
             "displayName": "Dom",

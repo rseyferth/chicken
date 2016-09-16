@@ -446,11 +446,11 @@ class View extends Observable
 		// occurs. The 'dirtying' of elements (morphs) is handled by the Renderer
 		// and Binding classes.				
 		
-		// Study the object
+/*		// Study the object
 		this.study(() => {
 			this.scheduleRevalidate();
 		});
-
+*/
 
 		return this;
 

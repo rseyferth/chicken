@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ApiCall.html">ApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
@@ -52,6 +54,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -90,6 +94,8 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
+            
+                <li><a href="../modules/Data.Api.html">Data.Api</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -138,6 +144,8 @@
     <pre class="code prettyprint linenums">
 import $ from &#x27;jquery&#x27;;
 
+import Reference from &#x27;~/Core/Reference&#x27;;
+
 /**
  * @module Dom
  */
@@ -151,8 +159,9 @@ class Binding
 	 * @param  {Dom.Renderer} 							renderer   
 	 * @param  {Core.Observable|Core.ObservableArray} 	observable 
 	 * @param  {string} 								path       	
+	 * @param  {Dom.View}								view
 	 */
-	constructor(renderer, observable, path) {
+	constructor(renderer, observable, path, view) {
 
 		/**
 		 * The Renderer this Binding has been created by. This is 
@@ -191,6 +200,10 @@ class Binding
 		this.morphs = new Set();
 
 
+
+		this.view = view;
+
+
 		////////////////
 		// Now watch! //
 		////////////////
@@ -199,7 +212,8 @@ class Binding
 
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) =&gt; {
-				morph.isDirty = true;				
+				morph.isDirty = true;
+				this.view.scheduleRevalidate();
 			});
 
 		});
@@ -230,6 +244,13 @@ class Binding
 
 	}
 
+
+	getReference() {
+		if (!this.reference) {
+			this.reference = new Reference(this.observable, this.path);
+		}
+		return this.reference;
+	}
 
 
 	/**

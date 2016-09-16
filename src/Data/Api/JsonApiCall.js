@@ -1,5 +1,3 @@
-import $ from 'jquery';
-
 import ApiCall from '~/Data/Api/ApiCall';
 
 /**

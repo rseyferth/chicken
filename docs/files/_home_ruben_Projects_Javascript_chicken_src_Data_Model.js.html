@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ApiCall.html">ApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
@@ -52,6 +54,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -90,6 +94,8 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
+            
+                <li><a href="../modules/Data.Api.html">Data.Api</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -136,7 +142,15 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+import inflection from &#x27;inflection&#x27;;
+import _ from &#x27;underscore&#x27;;
+import $ from &#x27;jquery&#x27;;
+
+import App from &#x27;~/Helpers/App&#x27;;
 import Observable from &#x27;~/Core/Observable&#x27;;
+import ModelStore from &#x27;~/Data/ModelStore&#x27;;
+import Collection from &#x27;~/Data/Collection&#x27;;
+import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 
 /**
  * @module Data
@@ -144,16 +158,456 @@ import Observable from &#x27;~/Core/Observable&#x27;;
 class Model extends Observable
 {
 
+	/**
+	 * The Model class is an extension of Observable, and is used
+	 * to hold data that is received from an Api, and save that data, etc.
+	 * 
+	 * @class Data.Model
+	 *
+	 * @constructor
+	 * @param  {Object}  initValues           
+	 * @param  {Boolean} convertToObservables 
+	 */
 	constructor(initValues = {}, convertToObservables = true) {	
 
 		super(initValues, convertToObservables);	
+
+		/**
+		 * The original values as received from the Api
+		 * 
+		 * @property originalValues
+		 * @type {object}
+		 */
+		this.originalValues = initValues;
+
+		this.related = {};
+
+
+
+
+		this.state = new Observable({
+			busy: false,
+			saving: false,
+			dirty: false
+		});
+		this.state.study(() =&gt; {
+			this._scheduleAttributeChanged(&#x27;is&#x27;);
+		});
+
+	}
+
+
+	///////////
+	// State //
+	///////////
+
+	getIs() {
+		return this.state;
+	}
+	isBusy() {
+		return this.state.get(&#x27;busy&#x27;);
+	}
+
+
+
+	/////////////////
+	// Get and set //
+	/////////////////
+
+
+	_get(key) {
+
+		// Is there a getter?
+		let methodName = &#x27;get&#x27; + inflection.capitalize(key);
+		if (this[methodName] &amp;&amp; typeof this[methodName] === &#x27;function&#x27;) {
+			return this[methodName].apply(this, [this.attributes[key]]);
+		}
+
+		// Is it a relationship?
+		if (this.related[key]) return this.related[key];
+
+		
+		// Nothing special. Do basics
+		return super._get(key);
+
+	}
+
+	_set(key, value) {
+	
+		// Cast if necessary
+		value = this.castValue(key, value);
+		
+		// Continue with it
+		super._set(key, value);
+
+		// Is dirty?
+		if (this.state) {
+			this._scheduleUpdateDirty();
+		}
+
+		return this;
+
+
+	}
+
+	getForApi(key) {
+
+		// Get value
+		let value = this.uncastValue(key, this.attributes[key]);		
+		return value;
+
+
+	}
+
+	castValue(key, value) {
+
+		// Do we need to cast it?
+		let attributeDefinition = this.getAttributeDefinition(key);
+		if (attributeDefinition) {
+			value = attributeDefinition.cast(value);
+		}
+
+		return value;
+
+	}
+
+	uncastValue(key, value) {
+
+		// Do we need to uncast it?
+		let attributeDefinition = this.getAttributeDefinition(key);
+		if (attributeDefinition) {
+			value = attributeDefinition.uncast(value);
+		}
+
+		return value;
+
+	}
+
+
+	/////////////////////////
+	// Api related methods //
+	/////////////////////////
+
+	setAttributesFromApi(attributes) {
+
+		// Loop through them and set values that are not dirty
+		_.each(attributes, (value, key) =&gt; {
+
+			// Dirty?
+			if (this.isDirty(key)) return;
+
+			// Set it, and see this as a non-dirty value
+			this.setAttribute(key, value);
+			this.originalValues[key] = this.uncastValue(key, this.attributes[key]);
+
+		});
+		return this;
+
+	}
+
+	getAttributesForApi(onlyDirty = true) {
+
+		// Which attributes to use?
+		let attr = onlyDirty ? this.getDirty() : $.extend(this.attributes);
+		attr = _.mapObject(attr, (value, key) =&gt; {
+
+			// Do we need to cast it?
+			let attributeDefinition = this.getAttributeDefinition(key);
+			if (attributeDefinition) {
+				value = attributeDefinition.cast(value);
+			}
+
+			return value;
+		});
+		delete attr.id;
+		return attr;
+
+	}
+
+	getApi() {
+
+		// Check model definition
+		let apiName = this.getDefinition() ? this.getDefinition().api : null;
+		return App().apis[apiName];
+
+	}
+
+	getApiUri() {
+
+		// Check definition
+		let def = this.getDefinition();
+		if (!def) throw new Error(&#x27;Cannot guess the ApiUri for a model that has no ModelDefinition&#x27;);
+
+		// Get api uri
+		return def.getApiUri(this.get(&#x27;id&#x27;));
+
+	}
+
+
+	save(options = {}) {
+
+		// Make settings
+		let settings = $.extend({
+			uri: null,
+			includeRelated: true,
+			includeRelatedData: false
+		}, options);
+
+		// Busy?
+		if (this.isBusy()) throw new Error(&#x27;Model has not completed its last action&#x27;);
+		this.state.set(&#x27;busy&#x27;, true);
+		this.state.set(&#x27;saving&#x27;, true);
+
+		// Create the call
+		if (!settings.uri) settings.uri = this.getApiUri();
+		let apiCall = this.getApi().saveModel(this, settings);
+
+		// Handle it.
+		apiCall.getPromise(&#x27;complete&#x27;).then(() =&gt; {
+
+			// No longer dirty!
+			this.resetDirty();
+			
+			// No longer busy
+			this.state.set(&#x27;busy&#x27;, false);
+			this.state.set(&#x27;saving&#x27;, false);
+
+		}, () =&gt; {
+			
+			// No longer busy
+			this.state.set(&#x27;busy&#x27;, false);
+			this.state.set(&#x27;saving&#x27;, false);
+		});
+
+		// Done.
+		return apiCall.execute();
+		
+	}
+
+
+
+
+
+
+	///////////////////////
+	// Dirtying of model //
+	///////////////////////
+
+	/**
+	 * @method getDirty
+	 * @return {Object} Key/value hash containing dirty attributes
+	 */
+	getDirty() {
+
+		// Get dirty values
+		let dirty = {};
+		_.each(this.attributes, (value, key) =&gt; {
+
+			// Not in original or changed?
+			if (this.isDirty(key)) { 
+
+				// Then it&#x27;s dirty
+				dirty[key] = value;
+
+			}
+
+		});
+
+		return dirty;
+
+	}
+
+	/**
+	 * Determine whether the model, or a specific attribute is dirty
+	 * (meaning it has been changed since initialization or Api update)
+	 * 
+	 * @method isDirty
+	 * @param  {string}  [key]    Optional attribute name
+	 * @return {Boolean}     
+	 */
+	isDirty(key = null) {
+
+		// Specific key?
+		if (key) {
+
+			// None at all?
+			if (this.attributes[key] === undefined) return false;
+
+			// Is it new?
+			if (this.attributes[key] &amp;&amp; this.originalValues[key] === undefined) return true;
+
+			// Has it changed
+			let oldValue = this.originalValues[key];
+			let newValue = this.uncastValue(key, this.attributes[key]);
+
+			return oldValue != newValue;
+
+		} else {
+
+			// Loop to see if anything is dirty
+			for (let key in this.attributes) {
+				if (this.isDirty(key)) return true;
+			}
+			return false;
+
+		}
+
+	}
+
+	updateDirty() {
+
+		this.state.set(&#x27;dirty&#x27;, this.isDirty());
+		return this;
+
+	}
+
+	_scheduleUpdateDirty() {
+		
+		// Already going?
+		if (this._scheduleUpdateDirtyTimeout) return;
+
+		// Wait a bit
+		this._scheduleUpdateDirtyTimeout = setTimeout(() =&gt; {
+			this.updateDirty();
+			this._scheduleUpdateDirtyTimeout = null;
+		}, Model.UpdateDirtyDelay);
+
+	}
+
+
+
+	///////////////////
+	// Relationships //
+	///////////////////
+
+	/**
+	 * Set the given model as the value of a relationship
+	 * 
+	 * @method setRelatedModel
+	 * @param {string} relationshipName 
+	 * @param {Data.Model} relatedModel    
+	 * @chainable
+	 */
+	setRelatedModel(relationshipName, relatedModel) {
+
+		// Set it
+		this.related[relationshipName] = relatedModel;
+		return this;
+
+	}
+
+	/**
+	 * Add the given model to a relationship collection
+	 *
+	 * @method addRelatedModel
+	 * @param {string} relationshipName 
+	 * @param {Data.Model} relatedModel     
+	 * @param {boolean} fromApi		
+	 * @chainable
+	 */
+	addRelatedModel(relationshipName, relatedModel, fromApi = false) {
+		
+		// Check if collection exists
+		if (this.related[relationshipName] === undefined) {
+				
+			// Make collection
+			this.related[relationshipName] = new Collection(relatedModel.constructor);
+
+		} 
+		
+		// Is it a valid collection?
+		else if ((!this.related instanceof Collection)) {
+			throw new TypeError(&#x27;Tried to add a related model to an existing object that is not a Collection&#x27;);
+		}
+
+		// Add model
+		let coll = this.related[relationshipName];
+		if (fromApi) {
+			coll.addFromApi(relatedModel);
+		} else {
+			coll.add(relatedModel);			
+		}
+
+		return this;
+
+	}
+
+
+
+	//////////////////////
+	// Model definition //
+	//////////////////////
+
+	/**
+	 * Get this model&#x27;s ModelDefinition. 
+	 * Can be undefined for non-defined Models.
+	 *
+	 * @method getDefinition
+	 * @return {Data.ModelDefinition}
+	 */
+	getDefinition() {
+		return this.constructor.definition;
+	}
+
+	/**
+	 * Get the definition for given attribute key. 
+	 * Can be undefined for non-defined Models, or if the
+	 * attribute is not defined in the ModelDefinition.
+	 *
+	 * @method getAttributeDefinition
+	 * @param  {string} key
+	 * @return {Data.ModelAttribute}  
+	 */
+	getAttributeDefinition(key) {
+
+		// Check if the model has a definition at all
+		let def = this.getDefinition();
+		if (!def) return;
+
+		// Get the attribute
+		return def.attributes[key];
 
 	}
 
 
 
 
+
 }
+
+Model.registry = new Map();
+
+Model.stores = new Map();
+
+Model.getStore = (modelName) =&gt; {
+	if (!Model.stores.has(modelName)) {
+		Model.stores.set(modelName, new ModelStore(modelName));
+	}
+	return Model.stores.get(modelName);
+};
+
+Model.getFromStore = (modelName, id) =&gt; {
+
+	// Is there a store?
+	if (!Model.stores.has(modelName)) return null;
+	let store = Model.getStore(modelName);
+	return store.get(id);
+
+};
+
+
+/**
+ * The number of milliseconds to delay checking whether the 
+ * model has dirty attributes, after it an attribute has been changed.
+ * 
+ * @property UpdateDirtyDelay
+ * @static
+ * @type {Number}
+ */
+Model.UpdateDirtyDelay = 100;
+
+
+ClassMap.register(&#x27;Model&#x27;, Model);
 
 module.exports = Model;
     </pre>

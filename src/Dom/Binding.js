@@ -15,8 +15,9 @@ class Binding
 	 * @param  {Dom.Renderer} 							renderer   
 	 * @param  {Core.Observable|Core.ObservableArray} 	observable 
 	 * @param  {string} 								path       	
+	 * @param  {Dom.View}								view
 	 */
-	constructor(renderer, observable, path) {
+	constructor(renderer, observable, path, view) {
 
 		/**
 		 * The Renderer this Binding has been created by. This is 
@@ -55,6 +56,10 @@ class Binding
 		this.morphs = new Set();
 
 
+
+		this.view = view;
+
+
 		////////////////
 		// Now watch! //
 		////////////////
@@ -63,7 +68,8 @@ class Binding
 
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
-				morph.isDirty = true;				
+				morph.isDirty = true;
+				this.view.scheduleRevalidate();
 			});
 
 		});

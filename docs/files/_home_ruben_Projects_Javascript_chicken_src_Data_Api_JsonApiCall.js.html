@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Projects/Javascript/chicken/src/Routing/Request.js</title>
+    <title>/home/ruben/Projects/Javascript/chicken/src/Data/Api/JsonApiCall.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -138,67 +138,24 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Routing/Request.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Data/Api/JsonApiCall.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
+import ApiCall from &#x27;~/Data/Api/ApiCall&#x27;;
 
 /**
- * @module Routing
+ * @module Data.Api
  */
-class Request
-{
+class JsonApiCall extends ApiCall {
 
-	/**
-	 * @class Routing.Request
-	 *
-	 * @constructor
-	 * @param {object} 			location 		The location received from the History library
-	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
-	 */
-	constructor(location, application = null) {
-
-		// Guess application if not given
-		if (!application) application = ClassMap.get(&#x27;Application&#x27;).getInstance();
-
-		// Parse the uri 
-		let uri = Request.cleanUri(location.pathname);
-		
-		// Strip of base part
-		var baseUrl = Request.cleanUri(application.settings.get(&#x27;baseUrl&#x27;));
-		if (uri.length &gt;= baseUrl.length &amp;&amp; uri.substr(0, baseUrl.length)) {
-			uri = uri.substr(baseUrl.length);
-		}
-
-		// Add the / back again
-		uri = &#x27;/&#x27; + uri;
-
-		/**
-		 * @property uri
-		 * @type {string}
-		 */
-		this.uri = uri;
-
+	include(relations) {
+		return this.query(&#x27;include&#x27;, relations);
 	}
 
 
-	
-
-
 }
-
-Request.cleanUri = (uri) =&gt; {
-
-	if (/^\//.test(uri)) uri = uri.substr(1);
-	if (/\/$/.test(uri)) uri = uri.substr(0, uri.length - 1);
-	return uri;
-
-};
-
-
-module.exports = Request;
-
+module.exports = JsonApiCall;
     </pre>
 </div>
 

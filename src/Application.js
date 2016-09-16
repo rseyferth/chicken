@@ -22,7 +22,7 @@ import Router from '~/Routing/Router';
 // Class definitino //
 //////////////////////
 
-var __instance = undefined;
+var _instance = undefined;
 
 class Application extends Observable {
 
@@ -36,7 +36,7 @@ class Application extends Observable {
 
 		// Basics
 		super();
-		__instance = this;
+		_instance = this;
 
 		////////////////
 		// Properties //
@@ -258,7 +258,7 @@ class Application extends Observable {
 
 
 Application.getInstance = () => {
-	return __instance;
+	return _instance;
 };
 
 

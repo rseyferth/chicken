@@ -41,6 +41,8 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/ApiCall.html">ApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
@@ -52,6 +54,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -90,6 +94,8 @@
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
+            
+                <li><a href="../modules/Data.Api.html">Data.Api</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -138,6 +144,7 @@
     <pre class="code prettyprint linenums">
 import _ from &#x27;underscore&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
+import Reference from &#x27;~/Core/Reference&#x27;;
 import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 import ComputedProperty from &#x27;~/Core/ComputedProperty&#x27;;
 
@@ -260,10 +267,10 @@ class Observable extends Obj {
 		let currentPart = parts.shift(); 
 
 		// No deep shit?
-		if (parts.length === 0) return this.attributes[currentPart] !== undefined;
+		if (parts.length === 0) return this._has(currentPart) !== undefined;
 
 		// Look deeper
-		let value = this.attributes[currentPart];
+		let value = this._get(currentPart);
 
 		// No value
 		if (value === undefined) {
@@ -282,8 +289,11 @@ class Observable extends Obj {
 
 		}
 
-
 	}
+	_has(key) {
+		return this.attributes[key] !== undefined;
+	}
+
 
 	/**
 	 * Get attribute from object
@@ -299,7 +309,7 @@ class Observable extends Obj {
 		let currentPart = parts.shift();
 
 		// Get value
-		let value = this.attributes[currentPart];
+		let value = this._get(currentPart);
 
 		// Nothing?
 		if (value === undefined) return;
@@ -308,7 +318,7 @@ class Observable extends Obj {
 		if (parts.length === 0) {
 
 			// Is it computed?
-			if (value instanceof ComputedProperty) {
+			if (value instanceof ComputedProperty || value instanceof Reference) {
 				return value.getValue();
 			}
 
@@ -328,9 +338,12 @@ class Observable extends Obj {
 
 		}
 
-
-
 	}
+	_get(key) {
+		return this.attributes[key];
+	}
+
+
 
 	/**
 	 * Set attribute on object. When you set a attribute on Observable, all
@@ -360,7 +373,6 @@ class Observable extends Obj {
 		if (value instanceof ComputedProperty) {
 			value.initialize(key, this);
 		}
-
 
 
 		// Is there a dot in there?
@@ -410,8 +422,16 @@ class Observable extends Obj {
 
 		}
 
-		// Store the value
-		this.attributes[key] = value;
+		// Now set the attribute
+		this.setAttribute(key, value, convertToObservables, doNotNotify);
+
+		return this;
+
+	}
+	setAttribute(key, value, convertToObservables = true, doNotNotify = false) {
+
+		// Set it
+		this._set(key, value);
 
 		// Is the value observable?
 		if (Observable.isObservable(value)) {
@@ -423,9 +443,37 @@ class Observable extends Obj {
 
 		}
 
+		// Is the value a reference?
+		if (value instanceof Reference) {
+
+			// Study the object
+			value.watch(() =&gt; {
+				this._scheduleAttributeChanged(key);
+			});
+
+		}
+
 		// Update attribute
 		if (!doNotNotify) this._scheduleAttributeChanged(key);
 
+		return this;
+
+
+	}
+	_set(key, value) {
+
+		// Is there a current value that is a reference?
+		if (this.attributes[key] instanceof Reference &amp;&amp; !(value instanceof Reference)) {
+		
+			// Write the referenced value
+			this.attributes[key].setValue(value);
+
+		} else {
+
+			// Store the value
+			this.attributes[key] = value;
+
+		}
 		return this;
 
 	}
@@ -452,12 +500,12 @@ class Observable extends Obj {
 					if (Array.isArray(value)) {
 						
 						// Put a new observable array in there
-						this.attributes[key] = ClassMap.create(&#x27;ObservableArray&#x27;, [value]);
+						this._set(key, ClassMap.create(&#x27;ObservableArray&#x27;, [value]));
 
 					} else {
 
 						// Put a new observable in there
-						this.attributes[key] = new Observable(value);
+						this._set(key, new Observable(value));
 
 					}
 
@@ -589,7 +637,7 @@ class Observable extends Obj {
 				return obj.observe(objKey, callback);				
 			}
 
-			throw new Error(&#x27;Cannot observe property of non-existing object&#x27;);
+			throw new Error(&#x27;Cannot observe property of non-existing object: &#x27; + key);
 			
 		}
 
@@ -748,6 +796,10 @@ class Observable extends Obj {
 	isObservable() {
 		return true;
 	}
+
+
+
+
 
 
 

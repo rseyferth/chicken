@@ -123,10 +123,10 @@ class Observable extends Obj {
 		let currentPart = parts.shift(); 
 
 		// No deep shit?
-		if (parts.length === 0) return this.attributes[currentPart] !== undefined;
+		if (parts.length === 0) return this._has(currentPart) !== undefined;
 
 		// Look deeper
-		let value = this.attributes[currentPart];
+		let value = this._get(currentPart);
 
 		// No value
 		if (value === undefined) {
@@ -145,8 +145,11 @@ class Observable extends Obj {
 
 		}
 
-
 	}
+	_has(key) {
+		return this.attributes[key] !== undefined;
+	}
+
 
 	/**
 	 * Get attribute from object
@@ -162,7 +165,7 @@ class Observable extends Obj {
 		let currentPart = parts.shift();
 
 		// Get value
-		let value = this.attributes[currentPart];
+		let value = this._get(currentPart);
 
 		// Nothing?
 		if (value === undefined) return;
@@ -191,9 +194,12 @@ class Observable extends Obj {
 
 		}
 
-
-
 	}
+	_get(key) {
+		return this.attributes[key];
+	}
+
+
 
 	/**
 	 * Set attribute on object. When you set a attribute on Observable, all
@@ -272,18 +278,16 @@ class Observable extends Obj {
 
 		}
 
-		// Is there a current value that is a reference?
-		if (this.attributes[key] instanceof Reference && !(value instanceof Reference)) {
-		
-			// Write the referenced value
-			this.attributes[key].setValue(value);
+		// Now set the attribute
+		this.setAttribute(key, value, convertToObservables, doNotNotify);
 
-		} else {
+		return this;
 
-			// Store the value
-			this.attributes[key] = value;
+	}
+	setAttribute(key, value, convertToObservables = true, doNotNotify = false) {
 
-		}
+		// Set it
+		this._set(key, value);
 
 		// Is the value observable?
 		if (Observable.isObservable(value)) {
@@ -310,6 +314,24 @@ class Observable extends Obj {
 
 		return this;
 
+
+	}
+	_set(key, value) {
+
+		// Is there a current value that is a reference?
+		if (this.attributes[key] instanceof Reference && !(value instanceof Reference)) {
+		
+			// Write the referenced value
+			this.attributes[key].setValue(value);
+
+		} else {
+
+			// Store the value
+			this.attributes[key] = value;
+
+		}
+		return this;
+
 	}
 
 
@@ -334,12 +356,12 @@ class Observable extends Obj {
 					if (Array.isArray(value)) {
 						
 						// Put a new observable array in there
-						this.attributes[key] = ClassMap.create('ObservableArray', [value]);
+						this._set(key, ClassMap.create('ObservableArray', [value]));
 
 					} else {
 
 						// Put a new observable in there
-						this.attributes[key] = new Observable(value);
+						this._set(key, new Observable(value));
 
 					}
 
@@ -630,6 +652,10 @@ class Observable extends Obj {
 	isObservable() {
 		return true;
 	}
+
+
+
+
 
 
 
