@@ -7,7 +7,7 @@
 		exports["Chicken"] = factory(require("$"), require("_"), require("XRegExp"), require("HTMLBars"), require("moment"));
 	else
 		root["Chicken"] = factory(root["$"], root["_"], root["XRegExp"], root["HTMLBars"], root["moment"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_43__, __WEBPACK_EXTERNAL_MODULE_67__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_43__, __WEBPACK_EXTERNAL_MODULE_74__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -72,6 +72,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Application2 = _interopRequireDefault(_Application);
 
+	var _Api = __webpack_require__(63);
+
+	var _Api2 = _interopRequireDefault(_Api);
+
+	var _ApiCall = __webpack_require__(50);
+
+	var _ApiCall2 = _interopRequireDefault(_ApiCall);
+
+	var _JsonApi = __webpack_require__(68);
+
+	var _JsonApi2 = _interopRequireDefault(_JsonApi);
+
+	var _JsonApiCall = __webpack_require__(69);
+
+	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
+
+	var _Auth = __webpack_require__(70);
+
+	var _Auth2 = _interopRequireDefault(_Auth);
+
+	var _JWTAuth = __webpack_require__(71);
+
+	var _JWTAuth2 = _interopRequireDefault(_JWTAuth);
+
 	var _ComputedProperty = __webpack_require__(37);
 
 	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
@@ -92,21 +116,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Model2 = __webpack_require__(61);
+	var _Model2 = __webpack_require__(64);
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelDefinition = __webpack_require__(65);
+	var _ModelDefinition = __webpack_require__(72);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
-
-	var _Api = __webpack_require__(69);
-
-	var _Api2 = _interopRequireDefault(_Api);
-
-	var _JsonApi = __webpack_require__(70);
-
-	var _JsonApi2 = _interopRequireDefault(_JsonApi);
 
 	var _ActionBinding = __webpack_require__(45);
 
@@ -144,7 +160,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
 
-	var _LinkTo = __webpack_require__(72);
+	var _LinkTo = __webpack_require__(76);
 
 	var _LinkTo2 = _interopRequireDefault(_LinkTo);
 
@@ -168,11 +184,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Action2 = _interopRequireDefault(_Action);
 
-	var _Controller2 = __webpack_require__(59);
+	var _Controller2 = __webpack_require__(60);
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
-	var _Request = __webpack_require__(60);
+	var _Middleware = __webpack_require__(62);
+
+	var _Middleware2 = _interopRequireDefault(_Middleware);
+
+	var _Redirect = __webpack_require__(59);
+
+	var _Redirect2 = _interopRequireDefault(_Redirect);
+
+	var _Request = __webpack_require__(61);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -210,6 +234,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Chicken Classes //
 	/////////////////////
 
+	// Api
+
+
+	// Auth
+
+
 	// Core
 
 
@@ -235,7 +265,19 @@ return /******/ (function(modules) { // webpackBootstrap
 		// Class tree //
 		////////////////
 
+		Api: {
+			Api: _Api2.default,
+			ApiCall: _ApiCall2.default,
+			JsonApi: _JsonApi2.default,
+			JsonApiCall: _JsonApiCall2.default
+		},
+
 		Application: _Application2.default,
+
+		Auth: {
+			Auth: _Auth2.default,
+			JWTAuth: _JWTAuth2.default
+		},
 
 		Core: {
 			ComputedProperty: _ComputedProperty2.default,
@@ -246,10 +288,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		Data: {
-			Api: {
-				Api: _Api2.default,
-				JsonApi: _JsonApi2.default
-			},
+
 			Model: _Model3.default,
 			ModelDefinition: _ModelDefinition2.default
 		},
@@ -276,6 +315,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		Routing: {
 			Action: _Action2.default,
 			Controller: _Controller3.default,
+			Middleware: _Middleware2.default,
+			Redirect: _Redirect2.default,
 			Request: _Request2.default,
 			Route: _Route2.default,
 			RouteMatch: _RouteMatch2.default,
@@ -384,6 +425,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			// Store it.
 			_Model3.default.registry.set(name, ChickenModel);
+			return ChickenModel;
+		},
+
+		middleware: function middleware(name) {
+			var callback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+			// Getter?
+			if (instance === null) {
+				return _Middleware2.default.registry.get(name);
+			}
+
+			// Make it a middleware instance
+			var middleware = new _Middleware2.default(name, callback);
+
+			// Store it
+			_Middleware2.default.registry.set(name, middleware);
+			return middleware;
+		},
+
+		redirect: function redirect(uri) {
+			return new _Redirect2.default(uri);
 		},
 
 		computed: function computed(dependencies, callback) {
@@ -547,12 +610,18 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.router = new _Router2.default(_this);
 
 			/**
-	   * One or more Data.Api.Api instances
+	   * One or more Api.Api instances
 	   * 
 	   * @property apis
 	   * @type {Object}
 	   */
 			_this.apis = {};
+
+			/**
+	   * One or more Auth.Auth instances
+	   * @type {Object}
+	   */
+			_this.auths = {};
 
 			/**
 	   * @property settings
@@ -636,11 +705,39 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this;
 			}
 		}, {
-			key: 'addApi',
-			value: function addApi(apiInstance) {
-				var key = arguments.length <= 1 || arguments[1] === undefined ? 'default' : arguments[1];
+			key: 'api',
+			value: function api() {
+				var key = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+				var apiInstance = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
+
+				// Get?
+				if (apiInstance === null) {
+					if (key === null) key = _underscore2.default.first(_underscore2.default.keys(this.apis));
+					return this.apis[key];
+				}
+
+				// Set
 				this.apis[key] = apiInstance;
+
+				return this;
+			}
+		}, {
+			key: 'auth',
+			value: function auth() {
+				var key = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+				var authInstance = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+				// Get?
+				if (authInstance === null) {
+					if (key === null) key = _underscore2.default.first(_underscore2.default.keys(this.auths));
+					return this.auths[key];
+				}
+
+				// Set
+				this.auths[key] = authInstance;
+
 				return this;
 			}
 		}, {
@@ -677,7 +774,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				// Change the history state
-				history.push({
+				this.history.push({
 					pathname: uri,
 					search: query
 				});
@@ -4675,6 +4772,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
 	var _underscore = __webpack_require__(2);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
@@ -4915,6 +5014,29 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Get definition
 				var definition = _Component2.default.registry.get(tagName);
+
+				// No known component?
+				if (!definition) {
+					var fragment;
+
+					var _ret = function () {
+
+						// Do the component fallback.
+						var element = renderer.dom.createElement(tagName);
+						_underscore2.default.each(attributeHash, function (value, key) {
+							element.setAttribute(key, renderer.hooks.getValue(value));
+						});
+						fragment = _htmlbarsStandalone2.default.Runtime.render(options.default, renderer, scope, {}).fragment;
+
+						element.appendChild(fragment);
+						morph.setNode(element);
+						return {
+							v: void 0
+						};
+					}();
+
+					if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+				}
 
 				// Create a new scope and use the component as self
 				var newScope = renderer.hooks.createScope(renderer, scope);
@@ -6422,13 +6544,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	/**
-	 * @module Data.Api
+	 * @module Api
 	 */
 	var ApiCall = function (_Obj) {
 		_inherits(ApiCall, _Obj);
 
 		/**
-	  * @class ApiCall 
+	  * @class Api.ApiCall 
 	  * 
 	  * @constructor 
 	  * @param  {Data.Api.Api} api 	The Api instance this call originates from
@@ -6470,6 +6592,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'execute',
 			value: function execute() {
 				var _this2 = this;
+
+				// Authorize it
+				var auth = this.api.getAuth();
+				if (auth && auth.isAuthenticated()) {
+					auth.authorizeApiCall(this);
+				}
 
 				// Make a promise
 				return this.promise('complete', function (resolve, reject) {
@@ -7417,9 +7545,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _Request = __webpack_require__(60);
+	var _Request = __webpack_require__(61);
 
 	var _Request2 = _interopRequireDefault(_Request);
+
+	var _Middleware = __webpack_require__(62);
+
+	var _Middleware2 = _interopRequireDefault(_Middleware);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -7475,9 +7607,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this._currentConfig = _SettingsObject2.default.create({
 
 				parentRoute: null,
-				viewContainer: 'main'
+				viewContainer: 'main',
+				middleware: []
 
-			}, ['parentRoute', 'viewContainer']);
+			}, ['parentRoute', 'viewContainer', 'middleware']);
 
 			return _this;
 		}
@@ -7584,57 +7717,96 @@ return /******/ (function(modules) { // webpackBootstrap
 					throw new Error('[Routing.Router] Could not find matching route. 404 handling is not implemented yet.');
 				}
 
-				/////////////////////////////
-				// Start executing actions //
-				/////////////////////////////
+				// Make the execution callback
+				var executeActions = function executeActions() {
 
-				var numberOfActionsStarted = 0;
-				var actionPromises = [];
-				routeMatch.actions.forEach(function (action, vcName) {
+					/////////////////////////////
+					// Start executing actions //
+					/////////////////////////////
 
-					// Get depends on promises
-					var dependsOnPromises = _underscore2.default.map(action.dependsOn, function (dependsOnAction) {
-						return dependsOnAction.getPromise('complete');
+					var numberOfActionsStarted = 0;
+					var actionPromises = [];
+					routeMatch.actions.forEach(function (action, vcName) {
+
+						// Get depends on promises
+						var dependsOnPromises = _underscore2.default.map(action.dependsOn, function (dependsOnAction) {
+							return dependsOnAction.getPromise('complete');
+						});
+
+						// Wait?
+						if (dependsOnPromises.length > 0) {
+
+							// Wait for it
+							Promise.all(dependsOnPromises).then(function () {
+
+								// Now we're ready!
+								action.execute(_this2.application);
+							}, function (error) {
+								throw new Error('[Routing.Router] Action for "' + vcName + '" was not started, due to error in dependancy route: ' + error);
+							});
+						} else {
+
+							// Start now
+							numberOfActionsStarted++;
+							action.execute(_this2.application);
+						}
+
+						// Add complete promise
+						actionPromises.push(action.getPromise('complete'));
 					});
 
-					// Wait?
-					if (dependsOnPromises.length > 0) {
+					////////////////////////////
+					// Keep track of progress //
+					////////////////////////////
 
-						// Wait for it
-						Promise.all(dependsOnPromises).then(function () {
+					// Any action started?
+					if (numberOfActionsStarted === 0) {
 
-							// Now we're ready!
-							action.execute(_this2.application);
-						}, function (error) {
-							throw new Error('[Routing.Router] Action for "' + vcName + '" was not started, due to error in dependancy route: ' + error);
-						});
-					} else {
-
-						// Start now
-						numberOfActionsStarted++;
-						action.execute(_this2.application);
+						throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.matchedRoute.getFullPattern() + '. Check your configuration.');
 					}
 
-					// Add complete promise
-					actionPromises.push(action.getPromise('complete'));
+					// Listen to the result
+					Promise.all(actionPromises).then(function () /*...results*/{
+
+						//@TODO What to do?
+
+					});
+				};
+
+				//////////////////////
+				// Setup middleware //
+				//////////////////////
+
+				// Loop and add middleware
+				var callbacksToExecute = [];
+				_underscore2.default.each(routeMatch.route.getMiddlewareNames(), function (mwName) {
+
+					// Get the middleware
+					var middleware = _Middleware2.default.registry.get(mwName);
+					if (!middleware) throw new Error('There is no middleware registered with the name "' + mwName + '"');
+
+					// Add the callback
+					callbacksToExecute.push(middleware.callback);
 				});
 
-				////////////////////////////
-				// Keep track of progress //
-				////////////////////////////
+				// Lastly we will execute the actions
+				callbacksToExecute.push(executeActions);
 
-				// Any action started?
-				if (numberOfActionsStarted === 0) {
+				////////////////////////////////////////////////////////////////
+				// Now call the first callback, to start the middleware chain //
+				////////////////////////////////////////////////////////////////
 
-					throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.matchedRoute.getFullPattern() + '. Check your configuration.');
-				}
+				var nextCallback = function nextCallback() {
 
-				// Listen to the result
-				Promise.all(actionPromises).then(function () /*...results*/{
+					// Get the callback to call
+					var cb = callbacksToExecute.shift();
 
-					//@TODO What to do?
+					// Get the next in line
+					var nextCb = _underscore2.default.first(callbacksToExecute);
 
-				});
+					cb.apply(_this2, [nextCb, request, routeMatch]);
+				};
+				nextCallback();
 
 				return routeMatch;
 			}
@@ -7788,7 +7960,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.options = _underscore2.default.defaults(options, {
 				abstract: actions === null,
 				as: null,
-				viewContainer: 'main'
+				viewContainer: 'main',
+				middleware: []
 			});
 
 			/**
@@ -7980,6 +8153,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				return c;
+			}
+		}, {
+			key: 'getMiddlewareNames',
+			value: function getMiddlewareNames() {
+
+				return this.options.middleware;
 			}
 
 			/**
@@ -8298,11 +8477,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _xregexp2 = _interopRequireDefault(_xregexp);
 
+	var _App = __webpack_require__(49);
+
+	var _App2 = _interopRequireDefault(_App);
+
 	var _Obj2 = __webpack_require__(34);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _Controller = __webpack_require__(59);
+	var _Redirect = __webpack_require__(59);
+
+	var _Redirect2 = _interopRequireDefault(_Redirect);
+
+	var _Controller = __webpack_require__(60);
 
 	var _Controller2 = _interopRequireDefault(_Controller);
 
@@ -8521,7 +8708,11 @@ return /******/ (function(modules) { // webpackBootstrap
 							reject('There is no controller or callback defined... This shouldn\'t happen.');
 							return;
 						}
-				}).then(function () /* result */{}, function () /* error */{
+				}).then(function () /* result */{
+
+					// Update VCs
+					application.updateViewContainers(_this2.viewContainer.$element);
+				}, function () /* error */{
 
 					// No longer loading
 					if (_this2.viewContainer) _this2.viewContainer.setLoading(false);
@@ -8532,62 +8723,71 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function _processResult(result, resolve, reject) {
 				var _this3 = this;
 
+				// A redirect?
+				if (result instanceof _Redirect2.default) {
+
+					//@TODO Cancel the running request?
+
+					(0, _App2.default)().goto(result.uri);
+				}
+
 				///////////////////////////
 				// Is the result a view? //
 				///////////////////////////
 
-				if (result instanceof _View2.default) {
-					(function () {
+				else if (result instanceof _View2.default) {
+						(function () {
 
-						// Render the view
-						var view = result;
-						view.render().then(function () {
+							// Render the view
+							var view = result;
+							view.render().then(function () {
 
-							// Add it
-							_this3.viewContainer.setAction(_this3);
-							view.addToContainer(_this3.viewContainer);
-						}, function (error) {
-							reject(error);
-						});
-					})();
-				}
-
-				//////////////////////////////
-				// Is the result a promise? //
-				//////////////////////////////
-
-				else if (result instanceof Promise) {
-
-						// Wait for it to finish
-						result.then(function (promiseResult) {
-
-							// Process result again!
-							_this3._processResult(promiseResult, resolve, reject);
-						}, function (error) {
-							reject(error);
-						});
+								// Add it
+								_this3.viewContainer.setAction(_this3);
+								view.addToContainer(_this3.viewContainer);
+								resolve();
+							}, function (error) {
+								reject(error);
+							});
+						})();
 					}
 
-					/////////////////////////////////
-					// Is it rendarable by itself? //
-					/////////////////////////////////
+					//////////////////////////////
+					// Is the result a promise? //
+					//////////////////////////////
 
-					else {
+					else if (result instanceof Promise) {
 
-							// A string
-							if (typeof result === 'string' || result instanceof DocumentFragment) {
+							// Wait for it to finish
+							result.then(function (promiseResult) {
 
-								// Set content
-								this.viewContainer.setAction(this);
-								this.viewContainer.setContent(result);
-								resolve();
-							} else {
-
-								// Don't know how to render this...
-								reject('I don\'t know how to render the result for "' + this.targetViewContainer + '"');
-								return;
-							}
+								// Process result again!
+								_this3._processResult(promiseResult, resolve, reject);
+							}, function (error) {
+								reject(error);
+							});
 						}
+
+						/////////////////////////////////
+						// Is it rendarable by itself? //
+						/////////////////////////////////
+
+						else {
+
+								// A string
+								if (typeof result === 'string' || result instanceof DocumentFragment) {
+
+									// Set content
+									this.viewContainer.setAction(this);
+									this.viewContainer.setContent(result);
+									resolve();
+								} else {
+
+									// Don't know how to render this...
+									reject('I don\'t know how to render the result for "' + this.targetViewContainer + '"');
+									return;
+								}
+							}
 			}
 		}]);
 
@@ -8606,6 +8806,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 59 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Redirect = function Redirect(uri) {
+		_classCallCheck(this, Redirect);
+
+		this.uri = uri;
+	};
+
+	module.exports = Redirect;
+
+/***/ },
+/* 60 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -8704,7 +8920,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Controller;
 
 /***/ },
-/* 60 */
+/* 61 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8766,7 +8982,225 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Request;
 
 /***/ },
-/* 61 */
+/* 62 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Middleware = function Middleware(name, callback) {
+		_classCallCheck(this, Middleware);
+
+		this.name = name;
+
+		this.callback = callback;
+	};
+
+	Middleware.registry = new Map();
+	Middleware.register = function (middleware) {
+		var name = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+		// Check arguments
+		if (!(middleware instanceof Middleware)) {
+			middleware = new Middleware(name, middleware);
+		} else if (name === null) {
+			name = middleware.name;
+		}
+
+		// Store it.
+		Middleware.registry.set(name, middleware);
+	};
+
+	module.exports = Middleware;
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Model = __webpack_require__(64);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
+	var _ApiCall = __webpack_require__(50);
+
+	var _ApiCall2 = _interopRequireDefault(_ApiCall);
+
+	var _SettingsObject = __webpack_require__(38);
+
+	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
+
+	var _App = __webpack_require__(49);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Api
+	 */
+	var Api = function () {
+
+		/**
+	  * @class Api.Api
+	  * @abstract 
+	  *
+	  * @constructor
+	  * @param  {Object} options 	 
+	  */
+		function Api(options) {
+			_classCallCheck(this, Api);
+
+			this.settings = new _SettingsObject2.default(options, {
+				baseUrl: '/api',
+				auth: false
+			});
+		}
+
+		_createClass(Api, [{
+			key: 'deserialize',
+			value: function deserialize() /* data, apiCall */{
+				throw new Error('The Api implementation should have a deserialize method.');
+			}
+		}, {
+			key: 'getAuth',
+			value: function getAuth() {
+
+				// Set already?
+				if (this.auth) return this.auth;
+				if (this.settings.auth === false) return false;
+
+				// Look it up.
+				this.auth = (0, _App2.default)().auth(this.settings.auth);
+				return this.auth;
+			}
+
+			//////////////////
+			// HTTP methods //
+			//////////////////
+
+		}, {
+			key: 'call',
+			value: function call(method, uri) {
+				var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+				var ajaxOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
+
+				// Create api call
+				return new _ApiCall2.default(this, method, uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'get',
+			value: function get(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('get', uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'post',
+			value: function post(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('post', uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'put',
+			value: function put(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('put', uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'patch',
+			value: function patch(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('patch', uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'delete',
+			value: function _delete(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('delete', uri, data, ajaxOptions);
+			}
+
+			////////////////////
+			// Helper methods //
+			////////////////////
+
+		}, {
+			key: 'makeUrl',
+			value: function makeUrl(uri) {
+				return this.settings.get('baseUrl') + uri;
+			}
+		}, {
+			key: 'ajax',
+			value: function ajax(options) {
+				options.dataType = 'json';
+				return _jquery2.default.ajax(options);
+			}
+
+			///////////////////
+			// Model methods //
+			///////////////////
+
+		}, {
+			key: 'one',
+			value: function one(modelName, id) {
+
+				// Get uri from model
+				var ModelClass = _Model2.default.registry.get(modelName);
+				var uri = ModelClass.definition.getApiUri(id);
+
+				// Make the call
+				var call = this.get(uri);
+				call.modelClass = ModelClass;
+				return call;
+			}
+		}, {
+			key: 'all',
+			value: function all(modelName) {
+
+				// Get uri from model
+				var ModelClass = _Model2.default.registry.get(modelName);
+				var uri = ModelClass.definition.getApiUri();
+
+				// Make the call
+				var call = this.get(uri);
+				call.modelClass = ModelClass;
+				return call;
+			}
+		}, {
+			key: 'saveModel',
+			value: function saveModel() /* uri, model */{
+				throw new Error('The Api implementation should have a saveModel method.');
+			}
+		}]);
+
+		return Api;
+	}();
+
+	module.exports = Api;
+
+/***/ },
+/* 64 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8775,7 +9209,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get2 = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _inflection = __webpack_require__(62);
+	var _inflection = __webpack_require__(65);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
@@ -8795,11 +9229,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _ModelStore = __webpack_require__(63);
+	var _ModelStore = __webpack_require__(66);
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
-	var _Collection = __webpack_require__(64);
+	var _Collection = __webpack_require__(67);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
@@ -9314,7 +9748,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Model;
 
 /***/ },
-/* 62 */
+/* 65 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10403,7 +10837,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ },
-/* 63 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10467,7 +10901,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelStore;
 
 /***/ },
-/* 64 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10570,288 +11004,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Collection;
 
 /***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _inflection = __webpack_require__(62);
-
-	var _inflection2 = _interopRequireDefault(_inflection);
-
-	var _ModelAttribute = __webpack_require__(66);
-
-	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
-
-	var _Relationship = __webpack_require__(68);
-
-	var _Relationship2 = _interopRequireDefault(_Relationship);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Data
-	 */
-	var ModelDefinition = function () {
-		function ModelDefinition(name, callback) {
-			_classCallCheck(this, ModelDefinition);
-
-			this.name = name;
-
-			this.apiUri = '/' + _inflection2.default.underscore(_inflection2.default.pluralize(name));
-			this.api = 'default';
-
-			this.attributes = {};
-			this.attributeNames = [];
-			this.relationships = {};
-
-			this.computedAttributes = {};
-
-			callback.apply(this, [this]);
-		}
-
-		_createClass(ModelDefinition, [{
-			key: 'attribute',
-			value: function attribute(name, type) {
-				var attr = new _ModelAttribute2.default(name, type);
-				this.attributeNames.push(name);
-				this.attributes[name] = attr;
-				return attr;
-			}
-		}, {
-			key: 'computed',
-			value: function computed(name, dependencies, callback) {
-
-				this.computedAttributes[name] = {
-					dependencies: dependencies,
-					callback: callback
-				};
-				return true;
-			}
-
-			//////////////////////
-			// Column defitions //
-			//////////////////////
-
-		}, {
-			key: 'integer',
-			value: function integer(name) {
-				var attr = this.attribute(name, _ModelAttribute2.default.Integer);
-				return attr;
-			}
-		}, {
-			key: 'string',
-			value: function string(name, size) {
-				var attr = this.attribute(name, _ModelAttribute2.default.String);
-				attr.size = size;
-				return attr;
-			}
-		}, {
-			key: 'date',
-			value: function date(name) {
-				var attr = this.attribute(name, _ModelAttribute2.default.Date);
-				return attr;
-			}
-
-			//////////////////////
-			// Column shortcuts //
-			//////////////////////
-
-		}, {
-			key: 'timestamps',
-			value: function timestamps() {
-				this.attribute('createdAt', _ModelAttribute2.default.DateTime);
-				this.attribute('updatedAt', _ModelAttribute2.default.DateTime);
-				return this;
-			}
-
-			///////////////////
-			// Relationships //
-			///////////////////
-
-		}, {
-			key: 'relationship',
-			value: function relationship(name) {
-				var rel = new _Relationship2.default(name, this.name);
-				this.relationships[name] = rel;
-				return rel;
-			}
-
-			/////////
-			// Api //
-			/////////
-
-		}, {
-			key: 'getApiUri',
-			value: function getApiUri() {
-				var id = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-
-				var uri = this.apiUri;
-				if (id) uri += '/' + id;
-				return uri;
-			}
-		}]);
-
-		return ModelDefinition;
-	}();
-
-	module.exports = ModelDefinition;
-
-/***/ },
-/* 66 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _moment = __webpack_require__(67);
-
-	var _moment2 = _interopRequireDefault(_moment);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var ModelAttribute = function () {
-		function ModelAttribute(name, type) {
-			_classCallCheck(this, ModelAttribute);
-
-			this.name = name;
-			this.type = type;
-
-			this.isPrimaryKey = false;
-
-			this.size = null;
-		}
-
-		_createClass(ModelAttribute, [{
-			key: 'primary',
-			value: function primary() {
-				var isPrimaryKey = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
-
-				this.isPrimaryKey = isPrimaryKey;
-				return this;
-			}
-
-			/**
-	   * Cast given (database) value for use in the application,
-	   * according to the type of this attribute
-	   * 
-	   * @method cast
-	   * @param  {mixed} value 
-	   * @return {mixed}       
-	   */
-
-		}, {
-			key: 'cast',
-			value: function cast(value) {
-
-				switch (this.type) {
-
-					////////////////
-					// Primitives //
-					////////////////
-
-					// Number
-					case ModelAttribute.Number:
-						return value instanceof Number ? value : Number.parseFloat(value);
-
-					// Integer
-					case ModelAttribute.Integer:
-						return Number.isInteger(value) ? value : Number.parseInt(value);
-
-					// String
-					case ModelAttribute.String:
-						return value instanceof String ? value : '' + value;
-
-					///////////
-					// Dates //
-					///////////
-
-					// Date or date time
-					case ModelAttribute.Date:
-					case ModelAttribute.DateTime:
-						return value; // ? moment(value) : value;
-
-					default:
-						return value;
-
-				}
-			}
-
-			/**
-	   * Cast given application value back for use in the database/api.
-	   *
-	   * @method uncast
-	   * @param  {mixed} value 
-	   * @return {mixed}       
-	   */
-
-		}, {
-			key: 'uncast',
-			value: function uncast(value) {
-
-				switch (this.type) {
-
-					////////////////
-					// Primitives //
-					////////////////
-
-					// Number
-					case ModelAttribute.Number:
-						return value instanceof Number ? value : Number.parseFloat(value);
-
-					// Integer
-					case ModelAttribute.Integer:
-						return Number.isInteger(value) ? value : Number.parseInt(value);
-
-					// String
-					case ModelAttribute.String:
-						return value instanceof String ? value : '' + value;
-
-					///////////
-					// Dates //
-					///////////
-
-					// Date or date time
-					case ModelAttribute.Date:
-						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD') : value;
-
-					case ModelAttribute.DateTime:
-						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD HH:mm:ss') : value;
-
-					default:
-						return value;
-
-				}
-			}
-		}]);
-
-		return ModelAttribute;
-	}();
-
-	ModelAttribute.Number = 'Number';
-	ModelAttribute.Integer = 'Integer';
-	ModelAttribute.String = 'String';
-	ModelAttribute.Enum = 'Enum';
-
-	ModelAttribute.Date = 'Date';
-	ModelAttribute.DateTime = 'DateTime';
-
-	module.exports = ModelAttribute;
-
-/***/ },
-/* 67 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_67__;
-
-/***/ },
 /* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -10859,234 +11011,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _inflection = __webpack_require__(62);
-
-	var _inflection2 = _interopRequireDefault(_inflection);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Relationship = function () {
-		function Relationship(name, localModel) {
-			_classCallCheck(this, Relationship);
-
-			this.name = name;
-
-			this.type = null;
-
-			this.localModel = localModel;
-
-			this.localKey = null;
-
-			this.remoteModel = null;
-			this.remoteKey = null;
-
-			this.pivotModel = null;
-		}
-
-		_createClass(Relationship, [{
-			key: 'hasMany',
-			value: function hasMany(remoteModel) {
-				var localKey = arguments.length <= 1 || arguments[1] === undefined ? 'id' : arguments[1];
-				var remoteKey = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-
-
-				// Basics
-				this.type = Relationship.HasMany;
-				this.remoteModel = remoteModel;
-
-				// Guess/store the keys
-				if (!this.localKey) this.localKey = localKey;
-				if (remoteKey || !this.remoteKey) {
-					this.remoteKey = remoteKey ? remoteKey : _inflection2.default.underscore(_inflection2.default.singularize(this.localModel));
-				}
-
-				return this;
-			}
-		}]);
-
-		return Relationship;
-	}();
-
-	Relationship.HasMany = 'HasMany';
-	Relationship.HasOne = 'BelongsTo'; // Practically the same.
-	Relationship.BelongsTo = 'BelongsTo';
-
-	Relationship.HasManyThrough = 'HasManyThrough';
-	Relationship.BelongsToMany = 'BelongsToMany';
-
-	module.exports = Relationship;
-
-/***/ },
-/* 69 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _Model = __webpack_require__(61);
-
-	var _Model2 = _interopRequireDefault(_Model);
-
-	var _ApiCall = __webpack_require__(50);
-
-	var _ApiCall2 = _interopRequireDefault(_ApiCall);
-
-	var _SettingsObject = __webpack_require__(38);
-
-	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Api = function () {
-		function Api(options) {
-			_classCallCheck(this, Api);
-
-			if (new.target === Api) {
-				throw new TypeError('It is not possible to instantiate the abstract Api class');
-			}
-
-			this.settings = new _SettingsObject2.default(options, {
-				baseUrl: '/api'
-			});
-		}
-
-		_createClass(Api, [{
-			key: 'deserialize',
-			value: function deserialize() /* data, apiCall */{
-				throw new Error('The Api implementation should have a deserialize method.');
-			}
-
-			//////////////////
-			// HTTP methods //
-			//////////////////
-
-		}, {
-			key: 'call',
-			value: function call(method, uri) {
-				var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-				var ajaxOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
-
-
-				// Create api call
-				return new _ApiCall2.default(this, method, uri, data, ajaxOptions);
-			}
-		}, {
-			key: 'get',
-			value: function get(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('get', uri, data, ajaxOptions);
-			}
-		}, {
-			key: 'post',
-			value: function post(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('post', uri, data, ajaxOptions);
-			}
-		}, {
-			key: 'put',
-			value: function put(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('put', uri, data, ajaxOptions);
-			}
-		}, {
-			key: 'patch',
-			value: function patch(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('patch', uri, data, ajaxOptions);
-			}
-		}, {
-			key: 'delete',
-			value: function _delete(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('delete', uri, data, ajaxOptions);
-			}
-
-			////////////////////
-			// Helper methods //
-			////////////////////
-
-		}, {
-			key: 'makeUrl',
-			value: function makeUrl(uri) {
-				return this.settings.get('baseUrl') + uri;
-			}
-		}, {
-			key: 'ajax',
-			value: function ajax(options) {
-				options.dataType = 'json';
-				return _jquery2.default.ajax(options);
-			}
-
-			///////////////////
-			// Model methods //
-			///////////////////
-
-		}, {
-			key: 'one',
-			value: function one(modelName, id) {
-
-				// Get uri from model
-				var ModelClass = _Model2.default.registry.get(modelName);
-				var uri = ModelClass.definition.getApiUri(id);
-
-				// Make the call
-				var call = this.get(uri);
-				call.modelClass = ModelClass;
-				return call;
-			}
-		}, {
-			key: 'all',
-			value: function all(modelName) {
-
-				// Get uri from model
-				var ModelClass = _Model2.default.registry.get(modelName);
-				var uri = ModelClass.definition.getApiUri();
-
-				// Make the call
-				var call = this.get(uri);
-				call.modelClass = ModelClass;
-				return call;
-			}
-		}, {
-			key: 'saveModel',
-			value: function saveModel() /* uri, model */{
-				throw new Error('The Api implementation should have a saveModel method.');
-			}
-		}]);
-
-		return Api;
-	}();
-
-	module.exports = Api;
-
-/***/ },
-/* 70 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _inflection = __webpack_require__(62);
+	var _inflection = __webpack_require__(65);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
@@ -11098,19 +11023,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _Api2 = __webpack_require__(69);
+	var _Api2 = __webpack_require__(63);
 
 	var _Api3 = _interopRequireDefault(_Api2);
 
-	var _JsonApiCall = __webpack_require__(71);
+	var _JsonApiCall = __webpack_require__(69);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _Model = __webpack_require__(61);
+	var _Model = __webpack_require__(64);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(64);
+	var _Collection = __webpack_require__(67);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
@@ -11126,13 +11051,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+	/**
+	 * @module Api
+	 */
 	var JsonApi = function (_Api) {
 		_inherits(JsonApi, _Api);
 
-		function JsonApi(baseUrl) {
+		/**
+	  * @class Api.JsonApi
+	  * @extends Api.Api
+	  *
+	  * @constructor
+	  * @param  {Object} options
+	  */
+		function JsonApi(options) {
 			_classCallCheck(this, JsonApi);
 
-			return _possibleConstructorReturn(this, (JsonApi.__proto__ || Object.getPrototypeOf(JsonApi)).call(this, baseUrl));
+			return _possibleConstructorReturn(this, (JsonApi.__proto__ || Object.getPrototypeOf(JsonApi)).call(this, options));
 		}
 
 		_createClass(JsonApi, [{
@@ -11398,7 +11333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApi;
 
 /***/ },
-/* 71 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11418,7 +11353,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	/**
-	 * @module Data.Api
+	 * @module Api
 	 */
 	var JsonApiCall = function (_ApiCall) {
 		_inherits(JsonApiCall, _ApiCall);
@@ -11431,6 +11366,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		_createClass(JsonApiCall, [{
 			key: 'include',
+
+
+			/**
+	   * @class Api.JsonApiCall
+	   * @extends Api.ApiCall
+	   * 
+	   * @constructor
+	   */
+
+			/**
+	   * Include the given relationships in the request
+	   * 
+	   * @method include
+	   * @chainable
+	   * 
+	   * @param  {string} relations  JSONAPI include options for request
+	   */
 			value: function include(relations) {
 				return this.query('include', relations);
 			}
@@ -11442,7 +11394,709 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApiCall;
 
 /***/ },
+/* 70 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _inflection = __webpack_require__(65);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _Observable2 = __webpack_require__(33);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	var _Middleware = __webpack_require__(62);
+
+	var _Middleware2 = _interopRequireDefault(_Middleware);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Auth
+	 */
+	var Auth = function (_Observable) {
+		_inherits(Auth, _Observable);
+
+		/**
+	  * @class Auth.Auth
+	  * @abstract
+	  *
+	  * @param 	{Object} options 
+	  * @constructor
+	  */
+		function Auth() {
+			var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+			_classCallCheck(this, Auth);
+
+			// Default options
+			var _this = _possibleConstructorReturn(this, (Auth.__proto__ || Object.getPrototypeOf(Auth)).call(this));
+
+			_this.settings = _.defaults(options, {
+
+				middlewareName: 'auth'
+
+			});
+
+			_this.set('isAuthenticated', false);
+
+			// Check 'on...' settings
+			_.each(_this.settings, function (value, key) {
+
+				var match = key.match(/^on([A-Z].+)$/);
+				if (match) {
+
+					// Is it a callback?
+					var eventName = _inflection2.default.camelize(match[1], true);
+					if (typeof value === 'function') {
+
+						// Add event listener
+						_this.on(eventName, value);
+					}
+				}
+			});
+
+			// Register the middleware
+			_this.middleware = new _Middleware2.default(_this.settings.middlewareName, function (next, request, routeMatch) {
+
+				return _this.middlewareAction(next, request, routeMatch);
+			});
+			_Middleware2.default.register(_this.middleware);
+
+			return _this;
+		}
+
+		/**
+	  * Act as middleware for given request
+	  *
+	  * @method middleWareAction
+	  * @param  {Callback} 			next		The callback to call when everything is okay
+	  * @param  {Routing.Request} 	request 
+	  * @param  {Routing.RouteMatch} 		routeMatch   	 	 
+	  */
+
+
+		_createClass(Auth, [{
+			key: 'middlewareAction',
+			value: function middlewareAction(next, request, routeMatch) {
+
+				// Are we not authenticated?
+				if (!this.isAuthenticated()) {
+
+					// Trigger the unauthenticated event
+					if (!this._listeners.has(Auth.Events.Unauthenticated)) {
+						throw new Error('Protected route called without authentication.');
+					}
+					this.trigger(Auth.Events.Unauthenticated, [request, routeMatch]);
+					return;
+				}
+
+				// Ok.
+				next();
+			}
+
+			/**
+	   * Try to authenticate using given credentials
+	   * 
+	   * @method authenticate
+	   * @param  {object} credentials 
+	   * @return {Promise}
+	   */
+
+		}, {
+			key: 'authenticate',
+			value: function authenticate(credentials) {
+				throw new Error('The ' + this.constructor.name + ' class has not implemented the "authenticate" method');
+			}
+
+			/**
+	   * Try to invalidate the current authenticated session
+	   *
+	   * @method invalidate
+	   * @return {Promise}
+	   */
+
+		}, {
+			key: 'invalidate',
+			value: function invalidate() {
+				throw new Error('The ' + this.constructor.name + ' class has not implemented the "invalidate" method');
+			}
+
+			/**
+	   * Check whether the session is authenticated
+	   * 
+	   * @method isAuthenticated
+	   * @return {Boolean}
+	   */
+
+		}, {
+			key: 'isAuthenticated',
+			value: function isAuthenticated() {
+				return this.get('isAuthenticated');
+			}
+
+			/**
+	   * Authorize given ApiCall instance, adding necessary
+	   * authorization headers, etc.
+	   * 
+	   * @method authorizeApiCall
+	   * @param  {Api.ApiCall} apiCall 
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'authorizeApiCall',
+			value: function authorizeApiCall(apiCall) {
+				return apiCall;
+			}
+		}]);
+
+		return Auth;
+	}(_Observable3.default);
+
+	Auth.Events = {
+
+		/**
+	  * This event is triggered when the session was authenticated but is not
+	  * any longer
+	  * 
+	  * @event sessionTimedOut
+	  */
+		SessionTimedOut: 'sessionTimedOut',
+
+		/**
+	  * This event is triggered when the session has been authenticated
+	  * 
+	  * @event authenticated
+	  */
+		Authenticated: 'authenticated',
+
+		/**
+	  * This event is triggered when the session has been invalidated
+	  * 
+	  * @event invalidated
+	  */
+		Invalidated: 'invalidated',
+
+		/**
+	  * This event is triggered whenever an unauthenticated user tries to access
+	  * a protected routeMatch
+	  * 
+	  * @event unauthenticated
+	  */
+		Unauthenticated: 'unauthenticated'
+
+	};
+
+	module.exports = Auth;
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Auth2 = __webpack_require__(70);
+
+	var _Auth3 = _interopRequireDefault(_Auth2);
+
+	var _Middleware = __webpack_require__(62);
+
+	var _Middleware2 = _interopRequireDefault(_Middleware);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Auth
+	 */
+	var JWTAuth = function (_Auth) {
+		_inherits(JWTAuth, _Auth);
+
+		/**
+	  * @class Auth.JWTAuth
+	  * @extends Auth.Auth
+	  *
+	  * @param 	{Object} options 
+	  * @constructor
+	  */
+		function JWTAuth() {
+			var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+
+			_classCallCheck(this, JWTAuth);
+
+			// Default options
+			options = _jquery2.default.extend({
+
+				baseUrl: '',
+				authenticateUri: '/authenticate',
+
+				authenticateMethod: 'post',
+
+				middlewareName: 'auth.jwt',
+
+				identifierKey: 'email',
+				passwordKey: 'password',
+
+				localStorageKey: 'ChickenJWTAuthToken'
+
+			}, options);
+
+			var _this = _possibleConstructorReturn(this, (JWTAuth.__proto__ || Object.getPrototypeOf(JWTAuth)).call(this, options));
+
+			_this.token = localStorage.getItem(_this.settings.localStorageKey);
+
+			_this.set('isAuthenticated', !!_this.token);
+
+			return _this;
+		}
+
+		_createClass(JWTAuth, [{
+			key: 'authenticate',
+			value: function authenticate(identifier, password) {
+				var _this2 = this;
+
+				// Make a call.
+				return new Promise(function (resolve, reject) {
+
+					// Prepare data
+					var data = {};
+					data[_this2.settings.identifierKey] = identifier;
+					data[_this2.settings.passwordKey] = password;
+
+					// Make the call.
+					_jquery2.default.ajax({
+						url: _this2.settings.baseUrl + _this2.settings.authenticateUri,
+						data: data,
+						method: _this2.settings.authenticateMethod
+					}).then(function (result) {
+
+						// Check token.
+						if (!result.token) reject('Could not find token in result');
+
+						// Store it.
+						_this2.setToken(result.token);
+						resolve(_this2.token);
+					}).fail(function (error) {
+
+						reject(error);
+					});
+				});
+			}
+		}, {
+			key: 'setToken',
+			value: function setToken(token) {
+
+				// Store it
+				this.token = token;
+
+				// Remember it.
+				localStorage.setItem(this.settings.localStorageKey, this.token);
+
+				// We are logged in
+				this.set('isAuthenticated', true);
+			}
+		}, {
+			key: 'invalidate',
+			value: function invalidate() {
+
+				// Remove token
+				this.token = false;
+				localStorage.removeItem(this.settings.localStorageKey);
+				this.set('isAuthenticated', false);
+			}
+		}, {
+			key: 'authorizeApiCall',
+			value: function authorizeApiCall(apiCall) {
+
+				// Add token.
+				if (this.isAuthenticated) {}
+
+				return apiCall;
+			}
+		}]);
+
+		return JWTAuth;
+	}(_Auth3.default);
+
+	module.exports = JWTAuth;
+
+/***/ },
 /* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _inflection = __webpack_require__(65);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _ModelAttribute = __webpack_require__(73);
+
+	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
+
+	var _Relationship = __webpack_require__(75);
+
+	var _Relationship2 = _interopRequireDefault(_Relationship);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Data
+	 */
+	var ModelDefinition = function () {
+		function ModelDefinition(name, callback) {
+			_classCallCheck(this, ModelDefinition);
+
+			this.name = name;
+
+			this.apiUri = '/' + _inflection2.default.underscore(_inflection2.default.pluralize(name));
+			this.api = 'default';
+
+			this.attributes = {};
+			this.attributeNames = [];
+			this.relationships = {};
+
+			this.computedAttributes = {};
+
+			callback.apply(this, [this]);
+		}
+
+		_createClass(ModelDefinition, [{
+			key: 'attribute',
+			value: function attribute(name, type) {
+				var attr = new _ModelAttribute2.default(name, type);
+				this.attributeNames.push(name);
+				this.attributes[name] = attr;
+				return attr;
+			}
+		}, {
+			key: 'computed',
+			value: function computed(name, dependencies, callback) {
+
+				this.computedAttributes[name] = {
+					dependencies: dependencies,
+					callback: callback
+				};
+				return true;
+			}
+
+			//////////////////////
+			// Column defitions //
+			//////////////////////
+
+		}, {
+			key: 'integer',
+			value: function integer(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Integer);
+				return attr;
+			}
+		}, {
+			key: 'string',
+			value: function string(name, size) {
+				var attr = this.attribute(name, _ModelAttribute2.default.String);
+				attr.size = size;
+				return attr;
+			}
+		}, {
+			key: 'date',
+			value: function date(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Date);
+				return attr;
+			}
+
+			//////////////////////
+			// Column shortcuts //
+			//////////////////////
+
+		}, {
+			key: 'timestamps',
+			value: function timestamps() {
+				this.attribute('createdAt', _ModelAttribute2.default.DateTime);
+				this.attribute('updatedAt', _ModelAttribute2.default.DateTime);
+				return this;
+			}
+
+			///////////////////
+			// Relationships //
+			///////////////////
+
+		}, {
+			key: 'relationship',
+			value: function relationship(name) {
+				var rel = new _Relationship2.default(name, this.name);
+				this.relationships[name] = rel;
+				return rel;
+			}
+
+			/////////
+			// Api //
+			/////////
+
+		}, {
+			key: 'getApiUri',
+			value: function getApiUri() {
+				var id = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+				var uri = this.apiUri;
+				if (id) uri += '/' + id;
+				return uri;
+			}
+		}]);
+
+		return ModelDefinition;
+	}();
+
+	module.exports = ModelDefinition;
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _moment = __webpack_require__(74);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var ModelAttribute = function () {
+		function ModelAttribute(name, type) {
+			_classCallCheck(this, ModelAttribute);
+
+			this.name = name;
+			this.type = type;
+
+			this.isPrimaryKey = false;
+
+			this.size = null;
+		}
+
+		_createClass(ModelAttribute, [{
+			key: 'primary',
+			value: function primary() {
+				var isPrimaryKey = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+				this.isPrimaryKey = isPrimaryKey;
+				return this;
+			}
+
+			/**
+	   * Cast given (database) value for use in the application,
+	   * according to the type of this attribute
+	   * 
+	   * @method cast
+	   * @param  {mixed} value 
+	   * @return {mixed}       
+	   */
+
+		}, {
+			key: 'cast',
+			value: function cast(value) {
+
+				switch (this.type) {
+
+					////////////////
+					// Primitives //
+					////////////////
+
+					// Number
+					case ModelAttribute.Number:
+						return value instanceof Number ? value : Number.parseFloat(value);
+
+					// Integer
+					case ModelAttribute.Integer:
+						return Number.isInteger(value) ? value : Number.parseInt(value);
+
+					// String
+					case ModelAttribute.String:
+						return value instanceof String ? value : '' + value;
+
+					///////////
+					// Dates //
+					///////////
+
+					// Date or date time
+					case ModelAttribute.Date:
+					case ModelAttribute.DateTime:
+						return value; // ? moment(value) : value;
+
+					default:
+						return value;
+
+				}
+			}
+
+			/**
+	   * Cast given application value back for use in the database/api.
+	   *
+	   * @method uncast
+	   * @param  {mixed} value 
+	   * @return {mixed}       
+	   */
+
+		}, {
+			key: 'uncast',
+			value: function uncast(value) {
+
+				switch (this.type) {
+
+					////////////////
+					// Primitives //
+					////////////////
+
+					// Number
+					case ModelAttribute.Number:
+						return value instanceof Number ? value : Number.parseFloat(value);
+
+					// Integer
+					case ModelAttribute.Integer:
+						return Number.isInteger(value) ? value : Number.parseInt(value);
+
+					// String
+					case ModelAttribute.String:
+						return value instanceof String ? value : '' + value;
+
+					///////////
+					// Dates //
+					///////////
+
+					// Date or date time
+					case ModelAttribute.Date:
+						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD') : value;
+
+					case ModelAttribute.DateTime:
+						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD HH:mm:ss') : value;
+
+					default:
+						return value;
+
+				}
+			}
+		}]);
+
+		return ModelAttribute;
+	}();
+
+	ModelAttribute.Number = 'Number';
+	ModelAttribute.Integer = 'Integer';
+	ModelAttribute.String = 'String';
+	ModelAttribute.Enum = 'Enum';
+
+	ModelAttribute.Date = 'Date';
+	ModelAttribute.DateTime = 'DateTime';
+
+	module.exports = ModelAttribute;
+
+/***/ },
+/* 74 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_74__;
+
+/***/ },
+/* 75 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _inflection = __webpack_require__(65);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Relationship = function () {
+		function Relationship(name, localModel) {
+			_classCallCheck(this, Relationship);
+
+			this.name = name;
+
+			this.type = null;
+
+			this.localModel = localModel;
+
+			this.localKey = null;
+
+			this.remoteModel = null;
+			this.remoteKey = null;
+
+			this.pivotModel = null;
+		}
+
+		_createClass(Relationship, [{
+			key: 'hasMany',
+			value: function hasMany(remoteModel) {
+				var localKey = arguments.length <= 1 || arguments[1] === undefined ? 'id' : arguments[1];
+				var remoteKey = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+
+				// Basics
+				this.type = Relationship.HasMany;
+				this.remoteModel = remoteModel;
+
+				// Guess/store the keys
+				if (!this.localKey) this.localKey = localKey;
+				if (remoteKey || !this.remoteKey) {
+					this.remoteKey = remoteKey ? remoteKey : _inflection2.default.underscore(_inflection2.default.singularize(this.localModel));
+				}
+
+				return this;
+			}
+		}]);
+
+		return Relationship;
+	}();
+
+	Relationship.HasMany = 'HasMany';
+	Relationship.HasOne = 'BelongsTo'; // Practically the same.
+	Relationship.BelongsTo = 'BelongsTo';
+
+	Relationship.HasManyThrough = 'HasManyThrough';
+	Relationship.BelongsToMany = 'BelongsToMany';
+
+	module.exports = Relationship;
+
+/***/ },
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

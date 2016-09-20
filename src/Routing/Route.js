@@ -85,7 +85,8 @@ class Route extends Obj
 		this.options = _.defaults(options, {
 			abstract: actions === null,
 			as: null,
-			viewContainer: 'main'
+			viewContainer: 'main',
+			middleware: []
 		});
 
 
@@ -272,6 +273,14 @@ class Route extends Obj
 
 
 	}
+
+
+	getMiddlewareNames() {
+
+		return this.options.middleware;
+
+	}
+
 
 
 	/**

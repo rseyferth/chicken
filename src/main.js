@@ -23,6 +23,16 @@ if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Err
 
 import Application from '~/Application';
 
+// Api
+import Api from '~/Api/Api';
+import ApiCall from '~/Api/ApiCall';
+import JsonApi from '~/Api/JsonApi';
+import JsonApiCall from '~/Api/JsonApiCall';
+
+// Auth
+import Auth from '~/Auth/Auth';
+import JWTAuth from '~/Auth/JWTAuth';
+
 // Core
 import ComputedProperty from '~/Core/ComputedProperty';
 import Obj from '~/Core/Obj';
@@ -34,8 +44,6 @@ import SettingsObject from '~/Core/SettingsObject';
 import Model from '~/Data/Model';
 import ModelDefinition from '~/Data/ModelDefinition';
 
-import Api from '~/Data/Api/Api';
-import JsonApi from '~/Data/Api/JsonApi';
 
 // Dom
 import ActionBinding from '~/Dom/ActionBinding';
@@ -59,6 +67,8 @@ import Utils from '~/Helpers/Utils';
 // Routing
 import Action from '~/Routing/Action';
 import Controller from '~/Routing/Controller';
+import Middleware from '~/Routing/Middleware';
+import Redirect from '~/Routing/Redirect';
 import Request from '~/Routing/Request';
 import Route from '~/Routing/Route';
 import RouteMatch from '~/Routing/RouteMatch';
@@ -77,7 +87,19 @@ var Chicken = {
 	// Class tree //
 	////////////////
 
+	Api: {
+		Api: Api,
+		ApiCall: ApiCall,
+		JsonApi: JsonApi,
+		JsonApiCall: JsonApiCall
+	},
+
 	Application: Application,
+
+	Auth: {
+		Auth: Auth,
+		JWTAuth: JWTAuth
+	},
 
 	Core: {
 		ComputedProperty: ComputedProperty,
@@ -88,10 +110,7 @@ var Chicken = {
 	},
 
 	Data: {
-		Api: {
-			Api: Api,
-			JsonApi: JsonApi
-		},
+		
 		Model: Model,
 		ModelDefinition: ModelDefinition
 	},
@@ -118,6 +137,8 @@ var Chicken = {
 	Routing: {
 		Action: Action,
 		Controller: Controller,
+		Middleware: Middleware,
+		Redirect: Redirect,
 		Request: Request,
 		Route: Route,
 		RouteMatch: RouteMatch,
@@ -209,8 +230,30 @@ var Chicken = {
 
 		// Store it.
 		Model.registry.set(name, ChickenModel);
+		return ChickenModel;
 
 	},
+
+	middleware: (name, callback = null) => {
+
+		// Getter?
+		if (instance === null) {
+			return Middleware.registry.get(name);
+		}
+
+		// Make it a middleware instance
+		let middleware = new Middleware(name, callback);
+		
+		// Store it
+		Middleware.registry.set(name, middleware);
+		return middleware;
+
+	},
+
+	redirect: (uri) => {
+		return new Redirect(uri);
+	},
+
 	
 	computed: (dependencies, callback) => {
 

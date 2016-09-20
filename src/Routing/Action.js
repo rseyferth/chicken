@@ -1,6 +1,8 @@
 import XRegExp from 'xregexp';
 
+import App from '~/Helpers/App';
 import Obj from '~/Core/Obj';
+import Redirect from '~/Routing/Redirect';
 import Controller from '~/Routing/Controller';
 import View from '~/Dom/View';
 
@@ -226,6 +228,9 @@ class Action extends Obj
 
 		}).then((/* result */) => {
 
+			// Update VCs
+			application.updateViewContainers(this.viewContainer.$element);
+
 		}, (/* error */) => {
 
 			// No longer loading
@@ -237,11 +242,20 @@ class Action extends Obj
 
 	_processResult(result, resolve, reject) {
 
+		// A redirect?
+		if (result instanceof Redirect) {
+
+			//@TODO Cancel the running request?
+			
+			App().goto(result.uri);
+
+		}
+
 		///////////////////////////
 		// Is the result a view? //
 		///////////////////////////
 
-		if (result instanceof View) {
+		else if (result instanceof View) {
 
 			// Render the view
 			let view = result;
@@ -250,6 +264,7 @@ class Action extends Obj
 				// Add it
 				this.viewContainer.setAction(this);
 				view.addToContainer(this.viewContainer);
+				resolve();
 
 			}, (error) => {
 				reject(error);

@@ -2,18 +2,29 @@ import inflection from 'inflection';
 import _ from 'underscore';
 import $ from 'jquery';
 
-import Api from '~/Data/Api/Api';
-import JsonApiCall from '~/Data/Api/JsonApiCall';
+import Api from '~/Api/Api';
+import JsonApiCall from '~/Api/JsonApiCall';
 import Model from '~/Data/Model';
 import Collection from '~/Data/Collection';
 import Utils from '~/Helpers/Utils';
 
+/**
+ * @module Api
+ */
 class JsonApi extends Api
 {
 
-	constructor(baseUrl) {
-		super(baseUrl);
+	/**
+	 * @class Api.JsonApi
+	 * @extends Api.Api
+	 *
+	 * @constructor
+	 * @param  {Object} options
+	 */
+	constructor(options) {
+		super(options);
 	}
+
 
 	call(method, uri, data = {}, ajaxOptions = {}) {
 

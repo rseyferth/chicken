@@ -71,12 +71,19 @@ class Application extends Observable {
 
 
 		/**
-		 * One or more Data.Api.Api instances
+		 * One or more Api.Api instances
 		 * 
 		 * @property apis
 		 * @type {Object}
 		 */
 		this.apis = {};
+
+
+		/**
+		 * One or more Auth.Auth instances
+		 * @type {Object}
+		 */
+		this.auths = {};
 
 
 
@@ -164,10 +171,35 @@ class Application extends Observable {
 	}
 
 
-	addApi(apiInstance, key = 'default') {
+	api(key = null, apiInstance = null) {
+		
+		// Get?
+		if (apiInstance === null) {
+			if (key === null) key = _.first(_.keys(this.apis));
+			return this.apis[key];
+		}
+
+		// Set
 		this.apis[key] = apiInstance;
+
 		return this;
 	}
+
+
+	auth(key = null, authInstance = null) {
+
+		// Get?
+		if (authInstance === null) {
+			if (key === null) key = _.first(_.keys(this.auths));
+			return this.auths[key];
+		}
+
+		// Set
+		this.auths[key] = authInstance;
+
+		return this;
+	}
+
 
 
 	start() {
@@ -201,7 +233,7 @@ class Application extends Observable {
 		}
 
 		// Change the history state
-		history.push({
+		this.history.push({
 			pathname: uri,
 			search: query
 		});

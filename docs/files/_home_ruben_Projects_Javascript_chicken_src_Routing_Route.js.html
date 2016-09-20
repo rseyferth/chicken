@@ -41,9 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/ApiCall.html">ApiCall</a></li>
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
             
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
@@ -91,11 +101,13 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
-            
-                <li><a href="../modules/Data.Api.html">Data.Api</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
@@ -229,7 +241,8 @@ class Route extends Obj
 		this.options = _.defaults(options, {
 			abstract: actions === null,
 			as: null,
-			viewContainer: &#x27;main&#x27;
+			viewContainer: &#x27;main&#x27;,
+			middleware: []
 		});
 
 
@@ -416,6 +429,14 @@ class Route extends Obj
 
 
 	}
+
+
+	getMiddlewareNames() {
+
+		return this.options.middleware;
+
+	}
+
 
 
 	/**

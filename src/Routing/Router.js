@@ -6,6 +6,7 @@ import Obj from '~/Core/Obj';
 import SettingsObject from '~/Core/SettingsObject';
 import Route from '~/Routing/Route';
 import Request from '~/Routing/Request';
+import Middleware from '~/Routing/Middleware';
 
 
 /**
@@ -54,9 +55,10 @@ class Router extends Obj
 		this._currentConfig = SettingsObject.create({
 
 			parentRoute: null,
-			viewContainer: 'main'
+			viewContainer: 'main',
+			middleware: []
 
-		}, ['parentRoute', 'viewContainer']);
+		}, ['parentRoute', 'viewContainer', 'middleware']);
 
 
 
@@ -161,65 +163,108 @@ class Router extends Obj
 
 		}
 
-
-		/////////////////////////////
-		// Start executing actions //
-		/////////////////////////////
-
-		var numberOfActionsStarted = 0;
-		var actionPromises = [];
-		routeMatch.actions.forEach((action, vcName) => {
+		// Make the execution callback
+		let executeActions = () => {
 
 
-			// Get depends on promises
-			var dependsOnPromises = _.map(action.dependsOn, (dependsOnAction) => {
-				return dependsOnAction.getPromise('complete');
-			});
+			/////////////////////////////
+			// Start executing actions //
+			/////////////////////////////
 
-			// Wait?
-			if (dependsOnPromises.length > 0) {
+			var numberOfActionsStarted = 0;
+			var actionPromises = [];
+			routeMatch.actions.forEach((action, vcName) => {
 
-				// Wait for it
-				Promise.all(dependsOnPromises).then(() => {
-
-					// Now we're ready!
-					action.execute(this.application);
-
-				}, (error) => {
-					throw new Error('[Routing.Router] Action for "' + vcName + '" was not started, due to error in dependancy route: ' + error);
+				// Get depends on promises
+				var dependsOnPromises = _.map(action.dependsOn, (dependsOnAction) => {
+					return dependsOnAction.getPromise('complete');
 				});
 
-			} else {
+				// Wait?
+				if (dependsOnPromises.length > 0) {
 
-				// Start now
-				numberOfActionsStarted++;
-				action.execute(this.application);
+					// Wait for it
+					Promise.all(dependsOnPromises).then(() => {
+
+						// Now we're ready!
+						action.execute(this.application);
+
+					}, (error) => {
+						throw new Error('[Routing.Router] Action for "' + vcName + '" was not started, due to error in dependancy route: ' + error);
+					});
+
+				} else {
+
+					// Start now
+					numberOfActionsStarted++;
+					action.execute(this.application);
+
+				}
+
+				// Add complete promise
+				actionPromises.push(action.getPromise('complete'));
+
+			});
+
+
+			////////////////////////////
+			// Keep track of progress //
+			////////////////////////////
+
+			// Any action started?
+			if (numberOfActionsStarted === 0) {
+
+				throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.matchedRoute.getFullPattern() + '. Check your configuration.'); 
 
 			}
 
-			// Add complete promise
-			actionPromises.push(action.getPromise('complete'));
+			// Listen to the result
+			Promise.all(actionPromises).then((/*...results*/) => {
+				
+				//@TODO What to do?
+
+			});
+
+		};
+
+
+		//////////////////////
+		// Setup middleware //
+		//////////////////////
+
+		// Loop and add middleware
+		let callbacksToExecute = [];
+		_.each(routeMatch.route.getMiddlewareNames(), (mwName) => {
+
+			// Get the middleware
+			let middleware = Middleware.registry.get(mwName);
+			if (!middleware) throw new Error('There is no middleware registered with the name "' + mwName + '"');
+
+			// Add the callback
+			callbacksToExecute.push(middleware.callback);
 
 		});
 
+		// Lastly we will execute the actions
+		callbacksToExecute.push(executeActions);
 
-		////////////////////////////
-		// Keep track of progress //
-		////////////////////////////
+		////////////////////////////////////////////////////////////////
+		// Now call the first callback, to start the middleware chain //
+		////////////////////////////////////////////////////////////////
 
-		// Any action started?
-		if (numberOfActionsStarted === 0) {
-
-			throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.matchedRoute.getFullPattern() + '. Check your configuration.'); 
-
-		}
-
-		// Listen to the result
-		Promise.all(actionPromises).then((/*...results*/) => {
+		let nextCallback = () => {
 			
-			//@TODO What to do?
+			// Get the callback to call
+			let cb = callbacksToExecute.shift();
 
-		});
+			// Get the next in line
+			let nextCb = _.first(callbacksToExecute);
+
+			cb.apply(this, [nextCb, request, routeMatch]);
+		};
+		nextCallback();
+
+		
 
 		return routeMatch;
 

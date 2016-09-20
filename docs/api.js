@@ -1,8 +1,13 @@
 YUI.add("yuidoc-meta", function(Y) {
    Y.YUIDoc = { meta: {
     "classes": [
-        "ApiCall",
+        "Api.Api",
+        "Api.ApiCall",
+        "Api.JsonApi",
+        "Api.JsonApiCall",
         "Application",
+        "Auth.Auth",
+        "Auth.JWTAuth",
         "Core.ComputedProperty",
         "Core.Obj",
         "Core.Observable",
@@ -26,14 +31,23 @@ YUI.add("yuidoc-meta", function(Y) {
         "Routing.Router"
     ],
     "modules": [
+        "Api",
+        "Auth",
         "Core",
         "Data",
-        "Data.Api",
         "Dom",
         "Helpers",
         "Routing"
     ],
     "allModules": [
+        {
+            "displayName": "Api",
+            "name": "Api"
+        },
+        {
+            "displayName": "Auth",
+            "name": "Auth"
+        },
         {
             "displayName": "Core",
             "name": "Core"
@@ -41,10 +55,6 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "Data",
             "name": "Data"
-        },
-        {
-            "displayName": "Data.Api",
-            "name": "Data.Api"
         },
         {
             "displayName": "Dom",

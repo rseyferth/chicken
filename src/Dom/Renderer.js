@@ -222,6 +222,21 @@ class Renderer
 				// Get definition
 				let definition = Component.registry.get(tagName);
 				
+				// No known component?
+				if (!definition) {
+
+					// Do the component fallback.
+					let element = renderer.dom.createElement(tagName);
+					_.each(attributeHash, (value, key) => {
+						element.setAttribute(key, renderer.hooks.getValue(value));
+					});
+					var fragment = HTMLBars.Runtime.render(options.default, renderer, scope, {}).fragment;
+					element.appendChild(fragment);
+					morph.setNode(element);
+					return;
+
+				}
+
 				// Create a new scope and use the component as self
 				var newScope = renderer.hooks.createScope(renderer, scope);
 				

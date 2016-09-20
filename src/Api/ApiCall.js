@@ -4,12 +4,12 @@ import QueryString from 'query-string';
 import Obj from '~/Core/Obj';
 
 /**
- * @module Data.Api
+ * @module Api
  */
 class ApiCall extends Obj {
 
 	/**
-	 * @class ApiCall 
+	 * @class Api.ApiCall 
 	 * 
 	 * @constructor 
 	 * @param  {Data.Api.Api} api 	The Api instance this call originates from
@@ -41,6 +41,12 @@ class ApiCall extends Obj {
 	 * @return {Promise}
 	 */
 	execute() {
+
+		// Authorize it
+		let auth = this.api.getAuth();
+		if (auth && auth.isAuthenticated()) {
+			auth.authorizeApiCall(this);
+		}
 
 		// Make a promise
 		return this.promise('complete', (resolve, reject) => {

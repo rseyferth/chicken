@@ -1,19 +1,27 @@
 import $ from 'jquery';
 
 import Model from '~/Data/Model';
-import ApiCall from '~/Data/Api/ApiCall';
+import ApiCall from '~/Api/ApiCall';
 import SettingsObject from '~/Core/SettingsObject';
+import App from '~/Helpers/App';
 
+/**
+ * @module Api
+ */
 class Api {
 
+	/**
+	 * @class Api.Api
+	 * @abstract 
+	 *
+	 * @constructor
+	 * @param  {Object} options 	 
+	 */
 	constructor(options) {
 		
-		if (new.target === Api) {
-			throw new TypeError('It is not possible to instantiate the abstract Api class');
-		}
-
 		this.settings = new SettingsObject(options, {
-			baseUrl: '/api'
+			baseUrl: '/api',
+			auth: false
 		});
 		
 	}
@@ -21,6 +29,18 @@ class Api {
 
 	deserialize(/* data, apiCall */) {
 		throw new Error('The Api implementation should have a deserialize method.');		
+	}
+
+	getAuth() {
+
+		// Set already?
+		if (this.auth) return this.auth;
+		if (this.settings.auth === false) return false;
+
+		// Look it up.
+		this.auth = App().auth(this.settings.auth);
+		return this.auth;
+
 	}
 
 

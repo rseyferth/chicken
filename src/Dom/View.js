@@ -5,7 +5,7 @@ import HTMLBars from 'htmlbars-standalone';
 import App from '~/Helpers/App';
 import Observable from '~/Core/Observable';
 import Binding from '~/Dom/Binding';
-import ApiCall from '~/Data/Api/ApiCall';
+import ApiCall from '~/Api/ApiCall';
 
 /**
  * @module Dom
