@@ -3,6 +3,7 @@ import inflection from 'inflection';
 
 import Observable from '~/Core/Observable';
 import Middleware from '~/Routing/Middleware';
+import App from '~/Helpers/App';
 
 /**
  * @module Auth
@@ -43,6 +44,16 @@ class Auth extends Observable
 				
 					// Add event listener
 					this.on(eventName, value);
+
+				} 
+
+				// Or uri?
+				else if (typeof value === 'string' && /^\//.test(value)) {
+
+					// Go to the uri when that happens
+					this.on(eventName, () => {
+						App().goto(value);
+					});
 
 				}
 
@@ -133,6 +144,19 @@ class Auth extends Observable
 	authorizeApiCall(apiCall) {
 		return apiCall;
 	}
+
+
+	/**
+	 * Read given Api Error and update session accordingly, if
+	 * appropriate.
+	 * 
+	 * @param  {object} error 
+	 * @return {object}       
+	 */
+	processApiError(error) {
+		return error;
+	}
+
 
 
 }

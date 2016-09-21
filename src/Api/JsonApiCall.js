@@ -10,6 +10,11 @@ class JsonApiCall extends ApiCall {
 	 * @extends Api.ApiCall
 	 * 
 	 * @constructor
+	 * @param  {Api.JsonApi} api 	The Api instance this call originates from
+	 * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+	 * @param  {string} uri			The uri to call
+	 * @param  {Object} data        
+	 * @param  {Object} ajaxOptions 	 
 	 */
 
 	/**

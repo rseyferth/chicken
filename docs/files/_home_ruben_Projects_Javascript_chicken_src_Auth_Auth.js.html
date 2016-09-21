@@ -159,6 +159,7 @@ import inflection from &#x27;inflection&#x27;;
 
 import Observable from &#x27;~/Core/Observable&#x27;;
 import Middleware from &#x27;~/Routing/Middleware&#x27;;
+import App from &#x27;~/Helpers/App&#x27;;
 
 /**
  * @module Auth
@@ -199,6 +200,16 @@ class Auth extends Observable
 				
 					// Add event listener
 					this.on(eventName, value);
+
+				} 
+
+				// Or uri?
+				else if (typeof value === &#x27;string&#x27; &amp;&amp; /^\//.test(value)) {
+
+					// Go to the uri when that happens
+					this.on(eventName, () =&gt; {
+						App().goto(value);
+					});
 
 				}
 
@@ -289,6 +300,19 @@ class Auth extends Observable
 	authorizeApiCall(apiCall) {
 		return apiCall;
 	}
+
+
+	/**
+	 * Read given Api Error and update session accordingly, if
+	 * appropriate.
+	 * 
+	 * @param  {object} error 
+	 * @return {object}       
+	 */
+	processApiError(error) {
+		return error;
+	}
+
 
 
 }

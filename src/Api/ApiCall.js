@@ -12,7 +12,7 @@ class ApiCall extends Obj {
 	 * @class Api.ApiCall 
 	 * 
 	 * @constructor 
-	 * @param  {Data.Api.Api} api 	The Api instance this call originates from
+	 * @param  {Api.Api} api 	The Api instance this call originates from
 	 * @param  {string} method      The HTTP method to use (get, post, put, etc.)
 	 * @param  {string} uri			The uri to call
 	 * @param  {Object} data        
@@ -22,14 +22,58 @@ class ApiCall extends Obj {
 
 		super();
 
+		/**
+		 * @property api
+		 * @type {Api.Api}
+		 */
 		this.api = api;
 
+		/**
+		 * The HTTP method (get, post, put, patch, or delete)
+		 * 
+		 * @property method
+		 * @type {string}
+		 */
 		this.method = method;
+		
+		/**
+		 * @property uri
+		 * @type {string}
+		 */
 		this.uri = uri;
+
+		/**
+		 * Data to send along with the request
+		 * 
+		 * @property data
+		 * @type {Mixed}
+		 */
 		this.data = data;
+
+		/**
+		 * Configuration options for the Ajax call
+		 *
+		 * @property ajaxOptions
+		 * @type {Object}
+		 */
 		this.ajaxOptions = ajaxOptions;
+
+		/**
+		 * Query parameters to add onto the url
+		 *
+		 * @property queryParams
+		 * @type {Object}
+		 */
 		this.queryParams = {};
 
+
+		/**
+		 * The model class used when it cannot be deduced from the
+		 * Api result
+		 * 
+		 * @property modelClass
+		 * @type {Class}
+		 */
 		this.modelClass = null;
 
 	}
@@ -80,6 +124,14 @@ class ApiCall extends Obj {
 	}
 
 
+	/**
+	 * Add given key/value(s) to the queryParams
+	 *
+	 * @method query
+	 * @param  {string|Object} keyOrHash  Either a key or a key/value hash
+	 * @param  {Mixed} value     When given a single key/value pair, enter the value as the second argument
+	 * @chainable
+	 */
 	query(keyOrHash, value = null) {
 
 		// Is it a key / value?

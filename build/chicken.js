@@ -7,7 +7,7 @@
 		exports["Chicken"] = factory(require("$"), require("_"), require("XRegExp"), require("HTMLBars"), require("moment"));
 	else
 		root["Chicken"] = factory(root["$"], root["_"], root["XRegExp"], root["HTMLBars"], root["moment"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_43__, __WEBPACK_EXTERNAL_MODULE_74__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_43__, __WEBPACK_EXTERNAL_MODULE_72__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -120,7 +120,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelDefinition = __webpack_require__(72);
+	var _ModelDefinition = __webpack_require__(73);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
 
@@ -6586,7 +6586,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @class Api.ApiCall 
 	  * 
 	  * @constructor 
-	  * @param  {Data.Api.Api} api 	The Api instance this call originates from
+	  * @param  {Api.Api} api 	The Api instance this call originates from
 	  * @param  {string} method      The HTTP method to use (get, post, put, etc.)
 	  * @param  {string} uri			The uri to call
 	  * @param  {Object} data        
@@ -6598,16 +6598,59 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			_classCallCheck(this, ApiCall);
 
+			/**
+	   * @property api
+	   * @type {Api.Api}
+	   */
 			var _this = _possibleConstructorReturn(this, (ApiCall.__proto__ || Object.getPrototypeOf(ApiCall)).call(this));
 
 			_this.api = api;
 
+			/**
+	   * The HTTP method (get, post, put, patch, or delete)
+	   * 
+	   * @property method
+	   * @type {string}
+	   */
 			_this.method = method;
+
+			/**
+	   * @property uri
+	   * @type {string}
+	   */
 			_this.uri = uri;
+
+			/**
+	   * Data to send along with the request
+	   * 
+	   * @property data
+	   * @type {Mixed}
+	   */
 			_this.data = data;
+
+			/**
+	   * Configuration options for the Ajax call
+	   *
+	   * @property ajaxOptions
+	   * @type {Object}
+	   */
 			_this.ajaxOptions = ajaxOptions;
+
+			/**
+	   * Query parameters to add onto the url
+	   *
+	   * @property queryParams
+	   * @type {Object}
+	   */
 			_this.queryParams = {};
 
+			/**
+	   * The model class used when it cannot be deduced from the
+	   * Api result
+	   * 
+	   * @property modelClass
+	   * @type {Class}
+	   */
 			_this.modelClass = null;
 
 			return _this;
@@ -6656,6 +6699,16 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 				});
 			}
+
+			/**
+	   * Add given key/value(s) to the queryParams
+	   *
+	   * @method query
+	   * @param  {string|Object} keyOrHash  Either a key or a key/value hash
+	   * @param  {Mixed} value     When given a single key/value pair, enter the value as the second argument
+	   * @chainable
+	   */
+
 		}, {
 			key: 'query',
 			value: function query(keyOrHash) {
@@ -9149,11 +9202,23 @@ return /******/ (function(modules) { // webpackBootstrap
 			});
 		}
 
+		/**
+	  * @method deserialize
+	  * @return {Data.Model|Data.Collection}
+	  */
+
+
 		_createClass(Api, [{
 			key: 'deserialize',
 			value: function deserialize() /* data, apiCall */{
 				throw new Error('The Api implementation should have a deserialize method.');
 			}
+
+			/**
+	   * @method getAuth
+	   * @return {Auth.Auth} 
+	   */
+
 		}, {
 			key: 'getAuth',
 			value: function getAuth() {
@@ -9171,6 +9236,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			// HTTP methods //
 			//////////////////
 
+			/**
+	   * @method call
+	   * @param  {string} method      
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
 		}, {
 			key: 'call',
 			value: function call(method, uri) {
@@ -9181,6 +9255,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Create api call
 				return new _ApiCall2.default(this, method, uri, data, ajaxOptions);
 			}
+
+			/**
+	   * @method get
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
 		}, {
 			key: 'get',
 			value: function get(uri) {
@@ -9189,6 +9272,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this.call('get', uri, data, ajaxOptions);
 			}
+
+			/**
+	   * @method post
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
 		}, {
 			key: 'post',
 			value: function post(uri) {
@@ -9197,6 +9289,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this.call('post', uri, data, ajaxOptions);
 			}
+
+			/**
+	   * @method put
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
 		}, {
 			key: 'put',
 			value: function put(uri) {
@@ -9205,6 +9306,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this.call('put', uri, data, ajaxOptions);
 			}
+
+			/**
+	   * @method path
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
 		}, {
 			key: 'patch',
 			value: function patch(uri) {
@@ -9213,6 +9323,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this.call('patch', uri, data, ajaxOptions);
 			}
+
+			/**
+	   * @method delete
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
 		}, {
 			key: 'delete',
 			value: function _delete(uri) {
@@ -9226,11 +9345,26 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Helper methods //
 			////////////////////
 
+			/**
+	   * @method makeUrl
+	   * @param  {string} uri 	Relative url within the API
+	   * @return {string} Fully formed url
+	   */
+
 		}, {
 			key: 'makeUrl',
 			value: function makeUrl(uri) {
 				return this.settings.get('baseUrl') + uri;
 			}
+
+			/**
+	   * Make an ajax call using jQuery
+	   * 
+	   * @method ajax
+	   * @param  {Object} options 
+	   * @return {jQuery Ajax call}         
+	   */
+
 		}, {
 			key: 'ajax',
 			value: function ajax(options) {
@@ -9242,12 +9376,22 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Model methods //
 			///////////////////
 
+			/**
+	   * Get a single Model record from the Api
+	   * 
+	   * @method one
+	   * @param  {string} modelName 
+	   * @param  {string} id        
+	   * @return {Api.ApiCall}
+	   */
+
 		}, {
 			key: 'one',
 			value: function one(modelName, id) {
 
 				// Get uri from model
 				var ModelClass = _Model2.default.registry.get(modelName);
+				if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
 				var uri = ModelClass.definition.getApiUri(id);
 
 				// Make the call
@@ -9255,12 +9399,22 @@ return /******/ (function(modules) { // webpackBootstrap
 				call.modelClass = ModelClass;
 				return call;
 			}
+
+			/**
+	   * Get all Model records from the Api
+	   * 
+	   * @method all
+	   * @param  {string} modelName
+	   * @return {Api.ApiCall}
+	   */
+
 		}, {
 			key: 'all',
 			value: function all(modelName) {
 
 				// Get uri from model
 				var ModelClass = _Model2.default.registry.get(modelName);
+				if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
 				var uri = ModelClass.definition.getApiUri();
 
 				// Make the call
@@ -9268,6 +9422,16 @@ return /******/ (function(modules) { // webpackBootstrap
 				call.modelClass = ModelClass;
 				return call;
 			}
+
+			/**
+	   * Save given model to the Api
+	   *
+	   * @method saveModel
+	   * @param 	{string}	uri
+	   * @param 	{Data.Model} model
+	   * @return {Api.ApiCall}
+	   */
+
 		}, {
 			key: 'saveModel',
 			value: function saveModel() /* uri, model */{
@@ -11620,6 +11784,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @extends Api.ApiCall
 	   * 
 	   * @constructor
+	   * @param  {Api.JsonApi} api 	The Api instance this call originates from
+	   * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+	   * @param  {string} uri			The uri to call
+	   * @param  {Object} data        
+	   * @param  {Object} ajaxOptions 	 
 	   */
 
 			/**
@@ -11663,6 +11832,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Middleware = __webpack_require__(62);
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
+
+	var _App = __webpack_require__(49);
+
+	var _App2 = _interopRequireDefault(_App);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -11713,6 +11886,15 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Add event listener
 						_this.on(eventName, value);
 					}
+
+					// Or uri?
+					else if (typeof value === 'string' && /^\//.test(value)) {
+
+							// Go to the uri when that happens
+							_this.on(eventName, function () {
+								(0, _App2.default)().goto(value);
+							});
+						}
 				}
 			});
 
@@ -11809,6 +11991,20 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function authorizeApiCall(apiCall) {
 				return apiCall;
 			}
+
+			/**
+	   * Read given Api Error and update session accordingly, if
+	   * appropriate.
+	   * 
+	   * @param  {object} error 
+	   * @return {object}       
+	   */
+
+		}, {
+			key: 'processApiError',
+			value: function processApiError(error) {
+				return error;
+			}
 		}]);
 
 		return Auth;
@@ -11862,6 +12058,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
+	var _moment = __webpack_require__(72);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
 	var _Auth2 = __webpack_require__(70);
 
 	var _Auth3 = _interopRequireDefault(_Auth2);
@@ -11897,15 +12097,20 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				baseUrl: '',
 				authenticateUri: '/authenticate',
+				refreshUri: '/authenticate/refresh',
 
 				authenticateMethod: 'post',
+				refreshMethod: 'post',
 
 				middlewareName: 'auth.jwt',
 
 				identifierKey: 'email',
 				passwordKey: 'password',
 
-				tokenValidForMinutes: 30,
+				tokenValidForMinutes: 60,
+
+				autoRefreshToken: true,
+				autoRefreshInterval: 600, // 10 minutes
 
 				localStorageKey: 'ChickenJWTAuthToken'
 
@@ -11919,9 +12124,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			var _this = _possibleConstructorReturn(this, (JWTAuth.__proto__ || Object.getPrototypeOf(JWTAuth)).call(this, options));
 
-			_this.token = localStorage.getItem(_this.settings.localStorageKey);
+			try {
+				_this.token = JSON.parse(localStorage.getItem(_this.settings.localStorageKey));
+			} catch (err) {
+				_this.token = null;
+			}
 
-			_this.set('isAuthenticated', !!_this.token);
+			// Check the token
+			_this.validateToken();
 
 			return _this;
 		}
@@ -11962,6 +12172,9 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Store it.
 						_this2.setToken(result.token);
 						resolve(_this2.token);
+
+						// Authenticated
+						_this2.trigger(_Auth3.default.Events.Authenticated);
 					}).fail(function (error) {
 
 						reject(error);
@@ -11975,36 +12188,166 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return new Promise(function (resolve /*, reject*/) {
 
+					// Waiting to time out?
+					if (_this3.sessionTimeoutTimeout) {
+						clearTimeout(_this3.sessionTimeoutTimeout);
+						_this3.sessionTimeoutTimeout = false;
+					}
+
 					// Remove token
 					_this3.token = false;
 					localStorage.removeItem(_this3.settings.localStorageKey);
 					_this3.set('isAuthenticated', false);
+					_this3.trigger(_Auth3.default.Events.Invalidated);
 					resolve();
 				});
 			}
 		}, {
+			key: 'refreshToken',
+			value: function refreshToken() {
+				var _this4 = this;
+
+				// Waiting to time out?
+				if (this.autoRefreshTimeout) {
+					clearTimeout(this.autoRefreshTimeout);
+					this.autoRefreshTimeout = false;
+				}
+
+				// Make a call.
+				return new Promise(function (resolve, reject) {
+
+					// Already timed out?
+					if (!_this4.isAuthenticated()) {
+						reject('Cannot refresh token when not authenticated');
+						return;
+					}
+
+					// Make the call.
+					_jquery2.default.ajax({
+						url: _this4.settings.baseUrl + _this4.settings.refreshUri,
+						method: _this4.settings.refreshMethod,
+						beforeSend: function beforeSend(xhr) {
+							xhr.setRequestHeader('Authorization', 'Bearer ' + _this4.token.token);
+						}
+					}).then(function (result) {
+
+						// Check token.
+						if (!result.token) reject('Could not find token in result');
+
+						// Store it.
+						_this4.setToken(result.token);
+						resolve(_this4.token);
+
+						// Authenticated
+						_this4.trigger(JWTAuth.Events.TokenRefreshed);
+					}).fail(function (error) {
+
+						_this4.invalidate();
+
+						reject(error);
+					});
+				});
+			}
+		}, {
 			key: 'setToken',
-			value: function setToken(token) {
+			value: function setToken(tokenString) {
 
 				// Store it
-				this.token = token;
+				this.token = {
+					token: tokenString,
+					receivedAt: (0, _moment2.default)().unix()
+				};
+
+				// Waiting to time out?
+				if (this.sessionTimeoutTimeout) {
+					clearTimeout(this.sessionTimeoutTimeout);
+					this.sessionTimeoutTimeout = false;
+				}
 
 				// Remember it.
-				localStorage.setItem(this.settings.localStorageKey, this.token);
+				localStorage.setItem(this.settings.localStorageKey, JSON.stringify(this.token));
 
 				// We are logged in
-				this.set('isAuthenticated', true);
+				this.validateToken();
+			}
+		}, {
+			key: 'validateToken',
+			value: function validateToken() {
+				var _this5 = this;
+
+				// Any token?
+				if (this.token) {
+
+					// Is it an object?
+					if (this.token instanceof Object) {
+
+						// Still valid?
+						var now = (0, _moment2.default)().unix();
+						var timesOutAt = this.token.receivedAt + this.settings.tokenValidForMinutes * 60;
+						if (timesOutAt < now) {
+
+							// No longer valid.
+							this.set('isAuthenticated', false);
+							this.token = null;
+							return;
+						}
+
+						// Auto refresh?
+						if (this.settings.autoRefreshToken) {
+
+							// Wait a bit and then refresh
+							if (this.autoRefreshTimeout) clearTimeout(this.autoRefreshTimeout);
+							var refreshAt = this.token.receivedAt + this.settings.autoRefreshInterval;
+							var timeoutMs = Math.max((refreshAt - now) * 1000, 1);
+							this.autoRefreshTimeout = setTimeout(function () {
+
+								_this5.autoRefreshTimeout = false;
+								_this5.refreshToken();
+							}, timeoutMs);
+						}
+
+						// Wait for it to timeout
+						if (this.sessionTimeoutTimeout) clearTimeout(this.sessionTimeoutTimeout);
+						this.sessionTimeoutTimeout = setTimeout(function () {
+
+							////////////////////////////////
+							// Make the session time out! //
+							////////////////////////////////
+
+							_this5.sessionTimeoutTimeout = false;
+							_this5.trigger(_Auth3.default.Events.SessionTimedOut);
+							_this5.set('isAuthenticated', false);
+							_this5.token = null;
+
+							if (_this5.autoRefreshTimeout) clearTimeout(_this5.autoRefreshTimeout);
+						}, (timesOutAt - now) * 1000);
+
+						// It is valid!
+						this.set('isAuthenticated', true);
+					} else {
+
+						// Not valid
+						this.set('isAuthenticated', false);
+						this.token = null;
+					}
+				} else {
+
+					// Not authenticated
+					this.set('isAuthenticated', false);
+				}
 			}
 		}, {
 			key: 'authorizeApiCall',
 			value: function authorizeApiCall(apiCall) {
+				var _this6 = this;
 
 				// Add token.
 				if (this.isAuthenticated()) {
 
 					// Add the bearer token
-
-
+					apiCall.ajaxOptions.beforeSend = function (xhr) {
+						xhr.setRequestHeader('Authorization', 'Bearer ' + _this6.token.token);
+					};
 				}
 
 				return apiCall;
@@ -12014,10 +12357,29 @@ return /******/ (function(modules) { // webpackBootstrap
 		return JWTAuth;
 	}(_Auth3.default);
 
+	JWTAuth.Events = {
+
+		/**
+	  * This event is triggered when a successful token refresh
+	  * action is completed
+	  * 
+	  * @event tokenRefreshed
+	  * @type {String}
+	  */
+		TokenRefreshed: 'tokenRefreshed'
+
+	};
+
 	module.exports = JWTAuth;
 
 /***/ },
 /* 72 */
+/***/ function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_72__;
+
+/***/ },
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12028,7 +12390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _ModelAttribute = __webpack_require__(73);
+	var _ModelAttribute = __webpack_require__(74);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
@@ -12149,14 +12511,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelDefinition;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _moment = __webpack_require__(74);
+	var _moment = __webpack_require__(72);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
@@ -12291,12 +12653,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	ModelAttribute.DateTime = 'DateTime';
 
 	module.exports = ModelAttribute;
-
-/***/ },
-/* 74 */
-/***/ function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_74__;
 
 /***/ },
 /* 75 */

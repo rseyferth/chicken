@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import moment from 'moment';
 
 import Auth from '~/Auth/Auth';
 
@@ -22,15 +23,20 @@ class JWTAuth extends Auth
 
 			baseUrl: '',
 			authenticateUri: '/authenticate',
+			refreshUri: '/authenticate/refresh',
 
 			authenticateMethod: 'post',
+			refreshMethod: 'post',
 
 			middlewareName: 'auth.jwt',
 
 			identifierKey: 'email',
 			passwordKey: 'password',
 
-			tokenValidForMinutes: 30,
+			tokenValidForMinutes: 60,
+
+			autoRefreshToken: true,
+			autoRefreshInterval: 600,	// 10 minutes
 
 			localStorageKey: 'ChickenJWTAuthToken'
 
@@ -44,13 +50,16 @@ class JWTAuth extends Auth
 		 * @property token
 		 * @type {string}
 		 */
-		this.token = localStorage.getItem(this.settings.localStorageKey);
+		try {
+			this.token = JSON.parse(localStorage.getItem(this.settings.localStorageKey));
+		} catch (err) {
+			this.token = null;
+		}
 
 
-		this.set('isAuthenticated', !!this.token);
-
-
-
+		// Check the token
+		this.validateToken();
+		
 
 	}
 
@@ -86,6 +95,9 @@ class JWTAuth extends Auth
 				this.setToken(result.token);
 				resolve(this.token);
 
+				// Authenticated
+				this.trigger(Auth.Events.Authenticated);			
+
 			}).fail((error) => {
 
 				reject(error);
@@ -101,29 +113,167 @@ class JWTAuth extends Auth
 
 		return new Promise((resolve/*, reject*/) => {
 
+			// Waiting to time out?
+			if (this.sessionTimeoutTimeout) {
+				clearTimeout(this.sessionTimeoutTimeout);
+				this.sessionTimeoutTimeout = false;
+			}
+
 			// Remove token
 			this.token = false;
 			localStorage.removeItem(this.settings.localStorageKey);
 			this.set('isAuthenticated', false);
+			this.trigger(Auth.Events.Invalidated);
 			resolve();
 
 		});
 
 	}
 
-	setToken(token) {
+	refreshToken() {
 
-		// Store it
-		this.token = token;
+		// Waiting to time out?
+		if (this.autoRefreshTimeout) {
+			clearTimeout(this.autoRefreshTimeout);
+			this.autoRefreshTimeout = false;
+		}
 
-		// Remember it.
-		localStorage.setItem(this.settings.localStorageKey, this.token);
+		// Make a call.
+		return new Promise((resolve, reject) => {
 
-		// We are logged in
-		this.set('isAuthenticated', true);
+			// Already timed out?
+			if (!this.isAuthenticated()) {
+				reject('Cannot refresh token when not authenticated');
+				return;
+			}
+
+			// Make the call.
+			$.ajax({
+				url: this.settings.baseUrl + this.settings.refreshUri,
+				method: this.settings.refreshMethod,
+				beforeSend: (xhr) => {
+					xhr.setRequestHeader('Authorization', 'Bearer ' + this.token.token);
+				}
+			}).then((result) => {
+
+				// Check token.
+				if (!result.token) reject('Could not find token in result');
+				
+				// Store it.
+				this.setToken(result.token);
+				resolve(this.token);
+
+				// Authenticated
+				this.trigger(JWTAuth.Events.TokenRefreshed);
+
+
+			}).fail((error) => {
+
+				this.invalidate();
+
+				reject(error);
+			});
+
+		});
 
 	}
 
+	setToken(tokenString) {
+
+		// Store it
+		this.token = {
+			token: tokenString,
+			receivedAt: moment().unix()
+		};
+		
+		// Waiting to time out?
+		if (this.sessionTimeoutTimeout) {
+			clearTimeout(this.sessionTimeoutTimeout);
+			this.sessionTimeoutTimeout = false;
+		}
+
+		// Remember it.
+		localStorage.setItem(this.settings.localStorageKey, JSON.stringify(this.token));
+
+		// We are logged in
+		this.validateToken();
+
+	}
+
+
+	validateToken() {
+
+		// Any token?
+		if (this.token) {
+
+			// Is it an object?
+			if (this.token instanceof Object) {
+
+				// Still valid?
+				let now = moment().unix();
+				let timesOutAt = this.token.receivedAt + this.settings.tokenValidForMinutes * 60;
+				if (timesOutAt < now) {
+
+					// No longer valid.
+					this.set('isAuthenticated', false);
+					this.token = null;
+					return; 
+
+				}
+
+				// Auto refresh?
+				if (this.settings.autoRefreshToken) {
+
+					// Wait a bit and then refresh
+					if (this.autoRefreshTimeout) clearTimeout(this.autoRefreshTimeout);
+					let refreshAt = this.token.receivedAt + this.settings.autoRefreshInterval;	
+					let timeoutMs = Math.max((refreshAt - now) * 1000, 1);
+					this.autoRefreshTimeout = setTimeout(() => {
+
+						this.autoRefreshTimeout = false;
+						this.refreshToken();							
+
+					}, timeoutMs);
+
+				}
+
+				// Wait for it to timeout
+				if (this.sessionTimeoutTimeout) clearTimeout(this.sessionTimeoutTimeout);
+				this.sessionTimeoutTimeout = setTimeout(() => {
+
+					////////////////////////////////
+					// Make the session time out! //
+					////////////////////////////////
+
+					this.sessionTimeoutTimeout = false;
+					this.trigger(Auth.Events.SessionTimedOut);
+					this.set('isAuthenticated', false);
+					this.token = null;
+
+					if (this.autoRefreshTimeout) clearTimeout(this.autoRefreshTimeout);
+					
+
+				}, (timesOutAt - now) * 1000);
+
+				// It is valid!
+				this.set('isAuthenticated', true);
+
+			} else {
+
+				// Not valid
+				this.set('isAuthenticated', false);
+				this.token = null;
+
+			}
+
+		} else {
+
+			// Not authenticated
+			this.set('isAuthenticated', false);
+
+		}
+		
+	}
 
 
 
@@ -133,7 +283,9 @@ class JWTAuth extends Auth
 		if (this.isAuthenticated()) {
 
 			// Add the bearer token
-
+			apiCall.ajaxOptions.beforeSend = (xhr) => {
+				xhr.setRequestHeader('Authorization', 'Bearer ' + this.token.token);
+			};
 
 		}
 
@@ -147,6 +299,19 @@ class JWTAuth extends Auth
 
 
 }
+
+JWTAuth.Events = {
+
+	/**
+	 * This event is triggered when a successful token refresh
+	 * action is completed
+	 * 
+	 * @event tokenRefreshed
+	 * @type {String}
+	 */
+	TokenRefreshed: 'tokenRefreshed'
+
+};
 
 
 module.exports = JWTAuth;
