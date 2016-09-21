@@ -154,8 +154,8 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
-import Application from &#x27;~/Application&#x27;;
 
 /**
  * @module Dom
@@ -170,15 +170,9 @@ class Element extends Obj
 	 * @param {jQuery} $element
 	 * @param {Application} [application]
 	 */
-	constructor($element, application = null) {
+	constructor($element) {
 
 		super();
-
-		/**
-		 * @property application
-		 * @type {Application}
-		 */
-		this.application = application ? application : Application.getInstance();
 
 		/**
 		 * The jQuery element that is the ViewContainer
@@ -195,17 +189,43 @@ class Element extends Obj
 
 	setContent(content) {
 
+		// Fire the before hooks.
+		this._fireHooks(&#x27;beforeRender&#x27;);
+
 		// Set it
 		this.$element.html(content);
 		this.trigger(&#x27;content&#x27;, content);
 
-		// Update view containers
-		this.application.updateViewContainers(this.$element);
+		// Fire the after hooks
+		this._fireHooks(&#x27;afterRender&#x27;);
 
 	}
 
 
+	_fireHooks(type) {
+
+		_.each(Element.Hooks[type], (callback) =&gt; {
+
+			// Fire it.
+			callback.apply(this, [this.$element, this]);
+
+		});
+
+	}
+
 }
+
+
+Element.registerHook = (callback, type = &#x27;afterRender&#x27;) =&gt; {
+	Element.Hooks[type].push(callback);
+	return true;	
+};
+
+Element.Hooks = {
+	beforeRender: [],
+	afterRender: []
+};
+
 
 module.exports = Element;
     </pre>

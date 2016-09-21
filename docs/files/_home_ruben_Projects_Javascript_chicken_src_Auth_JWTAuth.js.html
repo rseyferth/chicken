@@ -157,7 +157,6 @@
 import $ from &#x27;jquery&#x27;;
 
 import Auth from &#x27;~/Auth/Auth&#x27;;
-import Middleware from &#x27;~/Routing/Middleware&#x27;;
 
 /**
  * @module Auth
@@ -187,14 +186,21 @@ class JWTAuth extends Auth
 			identifierKey: &#x27;email&#x27;,
 			passwordKey: &#x27;password&#x27;,
 
+			tokenValidForMinutes: 30,
+
 			localStorageKey: &#x27;ChickenJWTAuthToken&#x27;
 
 		}, options);
 		super(options);
 
 
+		/**
+		 * The current token
+		 * 
+		 * @property token
+		 * @type {string}
+		 */
 		this.token = localStorage.getItem(this.settings.localStorageKey);
-
 
 
 		this.set(&#x27;isAuthenticated&#x27;, !!this.token);
@@ -204,6 +210,14 @@ class JWTAuth extends Auth
 
 	}
 
+	/**
+	 * Try to authenticate using given credentials
+	 * 
+	 * @method authenticate
+	 * @param  {string} identifier 	Usually the email address
+	 * @param  {string} password   
+	 * @return {Promise} 
+	 */
 	authenticate(identifier, password) {
 
 		// Make a call.
@@ -239,6 +253,19 @@ class JWTAuth extends Auth
 
 	}
 
+	invalidate() {
+
+		return new Promise((resolve/*, reject*/) =&gt; {
+
+			// Remove token
+			this.token = false;
+			localStorage.removeItem(this.settings.localStorageKey);
+			this.set(&#x27;isAuthenticated&#x27;, false);
+			resolve();
+
+		});
+
+	}
 
 	setToken(token) {
 
@@ -255,26 +282,17 @@ class JWTAuth extends Auth
 
 
 
-	invalidate() {
-
-		// Remove token
-		this.token = false;
-		localStorage.removeItem(this.settings.localStorageKey);
-		this.set(&#x27;isAuthenticated&#x27;, false);
-
-
-	}
-
-
 
 	authorizeApiCall(apiCall) {
 
 		// Add token.
-		if (this.isAuthenticated) {
+		if (this.isAuthenticated()) {
 
+			// Add the bearer token
 
 
 		}
+
 
 		return apiCall;
 	}

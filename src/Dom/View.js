@@ -515,29 +515,6 @@ class View extends Observable
 
 
 	/**
-	 * Set the contents of this view in given $target element
-	 * 
-	 * @method addToDom
-	 * @param {jQuery} $target    The $target for the view to render in. The contents will be completely replaced
-	 *                            by this view.
-	 */
-	addToDOM($target) {
-
-		// Add to dom
-		var $view = $('<view/>');
-		$view.html(this.documentFragment);
-		$target.html($view);
-
-		// Get the element
-		this.$element = $view;
-		
-		// Done!
-		this.resolvePromise('added', this);
-
-	}
-
-
-	/**
 	 * Add the view to the ViewContainer, replacing previous contents
 	 * and making sure the ViewContainer knows it's gotten the view.
 	 * 
@@ -549,9 +526,12 @@ class View extends Observable
 		// Set view
 		viewContainer.setView(this);
 
-		// Add to DOM
-		this.addToDOM(viewContainer.$element);
+		// Create wrapper
+		let $view = $('<view/>');
+		$view.html(this.documentFragment);
 
+		// Add to DOM
+		viewContainer.setContent($view);
 
 	}
 

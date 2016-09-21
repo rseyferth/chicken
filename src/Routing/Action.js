@@ -5,6 +5,7 @@ import Obj from '~/Core/Obj';
 import Redirect from '~/Routing/Redirect';
 import Controller from '~/Routing/Controller';
 import View from '~/Dom/View';
+import Utils from '~/Helpers/Utils';
 
 /**
  * @module Routing
@@ -184,6 +185,21 @@ class Action extends Obj
 				return;
 			}
 
+			// Is there currently an action in this vc?
+			if (this.viewContainer.currentAction) {
+
+				// Was it triggered by the same route?
+				if (Utils.uidFor(this.viewContainer.currentAction.route) === Utils.uidFor(this.route)) {
+
+					// That means, we've just navigated within nested routes of that page, and this action can be skipped.
+					resolve();
+					return;
+
+				}
+				
+			}
+
+
 			// The VC is busy now.
 			this.viewContainer.setLoading(true);
 
@@ -227,9 +243,6 @@ class Action extends Obj
 			}
 
 		}).then((/* result */) => {
-
-			// Update VCs
-			application.updateViewContainers(this.viewContainer.$element);
 
 		}, (/* error */) => {
 

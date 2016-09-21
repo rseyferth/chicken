@@ -1,5 +1,5 @@
+import _ from 'underscore';
 import Obj from '~/Core/Obj';
-import Application from '~/Application';
 
 /**
  * @module Dom
@@ -14,15 +14,9 @@ class Element extends Obj
 	 * @param {jQuery} $element
 	 * @param {Application} [application]
 	 */
-	constructor($element, application = null) {
+	constructor($element) {
 
 		super();
-
-		/**
-		 * @property application
-		 * @type {Application}
-		 */
-		this.application = application ? application : Application.getInstance();
 
 		/**
 		 * The jQuery element that is the ViewContainer
@@ -39,16 +33,42 @@ class Element extends Obj
 
 	setContent(content) {
 
+		// Fire the before hooks.
+		this._fireHooks('beforeRender');
+
 		// Set it
 		this.$element.html(content);
 		this.trigger('content', content);
 
-		// Update view containers
-		this.application.updateViewContainers(this.$element);
+		// Fire the after hooks
+		this._fireHooks('afterRender');
 
 	}
 
 
+	_fireHooks(type) {
+
+		_.each(Element.Hooks[type], (callback) => {
+
+			// Fire it.
+			callback.apply(this, [this.$element, this]);
+
+		});
+
+	}
+
 }
+
+
+Element.registerHook = (callback, type = 'afterRender') => {
+	Element.Hooks[type].push(callback);
+	return true;	
+};
+
+Element.Hooks = {
+	beforeRender: [],
+	afterRender: []
+};
+
 
 module.exports = Element;

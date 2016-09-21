@@ -17,6 +17,7 @@ import ViewContainer from '~/Dom/ViewContainer';
 import Renderer from '~/Dom/Renderer';
 import ClassMap from '~/Helpers/ClassMap';
 import Router from '~/Routing/Router';
+import Element from '~/Dom/Element';
 
 //////////////////////
 // Class definitino //
@@ -81,6 +82,8 @@ class Application extends Observable {
 
 		/**
 		 * One or more Auth.Auth instances
+		 *
+		 * @property auths
 		 * @type {Object}
 		 */
 		this.auths = {};
@@ -97,9 +100,11 @@ class Application extends Observable {
 			viewPath: 'views',
 			viewExtension: 'hbs',
 
+			elementLinkAttribute: 'link-to',
+
 			renderer: settings.renderer === undefined ? new Renderer() : null
 
-		}, [ 'baseUrl', 'viewPath', 'viewExtension', 'renderer' ]).apply(settings);
+		}, [ 'baseUrl', 'viewPath', 'viewExtension', 'renderer', 'elementLinkAttribute' ]).apply(settings);
 
 		
 
@@ -206,6 +211,37 @@ class Application extends Observable {
 
 		// Find initial view containers
 		this.findViewContainers();
+
+		// Update view containers whenever element contents are set.
+		Element.registerHook(($element) => {
+
+			// Update view containers
+			this.updateViewContainers($element);
+
+			// Find links
+			$element.find('[' + this.settings.get('elementLinkAttribute') + ']').on('click', (e) => {
+
+				// Open the uri!
+				e.preventDefault();
+				let uri = $(e.target).attr('href');
+				this.goto(uri);
+
+			}).each((index, el) => {
+
+				// Get uri
+				let $el = $(el);
+				let uri = $el.attr(this.settings.get('elementLinkAttribute'));
+				if (uri) {
+
+					// Store in href for easy visilbility, and remove link-to, so it won't be found again by this script
+					$el.removeAttr(this.settings.get('elementLinkAttribute'));
+					$el.attr('href', uri);
+					
+				}
+
+			});
+
+		});
 
 		// Listen to browser's address bar
 		this.history.listen((location) => {

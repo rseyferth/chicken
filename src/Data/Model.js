@@ -36,11 +36,29 @@ class Model extends Observable
 		 */
 		this.originalValues = initValues;
 
+		/**
+		 * Values of relationships, keyed by the relationshipname
+		 * 
+		 * @property related
+		 * @type {Object}
+		 */
 		this.related = {};
 
 
-
-
+		/**
+		 * The watchable current state of this model. This
+		 * contains attributes for 'busy', 'saving', and 'dirty'.
+		 *
+		 * You can use this in a view to update the view according
+		 * to the model state, using the 'is' property e.g.:
+		 *
+		 * 	{{#if author.is.busy}}
+		 * 		Please wait a moment...
+		 * 	{{/if}}
+		 * 
+		 * @property state
+		 * @type {Observable}
+		 */
 		this.state = new Observable({
 			busy: false,
 			saving: false,
@@ -57,9 +75,21 @@ class Model extends Observable
 	// State //
 	///////////
 
+	/**
+	 * Get the model state. This method is used to make the state
+	 * available in views.
+	 * 
+	 * @method getIs
+	 * @return {Observable}
+	 */
 	getIs() {
 		return this.state;
 	}
+
+	/**
+	 * @method isBusy
+	 * @return {Boolean} 
+	 */
 	isBusy() {
 		return this.state.get('busy');
 	}
@@ -69,6 +99,13 @@ class Model extends Observable
 	// Information methods //
 	/////////////////////////
 
+	/**
+	 * Checks whether this model is new or has already been saved. This
+	 * is determined by checking whether the 'id' is set.
+	 * 
+	 * @method isNew
+	 * @return {Boolean} 
+	 */
 	isNew() {
 		return !this.get('id');
 	}
@@ -77,7 +114,6 @@ class Model extends Observable
 	/////////////////
 	// Get and set //
 	/////////////////
-
 
 	_get(key) {
 
@@ -114,6 +150,15 @@ class Model extends Observable
 
 	}
 
+	/**
+	 * Get a value for use in the API, meaning it is in
+	 * database format. For example, dates will be converted back
+	 * from Moment instances into strings.
+	 *
+	 * @method getForApi
+	 * @param  {string} key 
+	 * @return {mixed} 
+	 */
 	getForApi(key) {
 
 		// Get value
@@ -123,6 +168,16 @@ class Model extends Observable
 
 	}
 
+	/**
+	 * Cast given value according to the AttributeDefinition for given
+	 * key. For example, if you pass a string containing a date as value,
+	 * for a Date key, you will receive a Moment instance.
+	 * 
+	 * @method castValue
+	 * @param  {string} key   
+	 * @param  {Mixed} value 
+	 * @return {Mixed}       
+	 */
 	castValue(key, value) {
 
 		// Do we need to cast it?
@@ -135,6 +190,14 @@ class Model extends Observable
 
 	}
 
+	/**
+	 * Uncast given value according to the AttributeDefinition for given key.
+	 *
+	 * @method uncastValue
+	 * @param  {string} key   
+	 * @param  {Mixed} value 
+	 * @return {Mixed}       
+	 */
 	uncastValue(key, value) {
 
 		// Do we need to uncast it?
@@ -152,6 +215,15 @@ class Model extends Observable
 	// Api related methods //
 	/////////////////////////
 
+	/**
+	 * Set attribute values that were retrieved from the API, meaning
+	 * they will not be seen as dirty, and will overwrite the original values
+	 * of the model. 
+	 *
+	 * @method setAttributesFromApi
+	 * @param {Object} attributes
+	 * @chainable
+	 */
 	setAttributesFromApi(attributes) {
 
 		// Loop through them and set values that are not dirty
@@ -169,6 +241,13 @@ class Model extends Observable
 
 	}
 
+	/**
+	 * Get attribute values for use in the API.
+	 *
+	 * @method getAttributesForApi
+	 * @param  {Boolean} onlyDirty  When true, only attributes that have been changed will be retrieved
+	 * @return {Object}      A hash containing attribute key/values
+	 */
 	getAttributesForApi(onlyDirty = true) {
 
 		// Which attributes to use?
@@ -188,6 +267,12 @@ class Model extends Observable
 
 	}
 
+	/**
+	 * Get the Api instance that is used by this model
+	 *
+	 * @method getApi
+	 * @return {Api.Api}
+	 */
 	getApi() {
 
 		// Check model definition
@@ -196,6 +281,12 @@ class Model extends Observable
 
 	}
 
+	/**
+	 * Get the uri for this model, that can be used in an API call
+	 *
+	 * @method getApiUri
+	 * @return {string}
+	 */
 	getApiUri() {
 
 		// Check definition
@@ -207,7 +298,26 @@ class Model extends Observable
 
 	}
 
-
+	/**
+	 * Save the model to the Api. 
+	 *
+	 * Possible options are:
+	 * 
+	 * **uri** (string)
+	 * A custom uri to use instead of the model's default uri
+	 * 
+	 * **includeRelated** (boolean)
+	 * _(Default: true)_ 
+	 * Whether to included modifications in the relationships 
+	 *
+	 * **includeRelatedData** (boolean)	
+	 * _(Default: false)_ 
+	 * Whether to embed relationship data into the request. Note: this is not following JSONAPI specifications.
+	 *
+	 * @method save
+	 * @param  {Object} [options={}]	Optional options hash
+	 * @return {Promise} The promise returned by the ApiCall.execute method
+	 */
 	save(options = {}) {
 
 		// Make settings
@@ -230,7 +340,7 @@ class Model extends Observable
 		apiCall.getPromise('complete').then(() => {
 
 			// No longer dirty!
-			this.resetDirty();
+			this.state.set('dirty', false);
 			
 			// No longer busy
 			this.state.set('busy', false);
@@ -257,13 +367,6 @@ class Model extends Observable
 	// Dirtying of model //
 	///////////////////////
 
-	/**
-	 * @method resetDirty
-	 * @chainable
-	 */
-	resetDirty() {
-		this.state.set('dirty', false);
-	}
 
 
 	/**
@@ -312,9 +415,6 @@ class Model extends Observable
 			// Has it changed
 			let oldValue = this.originalValues[key];
 			let newValue = this.uncastValue(key, this.attributes[key]);
-			if (oldValue != newValue) {
-				console.log('diff', key, oldValue, '!=', newValue);
-			}
 			return oldValue != newValue;
 
 		} else {
@@ -329,6 +429,13 @@ class Model extends Observable
 
 	}
 
+	/**
+	 * Check the current dirty state of the model and update
+	 * its status value.
+	 *
+	 * @method updateDirty
+	 * @chainable
+	 */
 	updateDirty() {
 
 		this.state.set('dirty', this.isDirty());
@@ -450,10 +557,31 @@ class Model extends Observable
 
 }
 
+/**
+ * A map of registered model classes
+ * 
+ * @static
+ * @property registry
+ * @type {Map}
+ */
 Model.registry = new Map();
 
+/**
+ * A map of Model stores, containing loaded records
+ *
+ * @static
+ * @property stores
+ * @type {Map}
+ */
 Model.stores = new Map();
 
+
+/**
+ * @static
+ * @method getStore
+ * @param  {string} modelName 
+ * @return {Map}           
+ */
 Model.getStore = (modelName) => {
 	if (!Model.stores.has(modelName)) {
 		Model.stores.set(modelName, new ModelStore(modelName));
@@ -461,6 +589,13 @@ Model.getStore = (modelName) => {
 	return Model.stores.get(modelName);
 };
 
+/**
+ * @static 
+ * @method getFromStaore
+ * @param  {string} modelName 
+ * @param  {number} id        
+ * @return {Data.Model}           
+ */
 Model.getFromStore = (modelName, id) => {
 
 	// Is there a store?
@@ -470,6 +605,15 @@ Model.getFromStore = (modelName, id) => {
 
 };
 
+/**
+ * Create a new model instance
+ *
+ * @static
+ * @method create
+ * @param  {string} modelName  
+ * @param  {Object} [initValues={}]
+ * @return {Data.Model}            
+ */
 Model.create = (modelName, initValues = {}) => {
 
 	let ModelClass = Model.registry.get(modelName);

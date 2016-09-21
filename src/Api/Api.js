@@ -12,7 +12,6 @@ class Api {
 
 	/**
 	 * @class Api.Api
-	 * @abstract 
 	 *
 	 * @constructor
 	 * @param  {Object} options 	 

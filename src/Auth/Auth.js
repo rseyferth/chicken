@@ -1,4 +1,4 @@
-import $ from 'jquery';
+import _ from 'underscore';
 import inflection from 'inflection';
 
 import Observable from '~/Core/Observable';
@@ -12,7 +12,6 @@ class Auth extends Observable
 
 	/**
 	 * @class Auth.Auth
-	 * @abstract
 	 *
 	 * @param 	{Object} options 
 	 * @constructor
@@ -96,7 +95,7 @@ class Auth extends Observable
 	 * @param  {object} credentials 
 	 * @return {Promise}
 	 */
-	authenticate(credentials) {
+	authenticate(/* credentials */) {
 		throw new Error('The ' + this.constructor.name + ' class has not implemented the "authenticate" method');		
 	}
 

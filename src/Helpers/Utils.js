@@ -79,8 +79,10 @@ let Utils = {
 
 
 	/**
-	 * Get a unique string identifier for given object or variable. 
-	 *  
+	 * Get a unique string identifier for given object or variable. For objects
+	 * this identifier will remain the same, making it useful for comparing objects.
+	 *
+	 * @method uidFor
 	 * @param  {mixed} obj 
 	 * @return {string}
 	 */

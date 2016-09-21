@@ -237,7 +237,7 @@ var Chicken = {
 	middleware: (name, callback = null) => {
 
 		// Getter?
-		if (instance === null) {
+		if (callback === null) {
 			return Middleware.registry.get(name);
 		}
 

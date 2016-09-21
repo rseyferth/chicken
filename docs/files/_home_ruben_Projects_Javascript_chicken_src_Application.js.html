@@ -173,6 +173,7 @@ import ViewContainer from &#x27;~/Dom/ViewContainer&#x27;;
 import Renderer from &#x27;~/Dom/Renderer&#x27;;
 import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 import Router from &#x27;~/Routing/Router&#x27;;
+import Element from &#x27;~/Dom/Element&#x27;;
 
 //////////////////////
 // Class definitino //
@@ -237,6 +238,8 @@ class Application extends Observable {
 
 		/**
 		 * One or more Auth.Auth instances
+		 *
+		 * @property auths
 		 * @type {Object}
 		 */
 		this.auths = {};
@@ -253,9 +256,11 @@ class Application extends Observable {
 			viewPath: &#x27;views&#x27;,
 			viewExtension: &#x27;hbs&#x27;,
 
+			elementLinkAttribute: &#x27;link-to&#x27;,
+
 			renderer: settings.renderer === undefined ? new Renderer() : null
 
-		}, [ &#x27;baseUrl&#x27;, &#x27;viewPath&#x27;, &#x27;viewExtension&#x27;, &#x27;renderer&#x27; ]).apply(settings);
+		}, [ &#x27;baseUrl&#x27;, &#x27;viewPath&#x27;, &#x27;viewExtension&#x27;, &#x27;renderer&#x27;, &#x27;elementLinkAttribute&#x27; ]).apply(settings);
 
 		
 
@@ -362,6 +367,37 @@ class Application extends Observable {
 
 		// Find initial view containers
 		this.findViewContainers();
+
+		// Update view containers whenever element contents are set.
+		Element.registerHook(($element) =&gt; {
+
+			// Update view containers
+			this.updateViewContainers($element);
+
+			// Find links
+			$element.find(&#x27;[&#x27; + this.settings.get(&#x27;elementLinkAttribute&#x27;) + &#x27;]&#x27;).on(&#x27;click&#x27;, (e) =&gt; {
+
+				// Open the uri!
+				e.preventDefault();
+				let uri = $(e.target).attr(&#x27;href&#x27;);
+				this.goto(uri);
+
+			}).each((index, el) =&gt; {
+
+				// Get uri
+				let $el = $(el);
+				let uri = $el.attr(this.settings.get(&#x27;elementLinkAttribute&#x27;));
+				if (uri) {
+
+					// Store in href for easy visilbility, and remove link-to, so it won&#x27;t be found again by this script
+					$el.removeAttr(this.settings.get(&#x27;elementLinkAttribute&#x27;));
+					$el.attr(&#x27;href&#x27;, uri);
+					
+				}
+
+			});
+
+		});
 
 		// Listen to browser&#x27;s address bar
 		this.history.listen((location) =&gt; {

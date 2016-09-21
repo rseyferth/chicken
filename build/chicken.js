@@ -433,7 +433,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 			// Getter?
-			if (instance === null) {
+			if (callback === null) {
 				return _Middleware2.default.registry.get(name);
 			}
 
@@ -540,6 +540,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Router2 = _interopRequireDefault(_Router);
 
+	var _Element = __webpack_require__(41);
+
+	var _Element2 = _interopRequireDefault(_Element);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -619,6 +623,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			/**
 	   * One or more Auth.Auth instances
+	   *
+	   * @property auths
 	   * @type {Object}
 	   */
 			_this.auths = {};
@@ -633,9 +639,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				viewPath: 'views',
 				viewExtension: 'hbs',
 
+				elementLinkAttribute: 'link-to',
+
 				renderer: settings.renderer === undefined ? new _Renderer2.default() : null
 
-			}, ['baseUrl', 'viewPath', 'viewExtension', 'renderer']).apply(settings);
+			}, ['baseUrl', 'viewPath', 'viewExtension', 'renderer', 'elementLinkAttribute']).apply(settings);
 
 			/**
 	   * @property history
@@ -747,6 +755,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Find initial view containers
 				this.findViewContainers();
+
+				// Update view containers whenever element contents are set.
+				_Element2.default.registerHook(function ($element) {
+
+					// Update view containers
+					_this3.updateViewContainers($element);
+
+					// Find links
+					$element.find('[' + _this3.settings.get('elementLinkAttribute') + ']').on('click', function (e) {
+
+						// Open the uri!
+						e.preventDefault();
+						var uri = (0, _jquery2.default)(e.target).attr('href');
+						_this3.goto(uri);
+					}).each(function (index, el) {
+
+						// Get uri
+						var $el = (0, _jquery2.default)(el);
+						var uri = $el.attr(_this3.settings.get('elementLinkAttribute'));
+						if (uri) {
+
+							// Store in href for easy visilbility, and remove link-to, so it won't be found again by this script
+							$el.removeAttr(_this3.settings.get('elementLinkAttribute'));
+							$el.attr('href', uri);
+						}
+					});
+				});
 
 				// Listen to browser's address bar
 				this.history.listen(function (location) {
@@ -4694,13 +4729,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
 	var _Obj2 = __webpack_require__(34);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	var _Application = __webpack_require__(4);
-
-	var _Application2 = _interopRequireDefault(_Application);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -4725,17 +4760,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param {Application} [application]
 	  */
 		function Element($element) {
-			var application = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
 			_classCallCheck(this, Element);
-
-			/**
-	   * @property application
-	   * @type {Application}
-	   */
-			var _this = _possibleConstructorReturn(this, (Element.__proto__ || Object.getPrototypeOf(Element)).call(this));
-
-			_this.application = application ? application : _Application2.default.getInstance();
 
 			/**
 	   * The jQuery element that is the ViewContainer
@@ -4743,6 +4768,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property $element
 	   * @type {jQuery}
 	   */
+			var _this = _possibleConstructorReturn(this, (Element.__proto__ || Object.getPrototypeOf(Element)).call(this));
+
 			_this.$element = $element;
 
 			return _this;
@@ -4752,17 +4779,43 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'setContent',
 			value: function setContent(content) {
 
+				// Fire the before hooks.
+				this._fireHooks('beforeRender');
+
 				// Set it
 				this.$element.html(content);
 				this.trigger('content', content);
 
-				// Update view containers
-				this.application.updateViewContainers(this.$element);
+				// Fire the after hooks
+				this._fireHooks('afterRender');
+			}
+		}, {
+			key: '_fireHooks',
+			value: function _fireHooks(type) {
+				var _this2 = this;
+
+				_underscore2.default.each(Element.Hooks[type], function (callback) {
+
+					// Fire it.
+					callback.apply(_this2, [_this2.$element, _this2]);
+				});
 			}
 		}]);
 
 		return Element;
 	}(_Obj3.default);
+
+	Element.registerHook = function (callback) {
+		var type = arguments.length <= 1 || arguments[1] === undefined ? 'afterRender' : arguments[1];
+
+		Element.Hooks[type].push(callback);
+		return true;
+	};
+
+	Element.Hooks = {
+		beforeRender: [],
+		afterRender: []
+	};
 
 	module.exports = Element;
 
@@ -6425,30 +6478,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 
 			/**
-	   * Set the contents of this view in given $target element
-	   * 
-	   * @method addToDom
-	   * @param {jQuery} $target    The $target for the view to render in. The contents will be completely replaced
-	   *                            by this view.
-	   */
-
-		}, {
-			key: 'addToDOM',
-			value: function addToDOM($target) {
-
-				// Add to dom
-				var $view = (0, _jquery2.default)('<view/>');
-				$view.html(this.documentFragment);
-				$target.html($view);
-
-				// Get the element
-				this.$element = $view;
-
-				// Done!
-				this.resolvePromise('added', this);
-			}
-
-			/**
 	   * Add the view to the ViewContainer, replacing previous contents
 	   * and making sure the ViewContainer knows it's gotten the view.
 	   * 
@@ -6463,8 +6492,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Set view
 				viewContainer.setView(this);
 
+				// Create wrapper
+				var $view = (0, _jquery2.default)('<view/>');
+				$view.html(this.documentFragment);
+
 				// Add to DOM
-				this.addToDOM(viewContainer.$element);
+				viewContainer.setContent($view);
 			}
 		}]);
 
@@ -6715,6 +6748,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
 	var _queryString = __webpack_require__(5);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
@@ -6726,6 +6763,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Utils = __webpack_require__(53);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
+
+	var _App = __webpack_require__(49);
+
+	var _App2 = _interopRequireDefault(_App);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -6765,6 +6806,32 @@ return /******/ (function(modules) { // webpackBootstrap
 					binding.apply();
 				} else {
 					throw new Error('The "action" keyword was not correctly configured in your Renderer...');
+				}
+			}
+
+			/////////////
+			// Routing //
+			/////////////
+
+		}, {
+			key: 'link',
+			value: function link(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+				var _this = this;
+
+				// Add listener
+				if (blocks.element) {
+
+					// Add click listener
+					var $el = (0, _jquery2.default)(blocks.element);
+					$el.on('click', function (e) {
+						e.preventDefault();
+
+						// Get uri value
+						var uri = _this._getValue(params[0]);
+
+						// Go there.
+						(0, _App2.default)().goto(uri);
+					});
 				}
 			}
 
@@ -6830,22 +6897,23 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (show) {
 
 					// Is it a yielding-if?
-					if (blocks.template.yield) {
+					if (blocks.template && blocks.template.yield) {
 						blocks.template.yield();
 
 						// Or parameter-if?
 					} else {
-						return this._getValue(params[0]);
+
+						return this._getValue(params[1]);
 					}
 				} else {
 
 					// Render the inverse yield
-					if (blocks.inverse.yield) {
+					if (blocks.inverse && blocks.inverse.yield) {
 						blocks.inverse.yield();
 
 						// Or the inverse param
 					} else {
-						return params[2];
+						return this._getValue(params[2]);
 					}
 				}
 			}
@@ -6888,20 +6956,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_getValues',
 			value: function _getValues(params) {
-				var _this = this;
+				var _this2 = this;
 
 				return params.map(function (value) {
-					return _this._getValue(value);
+					return _this2._getValue(value);
 				});
 			}
 		}, {
 			key: '_getHashValues',
 			value: function _getHashValues(attributeHash) {
-				var _this2 = this;
+				var _this3 = this;
 
 				var result = {};
 				_underscore2.default.each(attributeHash, function (value, key) {
-					result[key] = _this2._getValue(value);
+					result[key] = _this3._getValue(value);
 				});
 				return result;
 			}
@@ -7001,8 +7069,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		/**
-	  * Get a unique string identifier for given object or variable. 
-	  *  
+	  * Get a unique string identifier for given object or variable. For objects
+	  * this identifier will remain the same, making it useful for comparing objects.
+	  *
+	  * @method uidFor
 	  * @param  {mixed} obj 
 	  * @return {string}
 	  */
@@ -8497,6 +8567,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _View2 = _interopRequireDefault(_View);
 
+	var _Utils = __webpack_require__(53);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -8669,6 +8743,18 @@ return /******/ (function(modules) { // webpackBootstrap
 						return;
 					}
 
+					// Is there currently an action in this vc?
+					if (_this2.viewContainer.currentAction) {
+
+						// Was it triggered by the same route?
+						if (_Utils2.default.uidFor(_this2.viewContainer.currentAction.route) === _Utils2.default.uidFor(_this2.route)) {
+
+							// That means, we've just navigated within nested routes of that page, and this action can be skipped.
+							resolve();
+							return;
+						}
+					}
+
 					// The VC is busy now.
 					_this2.viewContainer.setLoading(true);
 
@@ -8708,11 +8794,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							reject('There is no controller or callback defined... This shouldn\'t happen.');
 							return;
 						}
-				}).then(function () /* result */{
-
-					// Update VCs
-					application.updateViewContainers(_this2.viewContainer.$element);
-				}, function () /* error */{
+				}).then(function () /* result */{}, function () /* error */{
 
 					// No longer loading
 					if (_this2.viewContainer) _this2.viewContainer.setLoading(false);
@@ -9054,7 +9136,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		/**
 	  * @class Api.Api
-	  * @abstract 
 	  *
 	  * @constructor
 	  * @param  {Object} options 	 
@@ -9281,8 +9362,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			_this.originalValues = initValues;
 
+			/**
+	   * Values of relationships, keyed by the relationshipname
+	   * 
+	   * @property related
+	   * @type {Object}
+	   */
 			_this.related = {};
 
+			/**
+	   * The watchable current state of this model. This
+	   * contains attributes for 'busy', 'saving', and 'dirty'.
+	   *
+	   * You can use this in a view to update the view according
+	   * to the model state, using the 'is' property e.g.:
+	   *
+	   * 	{{#if author.is.busy}}
+	   * 		Please wait a moment...
+	   * 	{{/if}}
+	   * 
+	   * @property state
+	   * @type {Observable}
+	   */
 			_this.state = new _Observable3.default({
 				busy: false,
 				saving: false,
@@ -9299,11 +9400,26 @@ return /******/ (function(modules) { // webpackBootstrap
 		// State //
 		///////////
 
+		/**
+	  * Get the model state. This method is used to make the state
+	  * available in views.
+	  * 
+	  * @method getIs
+	  * @return {Observable}
+	  */
+
+
 		_createClass(Model, [{
 			key: 'getIs',
 			value: function getIs() {
 				return this.state;
 			}
+
+			/**
+	   * @method isBusy
+	   * @return {Boolean} 
+	   */
+
 		}, {
 			key: 'isBusy',
 			value: function isBusy() {
@@ -9314,6 +9430,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Information methods //
 			/////////////////////////
 
+			/**
+	   * Checks whether this model is new or has already been saved. This
+	   * is determined by checking whether the 'id' is set.
+	   * 
+	   * @method isNew
+	   * @return {Boolean} 
+	   */
+
 		}, {
 			key: 'isNew',
 			value: function isNew() {
@@ -9323,7 +9447,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			/////////////////
 			// Get and set //
 			/////////////////
-
 
 		}, {
 			key: '_get',
@@ -9358,6 +9481,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this;
 			}
+
+			/**
+	   * Get a value for use in the API, meaning it is in
+	   * database format. For example, dates will be converted back
+	   * from Moment instances into strings.
+	   *
+	   * @method getForApi
+	   * @param  {string} key 
+	   * @return {mixed} 
+	   */
+
 		}, {
 			key: 'getForApi',
 			value: function getForApi(key) {
@@ -9366,6 +9500,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				var value = this.uncastValue(key, this.attributes[key]);
 				return value;
 			}
+
+			/**
+	   * Cast given value according to the AttributeDefinition for given
+	   * key. For example, if you pass a string containing a date as value,
+	   * for a Date key, you will receive a Moment instance.
+	   * 
+	   * @method castValue
+	   * @param  {string} key   
+	   * @param  {Mixed} value 
+	   * @return {Mixed}       
+	   */
+
 		}, {
 			key: 'castValue',
 			value: function castValue(key, value) {
@@ -9378,6 +9524,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return value;
 			}
+
+			/**
+	   * Uncast given value according to the AttributeDefinition for given key.
+	   *
+	   * @method uncastValue
+	   * @param  {string} key   
+	   * @param  {Mixed} value 
+	   * @return {Mixed}       
+	   */
+
 		}, {
 			key: 'uncastValue',
 			value: function uncastValue(key, value) {
@@ -9394,6 +9550,16 @@ return /******/ (function(modules) { // webpackBootstrap
 			/////////////////////////
 			// Api related methods //
 			/////////////////////////
+
+			/**
+	   * Set attribute values that were retrieved from the API, meaning
+	   * they will not be seen as dirty, and will overwrite the original values
+	   * of the model. 
+	   *
+	   * @method setAttributesFromApi
+	   * @param {Object} attributes
+	   * @chainable
+	   */
 
 		}, {
 			key: 'setAttributesFromApi',
@@ -9412,6 +9578,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 				return this;
 			}
+
+			/**
+	   * Get attribute values for use in the API.
+	   *
+	   * @method getAttributesForApi
+	   * @param  {Boolean} onlyDirty  When true, only attributes that have been changed will be retrieved
+	   * @return {Object}      A hash containing attribute key/values
+	   */
+
 		}, {
 			key: 'getAttributesForApi',
 			value: function getAttributesForApi() {
@@ -9435,6 +9610,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				delete attr.id;
 				return attr;
 			}
+
+			/**
+	   * Get the Api instance that is used by this model
+	   *
+	   * @method getApi
+	   * @return {Api.Api}
+	   */
+
 		}, {
 			key: 'getApi',
 			value: function getApi() {
@@ -9443,6 +9626,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				var apiName = this.getDefinition() ? this.getDefinition().api : null;
 				return (0, _App2.default)().apis[apiName];
 			}
+
+			/**
+	   * Get the uri for this model, that can be used in an API call
+	   *
+	   * @method getApiUri
+	   * @return {string}
+	   */
+
 		}, {
 			key: 'getApiUri',
 			value: function getApiUri() {
@@ -9454,6 +9645,28 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Get api uri
 				return def.getApiUri(this.get('id'));
 			}
+
+			/**
+	   * Save the model to the Api. 
+	   *
+	   * Possible options are:
+	   * 
+	   * **uri** (string)
+	   * A custom uri to use instead of the model's default uri
+	   * 
+	   * **includeRelated** (boolean)
+	   * _(Default: true)_ 
+	   * Whether to included modifications in the relationships 
+	   *
+	   * **includeRelatedData** (boolean)	
+	   * _(Default: false)_ 
+	   * Whether to embed relationship data into the request. Note: this is not following JSONAPI specifications.
+	   *
+	   * @method save
+	   * @param  {Object} [options={}]	Optional options hash
+	   * @return {Promise} The promise returned by the ApiCall.execute method
+	   */
+
 		}, {
 			key: 'save',
 			value: function save() {
@@ -9482,7 +9695,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				apiCall.getPromise('complete').then(function () {
 
 					// No longer dirty!
-					_this4.resetDirty();
+					_this4.state.set('dirty', false);
 
 					// No longer busy
 					_this4.state.set('busy', false);
@@ -9502,16 +9715,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Dirtying of model //
 			///////////////////////
 
-			/**
-	   * @method resetDirty
-	   * @chainable
-	   */
-
-		}, {
-			key: 'resetDirty',
-			value: function resetDirty() {
-				this.state.set('dirty', false);
-			}
 
 			/**
 	   * @method getDirty
@@ -9565,9 +9768,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Has it changed
 					var oldValue = this.originalValues[key];
 					var newValue = this.uncastValue(key, this.attributes[key]);
-					if (oldValue != newValue) {
-						console.log('diff', key, oldValue, '!=', newValue);
-					}
 					return oldValue != newValue;
 				} else {
 
@@ -9578,6 +9778,15 @@ return /******/ (function(modules) { // webpackBootstrap
 					return false;
 				}
 			}
+
+			/**
+	   * Check the current dirty state of the model and update
+	   * its status value.
+	   *
+	   * @method updateDirty
+	   * @chainable
+	   */
+
 		}, {
 			key: 'updateDirty',
 			value: function updateDirty() {
@@ -9705,10 +9914,32 @@ return /******/ (function(modules) { // webpackBootstrap
 		return Model;
 	}(_Observable3.default);
 
+	/**
+	 * A map of registered model classes
+	 * 
+	 * @static
+	 * @property registry
+	 * @type {Map}
+	 */
+
+
 	Model.registry = new Map();
 
+	/**
+	 * A map of Model stores, containing loaded records
+	 *
+	 * @static
+	 * @property stores
+	 * @type {Map}
+	 */
 	Model.stores = new Map();
 
+	/**
+	 * @static
+	 * @method getStore
+	 * @param  {string} modelName 
+	 * @return {Map}           
+	 */
 	Model.getStore = function (modelName) {
 		if (!Model.stores.has(modelName)) {
 			Model.stores.set(modelName, new _ModelStore2.default(modelName));
@@ -9716,6 +9947,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		return Model.stores.get(modelName);
 	};
 
+	/**
+	 * @static 
+	 * @method getFromStaore
+	 * @param  {string} modelName 
+	 * @param  {number} id        
+	 * @return {Data.Model}           
+	 */
 	Model.getFromStore = function (modelName, id) {
 
 		// Is there a store?
@@ -9724,6 +9962,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		return store.get(id);
 	};
 
+	/**
+	 * Create a new model instance
+	 *
+	 * @static
+	 * @method create
+	 * @param  {string} modelName  
+	 * @param  {Object} [initValues={}]
+	 * @return {Data.Model}            
+	 */
 	Model.create = function (modelName) {
 		var initValues = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
@@ -11376,13 +11623,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 
 			/**
-	   * Include the given relationships in the request
-	   * 
-	   * @method include
-	   * @chainable
-	   * 
-	   * @param  {string} relations  JSONAPI include options for request
-	   */
+	    * Include the given relationships in the request
+	    * 
+	    * @method include
+	    * @chainable
+	    * 
+	    * @param  {string} relations  JSONAPI include options for request
+	    */
 			value: function include(relations) {
 				return this.query('include', relations);
 			}
@@ -11401,9 +11648,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _jquery = __webpack_require__(1);
+	var _underscore = __webpack_require__(2);
 
-	var _jquery2 = _interopRequireDefault(_jquery);
+	var _underscore2 = _interopRequireDefault(_underscore);
 
 	var _inflection = __webpack_require__(65);
 
@@ -11433,7 +11680,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		/**
 	  * @class Auth.Auth
-	  * @abstract
 	  *
 	  * @param 	{Object} options 
 	  * @constructor
@@ -11446,7 +11692,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Default options
 			var _this = _possibleConstructorReturn(this, (Auth.__proto__ || Object.getPrototypeOf(Auth)).call(this));
 
-			_this.settings = _.defaults(options, {
+			_this.settings = _underscore2.default.defaults(options, {
 
 				middlewareName: 'auth'
 
@@ -11455,7 +11701,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.set('isAuthenticated', false);
 
 			// Check 'on...' settings
-			_.each(_this.settings, function (value, key) {
+			_underscore2.default.each(_this.settings, function (value, key) {
 
 				var match = key.match(/^on([A-Z].+)$/);
 				if (match) {
@@ -11519,7 +11765,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}, {
 			key: 'authenticate',
-			value: function authenticate(credentials) {
+			value: function authenticate() /* credentials */{
 				throw new Error('The ' + this.constructor.name + ' class has not implemented the "authenticate" method');
 			}
 
@@ -11620,10 +11866,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Auth3 = _interopRequireDefault(_Auth2);
 
-	var _Middleware = __webpack_require__(62);
-
-	var _Middleware2 = _interopRequireDefault(_Middleware);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11663,10 +11905,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				identifierKey: 'email',
 				passwordKey: 'password',
 
+				tokenValidForMinutes: 30,
+
 				localStorageKey: 'ChickenJWTAuthToken'
 
 			}, options);
 
+			/**
+	   * The current token
+	   * 
+	   * @property token
+	   * @type {string}
+	   */
 			var _this = _possibleConstructorReturn(this, (JWTAuth.__proto__ || Object.getPrototypeOf(JWTAuth)).call(this, options));
 
 			_this.token = localStorage.getItem(_this.settings.localStorageKey);
@@ -11675,6 +11925,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			return _this;
 		}
+
+		/**
+	  * Try to authenticate using given credentials
+	  * 
+	  * @method authenticate
+	  * @param  {string} identifier 	Usually the email address
+	  * @param  {string} password   
+	  * @return {Promise} 
+	  */
+
 
 		_createClass(JWTAuth, [{
 			key: 'authenticate',
@@ -11709,6 +11969,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 			}
 		}, {
+			key: 'invalidate',
+			value: function invalidate() {
+				var _this3 = this;
+
+				return new Promise(function (resolve /*, reject*/) {
+
+					// Remove token
+					_this3.token = false;
+					localStorage.removeItem(_this3.settings.localStorageKey);
+					_this3.set('isAuthenticated', false);
+					resolve();
+				});
+			}
+		}, {
 			key: 'setToken',
 			value: function setToken(token) {
 
@@ -11722,20 +11996,16 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.set('isAuthenticated', true);
 			}
 		}, {
-			key: 'invalidate',
-			value: function invalidate() {
-
-				// Remove token
-				this.token = false;
-				localStorage.removeItem(this.settings.localStorageKey);
-				this.set('isAuthenticated', false);
-			}
-		}, {
 			key: 'authorizeApiCall',
 			value: function authorizeApiCall(apiCall) {
 
 				// Add token.
-				if (this.isAuthenticated) {}
+				if (this.isAuthenticated()) {
+
+					// Add the bearer token
+
+
+				}
 
 				return apiCall;
 			}

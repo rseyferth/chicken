@@ -1,10 +1,12 @@
 /* eslint no-console: ["error", { allow: ["log"] }] */
 
 import _ from 'underscore';
+import $ from 'jquery';
 import QueryString from 'query-string';
 
 import ActionBinding from '~/Dom/ActionBinding';
 import Utils from '~/Helpers/Utils';
+import App from '~/Helpers/App';
 
 /**
  * @module Dom
@@ -42,6 +44,33 @@ class Helpers
 			throw new Error('The "action" keyword was not correctly configured in your Renderer...');
 		}
 
+	}
+
+
+	/////////////
+	// Routing //
+	/////////////
+
+	link(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+	
+		// Add listener
+		if (blocks.element) {
+
+			// Add click listener
+			let $el = $(blocks.element);
+			$el.on('click', (e) => {
+				e.preventDefault();
+
+				// Get uri value
+				let uri = this._getValue(params[0]);
+
+				// Go there.
+				App().goto(uri);
+
+			});
+			
+			
+		}
 	}
 
 
@@ -101,23 +130,25 @@ class Helpers
 		if (show) {
 
 			// Is it a yielding-if?
-			if (blocks.template.yield) {
+			if (blocks.template && blocks.template.yield) {
 				blocks.template.yield();
 
 			// Or parameter-if?
 			} else {
-				return this._getValue(params[0]);
+
+				return this._getValue(params[1]);
+				
 			}
 
 		} else {
 
 			// Render the inverse yield
-			if (blocks.inverse.yield) {
+			if (blocks.inverse && blocks.inverse.yield) {
 				blocks.inverse.yield();
 			
 			// Or the inverse param
 			} else {
-				return params[2];
+				return this._getValue(params[2]);
 			}
 		}
 

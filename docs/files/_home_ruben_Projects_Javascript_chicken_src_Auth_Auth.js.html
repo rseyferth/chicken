@@ -154,7 +154,7 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import $ from &#x27;jquery&#x27;;
+import _ from &#x27;underscore&#x27;;
 import inflection from &#x27;inflection&#x27;;
 
 import Observable from &#x27;~/Core/Observable&#x27;;
@@ -168,7 +168,6 @@ class Auth extends Observable
 
 	/**
 	 * @class Auth.Auth
-	 * @abstract
 	 *
 	 * @param 	{Object} options 
 	 * @constructor
@@ -252,7 +251,7 @@ class Auth extends Observable
 	 * @param  {object} credentials 
 	 * @return {Promise}
 	 */
-	authenticate(credentials) {
+	authenticate(/* credentials */) {
 		throw new Error(&#x27;The &#x27; + this.constructor.name + &#x27; class has not implemented the &quot;authenticate&quot; method&#x27;);		
 	}
 

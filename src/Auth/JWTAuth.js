@@ -1,7 +1,6 @@
 import $ from 'jquery';
 
 import Auth from '~/Auth/Auth';
-import Middleware from '~/Routing/Middleware';
 
 /**
  * @module Auth
@@ -31,14 +30,21 @@ class JWTAuth extends Auth
 			identifierKey: 'email',
 			passwordKey: 'password',
 
+			tokenValidForMinutes: 30,
+
 			localStorageKey: 'ChickenJWTAuthToken'
 
 		}, options);
 		super(options);
 
 
+		/**
+		 * The current token
+		 * 
+		 * @property token
+		 * @type {string}
+		 */
 		this.token = localStorage.getItem(this.settings.localStorageKey);
-
 
 
 		this.set('isAuthenticated', !!this.token);
@@ -48,6 +54,14 @@ class JWTAuth extends Auth
 
 	}
 
+	/**
+	 * Try to authenticate using given credentials
+	 * 
+	 * @method authenticate
+	 * @param  {string} identifier 	Usually the email address
+	 * @param  {string} password   
+	 * @return {Promise} 
+	 */
 	authenticate(identifier, password) {
 
 		// Make a call.
@@ -83,6 +97,19 @@ class JWTAuth extends Auth
 
 	}
 
+	invalidate() {
+
+		return new Promise((resolve/*, reject*/) => {
+
+			// Remove token
+			this.token = false;
+			localStorage.removeItem(this.settings.localStorageKey);
+			this.set('isAuthenticated', false);
+			resolve();
+
+		});
+
+	}
 
 	setToken(token) {
 
@@ -99,26 +126,17 @@ class JWTAuth extends Auth
 
 
 
-	invalidate() {
-
-		// Remove token
-		this.token = false;
-		localStorage.removeItem(this.settings.localStorageKey);
-		this.set('isAuthenticated', false);
-
-
-	}
-
-
 
 	authorizeApiCall(apiCall) {
 
 		// Add token.
-		if (this.isAuthenticated) {
+		if (this.isAuthenticated()) {
 
+			// Add the bearer token
 
 
 		}
+
 
 		return apiCall;
 	}
