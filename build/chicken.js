@@ -6821,6 +6821,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _App2 = _interopRequireDefault(_App);
 
+	var _Observable = __webpack_require__(33);
+
+	var _Observable2 = _interopRequireDefault(_Observable);
+
+	var _ObservableArray = __webpack_require__(54);
+
+	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6876,7 +6884,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Add click listener
 					var $el = (0, _jquery2.default)(blocks.element);
-					$el.on('click', function (e) {
+					$el.each(function (index, el) {
+
+						// Set href for easy debuggin' and statusbar info
+						(0, _jquery2.default)(el).attr('href', _this._getValue(params[0]));
+					}).on('click', function (e) {
 						e.preventDefault();
 
 						// Get uri value
@@ -6977,9 +6989,38 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}, {
 			key: 'concat',
-			value: function concat(params /*, attributeHash, blocks, morph, renderer, scope, visitor*/) {
+			value: function concat(params, attributeHash /*, blocks, morph, renderer, scope, visitor*/) {
 
-				return this._getValues(params).join();
+				attributeHash = _underscore2.default.defaults(attributeHash, {
+					separator: ''
+				});
+				return this._getValues(params).join(attributeHash.separator);
+			}
+		}, {
+			key: 'get',
+			value: function get(params) {
+
+				// Get params
+				var obj = this._getValue(params[0]);
+				var key = this._getValue(params[1]);
+
+				// Is it an observable?
+				if (obj instanceof _Observable2.default || obj instanceof _ObservableArray2.default) {
+					return obj.get(key);
+				} else {
+					return obj[key];
+				}
+			}
+		}, {
+			key: 'firstIn',
+			value: function firstIn(params) {
+
+				var arr = this._getValue(params[0]);
+				if (arr instanceof _ObservableArray2.default) {
+					return arr.first();
+				} else {
+					return _underscore2.default.first(arr);
+				}
 			}
 
 			///////////
@@ -7486,6 +7527,19 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 
 			/**
+	   * Get the first item in the collection
+	   * 
+	   * @method first
+	   * @return {mixed} 
+	   */
+
+		}, {
+			key: 'first',
+			value: function first() {
+				return _underscore2.default.first(this.items);
+			}
+
+			/**
 	   * Listen for any changes in any of the object's attributes. 
 	   * The callback will receive an array containing the names of
 	   * all updates attributes. 
@@ -7564,6 +7618,124 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					return item;
 				});
+			}
+
+			/**
+	   * Get a keyed array containing all items in this ObservableArray
+	   * by the value of given key.
+	   *
+	   * @method keyBy
+	   * @param  {string} key 	The attribute key. You can also use dot-notation in this key.
+	   * @return {Object}     
+	   */
+
+		}, {
+			key: 'keyBy',
+			value: function keyBy(key) {
+
+				// Loop it.
+				var result = {};
+				_underscore2.default.each(this.items, function (item) {
+					var keyValue = item.get(key);
+					if (keyValue) result[keyValue] = item;
+				});
+
+				return result;
+			}
+		}, {
+			key: 'sortBy',
+			value: function sortBy(keyOrCallback) {
+
+				// Is it a key?
+				var callback = keyOrCallback;
+				if (typeof keyOrCallback === 'string') {
+					callback = function callback(item) {
+						return item.get(keyOrCallback);
+					};
+				}
+
+				// Now sort!
+				this.items = _underscore2.default.sortBy(this.items, callback);
+				return this;
+			}
+
+			/**
+	   * Get a keyed array containing ObservableArray's with values that have the same
+	   * value for given key.
+	   *
+	   * @method groupBy
+	   * @param  {string} key  The attribute key. You can also use dot-notation in this key.
+	   * @param  {string} [defaultGroup=default] The key under which to put items that have no value for given key
+	   * @return {Object}
+	   */
+
+		}, {
+			key: 'groupBy',
+			value: function groupBy(key) {
+				var defaultGroup = arguments.length <= 1 || arguments[1] === undefined ? 'default' : arguments[1];
+
+
+				// Loop it
+				var result = {};
+				_underscore2.default.each(this.items, function (item) {
+
+					// Get value
+					var keyValue = item.get(key);
+
+					// Nothing?
+					if (!keyValue) keyValue = defaultGroup;
+
+					// Group known?
+					if (!result[keyValue]) result[keyValue] = new ObservableArray();
+					result[keyValue].add(item);
+				});
+
+				return result;
+			}
+
+			/**
+	   * Get value for given valueAttribute key from all items
+	   * 
+	   *
+	   * @method list 
+	   * @param  {string} valueAttribute 
+	   * @param  {string} keyAttribute   
+	   * @return {[type]}                [description]
+	   */
+
+		}, {
+			key: 'list',
+			value: function list(valueAttribute) {
+				var keyAttribute = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+				var result = keyAttribute ? {} : [];
+				_underscore2.default.each(this.items, function (item) {
+					if (keyAttribute) {
+						result[item.get(keyAttribute)] = item.get(valueAttribute);
+					} else {
+						result.push(item.get(valueAttribute));
+					}
+				});
+
+				return result;
+			}
+
+			/**
+	   * Get the lowest value for objects in this array
+	   *
+	   * @method getLowestValue
+	   * @param  {string}  key          
+	   * @return {mixed}
+	   */
+
+		}, {
+			key: 'getLowestValue',
+			value: function getLowestValue(key) {
+
+				// Get a list.
+				var list = this.list(key);
+				return _underscore2.default.min(list);
 			}
 
 			/**
@@ -8152,6 +8324,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this;
 			}
+		}, {
+			key: 'abstract',
+			value: function abstract() {
+				this.options.abstract = true;
+				return this;
+			}
 
 			/**
 	   * Check whether this Route matches the given Request. If so, the method
@@ -8562,15 +8740,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Make any actions that are already there dependent on the new ones, 
 				// because these actions are the parent(s) of the existing actions.
-				this.actions.forEach(function (previousAction) {
-					_underscore2.default.each(myActions, function (myAction) {
+				this.actions.forEach(function (previousAction, previousKey) {
+					_underscore2.default.each(myActions, function (myAction, myKey) {
 						previousAction.dependsOn.push(myAction);
 					});
 				});
 
 				// Add these actions
+				var actionsToMakeDependentOn = [];
 				_underscore2.default.each(myActions, function (myAction, targetViewContainer) {
+
+					// My this action dependent on previous actions defined in this route
+					_underscore2.default.each(actionsToMakeDependentOn, function (depAction) {
+						myAction.dependsOn.push(depAction);
+					});
+
+					// Add the action to my actions
 					_this2.actions.set(targetViewContainer, myAction);
+					actionsToMakeDependentOn.push(myAction);
 				});
 
 				// Now look into the parent
@@ -9556,6 +9743,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.state.study(function () {
 				_this._scheduleAttributeChanged('is');
 			});
+
+			// Check computed!
+			if (_this.constructor.definition) {
+
+				// Apply to model
+				_this.constructor.definition.initializeModel(_this);
+			}
 
 			return _this;
 		}
@@ -11638,7 +11832,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!resourceType) {
 					throw new TypeError('Api result did not specity the record type');
 				}
-				var modelName = _inflection2.default.singularize(_inflection2.default.capitalize(resourceType));
+				var modelName = _inflection2.default.singularize(_inflection2.default.camelize(resourceType));
 				if (_Model2.default.registry.has(modelName)) {
 					modelClass = _Model2.default.registry.get(modelName);
 				}
@@ -11669,6 +11863,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Check relationships records.
 				if (data.relationships) {
+
 					_underscore2.default.each(data.relationships, function (rel, relationshipName) {
 
 						// Is there data?
@@ -11731,7 +11926,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!relId) throw new TypeError('Api result did not specify the relationship record id');
 
 				// Find model in store
-				relType = _inflection2.default.singularize(_inflection2.default.capitalize(relType));
+				relType = _inflection2.default.singularize(_inflection2.default.camelize(relType));
 				var relModel = _Model2.default.getFromStore(relType, relId);
 
 				return relModel;
@@ -12398,6 +12593,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
+	var _ComputedProperty = __webpack_require__(37);
+
+	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -12424,6 +12623,17 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		_createClass(ModelDefinition, [{
+			key: 'initializeModel',
+			value: function initializeModel(model) {
+
+				// Add computed
+				_.each(this.computedAttributes, function (attr, key) {
+					model.set(key, new _ComputedProperty2.default(attr.dependencies, attr.callback));
+				});
+
+				return model;
+			}
+		}, {
 			key: 'attribute',
 			value: function attribute(name, type) {
 				var attr = new _ModelAttribute2.default(name, type);

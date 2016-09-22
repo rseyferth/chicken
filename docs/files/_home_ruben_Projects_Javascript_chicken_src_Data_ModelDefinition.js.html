@@ -158,6 +158,7 @@ import inflection from &#x27;inflection&#x27;;
 
 import ModelAttribute from &#x27;~/Data/ModelAttribute&#x27;;
 import Relationship from &#x27;~/Data/Relationship&#x27;;
+import ComputedProperty from &#x27;~/Core/ComputedProperty&#x27;;
 
 /**
  * @module Data
@@ -183,6 +184,19 @@ class ModelDefinition
 
 
 	}
+
+
+	initializeModel(model) {
+
+		// Add computed
+		_.each(this.computedAttributes, (attr, key) =&gt; {
+			model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
+		});
+
+		return model;
+
+	}
+
 
 		
 

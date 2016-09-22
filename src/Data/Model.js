@@ -68,6 +68,15 @@ class Model extends Observable
 			this._scheduleAttributeChanged('is');
 		});
 
+
+		// Check computed!
+		if (this.constructor.definition) {
+
+			// Apply to model
+			this.constructor.definition.initializeModel(this);
+
+		}
+		
 	}
 
 

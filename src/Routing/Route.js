@@ -154,6 +154,12 @@ class Route extends Obj
 	}
 
 
+	abstract() {
+		this.options.abstract = true;
+		return this;
+	}
+
+
 	/**
 	 * Check whether this Route matches the given Request. If so, the method
 	 * will return a complete RouteMatch. If not, the method will return `false`.

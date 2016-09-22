@@ -184,11 +184,10 @@ class JsonApi extends Api
 		if (!resourceType) {
 			throw new TypeError('Api result did not specity the record type');
 		}
-		let modelName = inflection.singularize(inflection.capitalize(resourceType));
+		let modelName = inflection.singularize(inflection.camelize(resourceType));
 		if (Model.registry.has(modelName)) {
 			modelClass = Model.registry.get(modelName);
 		}
-
 
 		// Collect attributes
 		let attributes = {};
@@ -218,6 +217,7 @@ class JsonApi extends Api
 
 		// Check relationships records.
 		if (data.relationships) {
+
 			_.each(data.relationships, (rel, relationshipName) => {
 
 				// Is there data?
@@ -288,7 +288,7 @@ class JsonApi extends Api
 		if (!relId) throw new TypeError('Api result did not specify the relationship record id'); 
 
 		// Find model in store
-		relType = inflection.singularize(inflection.capitalize(relType));
+		relType = inflection.singularize(inflection.camelize(relType));
 		let relModel = Model.getFromStore(relType, relId);
 	
 		return relModel;

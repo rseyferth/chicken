@@ -291,6 +291,19 @@ class ObservableArray extends Obj
 
 	}
 
+
+	/**
+	 * Get the first item in the collection
+	 * 
+	 * @method first
+	 * @return {mixed} 
+	 */
+	first() {
+		return _.first(this.items);
+	}
+
+
+
 	/**
 	 * Listen for any changes in any of the object's attributes. 
 	 * The callback will receive an array containing the names of
@@ -370,6 +383,120 @@ class ObservableArray extends Obj
 		});
 
 	}
+
+
+	/**
+	 * Get a keyed array containing all items in this ObservableArray
+	 * by the value of given key.
+	 *
+	 * @method keyBy
+	 * @param  {string} key 	The attribute key. You can also use dot-notation in this key.
+	 * @return {Object}     
+	 */
+	keyBy(key) {
+
+		// Loop it.
+		let result = {};
+		_.each(this.items, (item) => {
+			let keyValue = item.get(key);
+			if (keyValue) result[keyValue] = item;
+		});
+
+		return result;
+
+	}
+
+
+	sortBy(keyOrCallback) {
+
+		// Is it a key?
+		let callback = keyOrCallback;
+		if (typeof keyOrCallback === 'string') {
+			callback = (item) => {
+				return item.get(keyOrCallback);
+			};
+		}
+
+		// Now sort!
+		this.items = _.sortBy(this.items, callback);
+		return this;
+
+	}
+
+
+	/**
+	 * Get a keyed array containing ObservableArray's with values that have the same
+	 * value for given key.
+	 *
+	 * @method groupBy
+	 * @param  {string} key  The attribute key. You can also use dot-notation in this key.
+	 * @param  {string} [defaultGroup=default] The key under which to put items that have no value for given key
+	 * @return {Object}
+	 */
+	groupBy(key, defaultGroup = 'default') {
+
+		// Loop it
+		let result = {};
+		_.each(this.items, (item) => {
+
+			// Get value
+			let keyValue = item.get(key);
+
+			// Nothing?
+			if (!keyValue) keyValue = defaultGroup;
+
+			// Group known?
+			if (!result[keyValue]) result[keyValue] = new ObservableArray;
+			result[keyValue].add(item);
+
+		});
+
+		return result;
+
+	}
+
+	/**
+	 * Get value for given valueAttribute key from all items
+	 * 
+	 *
+	 * @method list 
+	 * @param  {string} valueAttribute 
+	 * @param  {string} keyAttribute   
+	 * @return {[type]}                [description]
+	 */
+	list(valueAttribute, keyAttribute = null) {
+
+		let result = keyAttribute ? {} : [];
+		_.each(this.items, (item) => {
+			if (keyAttribute) {
+				result[item.get(keyAttribute)] = item.get(valueAttribute);
+			} else {
+				result.push(item.get(valueAttribute))
+			}
+		});
+		
+		return result;
+
+	}
+
+	/**
+	 * Get the lowest value for objects in this array
+	 *
+	 * @method getLowestValue
+	 * @param  {string}  key          
+	 * @return {mixed}
+	 */
+	getLowestValue(key) {
+
+		// Get a list.
+		let list = this.list(key);
+		return _.min(list);
+
+	}
+
+
+
+
 
 
 

@@ -7,6 +7,8 @@ import QueryString from 'query-string';
 import ActionBinding from '~/Dom/ActionBinding';
 import Utils from '~/Helpers/Utils';
 import App from '~/Helpers/App';
+import Observable from '~/Core/Observable';
+import ObservableArray from '~/Core/ObservableArray';
 
 /**
  * @module Dom
@@ -58,7 +60,12 @@ class Helpers
 
 			// Add click listener
 			let $el = $(blocks.element);
-			$el.on('click', (e) => {
+			$el.each((index, el) => {
+
+				// Set href for easy debuggin' and statusbar info
+				$(el).attr('href', this._getValue(params[0]));
+
+			}).on('click', (e) => {
 				e.preventDefault();
 
 				// Get uri value
@@ -159,9 +166,38 @@ class Helpers
 	// Values //
 	////////////
 
-	concat(params/*, attributeHash, blocks, morph, renderer, scope, visitor*/) {
+	concat(params, attributeHash/*, blocks, morph, renderer, scope, visitor*/) {
 
-		return this._getValues(params).join();
+		attributeHash = _.defaults(attributeHash, {
+			separator: ''
+		});
+		return this._getValues(params).join(attributeHash.separator);
+
+	}
+
+	get(params) {
+
+		// Get params
+		let obj = this._getValue(params[0]);
+		let key = this._getValue(params[1]);
+
+		// Is it an observable?
+		if (obj instanceof Observable || obj instanceof ObservableArray) {
+			return obj.get(key);
+		} else {
+			return obj[key];
+		}
+
+	}
+
+	firstIn(params) {
+
+		let arr = this._getValue(params[0]);
+		if (arr instanceof ObservableArray) {
+			return arr.first();
+		} else {
+			return _.first(arr);
+		}
 
 	}
 
