@@ -5,7 +5,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import XRegExp from 'xregexp';
-
+import inflection from 'inflection';
 
 
 ///////////////////////////////////////
@@ -38,7 +38,9 @@ import ComputedProperty from '~/Core/ComputedProperty';
 import Obj from '~/Core/Obj';
 import Observable from '~/Core/Observable';
 import ObservableArray from '~/Core/ObservableArray';
+import Reference from '~/Core/Reference';
 import SettingsObject from '~/Core/SettingsObject';
+
 
 // Data
 import Model from '~/Data/Model';
@@ -55,8 +57,6 @@ import Helpers from '~/Dom/Helpers';
 import Renderer from '~/Dom/Renderer';
 import View from '~/Dom/View';
 import ViewContainer from '~/Dom/ViewContainer';
-
-import LinkTo from '~/Dom/Components/LinkTo';
 
 // Helpers
 import App from '~/Helpers/App';
@@ -106,6 +106,7 @@ var Chicken = {
 		Obj: Obj,
 		Observable: Observable,
 		ObservableArray: ObservableArray,
+		Reference: Reference,
 		SettingsObject: SettingsObject
 	},
 
@@ -144,6 +145,9 @@ var Chicken = {
 		RouteMatch: RouteMatch,
 		Router: Router
 	},
+
+	inflection: inflection,
+
 
 
 	/////////////////
@@ -272,16 +276,20 @@ var Chicken = {
 
 		return new View(...args);
 
+	},
+
+
+	/////////////
+	// Helpers //
+	/////////////
+
+	each: (...args) => {
+
+		return Utils.each.apply(this, args);
+
 	}
 
-
-
-
 };
-
-
-// Register components
-Chicken.component('link-to', LinkTo);
 
 
 module.exports = Chicken;

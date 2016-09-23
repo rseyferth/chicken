@@ -42,7 +42,7 @@ class Binding
 		 * @property path
 		 * @type {string}
 		 */
-		this.path = path;
+		this.path = typeof path === 'string' && path.length > 0 ? path : false;
 
 
 		/**
@@ -64,7 +64,8 @@ class Binding
 		// Now watch! //
 		////////////////
 
-		this.observable.observe(path, () => {
+		// What to do when value changes
+		let callback = () => {
 
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
@@ -72,7 +73,14 @@ class Binding
 				this.view.scheduleRevalidate();
 			});
 
-		});
+		};
+
+		// Now listen to the object
+		if (this.path) {
+			this.observable.observe(path, callback);
+		} else {
+			this.observable.study(callback);
+		}
 
 	}
 
@@ -83,7 +91,15 @@ class Binding
 	 * @return {mixed}
 	 */
 	getValue() {
-		return this.observable.get(this.path);
+		
+		// Get a path value
+		if (this.path) {
+			return this.observable.get(this.path);
+		}
+
+		// Then return the whole thing
+		return this.observable;
+
 	}
 
 

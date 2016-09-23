@@ -28,6 +28,9 @@ class SettingsObject extends Observable
 		 */
 		this.allowedKeys = allowedKeys;
 		
+
+		this.notificationsDisabled = true;
+
 	}
 
 	/**

@@ -127,7 +127,7 @@ class Model extends Observable
 	_get(key) {
 
 		// Is there a getter?
-		let methodName = 'get' + inflection.capitalize(key);
+		let methodName = 'get' + inflection.camelize(key);
 		if (this[methodName] && typeof this[methodName] === 'function') {
 			return this[methodName].apply(this, [this.attributes[key]]);
 		}
@@ -447,7 +447,10 @@ class Model extends Observable
 	 */
 	updateDirty() {
 
-		this.state.set('dirty', this.isDirty());
+		let isDirty = this.isDirty();
+		if (isDirty !== this.get('isDirty')) {
+			this.state.set('dirty', this.isDirty());
+		}
 		return this;
 
 	}

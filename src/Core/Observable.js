@@ -89,6 +89,13 @@ class Observable extends Obj {
 		this.attributes = {};
 
 
+		/**
+		 * Whenever this property is true, no notifications will be triggered
+		 * 
+		 * @attribute notificationsDisabled
+		 * @type {Boolean}
+		 */
+		this.notificationsDisabled = false;
 
 
 		// Scheduling
@@ -101,7 +108,9 @@ class Observable extends Obj {
 		////////////////////
 
 		// Initialize values
-		this.import(initValues, convertToObservables, true);
+		this.withoutNotifications(() => {
+			this.import(initValues, convertToObservables);			
+		});
 		
 	}
 
@@ -170,11 +179,16 @@ class Observable extends Obj {
 		// Nothing?
 		if (value === undefined) return;
 
+		// Is it a reference?
+		if (value instanceof Reference) {
+			value = value.getValue();
+		}
+
 		// Value found?
 		if (parts.length === 0) {
 
 			// Is it computed?
-			if (value instanceof ComputedProperty || value instanceof Reference) {
+			if (value instanceof ComputedProperty) {
 				return value.getValue();
 			}
 
@@ -190,7 +204,7 @@ class Observable extends Obj {
 
 		} else {
 
-			throw new Error('The found value for ' + key + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value));
+			throw new Error('The found value for ' + currentPart + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value));
 
 		}
 
@@ -210,11 +224,9 @@ class Observable extends Obj {
 	 * @param {mixed} value 		The value to store
 	 * @param {boolean} [convertToObservables=false]
 	 *        						Whether to convert standard object values into Observable instances
-	 * @param {boolean} [doNotNotify=false]
-	 *        						Whether to skip notifying listeners
 	 * @chainable
 	 */
-	set(key, value, convertToObservables = false, doNotNotify = false) {
+	set(key, value, convertToObservables = false) {
 
 		// Convert?
 		if (convertToObservables === true && typeof value === 'object' && value !== null) {
@@ -258,11 +270,11 @@ class Observable extends Obj {
 
 				}
 
-				// Study it
+				/*// Study it
 				newValue.study(() => {
 					this._scheduleAttributeChanged(currentPart);
 				});
-				
+				*/
 				// Store it
 				this.attributes[currentPart] = newValue;
 
@@ -279,12 +291,12 @@ class Observable extends Obj {
 		}
 
 		// Now set the attribute
-		this.setAttribute(key, value, convertToObservables, doNotNotify);
+		this.setAttribute(key, value, convertToObservables);
 
 		return this;
 
 	}
-	setAttribute(key, value, convertToObservables = true, doNotNotify = false) {
+	setAttribute(key, value, convertToObservables = true) {
 
 		// Set it
 		this._set(key, value);
@@ -310,7 +322,7 @@ class Observable extends Obj {
 		}
 
 		// Update attribute
-		if (!doNotNotify) this._scheduleAttributeChanged(key);
+		this._scheduleAttributeChanged(key);
 
 		return this;
 
@@ -335,49 +347,24 @@ class Observable extends Obj {
 	}
 
 
-	import(obj, convertToObservables = true, doNotNotify = false) {
+	setSilently(key, value, convertToObservables = false) {
+		return this.withoutNotifications(() => {
+			this.set(key, value, convertToObservables);
+		});
+	}
 
-		// Go through to the object's first level
-		_.each(obj, (value, key) => {
 
-			// Is the value an array or object?
-			if ((Array.isArray(value) || (typeof value === 'object' && value !== null && value.constructor === Object)) && convertToObservables === true) {
+	import(obj, convertToObservables = true) {
 
-				// Do I have this value?
-				if (this.attributes[key] !== undefined && Observable.isObservable(this.attributes[key])) {
-
-					// Import
-					var obj = this.attributes.get(key);
-					obj.import(value, convertToObservables, doNotNotify);
-
-				} else {
-
-					// Array or object?
-					if (Array.isArray(value)) {
-						
-						// Put a new observable array in there
-						this._set(key, ClassMap.create('ObservableArray', [value]));
-
-					} else {
-
-						// Put a new observable in there
-						this._set(key, new Observable(value));
-
-					}
-
-				}
-			
-			} else {
-
-				// Just set the value (don't notify)
-				this.set(key, value, convertToObservables, true);
-
-			}
-
-		});	
+		// Import all items in hash
+		this.withoutNotifications(() => {
+			_.each(obj, (value, key) => {
+				this.set(key, value, convertToObservables);
+			});
+		});
 
 		// Notify!
-		this.trigger(Observable.Events.Import);
+		if (!this.notificationsDisabled) this.trigger(Observable.Events.Import);
 
 		return this;
 
@@ -568,6 +555,29 @@ class Observable extends Obj {
 	}
 
 
+	/**
+	 * Execute given callback without triggering change notifications.
+	 * 
+	 * @method withoutNotifications
+	 * @param  {Function} callback 
+	 * @chainable
+	 */
+	withoutNotifications(callback) {
+
+		let wasDisabled = this.notificationsDisabled;
+		this.notificationsDisabled = true;
+
+		callback();
+
+		this.notificationsDisabled = wasDisabled;
+
+
+		return this;
+
+	}
+
+
+
 	clone(convertToObservables = true) {
 
 		// Make copy!
@@ -583,6 +593,9 @@ class Observable extends Obj {
 	/////////////////////
 
 	_scheduleAttributeChanged(key) {
+
+		// Notifications disabled?
+		if (this.notificationsDisabled) return;
 
 		// Already something scheduled?
 		if (!this._scheduleAttributesChangedTimeout) {
@@ -605,6 +618,9 @@ class Observable extends Obj {
 	}
 
 	_triggerAttributesChanged() {
+
+		// Notifications disabled?
+		if (this.notificationsDisabled) return;
 
 		// Clear for next time.
 		if (this._scheduleAttributesChangedTimeout) clearTimeout(this._scheduleAttributesChangedTimeout);

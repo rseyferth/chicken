@@ -189,8 +189,10 @@ class ModelDefinition
 	initializeModel(model) {
 
 		// Add computed
-		_.each(this.computedAttributes, (attr, key) =&gt; {
-			model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
+		model.withoutNotifications(() =&gt; {
+			_.each(this.computedAttributes, (attr, key) =&gt; {
+				model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
+			});			
 		});
 
 		return model;

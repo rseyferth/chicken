@@ -2,6 +2,7 @@ import _ from 'underscore';
 import HTMLBars from 'htmlbars-standalone';
 
 import Observable from '~/Core/Observable';
+import ObservableArray from '~/Core/ObservableArray';
 import Binding from '~/Dom/Binding';
 import ActionBinding from '~/Dom/ActionBinding';
 import Component from '~/Dom/Component';
@@ -61,11 +62,8 @@ class Renderer
 					path = keys.join('.');
 				}
 
-				// No path? Return the whole data
-				if (path === '') return appliedScope;
-
 				// Is data an observable?
-				if (appliedScope instanceof Observable) {
+				if ((appliedScope instanceof Observable && path.length > 0) || appliedScope instanceof ObservableArray) {
 
 					// Already a binding?
 					if (appliedScope._bindings === undefined) appliedScope._bindings = {};
@@ -83,6 +81,11 @@ class Renderer
 
 					// Get the value
 					return binding;
+
+				} else if (path === '') {
+
+					// Return the scope itself
+					return appliedScope;
 
 				} else {
 

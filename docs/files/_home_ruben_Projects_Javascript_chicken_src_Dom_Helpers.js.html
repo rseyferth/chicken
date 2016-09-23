@@ -161,6 +161,7 @@ import $ from &#x27;jquery&#x27;;
 import QueryString from &#x27;query-string&#x27;;
 
 import ActionBinding from &#x27;~/Dom/ActionBinding&#x27;;
+import Binding from &#x27;~/Dom/Binding&#x27;;
 import Utils from &#x27;~/Helpers/Utils&#x27;;
 import App from &#x27;~/Helpers/App&#x27;;
 import Observable from &#x27;~/Core/Observable&#x27;;
@@ -357,6 +358,18 @@ class Helpers
 
 	}
 
+	equal(params) {
+
+		// Get params
+		let value1 = this._getValue(params[0]);
+		let value2 = this._getValue(params[1]);
+		return value1 == value2;
+
+	}
+	notEqual(params) {
+		return !this.equal(params);
+	}
+
 
 
 	///////////
@@ -395,10 +408,6 @@ class Helpers
 		});
 		return result;
 	}
-
-
-
-
 
 	
 

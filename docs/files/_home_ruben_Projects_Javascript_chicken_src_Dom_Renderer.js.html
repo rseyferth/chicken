@@ -158,6 +158,7 @@ import _ from &#x27;underscore&#x27;;
 import HTMLBars from &#x27;htmlbars-standalone&#x27;;
 
 import Observable from &#x27;~/Core/Observable&#x27;;
+import ObservableArray from &#x27;~/Core/ObservableArray&#x27;;
 import Binding from &#x27;~/Dom/Binding&#x27;;
 import ActionBinding from &#x27;~/Dom/ActionBinding&#x27;;
 import Component from &#x27;~/Dom/Component&#x27;;
@@ -217,11 +218,8 @@ class Renderer
 					path = keys.join(&#x27;.&#x27;);
 				}
 
-				// No path? Return the whole data
-				if (path === &#x27;&#x27;) return appliedScope;
-
 				// Is data an observable?
-				if (appliedScope instanceof Observable) {
+				if ((appliedScope instanceof Observable &amp;&amp; path.length &gt; 0) || appliedScope instanceof ObservableArray) {
 
 					// Already a binding?
 					if (appliedScope._bindings === undefined) appliedScope._bindings = {};
@@ -239,6 +237,11 @@ class Renderer
 
 					// Get the value
 					return binding;
+
+				} else if (path === &#x27;&#x27;) {
+
+					// Return the scope itself
+					return appliedScope;
 
 				} else {
 

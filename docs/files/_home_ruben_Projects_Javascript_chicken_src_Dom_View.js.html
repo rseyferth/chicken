@@ -339,7 +339,7 @@ class View extends Observable
 		}
 
 		// Is it HTML?		
-		else if (/^\&lt;[a-z\!]/.test(source)) {
+		else if (/^\&lt;[a-z\!]/.test(source) || /^{{/.test(source)) {
 
 			// Use code now
 			this.templateString = source;
@@ -491,7 +491,9 @@ class View extends Observable
 				let promise = this.dataPromises[key] = value.getPromise(&#x27;complete&#x27;);
 				this.loadPromises.push(promise);
 				promise.then((result) =&gt; {
-					this.set(key, result, true, true);
+					this.withoutNotifications(() =&gt; {							
+						this.set(key, result, true, true);
+					});
 				});
 
 			}
@@ -503,7 +505,9 @@ class View extends Observable
 				this.dataPromises[key] = value;
 				this.loadPromises.push(value);
 				value.then((result) =&gt; {
-					this.set(key, result, true, true);
+					this.withoutNotifications(() =&gt; {		
+						this.set(key, result, true, true);
+					});
 				});
 
 			} else {
@@ -516,7 +520,9 @@ class View extends Observable
 				}
 
 				// Set it now (convert to observables, and do not trigger updates)
-				this.set(key, value, true, true);
+				this.withoutNotifications(() =&gt; {			
+					this.set(key, value, true);
+				});
 
 			}
 

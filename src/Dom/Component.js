@@ -20,30 +20,110 @@ class Component extends View
 
 		super(source, null, renderer);
 
+
+		/**
+		 * The tag-name that was used to initialize this component
+		 * 
+		 * @property name
+		 * @type {string}
+		 */
 		this.name = name;
 
+		/**
+		 * The HTMLBars morph that contains this component
+		 * 
+		 * @property morph
+		 * @type {HTMLBarsMorph}
+		 */
 		this.morph = morph;
 
+		/**
+		 * The HTMLBars scope for this component
+		 * 
+		 * @property scope
+		 * @type {Object}
+		 */
 		this.scope = scope;
 
+		/**
+		 * The list of non-keyed parameters used in this component
+		 * 
+		 * @property parameters
+		 * @type {array}
+		 */
 		this.parameters = parameters;
+
+		/**
+		 * The attribute hash
+		 *
+		 * @property attributes
+		 * @type {object}
+		 */
 		this.attributes = attributeHash;
+
+		/**
+		 * The HTMLBars visitor that was used to initialize this component
+		 *
+		 * @property visitor
+		 * @type {object}
+		 */
 		this.visitor = visitor;
 
+		/**
+		 * Sub-templates used to yield within the component
+		 *
+		 * @property subTemplates
+		 * @type {object}
+		 */
 		this.subTemplates = subTemplates;
 
+
+		/**
+		 * The tagName that will be used when creating this component. The default
+		 * value is 'div', but this can be overruled in your handlebar template, or
+		 * in the initCallback of the component.
+		 * 
+		 * @property tagName
+		 * @type {String}
+		 */
 		this.tagName = 'div';
+
+		/**
+		 * The CSS class(es) that will be added to the component upon creation. You can set
+		 * this value in the initCallback of the component.
+		 *
+		 * @property cssClass
+		 * @type {string}
+		 */
 		this.cssClass = false;
 
+		/**
+		 * @property element
+		 * @type {DOMElement}
+		 */
 		this.element = null;
+
+		/**
+		 * The component instance that wrap this component, if any.
+		 * 
+		 * @property parentComponent
+		 * @type {Dom.Component}
+		 */
+		this.parentComponent = this.scope.component;
+		this.setSilently('parent', this.parentComponent);
+		
+		/**
+		 * The dom-object can be used to listen to dom events on the event
+		 * 
+		 * @property dom
+		 * @type {Core.Obj}
+		 */
+		this.dom = new Obj();
 
 
 		// Make attributes available
 		this.with(this.attributes);
 
-
-		// Dom event listeners
-		this.dom = new Obj();
 
 
 		// Definition callback?
@@ -105,9 +185,23 @@ class Component extends View
 
 		// Create the element
 		this.element = document.createElement(this.tagName);
-		_.each(this.attributes, (value, attr) => {
-			this.element.setAttribute(attr, value);
+		_.each(this.attributes, (value, key) => {
+
+			// Check value type
+			if (value === 'true') value = true;
+			if (value === 'false') value = false;
+			if ($.isNumeric(value)) value = parseFloat(value);
+			if (value !== this.attributes[key]) {
+				this.attributes[key] = value;
+			}
+
+			// Is it a useful value?
+			if (typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number') {
+				this.element.setAttribute(key, value);
+			}
+
 		});
+
 		this.$element = $(this.element);
 		this.$element.append(this.documentFragment);
 

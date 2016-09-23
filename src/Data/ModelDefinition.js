@@ -33,8 +33,10 @@ class ModelDefinition
 	initializeModel(model) {
 
 		// Add computed
-		_.each(this.computedAttributes, (attr, key) => {
-			model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
+		model.withoutNotifications(() => {
+			_.each(this.computedAttributes, (attr, key) => {
+				model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
+			});			
 		});
 
 		return model;

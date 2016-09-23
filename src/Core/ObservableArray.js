@@ -30,10 +30,20 @@ class ObservableArray extends Obj
 		this.import(initValues, convertToObservables, true);
 
 
+		/**
+		 * Whenever this property is true, no notifications will be triggered
+		 * 
+		 * @attribute notificationsDisabled
+		 * @type {Boolean}
+		 */
+		this.notificationsDisabled = false;
+
+
+
 	}
 
 
-	import(arr, convertToObservables = true, doNotNotify = false) {
+	import(arr, convertToObservables = true) {
 
 		// Go through to the object's first level
 		_.each(arr, (value) => {
@@ -59,22 +69,17 @@ class ObservableArray extends Obj
 				// Just add the value (don't notify)
 				this.items.push(value);
 
-
-
 			}
 
 		});	
 
-		// Trigger import
-		this.trigger(ObservableArray.Events.Import);
-
-		// Notify of change?
-		if (!doNotNotify) {
-			this.trigger('change');
-			this.trigger('added', arr);
+		// Trigger changes
+		if (!this.notificationsDisabled) {
+			this.trigger(ObservableArray.Events.Import);
+			this.trigger(ObservableArray.Events.Change);
+			this.trigger(ObservableArray.Events.Add, arr);
 		}
-
-
+		
 		return this;
 
 	}
@@ -128,6 +133,7 @@ class ObservableArray extends Obj
 
 
 	}
+
 
 	set(key, value, convertToObservables = false) {
 

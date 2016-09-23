@@ -5,6 +5,7 @@ import $ from 'jquery';
 import QueryString from 'query-string';
 
 import ActionBinding from '~/Dom/ActionBinding';
+import Binding from '~/Dom/Binding';
 import Utils from '~/Helpers/Utils';
 import App from '~/Helpers/App';
 import Observable from '~/Core/Observable';
@@ -201,6 +202,18 @@ class Helpers
 
 	}
 
+	equal(params) {
+
+		// Get params
+		let value1 = this._getValue(params[0]);
+		let value2 = this._getValue(params[1]);
+		return value1 == value2;
+
+	}
+	notEqual(params) {
+		return !this.equal(params);
+	}
+
 
 
 	///////////
@@ -239,10 +252,6 @@ class Helpers
 		});
 		return result;
 	}
-
-
-
-
 
 	
 

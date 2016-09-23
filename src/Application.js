@@ -97,6 +97,8 @@ class Application extends Observable {
 		this.settings = SettingsObject.create({
 			baseUrl: '/',
 			
+			language: $('html').attr('lang'),
+
 			viewPath: 'views',
 			viewExtension: 'hbs',
 
@@ -209,6 +211,9 @@ class Application extends Observable {
 
 	start() {
 
+		// Enable momentJS
+		moment.locale(this.settings.get('language'));
+		
 		// Find initial view containers
 		this.findViewContainers();
 
