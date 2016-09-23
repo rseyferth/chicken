@@ -18,6 +18,7 @@ import Renderer from '~/Dom/Renderer';
 import ClassMap from '~/Helpers/ClassMap';
 import Router from '~/Routing/Router';
 import Element from '~/Dom/Element';
+import I18n from '~/Localization/I18n';
 
 //////////////////////
 // Class definitino //
@@ -88,6 +89,15 @@ class Application extends Observable {
 		 */
 		this.auths = {};
 
+		/**
+		 * Array of promises to fulfill before the application
+		 * can start.
+		 * 
+		 * @property loadPromises
+		 * @type {Array}
+		 */
+		this.loadPromises = [];
+
 
 
 		/**
@@ -108,6 +118,16 @@ class Application extends Observable {
 
 		}, [ 'baseUrl', 'viewPath', 'viewExtension', 'renderer', 'elementLinkAttribute' ]).apply(settings);
 
+
+
+		/**
+		 * @property i18n
+		 * @type {Localization.I18n}
+		 */
+		this.i18n = new I18n(this.settings.get('language'));
+
+
+	
 		
 
 		/**
@@ -208,54 +228,70 @@ class Application extends Observable {
 	}
 
 
+	translations(callback) {
+
+		callback.apply(this.i18n, [this.i18n]);
+		return this;
+
+	}
+
+
 
 	start() {
 
 		// Enable momentJS
 		moment.locale(this.settings.get('language'));
 		
-		// Find initial view containers
-		this.findViewContainers();
+		// Add i18n to promises
+		this.loadPromises.unshift(this.i18n.load());
 
-		// Update view containers whenever element contents are set.
-		Element.registerHook(($element) => {
 
-			// Update view containers
-			this.updateViewContainers($element);
+		// When all is done.
+		Promise.all(this.loadPromises).then(() => {
 
-			// Find links
-			$element.find('[' + this.settings.get('elementLinkAttribute') + ']').on('click', (e) => {
+			// Find initial view containers
+			this.findViewContainers();
 
-				// Open the uri!
-				e.preventDefault();
-				let uri = $(e.target).attr('href');
-				this.goto(uri);
+			// Update view containers whenever element contents are set.
+			Element.registerHook(($element) => {
 
-			}).each((index, el) => {
+				// Update view containers
+				this.updateViewContainers($element);
 
-				// Get uri
-				let $el = $(el);
-				let uri = $el.attr(this.settings.get('elementLinkAttribute'));
-				if (uri) {
+				// Find links
+				$element.find('[' + this.settings.get('elementLinkAttribute') + ']').on('click', (e) => {
 
-					// Store in href for easy visilbility, and remove link-to, so it won't be found again by this script
-					$el.removeAttr(this.settings.get('elementLinkAttribute'));
-					$el.attr('href', uri);
-					
-				}
+					// Open the uri!
+					e.preventDefault();
+					let uri = $(e.target).attr('href');
+					this.goto(uri);
+
+				}).each((index, el) => {
+
+					// Get uri
+					let $el = $(el);
+					let uri = $el.attr(this.settings.get('elementLinkAttribute'));
+					if (uri) {
+
+						// Store in href for easy visilbility, and remove link-to, so it won't be found again by this script
+						$el.removeAttr(this.settings.get('elementLinkAttribute'));
+						$el.attr('href', uri);
+						
+					}
+
+				});
 
 			});
 
+			// Listen to browser's address bar
+			this.history.listen((location) => {
+				this.router.handle(location);
+			});
+
+			// Start with current location
+			this.router.handle(this.history.getCurrentLocation());
+
 		});
-
-		// Listen to browser's address bar
-		this.history.listen((location) => {
-			this.router.handle(location);
-		});
-
-		// Start with current location
-		this.router.handle(this.history.getCurrentLocation());
-
 
 		return this;
 

@@ -37,6 +37,7 @@ YUI.add("yuidoc-meta", function(Y) {
         "Data",
         "Dom",
         "Helpers",
+        "Localization",
         "Routing"
     ],
     "allModules": [
@@ -63,6 +64,10 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "Helpers",
             "name": "Helpers"
+        },
+        {
+            "displayName": "Localization",
+            "name": "Localization"
         },
         {
             "displayName": "Routing",

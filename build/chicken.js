@@ -7,7 +7,7 @@
 		exports["Chicken"] = factory(require("$"), require("_"), require("XRegExp"), require("HTMLBars"), require("moment"));
 	else
 		root["Chicken"] = factory(root["$"], root["_"], root["XRegExp"], root["HTMLBars"], root["moment"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_44__, __WEBPACK_EXTERNAL_MODULE_72__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_44__, __WEBPACK_EXTERNAL_MODULE_73__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Application2 = _interopRequireDefault(_Application);
 
-	var _Api = __webpack_require__(64);
+	var _Api = __webpack_require__(65);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
@@ -84,19 +84,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ApiCall2 = _interopRequireDefault(_ApiCall);
 
-	var _JsonApi = __webpack_require__(68);
+	var _JsonApi = __webpack_require__(69);
 
 	var _JsonApi2 = _interopRequireDefault(_JsonApi);
 
-	var _JsonApiCall = __webpack_require__(69);
+	var _JsonApiCall = __webpack_require__(70);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _Auth = __webpack_require__(70);
+	var _Auth = __webpack_require__(71);
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
-	var _JWTAuth = __webpack_require__(71);
+	var _JWTAuth = __webpack_require__(72);
 
 	var _JWTAuth2 = _interopRequireDefault(_JWTAuth);
 
@@ -124,11 +124,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Model2 = __webpack_require__(65);
+	var _Model2 = __webpack_require__(66);
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelDefinition = __webpack_require__(73);
+	var _ModelDefinition = __webpack_require__(74);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
 
@@ -183,6 +183,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Utils = __webpack_require__(55);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
+
+	var _I18n = __webpack_require__(64);
+
+	var _I18n2 = _interopRequireDefault(_I18n);
 
 	var _Action = __webpack_require__(59);
 
@@ -256,6 +260,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	// Helpers
 
 
+	// Localization
+
+
 	// Routing
 
 
@@ -315,6 +322,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			Chainable: _Chainable2.default,
 			ClassMap: _ClassMap2.default,
 			Utils: _Utils2.default
+		},
+
+		Localization: {
+			I18n: _I18n2.default
 		},
 
 		Routing: {
@@ -1649,6 +1660,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Element2 = _interopRequireDefault(_Element);
 
+	var _I18n = __webpack_require__(64);
+
+	var _I18n2 = _interopRequireDefault(_I18n);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -1735,6 +1750,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.auths = {};
 
 			/**
+	   * Array of promises to fulfill before the application
+	   * can start.
+	   * 
+	   * @property loadPromises
+	   * @type {Array}
+	   */
+			_this.loadPromises = [];
+
+			/**
 	   * @property settings
 	   * @type {Core.SettingsObject}
 	   */
@@ -1751,6 +1775,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				renderer: settings.renderer === undefined ? new _Renderer2.default() : null
 
 			}, ['baseUrl', 'viewPath', 'viewExtension', 'renderer', 'elementLinkAttribute']).apply(settings);
+
+			/**
+	   * @property i18n
+	   * @type {Localization.I18n}
+	   */
+			_this.i18n = new _I18n2.default(_this.settings.get('language'));
 
 			/**
 	   * @property history
@@ -1856,6 +1886,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this;
 			}
 		}, {
+			key: 'translations',
+			value: function translations(callback) {
+
+				callback.apply(this.i18n, [this.i18n]);
+				return this;
+			}
+		}, {
 			key: 'start',
 			value: function start() {
 				var _this3 = this;
@@ -1863,43 +1900,50 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Enable momentJS
 				moment.locale(this.settings.get('language'));
 
-				// Find initial view containers
-				this.findViewContainers();
+				// Add i18n to promises
+				this.loadPromises.unshift(this.i18n.load());
 
-				// Update view containers whenever element contents are set.
-				_Element2.default.registerHook(function ($element) {
+				// When all is done.
+				Promise.all(this.loadPromises).then(function () {
 
-					// Update view containers
-					_this3.updateViewContainers($element);
+					// Find initial view containers
+					_this3.findViewContainers();
 
-					// Find links
-					$element.find('[' + _this3.settings.get('elementLinkAttribute') + ']').on('click', function (e) {
+					// Update view containers whenever element contents are set.
+					_Element2.default.registerHook(function ($element) {
 
-						// Open the uri!
-						e.preventDefault();
-						var uri = (0, _jquery2.default)(e.target).attr('href');
-						_this3.goto(uri);
-					}).each(function (index, el) {
+						// Update view containers
+						_this3.updateViewContainers($element);
 
-						// Get uri
-						var $el = (0, _jquery2.default)(el);
-						var uri = $el.attr(_this3.settings.get('elementLinkAttribute'));
-						if (uri) {
+						// Find links
+						$element.find('[' + _this3.settings.get('elementLinkAttribute') + ']').on('click', function (e) {
 
-							// Store in href for easy visilbility, and remove link-to, so it won't be found again by this script
-							$el.removeAttr(_this3.settings.get('elementLinkAttribute'));
-							$el.attr('href', uri);
-						}
+							// Open the uri!
+							e.preventDefault();
+							var uri = (0, _jquery2.default)(e.target).attr('href');
+							_this3.goto(uri);
+						}).each(function (index, el) {
+
+							// Get uri
+							var $el = (0, _jquery2.default)(el);
+							var uri = $el.attr(_this3.settings.get('elementLinkAttribute'));
+							if (uri) {
+
+								// Store in href for easy visilbility, and remove link-to, so it won't be found again by this script
+								$el.removeAttr(_this3.settings.get('elementLinkAttribute'));
+								$el.attr('href', uri);
+							}
+						});
 					});
-				});
 
-				// Listen to browser's address bar
-				this.history.listen(function (location) {
-					_this3.router.handle(location);
-				});
+					// Listen to browser's address bar
+					_this3.history.listen(function (location) {
+						_this3.router.handle(location);
+					});
 
-				// Start with current location
-				this.router.handle(this.history.getCurrentLocation());
+					// Start with current location
+					_this3.router.handle(_this3.history.getCurrentLocation());
+				});
 
 				return this;
 			}
@@ -8913,6 +8957,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				return _queryString2.default.stringify(this._getHashValues(attributeHash));
 			}
 
+			//////////////////
+			// Localization //
+			//////////////////
+
+		}, {
+			key: 't',
+			value: function t(params, attributeHash) {
+
+				// Get the key
+				var key = this._getValue(params[0]);
+
+				// Get from app
+				return (0, _App2.default)().i18n.translate(key, attributeHash);
+			}
+
 			//////////////
 			// Internal //
 			//////////////
@@ -10617,7 +10676,219 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _Model = __webpack_require__(65);
+	var _Obj2 = __webpack_require__(35);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Localization
+	 */
+	var I18n = function (_Obj) {
+		_inherits(I18n, _Obj);
+
+		function I18n(language) {
+			_classCallCheck(this, I18n);
+
+			/**
+	   * @property data
+	   * @type {Object}
+	   */
+			var _this = _possibleConstructorReturn(this, (I18n.__proto__ || Object.getPrototypeOf(I18n)).call(this));
+
+			_this.data = {};
+
+			/**
+	   * @property bundlesToLoad
+	   * @type {Array}
+	   */
+			_this.bundlesToLoad = [];
+
+			return _this;
+		}
+
+		/**
+	  * Add a bundle that will be loaded when the application starts
+	  *
+	  * @method addBundle
+	  * @param  {string} url 
+	  * @param  {string} [key=null]  Optional key to add loaded data under.
+	  * @chainable
+	  */
+
+
+		_createClass(I18n, [{
+			key: 'addBundle',
+			value: function addBundle(url) {
+				var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+				this.bundlesToLoad.push({
+					url: url,
+					key: key
+				});
+
+				return this;
+			}
+
+			/**
+	   * Manually load a bundle into I18n
+	   *
+	   * @method loadBundle
+	   * @param  {string} url 
+	   * @param  {string} [key=null]  Optional key to add loaded data under.
+	   * @return {Promise}     
+	   */
+
+		}, {
+			key: 'loadBundle',
+			value: function loadBundle(url) {
+				var _this2 = this;
+
+				var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+				return new Promise(function (resolve, reject) {
+
+					// Do we have it in cache?
+					if (I18n.Cache[url]) {
+
+						resolve(I18n.Cache[url]);
+						return;
+					}
+
+					// Load it.
+					_jquery2.default.ajax(url).then(function (result) {
+						resolve(result);
+					}).fail(function (error) {
+						reject(error);
+					});
+				}).then(function (result) {
+
+					// Is there a key?
+					if (key) {
+						var r = {};
+						r[key] = result;
+						result = r;
+					}
+
+					// Extend
+					_jquery2.default.extend(_this2.data, result);
+				});
+			}
+
+			/**
+	   * Load all added bundles
+	   *
+	   * @method load
+	   * @return {Promise}
+	   */
+
+		}, {
+			key: 'load',
+			value: function load() {
+				var _this3 = this;
+
+				// Main prmomise for loading
+				return this.promise('loaded', function (resolve) {
+
+					// Nothing to load?
+					if (_this3.bundlesToLoad.length === 0) {
+						resolve();
+						return;
+					}
+
+					// Collect promises
+					var promises = [];
+					_.each(_this3.bundlesToLoad, function (bundle) {
+
+						promises.push(_this3.loadBundle(bundle.url, bundle.key));
+					});
+
+					// When all is done.
+					Promise.all(promises).then(function () {
+						resolve();
+					});
+				});
+			}
+		}, {
+			key: 'translate',
+			value: function translate(key) {
+				var attributes = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var fallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+
+				// Dot notation
+				var obj = this.data;
+				var parts = key.split(/\./);
+				while (parts.length > 0) {
+
+					// Get firs tpart
+					var part = parts.shift();
+
+					// Not existing?
+					if (!obj[part]) return fallback ? fallback : '[' + key + ']';
+
+					// Dive in.
+					obj = obj[part];
+				}
+
+				// String?
+				if (typeof obj === 'string') {
+
+					/////////////////
+					// Templating? //
+					/////////////////
+
+					if (obj.match(/<%/)) {
+
+						// Convert attributes into real values
+						var attr = _.mapObject(attributes, function (value) {
+
+							// Get value?
+							if (typeof value.getValue === 'function') {
+								value = value.getValue();
+							}
+							return value;
+						});
+
+						// Make a template and run it
+						var template = _.template(obj);
+						obj = template(attr);
+					}
+				}
+
+				return obj;
+			}
+		}]);
+
+		return I18n;
+	}(_Obj3.default);
+
+	I18n.Cache = {};
+
+	module.exports = I18n;
+
+/***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Model = __webpack_require__(66);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
@@ -10900,7 +11171,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Api;
 
 /***/ },
-/* 65 */
+/* 66 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10929,11 +11200,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _ModelStore = __webpack_require__(66);
+	var _ModelStore = __webpack_require__(67);
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
-	var _Collection = __webpack_require__(67);
+	var _Collection = __webpack_require__(68);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
@@ -11624,7 +11895,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Model;
 
 /***/ },
-/* 66 */
+/* 67 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11688,7 +11959,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelStore;
 
 /***/ },
-/* 67 */
+/* 68 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11791,7 +12062,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Collection;
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -11810,19 +12081,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _Api2 = __webpack_require__(64);
+	var _Api2 = __webpack_require__(65);
 
 	var _Api3 = _interopRequireDefault(_Api2);
 
-	var _JsonApiCall = __webpack_require__(69);
+	var _JsonApiCall = __webpack_require__(70);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _Model = __webpack_require__(65);
+	var _Model = __webpack_require__(66);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(67);
+	var _Collection = __webpack_require__(68);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
@@ -12121,7 +12392,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApi;
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12187,7 +12458,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApiCall;
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12424,7 +12695,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Auth;
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12435,11 +12706,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _moment = __webpack_require__(72);
+	var _moment = __webpack_require__(73);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _Auth2 = __webpack_require__(70);
+	var _Auth2 = __webpack_require__(71);
 
 	var _Auth3 = _interopRequireDefault(_Auth2);
 
@@ -12750,13 +13021,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JWTAuth;
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_72__;
+	module.exports = __WEBPACK_EXTERNAL_MODULE_73__;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12767,11 +13038,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _ModelAttribute = __webpack_require__(74);
+	var _ModelAttribute = __webpack_require__(75);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _Relationship = __webpack_require__(75);
+	var _Relationship = __webpack_require__(76);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
@@ -12906,14 +13177,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelDefinition;
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _moment = __webpack_require__(72);
+	var _moment = __webpack_require__(73);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
@@ -13050,7 +13321,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelAttribute;
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

@@ -64,6 +64,9 @@ import Chainable from '~/Helpers/Chainable';
 import ClassMap from '~/Helpers/ClassMap';
 import Utils from '~/Helpers/Utils';
 
+// Localization
+import I18n from '~/Localization/I18n';
+
 // Routing
 import Action from '~/Routing/Action';
 import Controller from '~/Routing/Controller';
@@ -133,6 +136,10 @@ var Chicken = {
 		Chainable: Chainable,
 		ClassMap: ClassMap,
 		Utils: Utils
+	},
+
+	Localization: {
+		I18n: I18n
 	},
 
 	Routing: {
@@ -286,7 +293,7 @@ var Chicken = {
 	each: (...args) => {
 
 		return Utils.each.apply(this, args);
-
+		
 	}
 
 };

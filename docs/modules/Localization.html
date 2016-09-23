@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Projects/Javascript/chicken/src/Data/ModelDefinition.js</title>
+    <title>Localization</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -152,140 +152,37 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Data/ModelDefinition.js</h1>
+                        <h1>Localization Module</h1>
+<div class="box clearfix meta">
+    
 
-<div class="file">
-    <pre class="code prettyprint linenums">
-import inflection from &#x27;inflection&#x27;;
+    
 
-import ModelAttribute from &#x27;~/Data/ModelAttribute&#x27;;
-import Relationship from &#x27;~/Data/Relationship&#x27;;
-import ComputedProperty from &#x27;~/Core/ComputedProperty&#x27;;
+    
+        <div class="foundat">
+            Defined in: <a href="../files/_home_ruben_Projects_Javascript_chicken_src_Localization_I18n.js.html#l4"><code>&#x2F;home&#x2F;ruben&#x2F;Projects&#x2F;Javascript&#x2F;chicken&#x2F;src&#x2F;Localization&#x2F;I18n.js:4</code></a>
+        </div>
+    
 
-/**
- * @module Data
- */
-class ModelDefinition
-{
-
-	constructor(name, callback) {	
-
-		this.name = name;
-
-		this.apiUri = &#x27;/&#x27; + inflection.underscore(inflection.pluralize(name));
-		this.api = &#x27;default&#x27;;
-
-		this.attributes = {};
-		this.attributeNames = [];
-		this.relationships = {};
-
-		this.computedAttributes = {};
-
-
-		callback.apply(this, [this]);
-
-
-	}
-
-
-	initializeModel(model) {
-
-		// Add computed
-		model.withoutNotifications(() =&gt; {
-			_.each(this.computedAttributes, (attr, key) =&gt; {
-				model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
-			});			
-		});
-
-		return model;
-
-	}
-
-
-		
-
-
-	attribute(name, type) {
-		let attr = new ModelAttribute(name, type);
-		this.attributeNames.push(name);
-		this.attributes[name] = attr;
-		return attr;
-	}
-
-	computed(name, dependencies, callback) {
-
-		this.computedAttributes[name] = {
-			dependencies: dependencies,
-			callback: callback
-		};
-		return true;
-
-	}
+    
+</div>
 
 
 
-	//////////////////////
-	// Column defitions //
-	//////////////////////
-
-	integer(name) {
-		let attr = this.attribute(name, ModelAttribute.Integer);
-		return attr;
-	}
-
-	string(name, size) {
-		let attr = this.attribute(name, ModelAttribute.String);
-		attr.size = size;
-		return attr;
-	}
-
-	date(name) {
-		let attr = this.attribute(name, ModelAttribute.Date);
-		return attr;
-	}
+<div class="box intro">
+    
+</div>
 
 
 
-	//////////////////////
-	// Column shortcuts //
-	//////////////////////
+<div class="yui3-g">
+    <div class="yui3-u-1-2">
+        
+    </div>
 
-	timestamps() {
-		this.attribute(&#x27;createdAt&#x27;, ModelAttribute.DateTime);
-		this.attribute(&#x27;updatedAt&#x27;, ModelAttribute.DateTime);
-		return this;
-	}
-
-
-	///////////////////
-	// Relationships //
-	///////////////////
-
-	relationship(name) {
-		let rel = new Relationship(name, this.name);
-		this.relationships[name] = rel;
-		return rel;
-	}
-
-
-
-	/////////
-	// Api //
-	/////////
-
-	getApiUri(id = null) {
-		let uri = this.apiUri;
-		if (id) uri += &#x27;/&#x27; + id;
-		return uri;
-	}
-
-
-
-
-}
-
-module.exports = ModelDefinition;
-    </pre>
+    <div class="yui3-u-1-2">
+        
+    </div>
 </div>
 
                     </div>

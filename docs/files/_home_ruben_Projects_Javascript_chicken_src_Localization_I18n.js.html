@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Projects/Javascript/chicken/src/Data/ModelDefinition.js</title>
+    <title>/home/ruben/Projects/Javascript/chicken/src/Localization/I18n.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -152,139 +152,189 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Data/ModelDefinition.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Localization/I18n.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import inflection from &#x27;inflection&#x27;;
+import $ from &#x27;jquery&#x27;;
 
-import ModelAttribute from &#x27;~/Data/ModelAttribute&#x27;;
-import Relationship from &#x27;~/Data/Relationship&#x27;;
-import ComputedProperty from &#x27;~/Core/ComputedProperty&#x27;;
-
+import Obj from &#x27;~/Core/Obj&#x27;;
 /**
- * @module Data
+ * @module Localization
  */
-class ModelDefinition
-{
+class I18n extends Obj {
 
-	constructor(name, callback) {	
+	constructor(language) {
 
-		this.name = name;
+		super();
 
-		this.apiUri = &#x27;/&#x27; + inflection.underscore(inflection.pluralize(name));
-		this.api = &#x27;default&#x27;;
+		/**
+		 * @property data
+		 * @type {Object}
+		 */
+		this.data = {};
 
-		this.attributes = {};
-		this.attributeNames = [];
-		this.relationships = {};
-
-		this.computedAttributes = {};
-
-
-		callback.apply(this, [this]);
-
+		/**
+		 * @property bundlesToLoad
+		 * @type {Array}
+		 */
+		this.bundlesToLoad = [];
 
 	}
 
+	/**
+	 * Add a bundle that will be loaded when the application starts
+	 *
+	 * @method addBundle
+	 * @param  {string} url 
+	 * @param  {string} [key=null]  Optional key to add loaded data under.
+	 * @chainable
+	 */
+	addBundle(url, key = null) {
 
-	initializeModel(model) {
-
-		// Add computed
-		model.withoutNotifications(() =&gt; {
-			_.each(this.computedAttributes, (attr, key) =&gt; {
-				model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
-			});			
+		this.bundlesToLoad.push({
+			url: url,
+			key: key
 		});
 
-		return model;
+		return this;
+
+	}
+
+	/**
+	 * Manually load a bundle into I18n
+	 *
+	 * @method loadBundle
+	 * @param  {string} url 
+	 * @param  {string} [key=null]  Optional key to add loaded data under.
+	 * @return {Promise}     
+	 */
+	loadBundle(url, key = null) {
+
+		return new Promise((resolve, reject) =&gt; {
+
+			// Do we have it in cache?
+			if (I18n.Cache[url]) {
+
+				resolve(I18n.Cache[url]);
+				return;
+			}
+
+			// Load it.
+			$.ajax(url).then((result) =&gt; {
+				resolve(result);
+			}).fail((error) =&gt; {
+				reject(error);
+			});
+
+		}).then((result) =&gt; {
+
+			// Is there a key?
+			if (key) {
+				let r = {};
+				r[key] = result;
+				result = r;
+			}
+
+			// Extend
+			$.extend(this.data, result);
+
+		});
+
+	}
+
+	/**
+	 * Load all added bundles
+	 *
+	 * @method load
+	 * @return {Promise}
+	 */
+	load() {
+
+		// Main prmomise for loading
+		return this.promise(&#x27;loaded&#x27;, (resolve) =&gt; {
+
+			// Nothing to load?
+			if (this.bundlesToLoad.length === 0) {
+				resolve();
+				return;
+			}
+
+			// Collect promises
+			let promises = [];
+			_.each(this.bundlesToLoad, (bundle) =&gt; {
+
+				promises.push(this.loadBundle(bundle.url, bundle.key));
+
+			});
+
+			// When all is done.
+			Promise.all(promises).then(() =&gt; {
+				resolve();
+			});
+
+		});
 
 	}
 
 
+	translate(key, attributes = {}, fallback = null) {
+
+		// Dot notation
+		let obj = this.data;
+		let parts = key.split(/\./);
+		while (parts.length &gt; 0) {
+			
+			// Get firs tpart
+			let part = parts.shift();
+
+			// Not existing?
+			if (!obj[part]) return fallback ? fallback : &#x27;[&#x27; + key + &#x27;]&#x27;;
+			
+			// Dive in.
+			obj = obj[part];
+		}
+
+		// String?
+		if (typeof obj === &#x27;string&#x27;) {
+
+			/////////////////
+			// Templating? //
+			/////////////////
+			
+			if (obj.match(/&lt;%/)) {
+
+				// Convert attributes into real values
+				let attr = _.mapObject(attributes, (value) =&gt; {
+				
+					// Get value?
+					if (typeof value.getValue === &#x27;function&#x27;) {
+						value = value.getValue();
+					}
+					return value;
+
+				});
+				
+				// Make a template and run it
+				let template = _.template(obj);
+				obj = template(attr);
+
+			}
+
+		}
+
+		return obj;
 		
 
-
-	attribute(name, type) {
-		let attr = new ModelAttribute(name, type);
-		this.attributeNames.push(name);
-		this.attributes[name] = attr;
-		return attr;
 	}
-
-	computed(name, dependencies, callback) {
-
-		this.computedAttributes[name] = {
-			dependencies: dependencies,
-			callback: callback
-		};
-		return true;
-
-	}
-
-
-
-	//////////////////////
-	// Column defitions //
-	//////////////////////
-
-	integer(name) {
-		let attr = this.attribute(name, ModelAttribute.Integer);
-		return attr;
-	}
-
-	string(name, size) {
-		let attr = this.attribute(name, ModelAttribute.String);
-		attr.size = size;
-		return attr;
-	}
-
-	date(name) {
-		let attr = this.attribute(name, ModelAttribute.Date);
-		return attr;
-	}
-
-
-
-	//////////////////////
-	// Column shortcuts //
-	//////////////////////
-
-	timestamps() {
-		this.attribute(&#x27;createdAt&#x27;, ModelAttribute.DateTime);
-		this.attribute(&#x27;updatedAt&#x27;, ModelAttribute.DateTime);
-		return this;
-	}
-
-
-	///////////////////
-	// Relationships //
-	///////////////////
-
-	relationship(name) {
-		let rel = new Relationship(name, this.name);
-		this.relationships[name] = rel;
-		return rel;
-	}
-
-
-
-	/////////
-	// Api //
-	/////////
-
-	getApiUri(id = null) {
-		let uri = this.apiUri;
-		if (id) uri += &#x27;/&#x27; + id;
-		return uri;
-	}
-
-
 
 
 }
 
-module.exports = ModelDefinition;
+I18n.Cache = {};
+
+
+module.exports = I18n;
     </pre>
 </div>
 

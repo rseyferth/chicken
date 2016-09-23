@@ -230,6 +230,20 @@ class Helpers
 
 
 
+	//////////////////
+	// Localization //
+	//////////////////
+
+	t(params, attributeHash) {
+
+		// Get the key
+		let key = this._getValue(params[0]);
+
+		// Get from app
+		return App().i18n.translate(key, attributeHash);
+
+	}
+
 
 
 	//////////////
