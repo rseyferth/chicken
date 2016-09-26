@@ -539,6 +539,9 @@ class View extends Observable
 		// Add to DOM
 		viewContainer.setContent($view);
 
+		// Done.
+		this.resolvePromise('ready', [this]);
+
 	}
 
 

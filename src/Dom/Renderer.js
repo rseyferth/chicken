@@ -90,15 +90,11 @@ class Renderer
 				} else {
 
 					// Do native thing (deep-get)
-					var value = this.hooks.getRoot(scope, keys[0])[0];
-					for (var i = 1; i < keys.length; i++) {
-						if (value) {
-							value = this.hooks.getChild(value, keys[i]);
-						} else {
-							break;
-						}
+					var value = appliedScope;
+					for (let q = 0; q < keys.length; q++) {
+						value = value[keys[q]];
 					}
-
+					
 				}
 				
 				return value;

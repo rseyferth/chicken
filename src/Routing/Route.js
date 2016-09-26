@@ -384,6 +384,14 @@ class Route extends Obj
 	}
 
 
+	middleware(...keys) {
+
+		this.options.middleware = _.unique(_.flatten([this.options.middleware, keys]));
+		return this;
+
+	}
+
+
 	/**
 	 * An abstract Route can never be matched. This is useful when you have a Route
 	 * that only has subroutes, but no actions itself. If you define a Route without

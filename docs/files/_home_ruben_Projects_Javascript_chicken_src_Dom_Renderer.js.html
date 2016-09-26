@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -248,15 +250,11 @@ class Renderer
 				} else {
 
 					// Do native thing (deep-get)
-					var value = this.hooks.getRoot(scope, keys[0])[0];
-					for (var i = 1; i &lt; keys.length; i++) {
-						if (value) {
-							value = this.hooks.getChild(value, keys[i]);
-						} else {
-							break;
-						}
+					var value = appliedScope;
+					for (let q = 0; q &lt; keys.length; q++) {
+						value = value[keys[q]];
 					}
-
+					
 				}
 				
 				return value;

@@ -24,6 +24,8 @@ class Auth extends Observable
 		// Default options
 		this.settings = _.defaults(options, {
 
+			getUserUri: '/me',
+
 			middlewareName: 'auth'
 
 		});
@@ -149,14 +151,14 @@ class Auth extends Observable
 	/**
 	 * Read given Api Error and update session accordingly, if
 	 * appropriate.
-	 * 
+	 *
+	 * @method processApiError
 	 * @param  {object} error 
 	 * @return {object}       
 	 */
 	processApiError(error) {
 		return error;
 	}
-
 
 
 }

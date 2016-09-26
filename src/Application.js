@@ -2,6 +2,7 @@
 // Vendor libraries //
 //////////////////////
 
+import moment from 'moment';
 import QueryString from 'query-string';
 import { createHistory } from 'history';		// https://www.npmjs.com/package/history
 import $ from 'jquery';
@@ -58,9 +59,9 @@ class Application extends Observable {
 		 * kept up to date to contain all and only still existing containers.
 		 *
 		 * @property viewContainers
-		 * @type {Map}
+		 * @type {Object}
 		 */
-		this.viewContainers = new Map();
+		this.viewContainers = {};
 
 
 
@@ -153,12 +154,12 @@ class Application extends Observable {
 			var vc = new ViewContainer($(el), this);
 
 			// Already known?
-			if (this.viewContainers.has(vc.name)) {
+			if (this.viewContainers[vc.name]) {
 				throw new Error('There is already a view named "' + vc.name + '". It is not possible to have two views with the same name at the same time.');
 			}
 
 			// Store it.
-			this.viewContainers.set(vc.name, vc);
+			this.viewContainers[vc.name] = vc;
 
 			// Initialize
 			vc.initialize();
@@ -172,7 +173,14 @@ class Application extends Observable {
 	updateViewContainers($lookForNewOnesIn = null) {
 
 		// Check if all old ones are still there
-		
+		_.each(this.viewContainers, (vc, key) => {
+
+			// Removed?
+			if (!vc.isInDom()) {
+				delete this.viewContainers[key];
+			}
+			
+		});
 
 		// Look for new ones
 		if ($lookForNewOnesIn) this.findViewContainers($lookForNewOnesIn);
@@ -182,7 +190,7 @@ class Application extends Observable {
 	}
 
 	getViewContainer(key) {
-		return this.viewContainers.get(key);
+		return this.viewContainers[key];
 	}
 
 
@@ -225,6 +233,13 @@ class Application extends Observable {
 		this.auths[key] = authInstance;
 
 		return this;
+	}
+
+	user(apiKey = null) {
+
+		// Get authenticated user
+		return this.api(apiKey).getAuthenticatedUser();
+
 	}
 
 

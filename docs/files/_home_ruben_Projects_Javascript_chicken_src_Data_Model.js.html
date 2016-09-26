@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -184,7 +186,7 @@ class Model extends Observable
 	 */
 	constructor(initValues = {}, convertToObservables = true) {	
 
-		super(initValues, convertToObservables);	
+		super(initValues, convertToObservables);
 
 		/**
 		 * The original values as received from the Api
@@ -418,8 +420,9 @@ class Model extends Observable
 	getAttributesForApi(onlyDirty = true) {
 
 		// Which attributes to use?
-		let attr = onlyDirty ? this.getDirty() : $.extend(this.attributes);
+		let attr = onlyDirty ? this.getDirty() : _.defaults({}, this.attributes);
 		attr = _.mapObject(attr, (value, key) =&gt; {
+
 
 			// Do we need to cast it?
 			let attributeDefinition = this.getAttributeDefinition(key);
@@ -513,11 +516,17 @@ class Model extends Observable
 			this.state.set(&#x27;busy&#x27;, false);
 			this.state.set(&#x27;saving&#x27;, false);
 
+			// Trigger.
+			this.trigger(&#x27;save&#x27;, apiCall);
+
 		}, () =&gt; {
 			
 			// No longer busy
 			this.state.set(&#x27;busy&#x27;, false);
 			this.state.set(&#x27;saving&#x27;, false);
+
+			this.trigger(&#x27;error&#x27;, apiCall);
+
 		});
 
 		// Done.

@@ -110,6 +110,12 @@ class ViewContainer extends Element
 		return this._isLoading;
 	}
 
+	isInDom() {
+
+		return this.$element.closest(document.documentElement).length > 0;
+
+	}
+
 
 }
 

@@ -296,7 +296,7 @@ class Observable extends Obj {
 		return this;
 
 	}
-	setAttribute(key, value, convertToObservables = true) {
+	setAttribute(key, value) {
 
 		// Set it
 		this._set(key, value);

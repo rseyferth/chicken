@@ -2,6 +2,7 @@ import $ from 'jquery';
 import moment from 'moment';
 
 import Auth from '~/Auth/Auth';
+import AuthError from '~/Auth/AuthError';
 
 /**
  * @module Auth
@@ -24,6 +25,7 @@ class JWTAuth extends Auth
 			baseUrl: '',
 			authenticateUri: '/authenticate',
 			refreshUri: '/authenticate/refresh',
+			currentUserUri: '/me',
 
 			authenticateMethod: 'post',
 			refreshMethod: 'post',
@@ -100,7 +102,7 @@ class JWTAuth extends Auth
 
 			}).fail((error) => {
 
-				reject(error);
+				reject(new AuthError(this, error));
 
 			});
 
@@ -170,8 +172,8 @@ class JWTAuth extends Auth
 			}).fail((error) => {
 
 				this.invalidate();
+				reject(new AuthError(this, error));
 
-				reject(error);
 			});
 
 		});

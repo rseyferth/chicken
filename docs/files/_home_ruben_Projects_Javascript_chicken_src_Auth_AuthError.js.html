@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Projects/Javascript/chicken/src/Core/SettingsObject.js</title>
+    <title>/home/ruben/Projects/Javascript/chicken/src/Auth/AuthError.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,83 +154,52 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Core/SettingsObject.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Auth/AuthError.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import _ from &#x27;underscore&#x27;;
-
-import Observable from &#x27;~/Core/Observable&#x27;;
-import Chainable from &#x27;~/Helpers/Chainable&#x27;;
-
 /**
- * @module Core
+ * @module AuthError
  */
-class SettingsObject extends Observable
-{
+class AuthError {
 
-	/**
-	 * @class Core.SettingsObject
-	 * @extends Core.Observable
-	 *
-	 * @constructor
-	 * @param {object}  defaultSettings  	Initialize with these default settings
-	 * @param {array}   [allowedKeys] 		Optional array of allowed keys. By default all keys are allowed	 
-	 */
-	constructor(defaultSettings = {}, allowedKeys = []) {
+	constructor(auth, xhrError) {
 		
-		// Instantiate with default settings
-		super(defaultSettings);
-
 		/**
-		 * @property allowedKeys
-		 * @type Array
+		 * @property auth
+		 * @type {Auth.Auth}
 		 */
-		this.allowedKeys = allowedKeys;
+		this.auth = auth;
+
 		
-
-		this.notificationsDisabled = true;
-
-	}
-
-	/**
-	 * Apply given settings
-	 *
-	 * @method apply
-	 * @param {object} 	settings	A hash-object with keys and values
-	 * @chainable
-	 */
-	apply(settings) {
-
-		// Apply each key individually
-		_.each(settings, (value, key) =&gt; {
-			this.set(key, value);			
-		});
-
-		return this;
+		/**
+		 * @property xhrError
+		 * @type {jqXHR}
+		 */
+		this.xhrError = xhrError;
 
 	}
 
 
-	// Extra check for allowedKeys.
-	set(key, value) {
+	getMessage() {
 
-		// Is it allowed?
-		if (this.allowedKeys &amp;&amp; this.allowedKeys.length &gt; 0 &amp;&amp; !_.contains(this.allowedKeys,key)) {
-			throw new Error(&#x27;This SettingsObject does not have a setting for &quot;&#x27; + key + &#x27;&quot;. The allowed settings are: &#x27; + this.allowedKeys.join(&#x27;, &#x27;));
+		// JSON body with message?
+		if (this.xhrError.responseJSON &amp;&amp; this.xhrError.responseJSON.message) {
+
+			return this.xhrError.responseJSON.message;
+
 		}
 
-		// Do it.
-		return super.set(key, value);
-	
+		// Text?
+		if (this.xhrError.responseText) return this.xhrError.responseText;
 
-	} 
+		// Don&#x27;t know
+		return &#x27;Unknown error&#x27;;
 
+	}
 
 }
-
-
-module.exports = Chainable(SettingsObject);
+module.exports = AuthError;
     </pre>
 </div>
 

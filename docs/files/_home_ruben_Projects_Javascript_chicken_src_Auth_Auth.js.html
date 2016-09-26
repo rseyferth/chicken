@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -181,6 +183,8 @@ class Auth extends Observable
 
 		// Default options
 		this.settings = _.defaults(options, {
+
+			getUserUri: &#x27;/me&#x27;,
 
 			middlewareName: &#x27;auth&#x27;
 
@@ -307,14 +311,14 @@ class Auth extends Observable
 	/**
 	 * Read given Api Error and update session accordingly, if
 	 * appropriate.
-	 * 
+	 *
+	 * @method processApiError
 	 * @param  {object} error 
 	 * @return {object}       
 	 */
 	processApiError(error) {
 		return error;
 	}
-
 
 
 }

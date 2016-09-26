@@ -73,7 +73,7 @@ class JsonApi extends Api
 		if (!_.contains(includedModelGuids, Utils.uidFor(model))) {
 
 			// Attributes?
-			let attr = model.getAttributesForApi();
+			let attr = model.getAttributesForApi(!model.isNew());
 			if (_.size(attr) > 0) {
 				data.attributes = {};
 				_.each(attr, (value, key) => {

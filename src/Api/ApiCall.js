@@ -1,6 +1,7 @@
 import $ from 'jquery';
 import QueryString from 'query-string';
 
+import ApiError from '~/Api/ApiError';
 import Obj from '~/Core/Obj';
 
 /**
@@ -114,7 +115,9 @@ class ApiCall extends Obj {
 					
 				}).fail((error) => {
 
-					reject(error);
+					// Make error
+					let errorObj = new ApiError(this, error);
+					reject(errorObj);
 
 				});
 

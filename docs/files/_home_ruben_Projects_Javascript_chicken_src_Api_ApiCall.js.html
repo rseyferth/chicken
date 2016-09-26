@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -159,6 +161,7 @@
 import $ from &#x27;jquery&#x27;;
 import QueryString from &#x27;query-string&#x27;;
 
+import ApiError from &#x27;~/Api/ApiError&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
 
 /**
@@ -272,7 +275,9 @@ class ApiCall extends Obj {
 					
 				}).fail((error) =&gt; {
 
-					reject(error);
+					// Make error
+					let errorObj = new ApiError(this, error);
+					reject(errorObj);
 
 				});
 

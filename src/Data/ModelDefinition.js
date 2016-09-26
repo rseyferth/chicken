@@ -1,4 +1,5 @@
 import inflection from 'inflection';
+import _ from 'underscore';
 
 import ModelAttribute from '~/Data/ModelAttribute';
 import Relationship from '~/Data/Relationship';

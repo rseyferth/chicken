@@ -33,6 +33,7 @@ YUI.add("yuidoc-meta", function(Y) {
     "modules": [
         "Api",
         "Auth",
+        "AuthError",
         "Core",
         "Data",
         "Dom",
@@ -48,6 +49,10 @@ YUI.add("yuidoc-meta", function(Y) {
         {
             "displayName": "Auth",
             "name": "Auth"
+        },
+        {
+            "displayName": "AuthError",
+            "name": "AuthError"
         },
         {
             "displayName": "Core",

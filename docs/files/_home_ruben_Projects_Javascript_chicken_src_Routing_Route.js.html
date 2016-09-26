@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -537,6 +539,14 @@ class Route extends Obj
 		// Store in router
 		this.router.namedRoutes.set(name, this);
 
+		return this;
+
+	}
+
+
+	middleware(...keys) {
+
+		this.options.middleware = _.unique(_.flatten([this.options.middleware, keys]));
 		return this;
 
 	}

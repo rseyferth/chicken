@@ -2,7 +2,6 @@ import $ from 'jquery';
 
 import Model from '~/Data/Model';
 import ApiCall from '~/Api/ApiCall';
-import SettingsObject from '~/Core/SettingsObject';
 import App from '~/Helpers/App';
 
 /**
@@ -18,10 +17,38 @@ class Api {
 	 */
 	constructor(options) {
 		
-		this.settings = new SettingsObject(options, {
+		this.settings = $.extend({
 			baseUrl: '/api',
-			auth: false
-		});
+			
+			auth: false,
+
+			getCurrentUser: '/me',
+			autoGetAuthenticatedUser: true
+
+		}, options);
+
+		// Listen to auth
+		if (this.settings.autoGetAuthenticatedUser) {
+		
+			let auth = this.getAuth();
+			if (auth) {
+
+				// When we are logged in
+				if (auth.isAuthenticated()) this.getAuthenticatedUser();
+
+				// Listen to logout/login
+				auth.on('invalidated', () => {
+					this.getAuthenticatedUserPromise = false;
+					this.authenticatedUser = false;
+				});
+				auth.on('authenticated', () => {
+					this.getAuthenticatedUser();
+				});
+				
+			}
+
+		}
+
 		
 	}
 
@@ -48,6 +75,53 @@ class Api {
 		return this.auth;
 
 	}
+
+
+	getAuthenticatedUser() {
+
+		// Already loaded/loading?
+		if (!this.getAuthenticatedUserPromise) {
+
+			this.getAuthenticatedUserPromise = new Promise((resolve, reject) => {
+
+				// Set?
+				if (this.authenticatedUser) {
+					resolve(this.authenticatedUser);
+					return;
+				}
+
+				// Custom way?
+				let call;
+				if (typeof this.settings.getCurrentUser === 'function') {
+
+					call = this.settings.getCurrentUser();
+
+				} else {
+
+					// Use as uri
+					call = this.call('get', this.settings.getCurrentUser);
+
+				}
+
+				// Make the call
+				call.execute().then((result) => {
+
+					// Good.
+					this.authenticatedUser = result;
+					resolve(result);
+
+
+				}, (error) => {
+					reject(error);
+				});
+
+			});
+
+		}
+		return this.getAuthenticatedUserPromise;
+
+	}
+
 
 
 	//////////////////
@@ -135,7 +209,7 @@ class Api {
 	 * @return {string} Fully formed url
 	 */
 	makeUrl(uri) {
-		return this.settings.get('baseUrl') + uri;
+		return this.settings.baseUrl + uri;
 	}
 
 	/**

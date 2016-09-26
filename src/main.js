@@ -221,7 +221,15 @@ var Chicken = {
 
 	},
 
-	model: (name, configCallback, methods = null) => {
+	model: (name, configCallback = null, methods = null) => {
+
+		// Getter?
+		if (configCallback === null) {
+
+			// Get from registry
+			return Model.registry.get(name);
+
+		}
 
 		// Create class
 		var ChickenModel = class extends Model {
@@ -238,6 +246,12 @@ var Chicken = {
 		// Configure it.
 		ChickenModel.definition = new ModelDefinition(name, configCallback);
 		ChickenModel.modelName = name;
+
+		ChickenModel.create = (initValues = {}) => {
+
+			return new ChickenModel(initValues);
+
+		};
 
 		// Store it.
 		Model.registry.set(name, ChickenModel);

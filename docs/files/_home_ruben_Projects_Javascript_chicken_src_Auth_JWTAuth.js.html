@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -160,6 +162,7 @@ import $ from &#x27;jquery&#x27;;
 import moment from &#x27;moment&#x27;;
 
 import Auth from &#x27;~/Auth/Auth&#x27;;
+import AuthError from &#x27;~/Auth/AuthError&#x27;;
 
 /**
  * @module Auth
@@ -182,6 +185,7 @@ class JWTAuth extends Auth
 			baseUrl: &#x27;&#x27;,
 			authenticateUri: &#x27;/authenticate&#x27;,
 			refreshUri: &#x27;/authenticate/refresh&#x27;,
+			currentUserUri: &#x27;/me&#x27;,
 
 			authenticateMethod: &#x27;post&#x27;,
 			refreshMethod: &#x27;post&#x27;,
@@ -258,7 +262,7 @@ class JWTAuth extends Auth
 
 			}).fail((error) =&gt; {
 
-				reject(error);
+				reject(new AuthError(this, error));
 
 			});
 
@@ -328,8 +332,8 @@ class JWTAuth extends Auth
 			}).fail((error) =&gt; {
 
 				this.invalidate();
+				reject(new AuthError(this, error));
 
-				reject(error);
 			});
 
 		});

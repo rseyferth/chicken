@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -635,7 +637,7 @@ class ObservableArray extends Obj
 			if (keyAttribute) {
 				result[item.get(keyAttribute)] = item.get(valueAttribute);
 			} else {
-				result.push(item.get(valueAttribute))
+				result.push(item.get(valueAttribute));
 			}
 		});
 		
@@ -659,6 +661,12 @@ class ObservableArray extends Obj
 	}
 
 
+	each(callback) {
+
+		_.each(this.items, callback);
+		return this;
+
+	}
 
 
 

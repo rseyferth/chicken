@@ -477,7 +477,7 @@ class ObservableArray extends Obj
 			if (keyAttribute) {
 				result[item.get(keyAttribute)] = item.get(valueAttribute);
 			} else {
-				result.push(item.get(valueAttribute))
+				result.push(item.get(valueAttribute));
 			}
 		});
 		
@@ -501,6 +501,12 @@ class ObservableArray extends Obj
 	}
 
 
+	each(callback) {
+
+		_.each(this.items, callback);
+		return this;
+
+	}
 
 
 

@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -157,6 +159,7 @@
 <div class="file">
     <pre class="code prettyprint linenums">
 import $ from &#x27;jquery&#x27;;
+import _ from &#x27;underscore&#x27;;
 
 import Obj from &#x27;~/Core/Obj&#x27;;
 /**
@@ -164,7 +167,7 @@ import Obj from &#x27;~/Core/Obj&#x27;;
  */
 class I18n extends Obj {
 
-	constructor(language) {
+	constructor() {
 
 		super();
 

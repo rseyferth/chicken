@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -276,8 +278,8 @@ class RouteMatch
 
 		// Make any actions that are already there dependent on the new ones, 
 		// because these actions are the parent(s) of the existing actions.
-		this.actions.forEach((previousAction, previousKey) =&gt; {
-			_.each(myActions, (myAction, myKey) =&gt; {
+		this.actions.forEach((previousAction) =&gt; {
+			_.each(myActions, (myAction) =&gt; {
 				previousAction.dependsOn.push(myAction);
 			});
 		});	

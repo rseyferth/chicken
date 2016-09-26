@@ -105,6 +105,8 @@
             
                 <li><a href="../modules/Auth.html">Auth</a></li>
             
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -163,7 +165,6 @@ import $ from &#x27;jquery&#x27;;
 import QueryString from &#x27;query-string&#x27;;
 
 import ActionBinding from &#x27;~/Dom/ActionBinding&#x27;;
-import Binding from &#x27;~/Dom/Binding&#x27;;
 import Utils from &#x27;~/Helpers/Utils&#x27;;
 import App from &#x27;~/Helpers/App&#x27;;
 import Observable from &#x27;~/Core/Observable&#x27;;
@@ -370,6 +371,46 @@ class Helpers
 	}
 	notEqual(params) {
 		return !this.equal(params);
+	}
+
+	gt(params) {
+
+		// Get params
+		let value1 = this._getValue(params[0]);
+		let value2 = this._getValue(params[1]);
+		return value1 &gt; value2;
+
+	}
+	gte(params) {
+
+		// Get params
+		let value1 = this._getValue(params[0]);
+		let value2 = this._getValue(params[1]);
+		return value1 &gt;= value2;
+
+	}
+	lt(params) {
+
+		// Get params
+		let value1 = this._getValue(params[0]);
+		let value2 = this._getValue(params[1]);
+		return value1 &lt; value2;
+
+	}
+	lte(params) {
+
+		// Get params
+		let value1 = this._getValue(params[0]);
+		let value2 = this._getValue(params[1]);
+		return value1 &lt;= value2;
+
+	}
+
+	isObject(params) {
+		// Get param
+		let value = this._getValue(params[0]);
+		return value instanceof Object;
+
 	}
 
 

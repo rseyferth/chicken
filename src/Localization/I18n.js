@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 
 import Obj from '~/Core/Obj';
 /**
@@ -6,7 +7,7 @@ import Obj from '~/Core/Obj';
  */
 class I18n extends Obj {
 
-	constructor(language) {
+	constructor() {
 
 		super();
 
