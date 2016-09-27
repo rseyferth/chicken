@@ -6417,7 +6417,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					var parameters = params.slice(1);
 
 					// Create action binding
-					morph.actionBindings = new _ActionBinding2.default(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
+					var binding = new _ActionBinding2.default(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
+					morph.actionBindings = binding;
+					return binding;
 				}
 
 			}, _htmlbarsStandalone2.default.Runtime.Hooks.Default.keywords)
@@ -7715,6 +7717,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.element = null;
 
 			/**
+	   * The component's child components
+	   *
+	   * @property childComponents
+	   * @type {Array}
+	   */
+			_this.childComponents = [];
+
+			/**
 	   * The component instance that wrap this component, if any.
 	   * 
 	   * @property parentComponent
@@ -7722,6 +7732,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.parentComponent = _this.scope.component;
 			_this.setSilently('parent', _this.parentComponent);
+
+			// Do I have a parent?
+			if (_this.parentComponent) _this.parentComponent.childComponents.push(_this);
 
 			/**
 	   * The dom-object can be used to listen to dom events on the event
@@ -7786,7 +7799,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 					this.documentFragment = this.renderResult.fragment;
 				} catch (error) {
-					this.rejectPromise('render', error);
+					this.rejectPromise('ready', error);
 					return;
 				}
 
@@ -7827,10 +7840,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Done.
 				this.trigger('added', this.$element);
-				this.resolvePromise('render', this.documentFragment);
 
 				// Enable DOM events
 				this.enableDomEvents();
+
+				// Find child components
+				if (this.childComponents.length > 0) {
+
+					// Wait for the children to complete first
+					var promises = _underscore2.default.map(this.childComponents, function (child) {
+						return child.getPromise('ready');
+					});
+					Promise.all(promises).then(function () {
+						_this3.resolvePromise('ready');
+					});
+				} else {
+
+					// We are ready now.
+					this.resolvePromise('ready');
+				}
 			}
 		}, {
 			key: 'enableDomEvents',
@@ -8820,6 +8848,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
+	var _inflection = __webpack_require__(4);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
 	var _ActionBinding = __webpack_require__(48);
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
@@ -8877,7 +8909,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					var binding = _ActionBinding2.default.get(element.getAttribute('data-chicken-action'));
 					binding.apply();
 				} else {
-					throw new Error('The "action" keyword was not correctly configured in your Renderer...');
+					throw new Error('The "action" keyword was not correctly configured in your Renderer... Or you are trying to add an action to a Component.');
 				}
 			}
 
@@ -9089,6 +9121,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Get param
 				var value = this._getValue(params[0]);
 				return value instanceof Object;
+			}
+
+			/////////////
+			// Strings //
+			/////////////
+
+		}, {
+			key: 'camelize',
+			value: function camelize(params) {
+
+				var string = this._getValue(params[0]);
+				var capitalFirstLetter = !!this._getValue(params[1]);
+
+				return _inflection2.default.camelize(string, !capitalFirstLetter);
 			}
 
 			///////////
@@ -10981,6 +11027,17 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 				});
 			}
+
+			/**
+	   * Get the translation for given key
+	   * 
+	   * @method translate
+	   * @param  {string} key        			Dot-notation key to get value of
+	   * @param  {Object} [attributes={}] 	Optional object containing attributes to pass to the template in the translated value
+	   * @param  {mixed} [fallback=null]		Optional fallback value when the key is nout found
+	   * @return {mixed}
+	   */
+
 		}, {
 			key: 'translate',
 			value: function translate(key) {
@@ -11029,6 +11086,25 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				return obj;
+			}
+
+			/**
+	   * Alias of translate
+	   * 
+	   * @method get
+	   * @param  {string} key        
+	   * @param  {Object} [attributes={}] 
+	   * @param  {mixed} [fallback=null]
+	   * @return {mixed}
+	   */
+
+		}, {
+			key: 'get',
+			value: function get(key) {
+				var attributes = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var fallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+				return this.translate(key, attributes, fallback);
 			}
 		}]);
 
@@ -11418,6 +11494,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
+	var _moment = __webpack_require__(6);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
 	var _App = __webpack_require__(52);
 
 	var _App2 = _interopRequireDefault(_App);
@@ -11425,6 +11505,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Observable2 = __webpack_require__(35);
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	var _ObservableArray = __webpack_require__(46);
+
+	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
 	var _ModelStore = __webpack_require__(69);
 
@@ -11726,10 +11810,26 @@ return /******/ (function(modules) { // webpackBootstrap
 					var attributeDefinition = _this3.getAttributeDefinition(key);
 					if (attributeDefinition) {
 						value = attributeDefinition.cast(value);
+					} else {
+
+						// Is it a moment?
+						if (_moment2.default.isMoment(value)) {
+
+							// Make it ISO 8601
+							value = value.format('YYYY-MM-DD HH:mm:ss');
+						}
+
+						// Is it an array or model?
+						else if (value instanceof _ObservableArray2.default) {
+								value = JSON.stringify(value.toArray());
+							} else if (value instanceof Model) {
+								value = JSON.stringify(value.getAttributesForApi(onlyDirty));
+							}
 					}
 
 					return value;
 				});
+
 				delete attr.id;
 				return attr;
 			}

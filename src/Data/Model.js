@@ -1,9 +1,11 @@
 import inflection from 'inflection';
 import _ from 'underscore';
 import $ from 'jquery';
+import moment from 'moment';
 
 import App from '~/Helpers/App';
 import Observable from '~/Core/Observable';
+import ObservableArray from '~/Core/ObservableArray';
 import ModelStore from '~/Data/ModelStore';
 import Collection from '~/Data/Collection';
 import ClassMap from '~/Helpers/ClassMap';
@@ -263,15 +265,33 @@ class Model extends Observable
 		let attr = onlyDirty ? this.getDirty() : _.defaults({}, this.attributes);
 		attr = _.mapObject(attr, (value, key) => {
 
-
 			// Do we need to cast it?
 			let attributeDefinition = this.getAttributeDefinition(key);
 			if (attributeDefinition) {
 				value = attributeDefinition.cast(value);
+			} else {
+
+				// Is it a moment?
+				if (moment.isMoment(value)) {
+
+					// Make it ISO 8601
+					value = value.format('YYYY-MM-DD HH:mm:ss');
+
+				} 
+
+				// Is it an array or model?
+				else if (value instanceof ObservableArray) {
+					value = JSON.stringify(value.toArray());
+				}				
+				else if (value instanceof Model) {
+					value = JSON.stringify(value.getAttributesForApi(onlyDirty));
+				}
+
 			}
 
 			return value;
 		});
+		
 		delete attr.id;
 		return attr;
 

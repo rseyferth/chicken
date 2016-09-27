@@ -163,6 +163,7 @@
 import _ from &#x27;underscore&#x27;;
 import $ from &#x27;jquery&#x27;;
 import QueryString from &#x27;query-string&#x27;;
+import inflection from &#x27;inflection&#x27;;
 
 import ActionBinding from &#x27;~/Dom/ActionBinding&#x27;;
 import Utils from &#x27;~/Helpers/Utils&#x27;;
@@ -201,9 +202,8 @@ class Helpers
 			var binding = ActionBinding.get(element.getAttribute(&#x27;data-chicken-action&#x27;));
 			binding.apply();
 
-
 		} else {
-			throw new Error(&#x27;The &quot;action&quot; keyword was not correctly configured in your Renderer...&#x27;);
+			throw new Error(&#x27;The &quot;action&quot; keyword was not correctly configured in your Renderer... Or you are trying to add an action to a Component.&#x27;);
 		}
 
 	}
@@ -410,6 +410,20 @@ class Helpers
 		// Get param
 		let value = this._getValue(params[0]);
 		return value instanceof Object;
+
+	}
+
+
+	/////////////
+	// Strings //
+	/////////////
+
+	camelize(params) {
+
+		let string = this._getValue(params[0]);
+		let capitalFirstLetter = !!this._getValue(params[1]);
+
+		return inflection.camelize(string, !capitalFirstLetter);
 
 	}
 

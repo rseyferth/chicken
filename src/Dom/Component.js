@@ -103,6 +103,15 @@ class Component extends View
 		 */
 		this.element = null;
 
+
+		/**
+		 * The component's child components
+		 *
+		 * @property childComponents
+		 * @type {Array}
+		 */
+		this.childComponents = [];
+
 		/**
 		 * The component instance that wrap this component, if any.
 		 * 
@@ -111,6 +120,10 @@ class Component extends View
 		 */
 		this.parentComponent = this.scope.component;
 		this.setSilently('parent', this.parentComponent);
+
+		// Do I have a parent?
+		if (this.parentComponent) this.parentComponent.childComponents.push(this);
+
 		
 		/**
 		 * The dom-object can be used to listen to dom events on the event
@@ -173,7 +186,7 @@ class Component extends View
 			this.documentFragment = this.renderResult.fragment;
 
 		} catch (error) {
-			this.rejectPromise('render', error);
+			this.rejectPromise('ready', error);
 			return;
 		}
 
@@ -214,13 +227,28 @@ class Component extends View
 		// Put element in result
 		this.morph.setNode(this.$element[0]);
 
-
 		// Done.
 		this.trigger('added', this.$element);
-		this.resolvePromise('render', this.documentFragment);
 
 		// Enable DOM events
 		this.enableDomEvents();
+
+		// Find child components
+		if (this.childComponents.length > 0) {
+
+			// Wait for the children to complete first
+			let promises = _.map(this.childComponents, (child) => {
+				return child.getPromise('ready');
+			});
+			Promise.all(promises).then(() => {
+				this.resolvePromise('ready');
+			});
+
+		} else {
+
+			// We are ready now.
+			this.resolvePromise('ready');
+		}
 
 	}
 

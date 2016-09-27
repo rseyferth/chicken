@@ -120,7 +120,15 @@ class I18n extends Obj {
 
 	}
 
-
+	/**
+	 * Get the translation for given key
+	 * 
+	 * @method translate
+	 * @param  {string} key        			Dot-notation key to get value of
+	 * @param  {Object} [attributes={}] 	Optional object containing attributes to pass to the template in the translated value
+	 * @param  {mixed} [fallback=null]		Optional fallback value when the key is nout found
+	 * @return {mixed}
+	 */
 	translate(key, attributes = {}, fallback = null) {
 
 		// Dot notation
@@ -169,6 +177,19 @@ class I18n extends Obj {
 		return obj;
 		
 
+	}
+
+	/**
+	 * Alias of translate
+	 * 
+	 * @method get
+	 * @param  {string} key        
+	 * @param  {Object} [attributes={}] 
+	 * @param  {mixed} [fallback=null]
+	 * @return {mixed}
+	 */
+	get(key, attributes = {}, fallback = null) {
+		return this.translate(key, attributes, fallback);
 	}
 
 

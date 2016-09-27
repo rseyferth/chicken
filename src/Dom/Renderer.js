@@ -252,7 +252,7 @@ class Renderer
 					definition.initCallback, 
 					this);
 				newScope.self = component;
-				
+
 				// Now render it.
 				component.render();
 								
@@ -371,7 +371,9 @@ class Renderer
 					let parameters = params.slice(1);
 
 					// Create action binding
-					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
+					let binding = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
+					morph.actionBindings = binding;
+					return binding;
 
 				}
 
