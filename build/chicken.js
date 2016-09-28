@@ -6419,7 +6419,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Create action binding
 					var binding = new _ActionBinding2.default(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
 					morph.actionBindings = binding;
-					return binding;
 				}
 
 			}, _htmlbarsStandalone2.default.Runtime.Hooks.Default.keywords)
