@@ -52,7 +52,7 @@ class JsonApi extends Api
 		let method = model.isNew() ? 'post' : 'patch';
 
 		// Do the call
-		let apiCall = this.call(method, settings.uri, JSON.stringify(data));
+		let apiCall = this.call(method, settings.uri, JSON.stringify(data), settings.ajax);
 		
 
 		// Return it

@@ -89,9 +89,7 @@ class ApiCall extends Obj {
 
 		// Authorize it
 		let auth = this.api.getAuth();
-		if (auth && auth.isAuthenticated()) {
-			auth.authorizeApiCall(this);
-		}
+		if (auth) auth.authorizeApiCall(this);
 
 		// Make a promise
 		return this.promise('complete', (resolve, reject) => {
@@ -117,6 +115,9 @@ class ApiCall extends Obj {
 
 					// Make error
 					let errorObj = new ApiError(this, error);
+					if (auth) {
+						errorObj = auth.processApiError(errorObj);
+					} 
 					reject(errorObj);
 
 				});

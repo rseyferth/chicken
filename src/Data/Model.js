@@ -134,10 +134,16 @@ class Model extends Observable
 			return this[methodName].apply(this, [this.attributes[key]]);
 		}
 
+		// Is it a relationship that was not yet loaded
+		let relationship = this.getRelationship(key);
+		if (relationship) {
+			this.related[key] = relationship.getInitValue();
+		}
+
 		// Is it a relationship?
 		if (this.related[key]) return this.related[key];
 
-		
+
 		// Nothing special. Do basics
 		return super._get(key);
 
@@ -145,6 +151,12 @@ class Model extends Observable
 
 	_set(key, value) {
 	
+		// Is it a relationship that was not yet loaded
+		let relationship = this.getRelationship(key);
+		if (relationship) {
+			this.related[key] = value;
+		}
+
 		// Cast if necessary
 		value = this.castValue(key, value);
 		
@@ -590,6 +602,17 @@ class Model extends Observable
 
 	}
 
+
+	getRelationship(key) {
+
+		// Check if the model has a definition at all
+		let def = this.getDefinition();
+		if (!def) return null;
+
+		// Get the attribute
+		return def.relationships[key];
+
+	}
 
 
 

@@ -235,14 +235,7 @@ class Application extends Observable {
 		return this;
 	}
 
-	user(apiKey = null) {
-
-		// Get authenticated user
-		return this.api(apiKey).getAuthenticatedUser();
-
-	}
-
-
+	
 	translations(callback) {
 
 		callback.apply(this.i18n, [this.i18n]);
@@ -260,6 +253,10 @@ class Application extends Observable {
 		// Add i18n to promises
 		this.loadPromises.unshift(this.i18n.load());
 
+		// Do auth initialization
+		_.each(this.auths, (auth) => {
+			this.loadPromises.unshift(auth.initialize());
+		});
 
 		// When all is done.
 		Promise.all(this.loadPromises).then(() => {
@@ -332,6 +329,12 @@ class Application extends Observable {
 
 		return this;
 
+
+	}
+
+	getCurrentUri() {
+
+		return this.history.getCurrentLocation().pathname;
 
 	}
 

@@ -63,10 +63,11 @@ class Collection extends ObservableArray
 		let currentIds = _.map(this.items, (item) => {
 			return item.get('id');			
 		});
-		let overlap = _.intersection(currentIds, this.originalIds);
+		let newIds = _.difference(currentIds, this.originalIds);
+		let removedIds = _.difference(this.originalIds, currentIds);
 
 		// Are any of the id's different?
-		return overlap.length !== this.originalIds.length;
+		return newIds.length > 0 || removedIds.length > 0;
 
 
 	}

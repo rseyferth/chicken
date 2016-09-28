@@ -26,42 +26,16 @@ class Auth extends Observable
 
 			getUserUri: '/me',
 
+			onAuthenticated: null,
+			onUnauthenticated: null,
+			onSessionTimedOut: null,
+			onInvalidated: null,
+
 			middlewareName: 'auth'
 
 		});
 
 		this.set('isAuthenticated', false);
-
-
-
-		// Check 'on...' settings
-		_.each(this.settings, (value, key) => {
-
-			let match = key.match(/^on([A-Z].+)$/);
-			if (match) {
-
-				// Is it a callback?
-				let eventName = inflection.camelize(match[1], true);
-				if (typeof value === 'function') {
-				
-					// Add event listener
-					this.on(eventName, value);
-
-				} 
-
-				// Or uri?
-				else if (typeof value === 'string' && /^\//.test(value)) {
-
-					// Go to the uri when that happens
-					this.on(eventName, () => {
-						App().goto(value);
-					});
-
-				}
-
-			}
-
-		});
 
 		// Register the middleware
 		this.middleware = new Middleware(this.settings.middlewareName, (next, request, routeMatch) => {
@@ -87,10 +61,12 @@ class Auth extends Observable
 		if (!this.isAuthenticated()) {
 
 			// Trigger the unauthenticated event
-			if (!this._listeners.has(Auth.Events.Unauthenticated)) {
+			if (!this.settings.onAuthenticated) {
 				throw new Error('Protected route called without authentication.');
 			}
-			this.trigger(Auth.Events.Unauthenticated, [request, routeMatch]);
+
+			// Do the callback
+			this.doCallback('onAuthenticated', [request, routeMatch]);
 			return;
 
 		}
@@ -98,6 +74,48 @@ class Auth extends Observable
 		// Ok.
 		next();
 		
+	}
+
+
+	doCallback(key, params) {
+
+		// Promise
+		return new Promise((resolve, reject) => {
+
+			// Do we have one?
+			let callback = this.settings[key];
+			if (!callback) {
+				reject('There is no callback defined for ' + key);
+			}
+
+			// Is it a string with a uri?
+			if (typeof callback === 'string') {
+				App().goto(callback);
+				resolve();
+			}
+
+			// Get the result from the callback
+			let result = callback.apply(this, params);
+
+			// Is there something resolvable in there?
+			if (result && result instanceof Promise) {
+
+				// Link it.
+				result.then((result) => {
+					resolve(result);
+				}, (error) => {
+					reject(error);
+				});
+
+			} else {
+
+				// Just resolve now
+				resolve(result);
+
+			}
+
+		});
+
 	}
 
 
@@ -162,44 +180,6 @@ class Auth extends Observable
 
 
 }
-
-Auth.Events = {
-
-	/**
-	 * This event is triggered when the session was authenticated but is not
-	 * any longer
-	 * 
-	 * @event sessionTimedOut
-	 */
-	SessionTimedOut: 'sessionTimedOut',
-
-
-	/**
-	 * This event is triggered when the session has been authenticated
-	 * 
-	 * @event authenticated
-	 */
-	Authenticated: 'authenticated',
-
-	/**
-	 * This event is triggered when the session has been invalidated
-	 * 
-	 * @event invalidated
-	 */
-	Invalidated: 'invalidated',
-
-
-	/**
-	 * This event is triggered whenever an unauthenticated user tries to access
-	 * a protected routeMatch
-	 * 
-	 * @event unauthenticated
-	 */
-	Unauthenticated: 'unauthenticated'
-
-
-
-};
 
 
 

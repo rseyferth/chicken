@@ -43,9 +43,13 @@ import SettingsObject from '~/Core/SettingsObject';
 
 
 // Data
+import Collection from '~/Data/Collection';
 import Model from '~/Data/Model';
+import ModelAttribute from '~/Data/ModelAttribute';
 import ModelDefinition from '~/Data/ModelDefinition';
-
+import ModelStore from '~/Data/ModelStore';
+import Relationship from '~/Data/Relationship';
+import Service from '~/Data/Service';
 
 // Dom
 import ActionBinding from '~/Dom/ActionBinding';
@@ -114,9 +118,14 @@ var Chicken = {
 	},
 
 	Data: {
-		
+	
+		Collection: Collection,
 		Model: Model,
-		ModelDefinition: ModelDefinition
+		ModelAttribute: ModelAttribute,
+		ModelDefinition: ModelDefinition,
+		ModelStore: ModelStore,
+		Relationship: Relationship,
+		Service: Service
 	},
 
 	Dom: {
@@ -258,6 +267,32 @@ var Chicken = {
 		return ChickenModel;
 
 	},
+
+	service: (name, methods = null) => {
+
+		// Getter?
+		if (methods === null) {
+			return Service.get(name);
+		}
+
+		// Create class
+		var ChickenService = class extends Service {
+			constructor() {
+				super(name);
+			}
+		};
+
+		// Add given methods to prototype
+		$.extend(ChickenService.prototype, methods);
+
+		// Configure it.
+		ChickenService.serviceName = name;
+
+		// Store it.
+		Service.registry.set(name, ChickenService);
+		return ChickenService;
+
+	},	
 
 	middleware: (name, callback = null) => {
 

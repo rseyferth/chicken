@@ -124,13 +124,33 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
+	var _Collection = __webpack_require__(70);
+
+	var _Collection2 = _interopRequireDefault(_Collection);
+
 	var _Model2 = __webpack_require__(68);
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelDefinition = __webpack_require__(76);
+	var _ModelAttribute = __webpack_require__(76);
+
+	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
+
+	var _ModelDefinition = __webpack_require__(77);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
+
+	var _ModelStore = __webpack_require__(69);
+
+	var _ModelStore2 = _interopRequireDefault(_ModelStore);
+
+	var _Relationship = __webpack_require__(78);
+
+	var _Relationship2 = _interopRequireDefault(_Relationship);
+
+	var _Service2 = __webpack_require__(79);
+
+	var _Service3 = _interopRequireDefault(_Service2);
 
 	var _ActionBinding = __webpack_require__(48);
 
@@ -301,8 +321,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		Data: {
 
+			Collection: _Collection2.default,
 			Model: _Model3.default,
-			ModelDefinition: _ModelDefinition2.default
+			ModelAttribute: _ModelAttribute2.default,
+			ModelDefinition: _ModelDefinition2.default,
+			ModelStore: _ModelStore2.default,
+			Relationship: _Relationship2.default,
+			Service: _Service3.default
 		},
 
 		Dom: {
@@ -459,6 +484,39 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Store it.
 			_Model3.default.registry.set(name, ChickenModel);
 			return ChickenModel;
+		},
+
+		service: function service(name) {
+			var methods = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+			// Getter?
+			if (methods === null) {
+				return _Service3.default.get(name);
+			}
+
+			// Create class
+			var ChickenService = function (_Service) {
+				_inherits(ChickenService, _Service);
+
+				function ChickenService() {
+					_classCallCheck(this, ChickenService);
+
+					return _possibleConstructorReturn(this, (ChickenService.__proto__ || Object.getPrototypeOf(ChickenService)).call(this, name));
+				}
+
+				return ChickenService;
+			}(_Service3.default);
+
+			// Add given methods to prototype
+			_jquery2.default.extend(ChickenService.prototype, methods);
+
+			// Configure it.
+			ChickenService.serviceName = name;
+
+			// Store it.
+			_Service3.default.registry.set(name, ChickenService);
+			return ChickenService;
 		},
 
 		middleware: function middleware(name) {
@@ -1913,15 +1971,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this;
 			}
 		}, {
-			key: 'user',
-			value: function user() {
-				var apiKey = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-
-
-				// Get authenticated user
-				return this.api(apiKey).getAuthenticatedUser();
-			}
-		}, {
 			key: 'translations',
 			value: function translations(callback) {
 
@@ -1938,6 +1987,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Add i18n to promises
 				this.loadPromises.unshift(this.i18n.load());
+
+				// Do auth initialization
+				_underscore2.default.each(this.auths, function (auth) {
+					_this4.loadPromises.unshift(auth.initialize());
+				});
 
 				// When all is done.
 				Promise.all(this.loadPromises).then(function () {
@@ -2005,6 +2059,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 
 				return this;
+			}
+		}, {
+			key: 'getCurrentUri',
+			value: function getCurrentUri() {
+
+				return this.history.getCurrentLocation().pathname;
 			}
 		}, {
 			key: 'config',
@@ -8654,9 +8714,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Authorize it
 				var auth = this.api.getAuth();
-				if (auth && auth.isAuthenticated()) {
-					auth.authorizeApiCall(this);
-				}
+				if (auth) auth.authorizeApiCall(this);
 
 				// Make a promise
 				return this.promise('complete', function (resolve, reject) {
@@ -8680,6 +8738,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Make error
 						var errorObj = new _ApiError2.default(_this2, error);
+						if (auth) {
+							errorObj = auth.processApiError(errorObj);
+						}
 						reject(errorObj);
 					});
 				});
@@ -9618,9 +9679,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					var cb = callbacksToExecute.shift();
 
 					// Get the next in line
-					var nextCb = _underscore2.default.first(callbacksToExecute);
+					var result = cb.apply(_this2, [nextCallback, request, routeMatch]);
 
-					cb.apply(_this2, [nextCb, request, routeMatch]);
+					// Is there a result?
+					if (result !== undefined) {
+						console.log('WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT', result);
+					}
 				};
 				nextCallback();
 
@@ -11154,39 +11218,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param  {Object} options 	 
 	  */
 		function Api(options) {
-			var _this = this;
-
 			_classCallCheck(this, Api);
 
 			this.settings = _jquery2.default.extend({
 				baseUrl: '/api',
 
-				auth: false,
-
-				getCurrentUser: '/me',
-				autoGetAuthenticatedUser: true
+				auth: false
 
 			}, options);
-
-			// Listen to auth
-			if (this.settings.autoGetAuthenticatedUser) {
-
-				var auth = this.getAuth();
-				if (auth) {
-
-					// When we are logged in
-					if (auth.isAuthenticated()) this.getAuthenticatedUser();
-
-					// Listen to logout/login
-					auth.on('invalidated', function () {
-						_this.getAuthenticatedUserPromise = false;
-						_this.authenticatedUser = false;
-					});
-					auth.on('authenticated', function () {
-						_this.getAuthenticatedUser();
-					});
-				}
-			}
 		}
 
 		/**
@@ -11217,46 +11256,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Look it up.
 				this.auth = (0, _App2.default)().auth(this.settings.auth);
 				return this.auth;
-			}
-		}, {
-			key: 'getAuthenticatedUser',
-			value: function getAuthenticatedUser() {
-				var _this2 = this;
-
-				// Already loaded/loading?
-				if (!this.getAuthenticatedUserPromise) {
-
-					this.getAuthenticatedUserPromise = new Promise(function (resolve, reject) {
-
-						// Set?
-						if (_this2.authenticatedUser) {
-							resolve(_this2.authenticatedUser);
-							return;
-						}
-
-						// Custom way?
-						var call = void 0;
-						if (typeof _this2.settings.getCurrentUser === 'function') {
-
-							call = _this2.settings.getCurrentUser();
-						} else {
-
-							// Use as uri
-							call = _this2.call('get', _this2.settings.getCurrentUser);
-						}
-
-						// Make the call
-						call.execute().then(function (result) {
-
-							// Good.
-							_this2.authenticatedUser = result;
-							resolve(result);
-						}, function (error) {
-							reject(error);
-						});
-					});
-				}
-				return this.getAuthenticatedUserPromise;
 			}
 
 			//////////////////
@@ -11664,6 +11663,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					return this[methodName].apply(this, [this.attributes[key]]);
 				}
 
+				// Is it a relationship that was not yet loaded
+				var relationship = this.getRelationship(key);
+				if (relationship) {
+					this.related[key] = relationship.getInitValue();
+				}
+
 				// Is it a relationship?
 				if (this.related[key]) return this.related[key];
 
@@ -11673,6 +11678,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_set',
 			value: function _set(key, value) {
+
+				// Is it a relationship that was not yet loaded
+				var relationship = this.getRelationship(key);
+				if (relationship) {
+					this.related[key] = value;
+				}
 
 				// Cast if necessary
 				value = this.castValue(key, value);
@@ -12139,6 +12150,17 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Get the attribute
 				return def.attributes[key];
 			}
+		}, {
+			key: 'getRelationship',
+			value: function getRelationship(key) {
+
+				// Check if the model has a definition at all
+				var def = this.getDefinition();
+				if (!def) return null;
+
+				// Get the attribute
+				return def.relationships[key];
+			}
 		}]);
 
 		return Model;
@@ -12379,10 +12401,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				var currentIds = _underscore2.default.map(this.items, function (item) {
 					return item.get('id');
 				});
-				var overlap = _underscore2.default.intersection(currentIds, this.originalIds);
+				var newIds = _underscore2.default.difference(currentIds, this.originalIds);
+				var removedIds = _underscore2.default.difference(this.originalIds, currentIds);
 
 				// Are any of the id's different?
-				return overlap.length !== this.originalIds.length;
+				return newIds.length > 0 || removedIds.length > 0;
 			}
 		}]);
 
@@ -12488,7 +12511,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var method = model.isNew() ? 'post' : 'patch';
 
 				// Do the call
-				var apiCall = this.call(method, settings.uri, JSON.stringify(data));
+				var apiCall = this.call(method, settings.uri, JSON.stringify(data), settings.ajax);
 
 				// Return it
 				return apiCall;
@@ -12847,36 +12870,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				getUserUri: '/me',
 
+				onAuthenticated: null,
+				onUnauthenticated: null,
+				onSessionTimedOut: null,
+				onInvalidated: null,
+
 				middlewareName: 'auth'
 
 			});
 
 			_this.set('isAuthenticated', false);
-
-			// Check 'on...' settings
-			_underscore2.default.each(_this.settings, function (value, key) {
-
-				var match = key.match(/^on([A-Z].+)$/);
-				if (match) {
-
-					// Is it a callback?
-					var eventName = _inflection2.default.camelize(match[1], true);
-					if (typeof value === 'function') {
-
-						// Add event listener
-						_this.on(eventName, value);
-					}
-
-					// Or uri?
-					else if (typeof value === 'string' && /^\//.test(value)) {
-
-							// Go to the uri when that happens
-							_this.on(eventName, function () {
-								(0, _App2.default)().goto(value);
-							});
-						}
-				}
-			});
 
 			// Register the middleware
 			_this.middleware = new _Middleware2.default(_this.settings.middlewareName, function (next, request, routeMatch) {
@@ -12906,15 +12909,56 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!this.isAuthenticated()) {
 
 					// Trigger the unauthenticated event
-					if (!this._listeners.has(Auth.Events.Unauthenticated)) {
+					if (!this.settings.onAuthenticated) {
 						throw new Error('Protected route called without authentication.');
 					}
-					this.trigger(Auth.Events.Unauthenticated, [request, routeMatch]);
+
+					// Do the callback
+					this.doCallback('onAuthenticated', [request, routeMatch]);
 					return;
 				}
 
 				// Ok.
 				next();
+			}
+		}, {
+			key: 'doCallback',
+			value: function doCallback(key, params) {
+				var _this2 = this;
+
+				// Promise
+				return new Promise(function (resolve, reject) {
+
+					// Do we have one?
+					var callback = _this2.settings[key];
+					if (!callback) {
+						reject('There is no callback defined for ' + key);
+					}
+
+					// Is it a string with a uri?
+					if (typeof callback === 'string') {
+						(0, _App2.default)().goto(callback);
+						resolve();
+					}
+
+					// Get the result from the callback
+					var result = callback.apply(_this2, params);
+
+					// Is there something resolvable in there?
+					if (result && result instanceof Promise) {
+
+						// Link it.
+						result.then(function (result) {
+							resolve(result);
+						}, function (error) {
+							reject(error);
+						});
+					} else {
+
+						// Just resolve now
+						resolve(result);
+					}
+				});
 			}
 
 			/**
@@ -12990,40 +13034,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		return Auth;
 	}(_Observable3.default);
-
-	Auth.Events = {
-
-		/**
-	  * This event is triggered when the session was authenticated but is not
-	  * any longer
-	  * 
-	  * @event sessionTimedOut
-	  */
-		SessionTimedOut: 'sessionTimedOut',
-
-		/**
-	  * This event is triggered when the session has been authenticated
-	  * 
-	  * @event authenticated
-	  */
-		Authenticated: 'authenticated',
-
-		/**
-	  * This event is triggered when the session has been invalidated
-	  * 
-	  * @event invalidated
-	  */
-		Invalidated: 'invalidated',
-
-		/**
-	  * This event is triggered whenever an unauthenticated user tries to access
-	  * a protected routeMatch
-	  * 
-	  * @event unauthenticated
-	  */
-		Unauthenticated: 'unauthenticated'
-
-	};
 
 	module.exports = Auth;
 
@@ -13110,88 +13120,107 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			var _this = _possibleConstructorReturn(this, (JWTAuth.__proto__ || Object.getPrototypeOf(JWTAuth)).call(this, options));
 
-			try {
-				_this.token = JSON.parse(localStorage.getItem(_this.settings.localStorageKey));
-			} catch (err) {
-				_this.token = null;
-			}
-
-			// Check the token
-			_this.validateToken();
+			_this.token = null;
 
 			return _this;
 		}
 
-		/**
-	  * Try to authenticate using given credentials
-	  * 
-	  * @method authenticate
-	  * @param  {string} identifier 	Usually the email address
-	  * @param  {string} password   
-	  * @return {Promise} 
-	  */
-
-
 		_createClass(JWTAuth, [{
+			key: 'initialize',
+			value: function initialize() {
+				var _this2 = this;
+
+				// Get token from localstorage
+				try {
+					this.token = JSON.parse(localStorage.getItem(this.settings.localStorageKey));
+				} catch (err) {
+					this.token = null;
+				}
+
+				// Validate the tkoen
+				return new Promise(function (resolve) {
+
+					// Wheter we are or are not authenticated, we resolve, because initializion is complete
+					_this2.validateToken().then(function () {
+						resolve(true);
+					}, function () {
+						resolve(false);
+					});
+				});
+			}
+
+			/**
+	   * Try to authenticate using given credentials
+	   * 
+	   * @method authenticate
+	   * @param  {string} identifier 	Usually the email address
+	   * @param  {string} password   
+	   * @return {Promise} 
+	   */
+
+		}, {
 			key: 'authenticate',
 			value: function authenticate(identifier, password) {
-				var _this2 = this;
+				var _this3 = this;
 
 				// Make a call.
 				return new Promise(function (resolve, reject) {
 
 					// Prepare data
 					var data = {};
-					data[_this2.settings.identifierKey] = identifier;
-					data[_this2.settings.passwordKey] = password;
+					data[_this3.settings.identifierKey] = identifier;
+					data[_this3.settings.passwordKey] = password;
 
 					// Make the call.
 					_jquery2.default.ajax({
-						url: _this2.settings.baseUrl + _this2.settings.authenticateUri,
+						url: _this3.settings.baseUrl + _this3.settings.authenticateUri,
 						data: data,
-						method: _this2.settings.authenticateMethod
+						method: _this3.settings.authenticateMethod
 					}).then(function (result) {
 
 						// Check token.
 						if (!result.token) reject('Could not find token in result');
 
 						// Store it.
-						_this2.setToken(result.token);
-						resolve(_this2.token);
-
-						// Authenticated
-						_this2.trigger(_Auth3.default.Events.Authenticated);
+						_this3.setToken(result.token);
+						resolve(_this3.token);
 					}).fail(function (error) {
 
-						reject(new _AuthError2.default(_this2, error));
+						reject(new _AuthError2.default(_this3, error));
 					});
 				});
 			}
 		}, {
 			key: 'invalidate',
 			value: function invalidate() {
-				var _this3 = this;
+				var _this4 = this;
 
 				return new Promise(function (resolve /*, reject*/) {
 
 					// Waiting to time out?
-					if (_this3.sessionTimeoutTimeout) {
-						clearTimeout(_this3.sessionTimeoutTimeout);
-						_this3.sessionTimeoutTimeout = false;
+					if (_this4.sessionTimeoutTimeout) {
+						clearTimeout(_this4.sessionTimeoutTimeout);
+						_this4.sessionTimeoutTimeout = false;
+					}
+					if (_this4.autoRefreshTimeout) {
+						clearTimeout(_this4.autoRefreshTimeout);
+						_this4.autoRefreshTimeout = false;
 					}
 
 					// Remove token
-					_this3.token = false;
-					localStorage.removeItem(_this3.settings.localStorageKey);
-					_this3.set('isAuthenticated', false);
-					_this3.trigger(_Auth3.default.Events.Invalidated);
+					_this4.token = false;
+					localStorage.removeItem(_this4.settings.localStorageKey);
+					_this4.set('isAuthenticated', false);
+
+					_this4.doCallback('onInvalidated', []);
+					_this4.trigger('invalidated');
 					resolve();
 				});
 			}
 		}, {
 			key: 'refreshToken',
 			value: function refreshToken() {
-				var _this4 = this;
+				var _this5 = this;
 
 				// Waiting to time out?
 				if (this.autoRefreshTimeout) {
@@ -13203,17 +13232,17 @@ return /******/ (function(modules) { // webpackBootstrap
 				return new Promise(function (resolve, reject) {
 
 					// Already timed out?
-					if (!_this4.isAuthenticated()) {
+					if (!_this5.isAuthenticated()) {
 						reject('Cannot refresh token when not authenticated');
 						return;
 					}
 
 					// Make the call.
 					_jquery2.default.ajax({
-						url: _this4.settings.baseUrl + _this4.settings.refreshUri,
-						method: _this4.settings.refreshMethod,
+						url: _this5.settings.baseUrl + _this5.settings.refreshUri,
+						method: _this5.settings.refreshMethod,
 						beforeSend: function beforeSend(xhr) {
-							xhr.setRequestHeader('Authorization', 'Bearer ' + _this4.token.token);
+							xhr.setRequestHeader('Authorization', 'Bearer ' + _this5.token.token);
 						}
 					}).then(function (result) {
 
@@ -13221,15 +13250,15 @@ return /******/ (function(modules) { // webpackBootstrap
 						if (!result.token) reject('Could not find token in result');
 
 						// Store it.
-						_this4.setToken(result.token);
-						resolve(_this4.token);
+						_this5.setToken(result.token);
+						resolve(_this5.token);
 
 						// Authenticated
-						_this4.trigger(JWTAuth.Events.TokenRefreshed);
+						_this5.trigger('tokenRefreshed');
 					}).fail(function (error) {
 
-						_this4.invalidate();
-						reject(new _AuthError2.default(_this4, error));
+						_this5.invalidate();
+						reject(new _AuthError2.default(_this5, error));
 					});
 				});
 			}
@@ -13248,6 +13277,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					clearTimeout(this.sessionTimeoutTimeout);
 					this.sessionTimeoutTimeout = false;
 				}
+				if (this.autoRefreshTimeout) {
+					clearTimeout(this.autoRefreshTimeout);
+					this.autoRefreshTimeout = false;
+				}
 
 				// Remember it.
 				localStorage.setItem(this.settings.localStorageKey, JSON.stringify(this.token));
@@ -13258,80 +13291,89 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'validateToken',
 			value: function validateToken() {
-				var _this5 = this;
+				var _this6 = this;
 
-				// Any token?
-				if (this.token) {
+				return new Promise(function (resolve, reject) {
 
-					// Is it an object?
-					if (this.token instanceof Object) {
+					// Any token?
+					if (_this6.token) {
 
-						// Still valid?
-						var now = (0, _moment2.default)().unix();
-						var timesOutAt = this.token.receivedAt + this.settings.tokenValidForMinutes * 60;
-						if (timesOutAt < now) {
+						// Is it an object?
+						if (_this6.token instanceof Object) {
 
-							// No longer valid.
-							this.set('isAuthenticated', false);
-							this.token = null;
-							return;
+							// Still valid?
+							var now = (0, _moment2.default)().unix();
+							var timesOutAt = _this6.token.receivedAt + _this6.settings.tokenValidForMinutes * 60;
+							if (timesOutAt < now) {
+
+								// No longer valid.
+								_this6.set('isAuthenticated', false);
+								_this6.token = null;
+								reject();
+								return;
+							}
+
+							// Auto refresh?
+							if (_this6.settings.autoRefreshToken) {
+
+								// Wait a bit and then refresh
+								if (_this6.autoRefreshTimeout) clearTimeout(_this6.autoRefreshTimeout);
+								var refreshAt = _this6.token.receivedAt + _this6.settings.autoRefreshInterval;
+								var timeoutMs = Math.max((refreshAt - now) * 1000, 5000);
+								_this6.autoRefreshTimeout = setTimeout(function () {
+
+									_this6.autoRefreshTimeout = false;
+									_this6.refreshToken();
+								}, timeoutMs);
+							}
+
+							// Wait for it to timeout
+							if (_this6.sessionTimeoutTimeout) clearTimeout(_this6.sessionTimeoutTimeout);
+							_this6.sessionTimeoutTimeout = setTimeout(function () {
+
+								////////////////////////////////
+								// Make the session time out! //
+								////////////////////////////////
+
+								_this6.sessionTimeoutTimeout = false;
+								_this6.trigger('sessionTimedOut');
+								_this6.set('isAuthenticated', false);
+								_this6.token = null;
+
+								if (_this6.autoRefreshTimeout) clearTimeout(_this6.autoRefreshTimeout);
+							}, (timesOutAt - now) * 1000);
+
+							// It is valid!
+							_this6.doCallback('onAuthenticated', []).then(function () {
+								_this6.set('isAuthenticated', true);
+								resolve();
+							});
+						} else {
+
+							// Not valid
+							_this6.set('isAuthenticated', false);
+							reject();
+							_this6.token = null;
 						}
-
-						// Auto refresh?
-						if (this.settings.autoRefreshToken) {
-
-							// Wait a bit and then refresh
-							if (this.autoRefreshTimeout) clearTimeout(this.autoRefreshTimeout);
-							var refreshAt = this.token.receivedAt + this.settings.autoRefreshInterval;
-							var timeoutMs = Math.max((refreshAt - now) * 1000, 1);
-							this.autoRefreshTimeout = setTimeout(function () {
-
-								_this5.autoRefreshTimeout = false;
-								_this5.refreshToken();
-							}, timeoutMs);
-						}
-
-						// Wait for it to timeout
-						if (this.sessionTimeoutTimeout) clearTimeout(this.sessionTimeoutTimeout);
-						this.sessionTimeoutTimeout = setTimeout(function () {
-
-							////////////////////////////////
-							// Make the session time out! //
-							////////////////////////////////
-
-							_this5.sessionTimeoutTimeout = false;
-							_this5.trigger(_Auth3.default.Events.SessionTimedOut);
-							_this5.set('isAuthenticated', false);
-							_this5.token = null;
-
-							if (_this5.autoRefreshTimeout) clearTimeout(_this5.autoRefreshTimeout);
-						}, (timesOutAt - now) * 1000);
-
-						// It is valid!
-						this.set('isAuthenticated', true);
 					} else {
 
-						// Not valid
-						this.set('isAuthenticated', false);
-						this.token = null;
+						// Not authenticated
+						_this6.set('isAuthenticated', false);
+						reject();
 					}
-				} else {
-
-					// Not authenticated
-					this.set('isAuthenticated', false);
-				}
+				});
 			}
 		}, {
 			key: 'authorizeApiCall',
 			value: function authorizeApiCall(apiCall) {
-				var _this6 = this;
+				var _this7 = this;
 
 				// Add token.
-				if (this.isAuthenticated()) {
+				if (this.token) {
 
 					// Add the bearer token
 					apiCall.ajaxOptions.beforeSend = function (xhr) {
-						xhr.setRequestHeader('Authorization', 'Bearer ' + _this6.token.token);
+						xhr.setRequestHeader('Authorization', 'Bearer ' + _this7.token.token);
 					};
 				}
 
@@ -13412,160 +13454,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 76 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _inflection = __webpack_require__(4);
-
-	var _inflection2 = _interopRequireDefault(_inflection);
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _ModelAttribute = __webpack_require__(77);
-
-	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
-
-	var _Relationship = __webpack_require__(78);
-
-	var _Relationship2 = _interopRequireDefault(_Relationship);
-
-	var _ComputedProperty = __webpack_require__(39);
-
-	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Data
-	 */
-	var ModelDefinition = function () {
-		function ModelDefinition(name, callback) {
-			_classCallCheck(this, ModelDefinition);
-
-			this.name = name;
-
-			this.apiUri = '/' + _inflection2.default.underscore(_inflection2.default.pluralize(name));
-			this.api = 'default';
-
-			this.attributes = {};
-			this.attributeNames = [];
-			this.relationships = {};
-
-			this.computedAttributes = {};
-
-			callback.apply(this, [this]);
-		}
-
-		_createClass(ModelDefinition, [{
-			key: 'initializeModel',
-			value: function initializeModel(model) {
-				var _this = this;
-
-				// Add computed
-				model.withoutNotifications(function () {
-					_underscore2.default.each(_this.computedAttributes, function (attr, key) {
-						model.set(key, new _ComputedProperty2.default(attr.dependencies, attr.callback));
-					});
-				});
-
-				return model;
-			}
-		}, {
-			key: 'attribute',
-			value: function attribute(name, type) {
-				var attr = new _ModelAttribute2.default(name, type);
-				this.attributeNames.push(name);
-				this.attributes[name] = attr;
-				return attr;
-			}
-		}, {
-			key: 'computed',
-			value: function computed(name, dependencies, callback) {
-
-				this.computedAttributes[name] = {
-					dependencies: dependencies,
-					callback: callback
-				};
-				return true;
-			}
-
-			//////////////////////
-			// Column defitions //
-			//////////////////////
-
-		}, {
-			key: 'integer',
-			value: function integer(name) {
-				var attr = this.attribute(name, _ModelAttribute2.default.Integer);
-				return attr;
-			}
-		}, {
-			key: 'string',
-			value: function string(name, size) {
-				var attr = this.attribute(name, _ModelAttribute2.default.String);
-				attr.size = size;
-				return attr;
-			}
-		}, {
-			key: 'date',
-			value: function date(name) {
-				var attr = this.attribute(name, _ModelAttribute2.default.Date);
-				return attr;
-			}
-
-			//////////////////////
-			// Column shortcuts //
-			//////////////////////
-
-		}, {
-			key: 'timestamps',
-			value: function timestamps() {
-				this.attribute('createdAt', _ModelAttribute2.default.DateTime);
-				this.attribute('updatedAt', _ModelAttribute2.default.DateTime);
-				return this;
-			}
-
-			///////////////////
-			// Relationships //
-			///////////////////
-
-		}, {
-			key: 'relationship',
-			value: function relationship(name) {
-				var rel = new _Relationship2.default(name, this.name);
-				this.relationships[name] = rel;
-				return rel;
-			}
-
-			/////////
-			// Api //
-			/////////
-
-		}, {
-			key: 'getApiUri',
-			value: function getApiUri() {
-				var id = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
-
-				var uri = this.apiUri;
-				if (id) uri += '/' + id;
-				return uri;
-			}
-		}]);
-
-		return ModelDefinition;
-	}();
-
-	module.exports = ModelDefinition;
-
-/***/ },
-/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13709,6 +13597,160 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelAttribute;
 
 /***/ },
+/* 77 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _inflection = __webpack_require__(4);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _ModelAttribute = __webpack_require__(76);
+
+	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
+
+	var _Relationship = __webpack_require__(78);
+
+	var _Relationship2 = _interopRequireDefault(_Relationship);
+
+	var _ComputedProperty = __webpack_require__(39);
+
+	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Data
+	 */
+	var ModelDefinition = function () {
+		function ModelDefinition(name, callback) {
+			_classCallCheck(this, ModelDefinition);
+
+			this.name = name;
+
+			this.apiUri = '/' + _inflection2.default.underscore(_inflection2.default.pluralize(name));
+			this.api = 'default';
+
+			this.attributes = {};
+			this.attributeNames = [];
+			this.relationships = {};
+
+			this.computedAttributes = {};
+
+			callback.apply(this, [this]);
+		}
+
+		_createClass(ModelDefinition, [{
+			key: 'initializeModel',
+			value: function initializeModel(model) {
+				var _this = this;
+
+				// Add computed
+				model.withoutNotifications(function () {
+					_underscore2.default.each(_this.computedAttributes, function (attr, key) {
+						model.set(key, new _ComputedProperty2.default(attr.dependencies, attr.callback));
+					});
+				});
+
+				return model;
+			}
+		}, {
+			key: 'attribute',
+			value: function attribute(name, type) {
+				var attr = new _ModelAttribute2.default(name, type);
+				this.attributeNames.push(name);
+				this.attributes[name] = attr;
+				return attr;
+			}
+		}, {
+			key: 'computed',
+			value: function computed(name, dependencies, callback) {
+
+				this.computedAttributes[name] = {
+					dependencies: dependencies,
+					callback: callback
+				};
+				return true;
+			}
+
+			//////////////////////
+			// Column defitions //
+			//////////////////////
+
+		}, {
+			key: 'integer',
+			value: function integer(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Integer);
+				return attr;
+			}
+		}, {
+			key: 'string',
+			value: function string(name, size) {
+				var attr = this.attribute(name, _ModelAttribute2.default.String);
+				attr.size = size;
+				return attr;
+			}
+		}, {
+			key: 'date',
+			value: function date(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Date);
+				return attr;
+			}
+
+			//////////////////////
+			// Column shortcuts //
+			//////////////////////
+
+		}, {
+			key: 'timestamps',
+			value: function timestamps() {
+				this.attribute('createdAt', _ModelAttribute2.default.DateTime);
+				this.attribute('updatedAt', _ModelAttribute2.default.DateTime);
+				return this;
+			}
+
+			///////////////////
+			// Relationships //
+			///////////////////
+
+		}, {
+			key: 'relationship',
+			value: function relationship(name) {
+				var rel = new _Relationship2.default(name, this.name);
+				this.relationships[name] = rel;
+				return rel;
+			}
+
+			/////////
+			// Api //
+			/////////
+
+		}, {
+			key: 'getApiUri',
+			value: function getApiUri() {
+				var id = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+				var uri = this.apiUri;
+				if (id) uri += '/' + id;
+				return uri;
+			}
+		}]);
+
+		return ModelDefinition;
+	}();
+
+	module.exports = ModelDefinition;
+
+/***/ },
 /* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -13719,6 +13761,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _inflection = __webpack_require__(4);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _Collection = __webpack_require__(70);
+
+	var _Collection2 = _interopRequireDefault(_Collection);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -13761,6 +13807,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this;
 			}
+		}, {
+			key: 'getInitValue',
+			value: function getInitValue() {
+
+				// Depends on the type
+				switch (this.type) {
+
+					case Relationship.HasMany:
+					case Relationship.HasManyThrough:
+					case Relationship.BelongsToMany:
+						return new _Collection2.default();
+
+					default:
+						return null;
+
+				}
+			}
 		}]);
 
 		return Relationship;
@@ -13774,6 +13837,76 @@ return /******/ (function(modules) { // webpackBootstrap
 	Relationship.BelongsToMany = 'BelongsToMany';
 
 	module.exports = Relationship;
+
+/***/ },
+/* 79 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _Observable2 = __webpack_require__(35);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Service = function (_Observable) {
+		_inherits(Service, _Observable);
+
+		function Service(name) {
+			_classCallCheck(this, Service);
+
+			var _this = _possibleConstructorReturn(this, (Service.__proto__ || Object.getPrototypeOf(Service)).call(this));
+
+			_this.name = name;
+			_this.initialize.apply(_this);
+
+			return _this;
+		}
+
+		_createClass(Service, [{
+			key: 'initialize',
+			value: function initialize() {
+				throw new Error('The ' + this.name + ' service has not implemented the "initialize" method');
+			}
+		}]);
+
+		return Service;
+	}(_Observable3.default);
+
+	Service.registry = new Map();
+	Service.services = new Map();
+
+	Service.get = function (name) {
+
+		// Created?
+		if (!Service.services.has(name)) {
+
+			// Do we know it?
+			if (!Service.registry.has(name)) {
+				throw new Error('There is no service registed with the name "' + name + '"');
+			}
+
+			// Instantiate
+			var ServiceClass = Service.registry.get(name);
+			var service = new ServiceClass(name);
+
+			// Store
+			Service.services.set(name, service);
+		}
+
+		return Service.services.get(name);
+	};
+
+	module.exports = Service;
 
 /***/ }
 /******/ ])

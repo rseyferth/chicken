@@ -258,9 +258,13 @@ class Router extends Obj
 			let cb = callbacksToExecute.shift();
 
 			// Get the next in line
-			let nextCb = _.first(callbacksToExecute);
+			let result = cb.apply(this, [nextCallback, request, routeMatch]);
 
-			cb.apply(this, [nextCb, request, routeMatch]);
+			// Is there a result?
+			if (result !== undefined) {
+				console.log('WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT', result);
+			}
+
 		};
 		nextCallback();
 

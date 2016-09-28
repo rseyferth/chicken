@@ -1,5 +1,7 @@
 import inflection from 'inflection';
 
+import Collection from '~/Data/Collection';
+
 class Relationship {
 
 	constructor(name, localModel) {
@@ -34,6 +36,25 @@ class Relationship {
 		}
 
 		return this;
+
+	}
+
+
+
+	getInitValue() {
+
+		// Depends on the type
+		switch (this.type) {
+
+			case Relationship.HasMany:
+			case Relationship.HasManyThrough:
+			case Relationship.BelongsToMany:
+				return new Collection();
+
+			default:
+				return null;
+				
+		}
 
 	}
 
