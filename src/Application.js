@@ -294,6 +294,9 @@ class Application extends Observable {
 				});
 
 			});
+			
+			// Done!
+			this.resolvePromise('ready');
 
 			// Listen to browser's address bar
 			this.history.listen((location) => {
@@ -302,6 +305,8 @@ class Application extends Observable {
 
 			// Start with current location
 			this.router.handle(this.history.getCurrentLocation());
+
+
 
 		});
 

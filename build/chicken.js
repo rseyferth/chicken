@@ -2026,6 +2026,9 @@ return /******/ (function(modules) { // webpackBootstrap
 						});
 					});
 
+					// Done!
+					_this4.resolvePromise('ready');
+
 					// Listen to browser's address bar
 					_this4.history.listen(function (location) {
 						_this4.router.handle(location);
@@ -13375,6 +13378,19 @@ return /******/ (function(modules) { // webpackBootstrap
 						reject();
 					}
 				});
+			}
+		}, {
+			key: 'processApiError',
+			value: function processApiError(error) {
+
+				// Unauthorized?
+				if (error.xhrError.status === 401) {
+					if (error.getMessage() === 'Unable to authenticate with invalid token.') {
+						this.invalidate();
+					}
+				}
+
+				return error;
 			}
 		}, {
 			key: 'authorizeApiCall',
