@@ -9683,7 +9683,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Is there a result?
 					if (result !== undefined) {
-						console.log('WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT', result);
+						// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'
 					}
 				};
 				nextCallback();
@@ -12822,10 +12822,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _inflection = __webpack_require__(4);
-
-	var _inflection2 = _interopRequireDefault(_inflection);
-
 	var _Observable2 = __webpack_require__(35);
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
@@ -12909,12 +12905,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!this.isAuthenticated()) {
 
 					// Trigger the unauthenticated event
-					if (!this.settings.onAuthenticated) {
+					if (!this.settings.onUnauthenticated) {
 						throw new Error('Protected route called without authentication.');
 					}
 
 					// Do the callback
-					this.doCallback('onAuthenticated', [request, routeMatch]);
+					this.doCallback('onUnauthenticated', [request, routeMatch]);
 					return;
 				}
 
@@ -13140,6 +13136,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Validate the tkoen
 				return new Promise(function (resolve) {
 
+					// No token?
+					if (!_this2.token) {
+						resolve(false);
+						return;
+					}
+
 					// Wheter we are or are not authenticated, we resolve, because initializion is complete
 					_this2.validateToken().then(function () {
 						resolve(true);
@@ -13289,6 +13291,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.validateToken();
 			}
 		}, {
+			key: 'clearToken',
+			value: function clearToken() {
+				this.token = null;
+				localStorage.removeItem(this.settings.localStorageKey);
+			}
+		}, {
 			key: 'validateToken',
 			value: function validateToken() {
 				var _this6 = this;
@@ -13308,7 +13316,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 								// No longer valid.
 								_this6.set('isAuthenticated', false);
-								_this6.token = null;
+								_this6.clearToken();
 								reject();
 								return;
 							}

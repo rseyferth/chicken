@@ -67,10 +67,15 @@ class JWTAuth extends Auth
 		} catch (err) {
 			this.token = null;
 		}
-		
 
 		// Validate the tkoen
 		return new Promise((resolve) => {
+			
+			// No token?
+			if (!this.token) {
+				resolve(false);
+				return;
+			}
 			
 			// Wheter we are or are not authenticated, we resolve, because initializion is complete
 			this.validateToken().then(() => {
@@ -227,6 +232,11 @@ class JWTAuth extends Auth
 
 	}
 
+	clearToken() {
+		this.token = null;
+		localStorage.removeItem(this.settings.localStorageKey);
+	}
+
 
 	validateToken() {
 
@@ -245,7 +255,7 @@ class JWTAuth extends Auth
 
 						// No longer valid.
 						this.set('isAuthenticated', false);
-						this.token = null;
+						this.clearToken();
 						reject();
 						return; 
 

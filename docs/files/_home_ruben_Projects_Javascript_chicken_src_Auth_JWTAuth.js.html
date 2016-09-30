@@ -212,16 +212,39 @@ class JWTAuth extends Auth
 		 * @property token
 		 * @type {string}
 		 */
+		this.token = null;
+
+
+		
+
+	}
+
+	initialize() {
+
+		// Get token from localstorage
 		try {
 			this.token = JSON.parse(localStorage.getItem(this.settings.localStorageKey));
 		} catch (err) {
 			this.token = null;
 		}
 
+		// Validate the tkoen
+		return new Promise((resolve) =&gt; {
+			
+			// No token?
+			if (!this.token) {
+				resolve(false);
+				return;
+			}
+			
+			// Wheter we are or are not authenticated, we resolve, because initializion is complete
+			this.validateToken().then(() =&gt; {
+				resolve(true);
+			}, () =&gt; {
+				resolve(false);
+			});
 
-		// Check the token
-		this.validateToken();
-		
+		});		
 
 	}
 
@@ -257,9 +280,6 @@ class JWTAuth extends Auth
 				this.setToken(result.token);
 				resolve(this.token);
 
-				// Authenticated
-				this.trigger(Auth.Events.Authenticated);			
-
 			}).fail((error) =&gt; {
 
 				reject(new AuthError(this, error));
@@ -280,12 +300,18 @@ class JWTAuth extends Auth
 				clearTimeout(this.sessionTimeoutTimeout);
 				this.sessionTimeoutTimeout = false;
 			}
+			if (this.autoRefreshTimeout) {
+				clearTimeout(this.autoRefreshTimeout);
+				this.autoRefreshTimeout = false;
+			}
 
 			// Remove token
 			this.token = false;
 			localStorage.removeItem(this.settings.localStorageKey);
 			this.set(&#x27;isAuthenticated&#x27;, false);
-			this.trigger(Auth.Events.Invalidated);
+			
+			this.doCallback(&#x27;onInvalidated&#x27;, []);
+			this.trigger(&#x27;invalidated&#x27;);
 			resolve();
 
 		});
@@ -326,7 +352,7 @@ class JWTAuth extends Auth
 				resolve(this.token);
 
 				// Authenticated
-				this.trigger(JWTAuth.Events.TokenRefreshed);
+				this.trigger(&#x27;tokenRefreshed&#x27;);
 
 
 			}).fail((error) =&gt; {
@@ -353,6 +379,10 @@ class JWTAuth extends Auth
 			clearTimeout(this.sessionTimeoutTimeout);
 			this.sessionTimeoutTimeout = false;
 		}
+		if (this.autoRefreshTimeout) {
+			clearTimeout(this.autoRefreshTimeout);			
+			this.autoRefreshTimeout = false;
+		}
 
 		// Remember it.
 		localStorage.setItem(this.settings.localStorageKey, JSON.stringify(this.token));
@@ -362,78 +392,93 @@ class JWTAuth extends Auth
 
 	}
 
+	clearToken() {
+		this.token = null;
+		localStorage.removeItem(this.settings.localStorageKey);
+	}
+
 
 	validateToken() {
 
-		// Any token?
-		if (this.token) {
+		return new Promise((resolve, reject) =&gt; {
 
-			// Is it an object?
-			if (this.token instanceof Object) {
+			// Any token?
+			if (this.token) {
 
-				// Still valid?
-				let now = moment().unix();
-				let timesOutAt = this.token.receivedAt + this.settings.tokenValidForMinutes * 60;
-				if (timesOutAt &lt; now) {
+				// Is it an object?
+				if (this.token instanceof Object) {
 
-					// No longer valid.
+					// Still valid?
+					let now = moment().unix();
+					let timesOutAt = this.token.receivedAt + this.settings.tokenValidForMinutes * 60;
+					if (timesOutAt &lt; now) {
+
+						// No longer valid.
+						this.set(&#x27;isAuthenticated&#x27;, false);
+						this.clearToken();
+						reject();
+						return; 
+
+					}
+
+					// Auto refresh?
+					if (this.settings.autoRefreshToken) {
+
+						// Wait a bit and then refresh
+						if (this.autoRefreshTimeout) clearTimeout(this.autoRefreshTimeout);
+						let refreshAt = this.token.receivedAt + this.settings.autoRefreshInterval;	
+						let timeoutMs = Math.max((refreshAt - now) * 1000, 5000);
+						this.autoRefreshTimeout = setTimeout(() =&gt; {
+
+							this.autoRefreshTimeout = false;
+							this.refreshToken();							
+
+						}, timeoutMs);
+
+					}
+
+					// Wait for it to timeout
+					if (this.sessionTimeoutTimeout) clearTimeout(this.sessionTimeoutTimeout);
+					this.sessionTimeoutTimeout = setTimeout(() =&gt; {
+
+						////////////////////////////////
+						// Make the session time out! //
+						////////////////////////////////
+
+						this.sessionTimeoutTimeout = false;
+						this.trigger(&#x27;sessionTimedOut&#x27;);
+						this.set(&#x27;isAuthenticated&#x27;, false);
+						this.token = null;
+
+						if (this.autoRefreshTimeout) clearTimeout(this.autoRefreshTimeout);
+						
+
+					}, (timesOutAt - now) * 1000);
+
+					// It is valid!
+					this.doCallback(&#x27;onAuthenticated&#x27;, []).then(() =&gt; {
+						this.set(&#x27;isAuthenticated&#x27;, true);					
+						resolve();
+					});
+
+				} else {
+
+					// Not valid
 					this.set(&#x27;isAuthenticated&#x27;, false);
+					reject();
 					this.token = null;
-					return; 
 
 				}
-
-				// Auto refresh?
-				if (this.settings.autoRefreshToken) {
-
-					// Wait a bit and then refresh
-					if (this.autoRefreshTimeout) clearTimeout(this.autoRefreshTimeout);
-					let refreshAt = this.token.receivedAt + this.settings.autoRefreshInterval;	
-					let timeoutMs = Math.max((refreshAt - now) * 1000, 1);
-					this.autoRefreshTimeout = setTimeout(() =&gt; {
-
-						this.autoRefreshTimeout = false;
-						this.refreshToken();							
-
-					}, timeoutMs);
-
-				}
-
-				// Wait for it to timeout
-				if (this.sessionTimeoutTimeout) clearTimeout(this.sessionTimeoutTimeout);
-				this.sessionTimeoutTimeout = setTimeout(() =&gt; {
-
-					////////////////////////////////
-					// Make the session time out! //
-					////////////////////////////////
-
-					this.sessionTimeoutTimeout = false;
-					this.trigger(Auth.Events.SessionTimedOut);
-					this.set(&#x27;isAuthenticated&#x27;, false);
-					this.token = null;
-
-					if (this.autoRefreshTimeout) clearTimeout(this.autoRefreshTimeout);
-					
-
-				}, (timesOutAt - now) * 1000);
-
-				// It is valid!
-				this.set(&#x27;isAuthenticated&#x27;, true);
 
 			} else {
 
-				// Not valid
+				// Not authenticated
 				this.set(&#x27;isAuthenticated&#x27;, false);
-				this.token = null;
+				reject();
 
 			}
 
-		} else {
-
-			// Not authenticated
-			this.set(&#x27;isAuthenticated&#x27;, false);
-
-		}
+		});
 		
 	}
 
@@ -442,7 +487,7 @@ class JWTAuth extends Auth
 	authorizeApiCall(apiCall) {
 
 		// Add token.
-		if (this.isAuthenticated()) {
+		if (this.token) {
 
 			// Add the bearer token
 			apiCall.ajaxOptions.beforeSend = (xhr) =&gt; {

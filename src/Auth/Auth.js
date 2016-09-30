@@ -1,5 +1,4 @@
 import _ from 'underscore';
-import inflection from 'inflection';
 
 import Observable from '~/Core/Observable';
 import Middleware from '~/Routing/Middleware';
@@ -61,12 +60,12 @@ class Auth extends Observable
 		if (!this.isAuthenticated()) {
 
 			// Trigger the unauthenticated event
-			if (!this.settings.onAuthenticated) {
+			if (!this.settings.onUnauthenticated) {
 				throw new Error('Protected route called without authentication.');
 			}
 
 			// Do the callback
-			this.doCallback('onAuthenticated', [request, routeMatch]);
+			this.doCallback('onUnauthenticated', [request, routeMatch]);
 			return;
 
 		}

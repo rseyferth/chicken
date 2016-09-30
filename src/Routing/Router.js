@@ -262,7 +262,7 @@ class Router extends Obj
 
 			// Is there a result?
 			if (result !== undefined) {
-				console.log('WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT', result);
+				// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'
 			}
 
 		};
