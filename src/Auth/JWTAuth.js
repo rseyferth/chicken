@@ -118,7 +118,12 @@ class JWTAuth extends Auth
 				
 				// Store it.
 				this.setToken(result.token);
-				resolve(this.token);
+
+				// Handle user events
+				this.doCallback('onAuthenticated', []).then(() => {
+					this.set('isAuthenticated', true);
+					resolve(this.token);
+				});
 
 			}).fail((error) => {
 

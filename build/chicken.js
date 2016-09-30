@@ -13185,7 +13185,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Store it.
 						_this3.setToken(result.token);
-						resolve(_this3.token);
+
+						// Handle user events
+						_this3.doCallback('onAuthenticated', []).then(function () {
+							_this3.set('isAuthenticated', true);
+							resolve(_this3.token);
+						});
 					}).fail(function (error) {
 
 						reject(new _AuthError2.default(_this3, error));
