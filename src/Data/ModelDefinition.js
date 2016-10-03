@@ -24,6 +24,8 @@ class ModelDefinition
 
 		this.computedAttributes = {};
 
+		this.validationRules = {};
+
 
 		callback.apply(this, [this]);
 
@@ -44,8 +46,6 @@ class ModelDefinition
 
 	}
 
-
-		
 
 
 	attribute(name, type) {
@@ -109,6 +109,20 @@ class ModelDefinition
 		this.relationships[name] = rel;
 		return rel;
 	}
+
+
+	/////////////////////
+	// Form validation //
+	/////////////////////
+
+	validation(rules, formKey = 'default') {
+
+		this.validationRules[formKey] = rules;
+		return this;
+
+	}
+		
+
 
 
 

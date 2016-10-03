@@ -488,6 +488,19 @@ class JWTAuth extends Auth
 	}
 
 
+	processApiError(error) {
+
+		// Unauthorized?
+		if (error.xhrError.status === 401) {
+			if (error.getMessage() === &#x27;Unable to authenticate with invalid token.&#x27;) {
+				this.invalidate();
+			}
+		}
+
+		return error;
+
+	}
+
 
 	authorizeApiCall(apiCall) {
 

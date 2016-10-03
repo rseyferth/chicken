@@ -568,7 +568,22 @@ class Model extends Observable
 
 
 
+	//////////////////////////
+	// Forms and validation //
+	//////////////////////////
 
+	getValidationRules(formKey = &#x27;default&#x27;) {
+
+		// Check definition
+		let def = this.getDefinition();
+		if (def) {
+			let rules = def.validationRules[formKey];
+			return rules ? rules : null;
+		} else {
+			return null;
+		}
+
+	}
 
 
 	///////////////////////

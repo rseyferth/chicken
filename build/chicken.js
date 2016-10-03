@@ -11952,6 +11952,26 @@ return /******/ (function(modules) { // webpackBootstrap
 				return apiCall.execute();
 			}
 
+			//////////////////////////
+			// Forms and validation //
+			//////////////////////////
+
+		}, {
+			key: 'getValidationRules',
+			value: function getValidationRules() {
+				var formKey = arguments.length <= 0 || arguments[0] === undefined ? 'default' : arguments[0];
+
+
+				// Check definition
+				var def = this.getDefinition();
+				if (def) {
+					var rules = def.validationRules[formKey];
+					return rules ? rules : null;
+				} else {
+					return null;
+				}
+			}
+
 			///////////////////////
 			// Dirtying of model //
 			///////////////////////
@@ -13675,6 +13695,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			this.computedAttributes = {};
 
+			this.validationRules = {};
+
 			callback.apply(this, [this]);
 		}
 
@@ -13757,6 +13779,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				var rel = new _Relationship2.default(name, this.name);
 				this.relationships[name] = rel;
 				return rel;
+			}
+
+			/////////////////////
+			// Form validation //
+			/////////////////////
+
+		}, {
+			key: 'validation',
+			value: function validation(rules) {
+				var formKey = arguments.length <= 1 || arguments[1] === undefined ? 'default' : arguments[1];
+
+
+				this.validationRules[formKey] = rules;
+				return this;
 			}
 
 			/////////
