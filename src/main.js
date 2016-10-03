@@ -1,3 +1,5 @@
+/* eslint no-console: "off" */
+				
 //////////////////////
 // Vendor libraries //
 //////////////////////
@@ -343,7 +345,21 @@ var Chicken = {
 
 		return Utils.each.apply(this, args);
 		
-	}
+	},
+
+	debug: (message, key = null) => {
+
+		switch (Chicken.debugging) {
+
+			case 'console':
+				console.log((key ? '[' + key + '] ' : '') + message);
+				break;
+
+		}
+
+	},
+
+	debugging: 'console'
 
 };
 
