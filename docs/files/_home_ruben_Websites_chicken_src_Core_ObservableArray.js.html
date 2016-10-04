@@ -41,7 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
@@ -52,6 +64,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -87,6 +101,12 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -94,6 +114,8 @@
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -168,10 +190,20 @@ class ObservableArray extends Obj
 		this.import(initValues, convertToObservables, true);
 
 
+		/**
+		 * Whenever this property is true, no notifications will be triggered
+		 * 
+		 * @attribute notificationsDisabled
+		 * @type {Boolean}
+		 */
+		this.notificationsDisabled = false;
+
+
+
 	}
 
 
-	import(arr, convertToObservables = true, doNotNotify = false) {
+	import(arr, convertToObservables = true) {
 
 		// Go through to the object&#x27;s first level
 		_.each(arr, (value) =&gt; {
@@ -201,16 +233,13 @@ class ObservableArray extends Obj
 
 		});	
 
-		// Trigger import
-		this.trigger(ObservableArray.Events.Import);
-
-		// Notify of change?
-		if (!doNotNotify) {
-			this.trigger(&#x27;change&#x27;);
-			this.trigger(&#x27;added&#x27;, arr);
+		// Trigger changes
+		if (!this.notificationsDisabled) {
+			this.trigger(ObservableArray.Events.Import);
+			this.trigger(ObservableArray.Events.Change);
+			this.trigger(ObservableArray.Events.Add, arr);
 		}
-
-
+		
 		return this;
 
 	}
@@ -264,6 +293,7 @@ class ObservableArray extends Obj
 
 
 	}
+
 
 	set(key, value, convertToObservables = false) {
 
@@ -343,28 +373,46 @@ class ObservableArray extends Obj
 	 */
 	add(...values) {
 
+		// Is the last value a boolean?
+		let doNotNotify = false;
+		if (values.length &gt; 1 &amp;&amp; typeof values[values.length - 1] === &#x27;boolean&#x27;) {
+			doNotNotify = values.pop();
+		}
+
 		// Add items
 		_.each(values, (value) =&gt; {
 			
-			// Add it.
-			this.items.push(value);
-
-			// Is it observable?
-			if (ObservableArray.isObservable(value)) {
-				value.on(&#x27;change&#x27;, () =&gt; {
-					this.trigger(&#x27;change&#x27;);
-				});
-			}
+			this._add(value);
 
 		});
 
 		// Trigger events
-		this.trigger(ObservableArray.Events.Change);
-		this.trigger(ObservableArray.Events.Add, values);
+		if (!doNotNotify) {
+			this.trigger(ObservableArray.Events.Change);
+			this.trigger(ObservableArray.Events.Add, values);
+		}
 
 		return this;
 
 	}
+
+
+	_add(value) {
+
+		// Add it.
+		this.items.push(value);
+
+		// Is it observable?
+		if (ObservableArray.isObservable(value)) {
+			value.on(&#x27;change&#x27;, () =&gt; {
+				this.trigger(&#x27;change&#x27;);
+			});
+		}
+
+		return this;
+
+	}
+
 
 	/**
 	 * Delete one or more items from the array
@@ -408,6 +456,19 @@ class ObservableArray extends Obj
 		return this;
 
 	}
+
+
+	/**
+	 * Get the first item in the collection
+	 * 
+	 * @method first
+	 * @return {mixed} 
+	 */
+	first() {
+		return _.first(this.items);
+	}
+
+
 
 	/**
 	 * Listen for any changes in any of the object&#x27;s attributes. 
@@ -488,6 +549,126 @@ class ObservableArray extends Obj
 		});
 
 	}
+
+
+	/**
+	 * Get a keyed array containing all items in this ObservableArray
+	 * by the value of given key.
+	 *
+	 * @method keyBy
+	 * @param  {string} key 	The attribute key. You can also use dot-notation in this key.
+	 * @return {Object}     
+	 */
+	keyBy(key) {
+
+		// Loop it.
+		let result = {};
+		_.each(this.items, (item) =&gt; {
+			let keyValue = item.get(key);
+			if (keyValue) result[keyValue] = item;
+		});
+
+		return result;
+
+	}
+
+
+	sortBy(keyOrCallback) {
+
+		// Is it a key?
+		let callback = keyOrCallback;
+		if (typeof keyOrCallback === &#x27;string&#x27;) {
+			callback = (item) =&gt; {
+				return item.get(keyOrCallback);
+			};
+		}
+
+		// Now sort!
+		this.items = _.sortBy(this.items, callback);
+		return this;
+
+	}
+
+
+	/**
+	 * Get a keyed array containing ObservableArray&#x27;s with values that have the same
+	 * value for given key.
+	 *
+	 * @method groupBy
+	 * @param  {string} key  The attribute key. You can also use dot-notation in this key.
+	 * @param  {string} [defaultGroup=default] The key under which to put items that have no value for given key
+	 * @return {Object}
+	 */
+	groupBy(key, defaultGroup = &#x27;default&#x27;) {
+
+		// Loop it
+		let result = {};
+		_.each(this.items, (item) =&gt; {
+
+			// Get value
+			let keyValue = item.get(key);
+
+			// Nothing?
+			if (!keyValue) keyValue = defaultGroup;
+
+			// Group known?
+			if (!result[keyValue]) result[keyValue] = new ObservableArray;
+			result[keyValue].add(item);
+
+		});
+
+		return result;
+
+	}
+
+	/**
+	 * Get value for given valueAttribute key from all items
+	 * 
+	 *
+	 * @method list 
+	 * @param  {string} valueAttribute 
+	 * @param  {string} keyAttribute   
+	 * @return {[type]}                [description]
+	 */
+	list(valueAttribute, keyAttribute = null) {
+
+		let result = keyAttribute ? {} : [];
+		_.each(this.items, (item) =&gt; {
+			if (keyAttribute) {
+				result[item.get(keyAttribute)] = item.get(valueAttribute);
+			} else {
+				result.push(item.get(valueAttribute));
+			}
+		});
+		
+		return result;
+
+	}
+
+	/**
+	 * Get the lowest value for objects in this array
+	 *
+	 * @method getLowestValue
+	 * @param  {string}  key          
+	 * @return {mixed}
+	 */
+	getLowestValue(key) {
+
+		// Get a list.
+		let list = this.list(key);
+		return _.min(list);
+
+	}
+
+
+	each(callback) {
+
+		_.each(this.items, callback);
+		return this;
+
+	}
+
+
 
 
 

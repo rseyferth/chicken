@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/Element.js</title>
+    <title>/home/ruben/Websites/chicken/src/Api/Api.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,84 +154,232 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Element.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Api/Api.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import _ from &#x27;underscore&#x27;;
-import Obj from &#x27;~/Core/Obj&#x27;;
+import $ from &#x27;jquery&#x27;;
+
+import Model from &#x27;~/Data/Model&#x27;;
+import ApiCall from &#x27;~/Api/ApiCall&#x27;;
+import App from &#x27;~/Helpers/App&#x27;;
 
 /**
- * @module Dom
+ * @module Api
  */
-class Element extends Obj
-{
+class Api {
+
 	/**
-	 * @class Dom.Element
-	 * @extends Core.Obj
+	 * @class Api.Api
 	 *
 	 * @constructor
-	 * @param {jQuery} $element
-	 * @param {Application} [application]
+	 * @param  {Object} options 	 
 	 */
-	constructor($element) {
+	constructor(options) {
+		
+		this.settings = $.extend({
+			baseUrl: &#x27;/api&#x27;,
+			
+			auth: false,
 
-		super();
+		}, options);
 
-		/**
-		 * The jQuery element that is the ViewContainer
-		 * 
-		 * @property $element
-		 * @type {jQuery}
-		 */
-		this.$element = $element;
+	}
 
+	/**
+	 * @method deserialize
+	 * @return {Data.Model|Data.Collection}
+	 */
+	deserialize(/* data, apiCall */) {
+		throw new Error(&#x27;The Api implementation should have a deserialize method.&#x27;);		
+	}
+
+	/**
+	 * @method getAuth
+	 * @return {Auth.Auth} 
+	 */
+	getAuth() {
+
+		// Set already?
+		if (this.auth) return this.auth;
+		if (this.settings.auth === false) return false;
+
+		// Look it up.
+		this.auth = App().auth(this.settings.auth);
+		return this.auth;
 
 	}
 
 
 
-	setContent(content) {
 
-		// Fire the before hooks.
-		this._fireHooks(&#x27;beforeRender&#x27;);
+	//////////////////
+	// HTTP methods //
+	//////////////////
 
-		// Set it
-		this.$element.html(content);
-		this.trigger(&#x27;content&#x27;, content);
+	/**
+	 * @method call
+	 * @param  {string} method      
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	call(method, uri, data = {}, ajaxOptions = {}) {
 
-		// Fire the after hooks
-		this._fireHooks(&#x27;afterRender&#x27;);
+		// Create api call
+		return new ApiCall(this, method, uri, data, ajaxOptions);
+
+	}
+
+	/**
+	 * @method get
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	get(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;get&#x27;, uri, data, ajaxOptions);
+	}
+
+	/**
+	 * @method post
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	post(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;post&#x27;, uri, data, ajaxOptions);
+	}
+
+	/**
+	 * @method put
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	put(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;put&#x27;, uri, data, ajaxOptions);
+	}
+
+	/**
+	 * @method path
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	patch(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;patch&#x27;, uri, data, ajaxOptions);
+	}
+
+	/**
+	 * @method delete
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	delete(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;delete&#x27;, uri, data, ajaxOptions);
+	}
+
+
+	////////////////////
+	// Helper methods //
+	////////////////////
+
+	/**
+	 * @method makeUrl
+	 * @param  {string} uri 	Relative url within the API
+	 * @return {string} Fully formed url
+	 */
+	makeUrl(uri) {
+		return this.settings.baseUrl + uri;
+	}
+
+	/**
+	 * Make an ajax call using jQuery
+	 * 
+	 * @method ajax
+	 * @param  {Object} options 
+	 * @return {jQuery Ajax call}         
+	 */
+	ajax(options) {
+		options.dataType = &#x27;json&#x27;;
+		return $.ajax(options);
+	}
+
+
+	///////////////////
+	// Model methods //
+	///////////////////
+
+	/**
+	 * Get a single Model record from the Api
+	 * 
+	 * @method one
+	 * @param  {string} modelName 
+	 * @param  {string} id        
+	 * @return {Api.ApiCall}
+	 */
+	one(modelName, id) {
+
+		// Get uri from model
+		let ModelClass = Model.registry.get(modelName);
+		if (!ModelClass) throw new Error(&#x27;There is no model registered with the name &quot;&#x27; + modelName + &#x27;&quot;&#x27;);
+		let uri = ModelClass.definition.getApiUri(id);
+
+		// Make the call
+		let call = this.get(uri);
+		call.modelClass = ModelClass;
+		return call;
+
+	}
+
+	/**
+	 * Get all Model records from the Api
+	 * 
+	 * @method all
+	 * @param  {string} modelName
+	 * @return {Api.ApiCall}
+	 */
+	all(modelName) {
+
+		// Get uri from model
+		let ModelClass = Model.registry.get(modelName);
+		if (!ModelClass) throw new Error(&#x27;There is no model registered with the name &quot;&#x27; + modelName + &#x27;&quot;&#x27;);
+		let uri = ModelClass.definition.getApiUri();
+
+		// Make the call
+		let call = this.get(uri);
+		call.modelClass = ModelClass;
+		return call;
 
 	}
 
 
-	_fireHooks(type) {
-
-		_.each(Element.Hooks[type], (callback) =&gt; {
-
-			// Fire it.
-			callback.apply(this, [this.$element, this]);
-
-		});
-
+	/**
+	 * Save given model to the Api
+	 *
+	 * @method saveModel
+	 * @param 	{string}	uri
+	 * @param 	{Data.Model} model
+	 * @return {Api.ApiCall}
+	 */
+	saveModel(/* uri, model */) {
+		throw new Error(&#x27;The Api implementation should have a saveModel method.&#x27;);		
 	}
+
+
+
+
 
 }
-
-
-Element.registerHook = (callback, type = &#x27;afterRender&#x27;) =&gt; {
-	Element.Hooks[type].push(callback);
-	return true;	
-};
-
-Element.Hooks = {
-	beforeRender: [],
-	afterRender: []
-};
-
-
-module.exports = Element;
+module.exports = Api;
     </pre>
 </div>
 

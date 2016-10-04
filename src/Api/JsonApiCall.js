@@ -1,3 +1,5 @@
+import inflection from 'inflection';
+
 import ApiCall from '~/Api/ApiCall';
 
 /**
@@ -27,6 +29,11 @@ class JsonApiCall extends ApiCall {
 	  */
 	include(relations) {
 		return this.query('include', relations);
+	}
+
+
+	filter(key, value) {
+		return this.query('filter[' + inflection.underscore(key) + ']', value);
 	}
 
 

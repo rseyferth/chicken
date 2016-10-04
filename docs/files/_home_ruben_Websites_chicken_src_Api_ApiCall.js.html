@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/Element.js</title>
+    <title>/home/ruben/Websites/chicken/src/Api/ApiCall.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,84 +154,164 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Element.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Api/ApiCall.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import _ from &#x27;underscore&#x27;;
+import $ from &#x27;jquery&#x27;;
+import QueryString from &#x27;query-string&#x27;;
+
+import ApiError from &#x27;~/Api/ApiError&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
 
 /**
- * @module Dom
+ * @module Api
  */
-class Element extends Obj
-{
+class ApiCall extends Obj {
+
 	/**
-	 * @class Dom.Element
-	 * @extends Core.Obj
-	 *
-	 * @constructor
-	 * @param {jQuery} $element
-	 * @param {Application} [application]
+	 * @class Api.ApiCall 
+	 * 
+	 * @constructor 
+	 * @param  {Api.Api} api 	The Api instance this call originates from
+	 * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+	 * @param  {string} uri			The uri to call
+	 * @param  {Object} data        
+	 * @param  {Object} ajaxOptions 	 
 	 */
-	constructor($element) {
+	constructor(api, method, uri, data = {}, ajaxOptions = {}) {
 
 		super();
 
 		/**
-		 * The jQuery element that is the ViewContainer
-		 * 
-		 * @property $element
-		 * @type {jQuery}
+		 * @property api
+		 * @type {Api.Api}
 		 */
-		this.$element = $element;
+		this.api = api;
 
+		/**
+		 * The HTTP method (get, post, put, patch, or delete)
+		 * 
+		 * @property method
+		 * @type {string}
+		 */
+		this.method = method;
+		
+		/**
+		 * @property uri
+		 * @type {string}
+		 */
+		this.uri = uri;
+
+		/**
+		 * Data to send along with the request
+		 * 
+		 * @property data
+		 * @type {Mixed}
+		 */
+		this.data = data;
+
+		/**
+		 * Configuration options for the Ajax call
+		 *
+		 * @property ajaxOptions
+		 * @type {Object}
+		 */
+		this.ajaxOptions = ajaxOptions;
+
+		/**
+		 * Query parameters to add onto the url
+		 *
+		 * @property queryParams
+		 * @type {Object}
+		 */
+		this.queryParams = {};
+
+
+		/**
+		 * The model class used when it cannot be deduced from the
+		 * Api result
+		 * 
+		 * @property modelClass
+		 * @type {Class}
+		 */
+		this.modelClass = null;
 
 	}
 
+	/**
+	 * Execute the Api Call
+	 *
+	 * @method execute
+	 * @return {Promise}
+	 */
+	execute() {
 
+		// Authorize it
+		let auth = this.api.getAuth();
+		if (auth) auth.authorizeApiCall(this);
 
-	setContent(content) {
+		// Make a promise
+		return this.promise(&#x27;complete&#x27;, (resolve, reject) =&gt; {
 
-		// Fire the before hooks.
-		this._fireHooks(&#x27;beforeRender&#x27;);
+			// Combine options
+			let queryString = QueryString.stringify(this.queryParams);
+			if (queryString.length &gt; 0) queryString = &#x27;?&#x27; + queryString;
+			let options = $.extend({
+				
+				url: this.api.makeUrl(this.uri) + queryString,
+				method: this.method,
+				data: this.data
+				
+			}, this.ajaxOptions);
 
-		// Set it
-		this.$element.html(content);
-		this.trigger(&#x27;content&#x27;, content);
+			// Make the call
+			this.api.ajax(options)
+				.then((result) =&gt; {
 
-		// Fire the after hooks
-		this._fireHooks(&#x27;afterRender&#x27;);
+					resolve(this.api.deserialize(result, this));
+					
+				}).fail((error) =&gt; {
 
-	}
+					// Make error
+					let errorObj = new ApiError(this, error);
+					if (auth) {
+						errorObj = auth.processApiError(errorObj);
+					} 
+					reject(errorObj);
 
+				});
 
-	_fireHooks(type) {
-
-		_.each(Element.Hooks[type], (callback) =&gt; {
-
-			// Fire it.
-			callback.apply(this, [this.$element, this]);
 
 		});
 
 	}
 
+
+	/**
+	 * Add given key/value(s) to the queryParams
+	 *
+	 * @method query
+	 * @param  {string|Object} keyOrHash  Either a key or a key/value hash
+	 * @param  {Mixed} value     When given a single key/value pair, enter the value as the second argument
+	 * @chainable
+	 */
+	query(keyOrHash, value = null) {
+
+		// Is it a key / value?
+		if (typeof keyOrHash === &#x27;string&#x27;) {
+			this.queryParams[keyOrHash] = value;
+		} else {
+			$.extend(this.queryParams, keyOrHash);
+		}
+		return this;
+
+
+	}
+
+
 }
-
-
-Element.registerHook = (callback, type = &#x27;afterRender&#x27;) =&gt; {
-	Element.Hooks[type].push(callback);
-	return true;	
-};
-
-Element.Hooks = {
-	beforeRender: [],
-	afterRender: []
-};
-
-
-module.exports = Element;
+module.exports = ApiCall;
     </pre>
 </div>
 

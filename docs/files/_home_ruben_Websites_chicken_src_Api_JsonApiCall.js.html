@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/Element.js</title>
+    <title>/home/ruben/Websites/chicken/src/Api/JsonApiCall.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,84 +154,51 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Element.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Api/JsonApiCall.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import _ from &#x27;underscore&#x27;;
-import Obj from &#x27;~/Core/Obj&#x27;;
+import inflection from &#x27;inflection&#x27;;
+
+import ApiCall from &#x27;~/Api/ApiCall&#x27;;
 
 /**
- * @module Dom
+ * @module Api
  */
-class Element extends Obj
-{
+class JsonApiCall extends ApiCall {
+
 	/**
-	 * @class Dom.Element
-	 * @extends Core.Obj
-	 *
+	 * @class Api.JsonApiCall
+	 * @extends Api.ApiCall
+	 * 
 	 * @constructor
-	 * @param {jQuery} $element
-	 * @param {Application} [application]
+	 * @param  {Api.JsonApi} api 	The Api instance this call originates from
+	 * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+	 * @param  {string} uri			The uri to call
+	 * @param  {Object} data        
+	 * @param  {Object} ajaxOptions 	 
 	 */
-	constructor($element) {
 
-		super();
-
-		/**
-		 * The jQuery element that is the ViewContainer
-		 * 
-		 * @property $element
-		 * @type {jQuery}
-		 */
-		this.$element = $element;
-
-
+	/**
+	  * Include the given relationships in the request
+	  * 
+	  * @method include
+	  * @chainable
+	  * 
+	  * @param  {string} relations  JSONAPI include options for request
+	  */
+	include(relations) {
+		return this.query(&#x27;include&#x27;, relations);
 	}
 
 
-
-	setContent(content) {
-
-		// Fire the before hooks.
-		this._fireHooks(&#x27;beforeRender&#x27;);
-
-		// Set it
-		this.$element.html(content);
-		this.trigger(&#x27;content&#x27;, content);
-
-		// Fire the after hooks
-		this._fireHooks(&#x27;afterRender&#x27;);
-
+	filter(key, value) {
+		return this.query(&#x27;filter[&#x27; + inflection.underscore(key) + &#x27;]&#x27;, value);
 	}
 
-
-	_fireHooks(type) {
-
-		_.each(Element.Hooks[type], (callback) =&gt; {
-
-			// Fire it.
-			callback.apply(this, [this.$element, this]);
-
-		});
-
-	}
 
 }
-
-
-Element.registerHook = (callback, type = &#x27;afterRender&#x27;) =&gt; {
-	Element.Hooks[type].push(callback);
-	return true;	
-};
-
-Element.Hooks = {
-	beforeRender: [],
-	afterRender: []
-};
-
-
-module.exports = Element;
+module.exports = JsonApiCall;
     </pre>
 </div>
 

@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/Component.js</title>
+    <title>/home/ruben/Websites/chicken/src/Localization/I18n.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,327 +154,211 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Component.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Localization/I18n.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 import $ from &#x27;jquery&#x27;;
 import _ from &#x27;underscore&#x27;;
-import HTMLBars from &#x27;htmlbars-standalone&#x27;;
-
 
 import Obj from &#x27;~/Core/Obj&#x27;;
-import View from &#x27;~/Dom/View&#x27;;
-
 /**
- * @module Dom
+ * @module Localization
  */
-class Component extends View
-{
+class I18n extends Obj {
 
-	/**
-	 * @class Dom.Component
-	 * @extends Dom.View
-	 */
-	constructor(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates, initCallback = null, renderer = null) {
+	constructor() {
 
-		super(source, null, renderer);
-
+		super();
 
 		/**
-		 * The tag-name that was used to initialize this component
-		 * 
-		 * @property name
-		 * @type {string}
-		 */
-		this.name = name;
-
-		/**
-		 * The HTMLBars morph that contains this component
-		 * 
-		 * @property morph
-		 * @type {HTMLBarsMorph}
-		 */
-		this.morph = morph;
-
-		/**
-		 * The HTMLBars scope for this component
-		 * 
-		 * @property scope
+		 * @property data
 		 * @type {Object}
 		 */
-		this.scope = scope;
+		this.data = {};
 
 		/**
-		 * The list of non-keyed parameters used in this component
-		 * 
-		 * @property parameters
-		 * @type {array}
-		 */
-		this.parameters = parameters;
-
-		/**
-		 * The attribute hash
-		 *
-		 * @property attributes
-		 * @type {object}
-		 */
-		this.attributes = attributeHash;
-
-		/**
-		 * The HTMLBars visitor that was used to initialize this component
-		 *
-		 * @property visitor
-		 * @type {object}
-		 */
-		this.visitor = visitor;
-
-		/**
-		 * Sub-templates used to yield within the component
-		 *
-		 * @property subTemplates
-		 * @type {object}
-		 */
-		this.subTemplates = subTemplates;
-
-
-		/**
-		 * The tagName that will be used when creating this component. The default
-		 * value is &#x27;div&#x27;, but this can be overruled in your handlebar template, or
-		 * in the initCallback of the component.
-		 * 
-		 * @property tagName
-		 * @type {String}
-		 */
-		this.tagName = &#x27;div&#x27;;
-
-		/**
-		 * The CSS class(es) that will be added to the component upon creation. You can set
-		 * this value in the initCallback of the component.
-		 *
-		 * @property cssClass
-		 * @type {string}
-		 */
-		this.cssClass = false;
-
-		/**
-		 * @property element
-		 * @type {DOMElement}
-		 */
-		this.element = null;
-
-
-		/**
-		 * The component&#x27;s child components
-		 *
-		 * @property childComponents
+		 * @property bundlesToLoad
 		 * @type {Array}
 		 */
-		this.childComponents = [];
-
-		/**
-		 * The component instance that wrap this component, if any.
-		 * 
-		 * @property parentComponent
-		 * @type {Dom.Component}
-		 */
-		this.parentComponent = this.scope.component;
-		this.setSilently(&#x27;parent&#x27;, this.parentComponent);
-
-		// Do I have a parent?
-		if (this.parentComponent) this.parentComponent.childComponents.push(this);
-
-		
-		/**
-		 * The dom-object can be used to listen to dom events on the event
-		 * 
-		 * @property dom
-		 * @type {Core.Obj}
-		 */
-		this.dom = new Obj();
-
-
-		// Make attributes available
-		this.with(this.attributes);
-
-
-
-		// Definition callback?
-		if (initCallback) {
-			initCallback.apply(this);
-		}
-
+		this.bundlesToLoad = [];
 
 	}
 
-	sendAction(name = null, ...args) {
+	/**
+	 * Add a bundle that will be loaded when the application starts
+	 *
+	 * @method addBundle
+	 * @param  {string} url 
+	 * @param  {string} [key=null]  Optional key to add loaded data under.
+	 * @chainable
+	 */
+	addBundle(url, key = null) {
 
-		// No name given?
-		if (name === null) {
-			name = this.attributes.action;
-		}
+		this.bundlesToLoad.push({
+			url: url,
+			key: key
+		});
 
-		// Get the callback.
-		let actionScope = this.renderer.hooks.getActionScope(this.scope, name);
-		if (!actionScope) throw new Error(&#x27;[Component &#x27; + this.name + &#x27;] Could not find action &quot;&#x27; + name + &#x27;&quot; within the scope&#x27;);
-		let callback = actionScope.actions[name];
-
-		// Now call it.
-		var params = _.flatten([
-			_.map(args, (value) =&gt; {
-				return this.renderer.hooks.getValue(value);
-			}), 
-			this,	
-			actionScope
-		]);
-		callback.apply(actionScope instanceof View ? actionScope : this, params);
-
+		return this;
 
 	}
 
-	
-	renderSync() {
+	/**
+	 * Manually load a bundle into I18n
+	 *
+	 * @method loadBundle
+	 * @param  {string} url 
+	 * @param  {string} [key=null]  Optional key to add loaded data under.
+	 * @return {Promise}     
+	 */
+	loadBundle(url, key = null) {
 
-		// Create the template
-		try {
+		return new Promise((resolve, reject) =&gt; {
 
-			// Render it
-			this.renderResult = this.getTemplate().render(this, this.renderer, {
-				scope: this.scope,
-				template: this.subTemplates.default
+			// Do we have it in cache?
+			if (I18n.Cache[url]) {
+
+				resolve(I18n.Cache[url]);
+				return;
+			}
+
+			// Load it.
+			$.ajax(url).then((result) =&gt; {
+				resolve(result);
+			}).fail((error) =&gt; {
+				reject(error);
 			});
-			this.documentFragment = this.renderResult.fragment;
 
-		} catch (error) {
-			this.rejectPromise(&#x27;ready&#x27;, error);
-			return;
-		}
+		}).then((result) =&gt; {
 
-
-		// Study the object
-		this.study(() =&gt; {
-			this.scheduleRevalidate();
-		});
-
-		// Create the element
-		this.element = document.createElement(this.tagName);
-		_.each(this.attributes, (value, key) =&gt; {
-
-			// Check value type
-			if (value === &#x27;true&#x27;) value = true;
-			if (value === &#x27;false&#x27;) value = false;
-			if ($.isNumeric(value)) value = parseFloat(value);
-			if (value !== this.attributes[key]) {
-				this.attributes[key] = value;
+			// Is there a key?
+			if (key) {
+				let r = {};
+				r[key] = result;
+				result = r;
 			}
 
-			// Is it a useful value?
-			if (typeof value === &#x27;string&#x27; || typeof value === &#x27;boolean&#x27; || typeof value === &#x27;number&#x27;) {
-				this.element.setAttribute(key, value);
-			}
+			// Extend
+			$.extend(this.data, result);
 
 		});
 
-		this.$element = $(this.element);
-		this.$element.append(this.documentFragment);
+	}
 
-		// CSS class
-		if (this.cssClass) this.$element.addClass(this.cssClass);
+	/**
+	 * Load all added bundles
+	 *
+	 * @method load
+	 * @return {Promise}
+	 */
+	load() {
 
-		// Trigger beforeAdded
-		this.trigger(&#x27;beforeAdd&#x27;, this.$element);
+		// Main prmomise for loading
+		return this.promise(&#x27;loaded&#x27;, (resolve) =&gt; {
 
-		// Put element in result
-		this.morph.setNode(this.$element[0]);
+			// Nothing to load?
+			if (this.bundlesToLoad.length === 0) {
+				resolve();
+				return;
+			}
 
-		// Done.
-		this.trigger(&#x27;added&#x27;, this.$element);
+			// Collect promises
+			let promises = [];
+			_.each(this.bundlesToLoad, (bundle) =&gt; {
 
-		// Enable DOM events
-		this.enableDomEvents();
+				promises.push(this.loadBundle(bundle.url, bundle.key));
 
-		// Find child components
-		if (this.childComponents.length &gt; 0) {
-
-			// Wait for the children to complete first
-			let promises = _.map(this.childComponents, (child) =&gt; {
-				return child.getPromise(&#x27;ready&#x27;);
 			});
+
+			// When all is done.
 			Promise.all(promises).then(() =&gt; {
-				this.resolvePromise(&#x27;ready&#x27;);
-			});
-
-		} else {
-
-			// We are ready now.
-			this.resolvePromise(&#x27;ready&#x27;);
-		}
-
-	}
-
-	enableDomEvents() {
-
-		// Loop through callbacks
-		this.dom._listeners.forEach((callbacks, name) =&gt; {
-			
-			// Proper event?
-			if (!_.contains(Component.DomEventNames, name)) {
-				throw new Error(&#x27;The &quot;&#x27; + name + &#x27;&quot; event is not a valid DOM event.&#x27;);
-			}
-
-			// Listen and connect.
-			this.$element.on(name, (...args) =&gt; {
-				args.unshift(name);
-				this.dom.trigger.apply(this.dom, args);				
+				resolve();
 			});
 
 		});
 
 	}
 
+	/**
+	 * Get the translation for given key
+	 * 
+	 * @method translate
+	 * @param  {string} key        			Dot-notation key to get value of
+	 * @param  {Object} [attributes={}] 	Optional object containing attributes to pass to the template in the translated value
+	 * @param  {mixed} [fallback=null]		Optional fallback value when the key is nout found
+	 * @return {mixed}
+	 */
+	translate(key, attributes = {}, fallback = null) {
 
+		// Dot notation
+		let obj = this.data;
+		let parts = key.split(/\./);
+		while (parts.length &gt; 0) {
+			
+			// Get firs tpart
+			let part = parts.shift();
 
-	getSubTemplate(key) {
+			// Not existing?
+			if (!obj[part]) return fallback ? fallback : &#x27;[&#x27; + key + &#x27;]&#x27;;
+			
+			// Dive in.
+			obj = obj[part];
+		}
 
-		let block = HTMLBars.Util.Template.blockFor(
-			HTMLBars.Runtime.render,
-			this.subTemplates[key],
-			{
-				scope: this.scope
+		// String?
+		if (typeof obj === &#x27;string&#x27;) {
+
+			/////////////////
+			// Templating? //
+			/////////////////
+			
+			if (obj.match(/&lt;%/)) {
+
+				// Convert attributes into real values
+				let attr = _.mapObject(attributes, (value) =&gt; {
+				
+					// Get value?
+					if (typeof value.getValue === &#x27;function&#x27;) {
+						value = value.getValue();
+					}
+					return value;
+
+				});
+				
+				// Make a template and run it
+				let template = _.template(obj);
+				obj = template(attr);
+
 			}
-		);
 
-		return block;
+		}
 
+		return obj;
+		
+
+	}
+
+	/**
+	 * Alias of translate
+	 * 
+	 * @method get
+	 * @param  {string} key        
+	 * @param  {Object} [attributes={}] 
+	 * @param  {mixed} [fallback=null]
+	 * @return {mixed}
+	 */
+	get(key, attributes = {}, fallback = null) {
+		return this.translate(key, attributes, fallback);
 	}
 
 
 }
 
-
-Component.DomEventNames = [
-	
-	// Touch events
-	&#x27;touchStart&#x27;, &#x27;touchMove&#x27;, &#x27;touchEnd&#x27;, &#x27;touchCancel&#x27;,
-
-	// Keyboard
-	&#x27;keyDown&#x27;, &#x27;keyUp&#x27;, &#x27;keyPress&#x27;,
-
-	// Mouse
-	&#x27;mouseDown&#x27;, &#x27;mouseUp&#x27;, &#x27;contextMenu&#x27;, &#x27;click&#x27;, &#x27;doubleClick&#x27;, &#x27;mouseMove&#x27;, &#x27;focusIn&#x27;, &#x27;focusOut&#x27;, &#x27;mouseEnter&#x27;, &#x27;mouseLeave&#x27;,
-
-	// Form
-	&#x27;submit&#x27;, &#x27;change&#x27;, &#x27;focusIn&#x27;, &#x27;focusOut&#x27;, &#x27;input&#x27;,
-
-	// HTML5
-	&#x27;dragStart&#x27;, &#x27;drag&#x27;, &#x27;dragEnter&#x27;, &#x27;dragLeave&#x27;, &#x27;dragOver&#x27;, &#x27;dragEnd&#x27;, &#x27;drop&#x27;
-
-];
+I18n.Cache = {};
 
 
-Component.registry = new Map();
-
-module.exports = Component;
+module.exports = I18n;
     </pre>
 </div>
 

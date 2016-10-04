@@ -41,7 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
@@ -52,6 +64,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -87,6 +101,12 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -94,6 +114,8 @@
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -140,9 +162,13 @@ import _ from &#x27;underscore&#x27;;
 import HTMLBars from &#x27;htmlbars-standalone&#x27;;
 
 import Observable from &#x27;~/Core/Observable&#x27;;
+import ObservableArray from &#x27;~/Core/ObservableArray&#x27;;
 import Binding from &#x27;~/Dom/Binding&#x27;;
 import ActionBinding from &#x27;~/Dom/ActionBinding&#x27;;
+import Component from &#x27;~/Dom/Component&#x27;;
+import ComponentDefinition from &#x27;~/Dom/ComponentDefinition&#x27;;
 import Helpers from &#x27;~/Dom/Helpers&#x27;;
+import View from &#x27;~/Dom/View&#x27;;
 
 /**
  * @module Dom
@@ -196,11 +222,8 @@ class Renderer
 					path = keys.join(&#x27;.&#x27;);
 				}
 
-				// No path? Return the whole data
-				if (path === &#x27;&#x27;) return appliedScope;
-
 				// Is data an observable?
-				if (appliedScope instanceof Observable) {
+				if ((appliedScope instanceof Observable &amp;&amp; path.length &gt; 0) || appliedScope instanceof ObservableArray) {
 
 					// Already a binding?
 					if (appliedScope._bindings === undefined) appliedScope._bindings = {};
@@ -211,7 +234,7 @@ class Renderer
 					}
 
 					// Create a binding
-					var binding = new Binding(this, appliedScope, path);
+					var binding = new Binding(this, appliedScope, path, scope.view ? scope.view : scope.self);
 
 					// Store it
 					appliedScope._bindings[path] = binding;
@@ -219,18 +242,19 @@ class Renderer
 					// Get the value
 					return binding;
 
+				} else if (path === &#x27;&#x27;) {
+
+					// Return the scope itself
+					return appliedScope;
+
 				} else {
 
 					// Do native thing (deep-get)
-					var value = this.hooks.getRoot(scope, keys[0])[0];
-					for (var i = 1; i &lt; keys.length; i++) {
-						if (value) {
-							value = this.hooks.getChild(value, keys[i]);
-						} else {
-							break;
-						}
+					var value = appliedScope;
+					for (let q = 0; q &lt; keys.length; q++) {
+						value = value[keys[q]];
 					}
-
+					
 				}
 				
 				return value;
@@ -273,7 +297,43 @@ class Renderer
 							
 			},
 
+			createFreshScope: () =&gt; {
+				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
+			},
+
+			createChildScope: (parentScope) =&gt; {
+
+				// Create a new scope extending the parent
+				var scope = Object.create(parentScope);
+				scope.locals = Object.create(parentScope.locals);
+				scope.localPresent = Object.create(parentScope.localPresent);
+				scope.blocks = Object.create(parentScope.blocks);
+				scope.actions = Object.create(parentScope.actions);
+
+				// Check is parent is a view
+				if (parentScope.self instanceof View) {
+					
+					// Bubble the actions
+					scope.actions = _.extend(scope.actions, parentScope.self.actions);
+
+
+					// No a component?
+					if (!(parentScope.self instanceof Component)) {
+						scope.view = parentScope.self;
+					} else {
+						scope.component = parentScope.self;
+					}
+
+				}
+
+				return scope;
+
+
+			},
+
+
 			lookupHelper: (renderer, scope, helperName) =&gt; {
+				
 				if (!renderer.helpers[helperName]) {
 					throw new Error(&#x27;There is no helper registered with the name &quot;&#x27; + helperName + &#x27;&quot;&#x27;);
 				}
@@ -282,15 +342,165 @@ class Renderer
 
 			invokeHelper: (morph, renderer, scope, visitor, params, attributeHash, helper, options) =&gt; {
 				
-				// Call it with its own context
+				// Is it a component?
+				if (helper instanceof ComponentDefinition) {
+
+					// Call component hook
+					return {
+						value: this.hooks.component(morph, renderer, scope, helper, params, attributeHash, options, visitor)
+					};
+
+				} 
+
+				// Call the helper with its own context
 				return { 
 					value: helper.apply(this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor])
 				};
 
 			},
 
-			component: (/*morph, renderer, scope, tagName, params, attrs, options, visitor*/) =&gt; {
-//				console.log(&#x27;Component&#x27;, tagName, params, attrs);
+			component: (morph, renderer, scope, tagName, params, attributeHash, options, visitor) =&gt; {
+
+				////////////////////////////////////////////////////////////////
+				// Is the component already created, and is this a re-render? //
+				////////////////////////////////////////////////////////////////
+
+				let state = morph.getState();
+				if (state.component) {
+
+					state.component.scheduleRevalidate();
+					return;
+
+				} 			
+
+
+				///////////////////////////////////
+				// Create the component instance //
+				///////////////////////////////////
+
+				// Get definition
+				let definition = Component.registry.get(tagName);
+				
+				// No known component?
+				if (!definition) {
+
+					// Do the component fallback.
+					let element = renderer.dom.createElement(tagName);
+					_.each(attributeHash, (value, key) =&gt; {
+						element.setAttribute(key, renderer.hooks.getValue(value));
+					});
+					var fragment = HTMLBars.Runtime.render(options.default, renderer, scope, {}).fragment;
+					element.appendChild(fragment);
+					morph.setNode(element);
+					return;
+
+				}
+
+				// Create a new scope and use the component as self
+				var newScope = renderer.hooks.createScope(renderer, scope);
+				
+				// Create it
+				let component = new Component(
+					definition.name, 
+					definition.source, 
+					morph,
+					newScope,
+					params,
+					attributeHash,
+					visitor,
+					options,
+					definition.initCallback, 
+					this);
+				newScope.self = component;
+
+				// Now render it.
+				component.render();
+								
+				// Store it.
+				state.component = component;
+
+			},
+
+
+			/**
+			 * Check if the given path is a known class (component, or block, inline)
+			 *
+			 * @method hooks.classify
+			 * @param  {Dom.Renderer} renderer 
+			 * @param  {Object} scope    
+			 * @param  {string} path     
+			 * @return {string}          
+			 */
+			classify: (renderer, scope, path) =&gt; {
+	
+				// Is this a known component?
+				if (Component.registry.has(path)) return &#x27;component&#x27;;
+
+				// Nothing known.
+				return false;
+
+			},
+
+
+
+			getBlock: (scope, key) =&gt; {
+
+				// Is the block known?
+				let block = scope.blocks[key];
+				if (block) return block;
+
+				// Are we inside a component?
+				if (scope.self instanceof Component) {
+					return scope.self.getSubTemplate(key);
+				}
+				
+				// Nothing there
+				return null;
+
+			},
+
+			getActionScope: (scope, key) =&gt; {
+
+				// Check the scope
+				if (scope.actions &amp;&amp; scope.actions[key]) {
+
+					return scope;
+
+				} else if (scope.locals.actions &amp;&amp; scope.locals.actions[key]) {
+
+					// Use local action
+					return scope.locals;
+
+				} else if (scope.self.actions &amp;&amp; scope.self.actions[key]) {
+
+					// Use that
+					return scope.self;
+
+				} else if (scope.view &amp;&amp; scope.view.actions &amp;&amp; scope.view.actions[key]) {
+
+					// Use the veiw
+					return scope.view;
+
+				} else {
+
+					return false;
+
+				}
+
+
+			},
+
+			getAction: (scope, key) =&gt; {
+
+				let appliedScope = this.hooks.getActionScope(scope, key);
+				if (appliedScope) {
+					
+					// Get the action
+					return appliedScope.actions[key];
+
+				}
+				return false;
+
 			},
 
 
@@ -307,20 +517,10 @@ class Renderer
 					
 					// Check binding
 					if (morph.actionBindings) return;
-
+					
 					// Get action scope
-					let appliedScope;
-					if (scope.localPresent[&#x27;actions&#x27;] &amp;&amp; scope.locals.actions[params[0]]) {
-
-						// Use local action
-						appliedScope = scope.locals;
-
-					} else if (scope.self.actions &amp;&amp; scope.self.actions[params[0]]) {
-
-						// Use that
-						appliedScope = scope.self;
-
-					} else {
+					let actionCallback = renderer.hooks.getAction(scope, params[0]);
+					if (!actionCallback) {
 
 						// Undefined action.
 						throw new Error(&#x27;Could not find action &quot;&#x27; + params[0] + &#x27;&quot; within the scope&#x27;);
@@ -328,18 +528,11 @@ class Renderer
 					}
 
 					// Get action
-					let actionCallback = appliedScope.actions[params[0]];
 					let parameters = params.slice(1);
 
 					// Create action binding
-					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
-
-				},
-
-
-				component: (/*morph, renderer, scope, params, hash, template, inverse, visitor, isRerender = false*/) =&gt; {
-
-					//console.log(&#x27; jojojojo&#x27;);
+					let binding = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
+					morph.actionBindings = binding;					
 
 				}
 

@@ -41,7 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
@@ -52,6 +64,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -87,6 +101,12 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -94,6 +114,8 @@
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -138,6 +160,7 @@
     <pre class="code prettyprint linenums">
 import _ from &#x27;underscore&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
+import Reference from &#x27;~/Core/Reference&#x27;;
 import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 import ComputedProperty from &#x27;~/Core/ComputedProperty&#x27;;
 
@@ -226,6 +249,13 @@ class Observable extends Obj {
 		this.attributes = {};
 
 
+		/**
+		 * Whenever this property is true, no notifications will be triggered
+		 * 
+		 * @attribute notificationsDisabled
+		 * @type {Boolean}
+		 */
+		this.notificationsDisabled = false;
 
 
 		// Scheduling
@@ -238,7 +268,9 @@ class Observable extends Obj {
 		////////////////////
 
 		// Initialize values
-		this.import(initValues, convertToObservables, true);
+		this.withoutNotifications(() =&gt; {
+			this.import(initValues, convertToObservables);			
+		});
 		
 	}
 
@@ -260,10 +292,10 @@ class Observable extends Obj {
 		let currentPart = parts.shift(); 
 
 		// No deep shit?
-		if (parts.length === 0) return this.attributes[currentPart] !== undefined;
+		if (parts.length === 0) return this._has(currentPart) !== undefined;
 
 		// Look deeper
-		let value = this.attributes[currentPart];
+		let value = this._get(currentPart);
 
 		// No value
 		if (value === undefined) {
@@ -282,8 +314,11 @@ class Observable extends Obj {
 
 		}
 
-
 	}
+	_has(key) {
+		return this.attributes[key] !== undefined;
+	}
+
 
 	/**
 	 * Get attribute from object
@@ -299,10 +334,15 @@ class Observable extends Obj {
 		let currentPart = parts.shift();
 
 		// Get value
-		let value = this.attributes[currentPart];
+		let value = this._get(currentPart);
 
 		// Nothing?
 		if (value === undefined) return;
+
+		// Is it a reference?
+		if (value instanceof Reference) {
+			value = value.getValue();
+		}
 
 		// Value found?
 		if (parts.length === 0) {
@@ -324,13 +364,16 @@ class Observable extends Obj {
 
 		} else {
 
-			throw new Error(&#x27;The found value for &#x27; + key + &#x27; is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is &#x27; + (typeof value));
+			throw new Error(&#x27;The found value for &#x27; + currentPart + &#x27; is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is &#x27; + (typeof value));
 
 		}
 
-
-
 	}
+	_get(key) {
+		return this.attributes[key];
+	}
+
+
 
 	/**
 	 * Set attribute on object. When you set a attribute on Observable, all
@@ -341,11 +384,9 @@ class Observable extends Obj {
 	 * @param {mixed} value 		The value to store
 	 * @param {boolean} [convertToObservables=false]
 	 *        						Whether to convert standard object values into Observable instances
-	 * @param {boolean} [doNotNotify=false]
-	 *        						Whether to skip notifying listeners
 	 * @chainable
 	 */
-	set(key, value, convertToObservables = false, doNotNotify = false) {
+	set(key, value, convertToObservables = false) {
 
 		// Convert?
 		if (convertToObservables === true &amp;&amp; typeof value === &#x27;object&#x27; &amp;&amp; value !== null) {
@@ -360,7 +401,6 @@ class Observable extends Obj {
 		if (value instanceof ComputedProperty) {
 			value.initialize(key, this);
 		}
-
 
 
 		// Is there a dot in there?
@@ -390,11 +430,11 @@ class Observable extends Obj {
 
 				}
 
-				// Study it
+				/*// Study it
 				newValue.study(() =&gt; {
 					this._scheduleAttributeChanged(currentPart);
 				});
-				
+				*/
 				// Store it
 				this.attributes[currentPart] = newValue;
 
@@ -410,8 +450,16 @@ class Observable extends Obj {
 
 		}
 
-		// Store the value
-		this.attributes[key] = value;
+		// Now set the attribute
+		this.setAttribute(key, value, convertToObservables);
+
+		return this;
+
+	}
+	setAttribute(key, value) {
+
+		// Set it
+		this._set(key, value);
 
 		// Is the value observable?
 		if (Observable.isObservable(value)) {
@@ -423,57 +471,60 @@ class Observable extends Obj {
 
 		}
 
-		// Update attribute
-		if (!doNotNotify) this._scheduleAttributeChanged(key);
+		// Is the value a reference?
+		if (value instanceof Reference) {
 
+			// Study the object
+			value.watch(() =&gt; {
+				this._scheduleAttributeChanged(key);
+			});
+
+		}
+
+		// Update attribute
+		this._scheduleAttributeChanged(key);
+
+		return this;
+
+
+	}
+	_set(key, value) {
+
+		// Is there a current value that is a reference?
+		if (this.attributes[key] instanceof Reference &amp;&amp; !(value instanceof Reference)) {
+		
+			// Write the referenced value
+			this.attributes[key].setValue(value);
+
+		} else {
+
+			// Store the value
+			this.attributes[key] = value;
+
+		}
 		return this;
 
 	}
 
 
-	import(obj, convertToObservables = true, doNotNotify = false) {
+	setSilently(key, value, convertToObservables = false) {
+		return this.withoutNotifications(() =&gt; {
+			this.set(key, value, convertToObservables);
+		});
+	}
 
-		// Go through to the object&#x27;s first level
-		_.each(obj, (value, key) =&gt; {
 
-			// Is the value an array or object?
-			if ((Array.isArray(value) || (typeof value === &#x27;object&#x27; &amp;&amp; value !== null &amp;&amp; value.constructor === Object)) &amp;&amp; convertToObservables === true) {
+	import(obj, convertToObservables = true) {
 
-				// Do I have this value?
-				if (this.attributes[key] !== undefined &amp;&amp; Observable.isObservable(this.attributes[key])) {
-
-					// Import
-					var obj = this.attributes.get(key);
-					obj.import(value, convertToObservables, doNotNotify);
-
-				} else {
-
-					// Array or object?
-					if (Array.isArray(value)) {
-						
-						// Put a new observable array in there
-						this.attributes[key] = ClassMap.create(&#x27;ObservableArray&#x27;, [value]);
-
-					} else {
-
-						// Put a new observable in there
-						this.attributes[key] = new Observable(value);
-
-					}
-
-				}
-			
-			} else {
-
-				// Just set the value (don&#x27;t notify)
-				this.set(key, value, convertToObservables, true);
-
-			}
-
-		});	
+		// Import all items in hash
+		this.withoutNotifications(() =&gt; {
+			_.each(obj, (value, key) =&gt; {
+				this.set(key, value, convertToObservables);
+			});
+		});
 
 		// Notify!
-		this.trigger(Observable.Events.Import);
+		if (!this.notificationsDisabled) this.trigger(Observable.Events.Import);
 
 		return this;
 
@@ -578,25 +629,18 @@ class Observable extends Obj {
 		//////////////////////////////
 
 		let parts = key.split(/\./);
-		let currentPart = parts.shift();
-		if (parts.length &gt; 0) {
+		if (parts.length &gt; 1) {
 
-			// Do the sub thing
-			var sub = this.attributes[currentPart];
-			if (sub === undefined) {
-
-				// Create new observable
-				this.set(currentPart, {}, true);
-				sub = this.attributes[currentPart];
-
-			}
+			// Get the object concerned
+			let objKey = parts.pop();
+			let obj = this.get(parts.join(&#x27;.&#x27;));
 
 			// Is it an observable?
-			if (Observable.isObservable(sub)) {
-				return sub.observe(parts.join(&#x27;.&#x27;), callback);				
+			if (Observable.isObservable(obj) &amp;&amp; obj.observe) {
+				return obj.observe(objKey, callback);				
 			}
 
-			throw new Error(&#x27;Cannot observe property of non-existing object&#x27;);
+			throw new Error(&#x27;Cannot observe property of non-existing object: &#x27; + key);
 			
 		}
 
@@ -671,6 +715,29 @@ class Observable extends Obj {
 	}
 
 
+	/**
+	 * Execute given callback without triggering change notifications.
+	 * 
+	 * @method withoutNotifications
+	 * @param  {Function} callback 
+	 * @chainable
+	 */
+	withoutNotifications(callback) {
+
+		let wasDisabled = this.notificationsDisabled;
+		this.notificationsDisabled = true;
+
+		callback();
+
+		this.notificationsDisabled = wasDisabled;
+
+
+		return this;
+
+	}
+
+
+
 	clone(convertToObservables = true) {
 
 		// Make copy!
@@ -686,6 +753,9 @@ class Observable extends Obj {
 	/////////////////////
 
 	_scheduleAttributeChanged(key) {
+
+		// Notifications disabled?
+		if (this.notificationsDisabled) return;
 
 		// Already something scheduled?
 		if (!this._scheduleAttributesChangedTimeout) {
@@ -708,6 +778,9 @@ class Observable extends Obj {
 	}
 
 	_triggerAttributesChanged() {
+
+		// Notifications disabled?
+		if (this.notificationsDisabled) return;
 
 		// Clear for next time.
 		if (this._scheduleAttributesChangedTimeout) clearTimeout(this._scheduleAttributesChangedTimeout);
@@ -755,6 +828,10 @@ class Observable extends Obj {
 	isObservable() {
 		return true;
 	}
+
+
+
+
 
 
 

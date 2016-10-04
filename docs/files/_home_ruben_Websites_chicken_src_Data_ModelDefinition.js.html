@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/Element.js</title>
+    <title>/home/ruben/Websites/chicken/src/Data/ModelDefinition.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,84 +154,154 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Element.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Data/ModelDefinition.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
+import inflection from &#x27;inflection&#x27;;
 import _ from &#x27;underscore&#x27;;
-import Obj from &#x27;~/Core/Obj&#x27;;
+
+import ModelAttribute from &#x27;~/Data/ModelAttribute&#x27;;
+import Relationship from &#x27;~/Data/Relationship&#x27;;
+import ComputedProperty from &#x27;~/Core/ComputedProperty&#x27;;
 
 /**
- * @module Dom
+ * @module Data
  */
-class Element extends Obj
+class ModelDefinition
 {
-	/**
-	 * @class Dom.Element
-	 * @extends Core.Obj
-	 *
-	 * @constructor
-	 * @param {jQuery} $element
-	 * @param {Application} [application]
-	 */
-	constructor($element) {
 
-		super();
+	constructor(name, callback) {	
 
-		/**
-		 * The jQuery element that is the ViewContainer
-		 * 
-		 * @property $element
-		 * @type {jQuery}
-		 */
-		this.$element = $element;
+		this.name = name;
+
+		this.apiUri = &#x27;/&#x27; + inflection.underscore(inflection.pluralize(name));
+		this.api = &#x27;default&#x27;;
+
+		this.attributes = {};
+		this.attributeNames = [];
+		this.relationships = {};
+
+		this.computedAttributes = {};
+
+		this.validationRules = {};
+
+
+		callback.apply(this, [this]);
 
 
 	}
 
 
+	initializeModel(model) {
 
-	setContent(content) {
-
-		// Fire the before hooks.
-		this._fireHooks(&#x27;beforeRender&#x27;);
-
-		// Set it
-		this.$element.html(content);
-		this.trigger(&#x27;content&#x27;, content);
-
-		// Fire the after hooks
-		this._fireHooks(&#x27;afterRender&#x27;);
-
-	}
-
-
-	_fireHooks(type) {
-
-		_.each(Element.Hooks[type], (callback) =&gt; {
-
-			// Fire it.
-			callback.apply(this, [this.$element, this]);
-
+		// Add computed
+		model.withoutNotifications(() =&gt; {
+			_.each(this.computedAttributes, (attr, key) =&gt; {
+				model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
+			});			
 		});
 
+		return model;
+
 	}
+
+
+
+	attribute(name, type) {
+		let attr = new ModelAttribute(name, type);
+		this.attributeNames.push(name);
+		this.attributes[name] = attr;
+		return attr;
+	}
+
+	computed(name, dependencies, callback) {
+
+		this.computedAttributes[name] = {
+			dependencies: dependencies,
+			callback: callback
+		};
+		return true;
+
+	}
+
+
+
+	//////////////////////
+	// Column defitions //
+	//////////////////////
+
+	integer(name) {
+		let attr = this.attribute(name, ModelAttribute.Integer);
+		return attr;
+	}
+
+	string(name, size) {
+		let attr = this.attribute(name, ModelAttribute.String);
+		attr.size = size;
+		return attr;
+	}
+
+	date(name) {
+		let attr = this.attribute(name, ModelAttribute.Date);
+		return attr;
+	}
+
+
+
+	//////////////////////
+	// Column shortcuts //
+	//////////////////////
+
+	timestamps() {
+		this.attribute(&#x27;createdAt&#x27;, ModelAttribute.DateTime);
+		this.attribute(&#x27;updatedAt&#x27;, ModelAttribute.DateTime);
+		return this;
+	}
+
+
+	///////////////////
+	// Relationships //
+	///////////////////
+
+	relationship(name) {
+		let rel = new Relationship(name, this.name);
+		this.relationships[name] = rel;
+		return rel;
+	}
+
+
+	/////////////////////
+	// Form validation //
+	/////////////////////
+
+	validation(rules, formKey = &#x27;default&#x27;) {
+
+		this.validationRules[formKey] = rules;
+		return this;
+
+	}
+		
+
+
+
+
+	/////////
+	// Api //
+	/////////
+
+	getApiUri(id = null) {
+		let uri = this.apiUri;
+		if (id) uri += &#x27;/&#x27; + id;
+		return uri;
+	}
+
+
+
 
 }
 
-
-Element.registerHook = (callback, type = &#x27;afterRender&#x27;) =&gt; {
-	Element.Hooks[type].push(callback);
-	return true;	
-};
-
-Element.Hooks = {
-	beforeRender: [],
-	afterRender: []
-};
-
-
-module.exports = Element;
+module.exports = ModelDefinition;
     </pre>
 </div>
 

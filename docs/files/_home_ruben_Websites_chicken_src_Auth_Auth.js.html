@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Websites/chicken/src/Dom/Element.js</title>
+    <title>/home/ruben/Websites/chicken/src/Auth/Auth.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,84 +154,195 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Dom/Element.js</h1>
+                        <h1 class="file-heading">File: /home/ruben/Websites/chicken/src/Auth/Auth.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
 import _ from &#x27;underscore&#x27;;
-import Obj from &#x27;~/Core/Obj&#x27;;
+
+import Observable from &#x27;~/Core/Observable&#x27;;
+import Middleware from &#x27;~/Routing/Middleware&#x27;;
+import App from &#x27;~/Helpers/App&#x27;;
 
 /**
- * @module Dom
+ * @module Auth
  */
-class Element extends Obj
+class Auth extends Observable
 {
+
 	/**
-	 * @class Dom.Element
-	 * @extends Core.Obj
+	 * @class Auth.Auth
 	 *
+	 * @param 	{Object} options 
 	 * @constructor
-	 * @param {jQuery} $element
-	 * @param {Application} [application]
 	 */
-	constructor($element) {
+	constructor(options = {}) {
 
 		super();
 
-		/**
-		 * The jQuery element that is the ViewContainer
-		 * 
-		 * @property $element
-		 * @type {jQuery}
-		 */
-		this.$element = $element;
+		// Default options
+		this.settings = _.defaults(options, {
 
+			getUserUri: &#x27;/me&#x27;,
+
+			onAuthenticated: null,
+			onUnauthenticated: null,
+			onSessionTimedOut: null,
+			onInvalidated: null,
+
+			middlewareName: &#x27;auth&#x27;
+
+		});
+
+		this.set(&#x27;isAuthenticated&#x27;, false);
+
+		// Register the middleware
+		this.middleware = new Middleware(this.settings.middlewareName, (next, request, routeMatch) =&gt; {
+
+			return this.middlewareAction(next, request, routeMatch);
+
+		});
+		Middleware.register(this.middleware);
 
 	}
 
+	/**
+	 * Act as middleware for given request
+	 *
+	 * @method middleWareAction
+	 * @param  {Callback} 			next		The callback to call when everything is okay
+	 * @param  {Routing.Request} 	request 
+	 * @param  {Routing.RouteMatch} 		routeMatch   	 	 
+	 */
+	middlewareAction(next, request, routeMatch) {
 
+		// Are we not authenticated?
+		if (!this.isAuthenticated()) {
 
-	setContent(content) {
+			// Trigger the unauthenticated event
+			if (!this.settings.onUnauthenticated) {
+				throw new Error(&#x27;Protected route called without authentication.&#x27;);
+			}
 
-		// Fire the before hooks.
-		this._fireHooks(&#x27;beforeRender&#x27;);
+			// Do the callback
+			this.doCallback(&#x27;onUnauthenticated&#x27;, [request, routeMatch]);
+			return;
 
-		// Set it
-		this.$element.html(content);
-		this.trigger(&#x27;content&#x27;, content);
+		}
 
-		// Fire the after hooks
-		this._fireHooks(&#x27;afterRender&#x27;);
-
+		// Ok.
+		next();
+		
 	}
 
 
-	_fireHooks(type) {
+	doCallback(key, params) {
 
-		_.each(Element.Hooks[type], (callback) =&gt; {
+		// Promise
+		return new Promise((resolve, reject) =&gt; {
 
-			// Fire it.
-			callback.apply(this, [this.$element, this]);
+			// Do we have one?
+			let callback = this.settings[key];
+			if (!callback) {
+				reject(&#x27;There is no callback defined for &#x27; + key);
+			}
+
+			// Is it a string with a uri?
+			if (typeof callback === &#x27;string&#x27;) {
+				App().goto(callback);
+				resolve();
+			}
+
+			// Get the result from the callback
+			let result = callback.apply(this, params);
+
+			// Is there something resolvable in there?
+			if (result &amp;&amp; result instanceof Promise) {
+
+				// Link it.
+				result.then((result) =&gt; {
+					resolve(result);
+				}, (error) =&gt; {
+					reject(error);
+				});
+
+			} else {
+
+				// Just resolve now
+				resolve(result);
+
+			}
 
 		});
 
 	}
 
+
+	/**
+	 * Try to authenticate using given credentials
+	 * 
+	 * @method authenticate
+	 * @param  {object} credentials 
+	 * @return {Promise}
+	 */
+	authenticate(/* credentials */) {
+		throw new Error(&#x27;The &#x27; + this.constructor.name + &#x27; class has not implemented the &quot;authenticate&quot; method&#x27;);		
+	}
+
+
+	/**
+	 * Try to invalidate the current authenticated session
+	 *
+	 * @method invalidate
+	 * @return {Promise}
+	 */
+	invalidate() {
+		throw new Error(&#x27;The &#x27; + this.constructor.name + &#x27; class has not implemented the &quot;invalidate&quot; method&#x27;);
+	}
+
+
+	/**
+	 * Check whether the session is authenticated
+	 * 
+	 * @method isAuthenticated
+	 * @return {Boolean}
+	 */
+	isAuthenticated() {
+		return this.get(&#x27;isAuthenticated&#x27;);		
+	}
+
+
+	/**
+	 * Authorize given ApiCall instance, adding necessary
+	 * authorization headers, etc.
+	 * 
+	 * @method authorizeApiCall
+	 * @param  {Api.ApiCall} apiCall 
+	 * @return {Api.ApiCall}
+	 */
+	authorizeApiCall(apiCall) {
+		return apiCall;
+	}
+
+
+	/**
+	 * Read given Api Error and update session accordingly, if
+	 * appropriate.
+	 *
+	 * @method processApiError
+	 * @param  {object} error 
+	 * @return {object}       
+	 */
+	processApiError(error) {
+		return error;
+	}
+
+
 }
 
 
-Element.registerHook = (callback, type = &#x27;afterRender&#x27;) =&gt; {
-	Element.Hooks[type].push(callback);
-	return true;	
-};
 
-Element.Hooks = {
-	beforeRender: [],
-	afterRender: []
-};
-
-
-module.exports = Element;
+module.exports = Auth;
     </pre>
 </div>
 
