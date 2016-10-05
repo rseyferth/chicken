@@ -169,6 +169,7 @@ import Component from &#x27;~/Dom/Component&#x27;;
 import ComponentDefinition from &#x27;~/Dom/ComponentDefinition&#x27;;
 import Helpers from &#x27;~/Dom/Helpers&#x27;;
 import View from &#x27;~/Dom/View&#x27;;
+import Utils from &#x27;~/Helpers/Utils&#x27;;
 
 /**
  * @module Dom
@@ -398,6 +399,25 @@ class Renderer
 
 				// Create a new scope and use the component as self
 				var newScope = renderer.hooks.createScope(renderer, scope);
+				
+				// Are there attributes defined as an attribute?
+				if (attributeHash &amp;&amp; attributeHash.attributes) {
+					
+					// A binding?
+					let attrs = attributeHash.attributes;
+					if (attrs instanceof Binding) attrs = attrs.getValue();
+
+					// A hash?
+					if (attrs instanceof Object) {
+
+						// Replace
+						delete attributeHash.attributes;
+						Utils.each(attrs, (value, key) =&gt; {
+							attributeHash[key] = value;
+						});
+
+					}
+				}
 				
 				// Create it
 				let component = new Component(

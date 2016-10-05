@@ -347,6 +347,10 @@ var Chicken = {
 		
 	},
 
+	map: (...args) => {
+		return Utils.map.apply(this, args);
+	},
+
 	debug: (message, key = null) => {
 
 		switch (Chicken.debugging) {

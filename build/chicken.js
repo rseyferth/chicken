@@ -574,6 +574,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			return _Utils2.default.each.apply(undefined, args);
 		},
 
+		map: function map() {
+			for (var _len4 = arguments.length, args = Array(_len4), _key4 = 0; _key4 < _len4; _key4++) {
+				args[_key4] = arguments[_key4];
+			}
+
+			return _Utils2.default.map.apply(undefined, args);
+		},
+
 		debug: function debug(message) {
 			var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
@@ -6012,6 +6020,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _View2 = _interopRequireDefault(_View);
 
+	var _Utils = __webpack_require__(54);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -6239,6 +6251,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Create a new scope and use the component as self
 				var newScope = renderer.hooks.createScope(renderer, scope);
+
+				// Are there attributes defined as an attribute?
+				if (attributeHash && attributeHash.attributes) {
+
+					// A binding?
+					var attrs = attributeHash.attributes;
+					if (attrs instanceof _Binding2.default) attrs = attrs.getValue();
+
+					// A hash?
+					if (attrs instanceof Object) {
+
+						// Replace
+						delete attributeHash.attributes;
+						_Utils2.default.each(attrs, function (value, key) {
+							attributeHash[key] = value;
+						});
+					}
+				}
 
 				// Create it
 				var component = new _Component2.default(definition.name, definition.source, morph, newScope, params, attributeHash, visitor, options, definition.initCallback, _this);
@@ -9051,6 +9081,17 @@ return /******/ (function(modules) { // webpackBootstrap
 				return value instanceof Object;
 			}
 
+			//////////////////
+			// HTML Helpers //
+			//////////////////
+
+		}, {
+			key: 'attributesFrom',
+			value: function attributesFrom(params, attributeHash, blocks, morph) {
+
+				console.log(params, attributeHash, blocks, morph);
+			}
+
 			/////////////
 			// Strings //
 			/////////////
@@ -9181,6 +9222,23 @@ return /******/ (function(modules) { // webpackBootstrap
 				obj = obj.items;
 			}
 			return _underscore2.default.each(obj, callback, context);
+		},
+
+		/**
+	  * @method map
+	  * @static
+	  * 
+	  * @param  {Object}   obj      
+	  * @param  {Function} callback 
+	  * @param  {Object}   context  
+	  */
+		map: function map(obj, callback, context) {
+			if (obj instanceof _Observable2.default) {
+				obj = obj.attributes;
+			} else if (obj instanceof _ObservableArray2.default) {
+				obj = obj.items;
+			}
+			return _underscore2.default.map(obj, callback, context);
 		},
 
 		/**
@@ -11414,7 +11472,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  */
 		function Model() {
 			var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-			var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+			var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
 			_classCallCheck(this, Model);
 
