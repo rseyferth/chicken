@@ -146,18 +146,28 @@ class Action extends Obj
 		///////////////////////////
 		// Check passed argument //
 		///////////////////////////
-
+		
 		if (typeof controllerActionOrCallback === 'string') {
 
-			// Parse controller name
-			var match = XRegExp.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
-			if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
-			
-			// Store this
-			this.controllerClass = match.class;
-			this.controllerAction = match.action;
+			// A view uri?
+			if (controllerActionOrCallback.match(/^[a-z\-\d\.]+$/)) {
 
+				// Create a simple view callback
+				this.callback = () => {
+					return new View(controllerActionOrCallback);
+				};
 
+			} else {
+
+				// Parse controller name
+				var match = XRegExp.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
+				if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
+				
+				// Store this
+				this.controllerClass = match.class;
+				this.controllerAction = match.action;
+
+			}
 
 		} else if (typeof controllerActionOrCallback === 'function') {
 

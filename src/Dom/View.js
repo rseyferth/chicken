@@ -172,6 +172,10 @@ class View extends Observable
 
 
 
+		this.hooks = {
+			beforeRender: []
+		};
+
 
 		//////////////////////////
 		// Check out the source //
@@ -230,6 +234,12 @@ class View extends Observable
 
 
 
+	}
+
+
+	beforeRender(callback) {
+		this.hooks.beforeRender.push(callback);
+		return this;
 	}
 
 
@@ -433,6 +443,12 @@ class View extends Observable
 		// Create template //
 		/////////////////////
 
+		// Before render hook
+		_.each(this.hooks.beforeRender, (cb) => {
+			cb.apply(this);
+		});
+
+		// Render it
 		try {
 			this.renderResult = this.getTemplate().render(this, this.renderer);
 		} catch (error) {

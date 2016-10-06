@@ -8080,6 +8080,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.apiCalls = [];
 
+			_this.hooks = {
+				beforeRender: []
+			};
+
 			//////////////////////////
 			// Check out the source //
 			//////////////////////////
@@ -8128,6 +8132,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		_createClass(View, [{
+			key: 'beforeRender',
+			value: function beforeRender(callback) {
+				this.hooks.beforeRender.push(callback);
+				return this;
+			}
+		}, {
 			key: 'loadTemplate',
 			value: function loadTemplate() {
 				var _this2 = this;
@@ -8321,11 +8331,18 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'renderSync',
 			value: function renderSync() {
+				var _this5 = this;
 
 				/////////////////////
 				// Create template //
 				/////////////////////
 
+				// Before render hook
+				_underscore2.default.each(this.hooks.beforeRender, function (cb) {
+					cb.apply(_this5);
+				});
+
+				// Render it
 				try {
 					this.renderResult = this.getTemplate().render(this, this.renderer);
 				} catch (error) {
@@ -8374,7 +8391,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'scheduleRevalidate',
 			value: function scheduleRevalidate() {
-				var _this5 = this;
+				var _this6 = this;
 
 				// Not already pending?
 				if (!this.revalidateTimeout) {
@@ -8383,7 +8400,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					this.revalidateTimeout = setTimeout(function () {
 
 						// Revalidate!
-						_this5.revalidate();
+						_this6.revalidate();
 					}, View.RevalidationDelay);
 				}
 
@@ -10470,13 +10487,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			if (typeof controllerActionOrCallback === 'string') {
 
-				// Parse controller name
-				var match = _xregexp2.default.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
-				if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
+				// A view uri?
+				if (controllerActionOrCallback.match(/^[a-z\-\d\.]+$/)) {
 
-				// Store this
-				_this.controllerClass = match.class;
-				_this.controllerAction = match.action;
+					// Create a simple view callback
+					_this.callback = function () {
+						return new _View2.default(controllerActionOrCallback);
+					};
+				} else {
+
+					// Parse controller name
+					var match = _xregexp2.default.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
+					if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
+
+					// Store this
+					_this.controllerClass = match.class;
+					_this.controllerAction = match.action;
+				}
 			} else if (typeof controllerActionOrCallback === 'function') {
 
 				// Store it
