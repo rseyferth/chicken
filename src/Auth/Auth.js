@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import $ from 'jquery';
 
 import Observable from '~/Core/Observable';
 import Middleware from '~/Routing/Middleware';
@@ -161,7 +162,17 @@ class Auth extends Observable
 	 * @return {Api.ApiCall}
 	 */
 	authorizeApiCall(apiCall) {
+		
+		// Extend with my options
+		let ajaxOptions = this.getAjaxOptions();
+		$.extend(apiCall.ajaxOptions, ajaxOptions);
 		return apiCall;
+		
+	}
+
+
+	getAjaxOptions() {
+		return {};
 	}
 
 

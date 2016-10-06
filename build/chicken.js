@@ -12804,6 +12804,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
 	var _Observable2 = __webpack_require__(32);
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
@@ -12991,7 +12995,16 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'authorizeApiCall',
 			value: function authorizeApiCall(apiCall) {
+
+				// Extend with my options
+				var ajaxOptions = this.getAjaxOptions();
+				_jquery2.default.extend(apiCall.ajaxOptions, ajaxOptions);
 				return apiCall;
+			}
+		}, {
+			key: 'getAjaxOptions',
+			value: function getAjaxOptions() {
+				return {};
 			}
 
 			/**
@@ -13372,20 +13385,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				return error;
 			}
 		}, {
-			key: 'authorizeApiCall',
-			value: function authorizeApiCall(apiCall) {
+			key: 'getAjaxOptions',
+			value: function getAjaxOptions() {
 				var _this7 = this;
 
 				// Add token.
+				var options = {};
 				if (this.token) {
 
 					// Add the bearer token
-					apiCall.ajaxOptions.beforeSend = function (xhr) {
+					options.beforeSend = function (xhr) {
 						xhr.setRequestHeader('Authorization', 'Bearer ' + _this7.token.token);
 					};
 				}
 
-				return apiCall;
+				return options;
 			}
 		}]);
 
