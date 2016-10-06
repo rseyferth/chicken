@@ -394,7 +394,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		api: function api() {
-			var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
+			var key = arguments.length <= 0 || arguments[0] === undefined ? 'default' : arguments[0];
 
 			return _Application2.default.getInstance().apis[key];
 		},
@@ -427,7 +427,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		component: function component(name, source, initCallback, renderer) {
-			var overwrite = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+			var overwrite = arguments.length <= 4 || arguments[4] === undefined ? false : arguments[4];
 
 
 			// Create definition
@@ -441,8 +441,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		model: function model(name) {
-			var configCallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-			var methods = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+			var configCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+			var methods = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
 
 			// Getter?
@@ -457,7 +457,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				_inherits(ChickenModel, _Model);
 
 				function ChickenModel() {
-					var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+					var initValues = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
 					_classCallCheck(this, ChickenModel);
 
@@ -477,7 +477,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			ChickenModel.modelName = name;
 
 			ChickenModel.create = function () {
-				var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+				var initValues = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 
 				return new ChickenModel(initValues);
@@ -489,7 +489,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		service: function service(name) {
-			var methods = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+			var methods = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 			// Getter?
@@ -522,7 +522,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		middleware: function middleware(name) {
-			var callback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+			var callback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 			// Getter?
@@ -548,7 +548,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		observable: function observable() {
-			var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+			var data = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
 
 			return new _Observable2.default(data);
@@ -583,7 +583,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		debug: function debug(message) {
-			var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+			var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 			switch (Chicken.debugging) {
@@ -1898,7 +1898,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function findViewContainers() {
 				var _this2 = this;
 
-				var $element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+				var $element = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
 
 				// No element to look in?
@@ -1929,7 +1929,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function updateViewContainers() {
 				var _this3 = this;
 
-				var $lookForNewOnesIn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+				var $lookForNewOnesIn = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
 
 				// Check if all old ones are still there
@@ -1962,8 +1962,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'api',
 			value: function api() {
-				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-				var apiInstance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var key = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+				var apiInstance = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 				// Get?
@@ -1980,8 +1980,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'auth',
 			value: function auth() {
-				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-				var authInstance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var key = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+				var authInstance = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 				// Get?
@@ -2068,7 +2068,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'goto',
 			value: function goto(uri) {
-				var query = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var query = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 				// Check the query
@@ -4388,7 +4388,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -4485,8 +4485,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
 	  **/
 		function Observable() {
-			var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-			var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+			var initValues = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+			var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 			_classCallCheck(this, Observable);
 
@@ -4653,7 +4653,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'set',
 			value: function set(key, value) {
-				var convertToObservables = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+				var convertToObservables = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
 
 				// Convert?
@@ -4767,7 +4767,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function setSilently(key, value) {
 				var _this3 = this;
 
-				var convertToObservables = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+				var convertToObservables = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
 				return this.withoutNotifications(function () {
 					_this3.set(key, value, convertToObservables);
@@ -4778,7 +4778,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function _import(obj) {
 				var _this4 = this;
 
-				var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+				var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 
 				// Import all items in hash
@@ -5007,7 +5007,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'clone',
 			value: function clone() {
-				var convertToObservables = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+				var convertToObservables = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
 
 				// Make copy!
@@ -5425,7 +5425,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			return this;
 		},
 		create: function create(className) {
-			var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+			var args = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
 
 			var c = this.get(className);
 			if (c === undefined) throw new Error('The ' + className + ' class is not registered in the ClassMap');
@@ -5621,8 +5621,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param {array}   [allowedKeys] 		Optional array of allowed keys. By default all keys are allowed	 
 	  */
 		function SettingsObject() {
-			var defaultSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-			var allowedKeys = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+			var defaultSettings = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+			var allowedKeys = arguments.length <= 1 || arguments[1] === undefined ? [] : arguments[1];
 
 			_classCallCheck(this, SettingsObject);
 
@@ -5805,7 +5805,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'setContent',
 			value: function setContent(content) {
-				var setLoadingFalse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+				var setLoadingFalse = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 
 				// Set HTML
@@ -5832,7 +5832,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'setLoading',
 			value: function setLoading() {
-				var loading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+				var loading = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
 				this._isLoading = loading;
 				this.$element.toggleClass(ViewContainer.Classes.Loading, loading);
@@ -5959,7 +5959,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_Obj3.default);
 
 	Element.registerHook = function (callback) {
-		var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'afterRender';
+		var type = arguments.length <= 1 || arguments[1] === undefined ? 'afterRender' : arguments[1];
 
 		Element.Hooks[type].push(callback);
 		return true;
@@ -5978,7 +5978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _underscore = __webpack_require__(2);
 
@@ -6417,7 +6417,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -6458,8 +6458,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
 	  */
 		function ObservableArray() {
-			var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-			var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+			var initValues = arguments.length <= 0 || arguments[0] === undefined ? [] : arguments[0];
+			var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 			_classCallCheck(this, ObservableArray);
 
@@ -6487,7 +6487,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function _import(arr) {
 				var _this2 = this;
 
-				var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+				var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 
 				// Go through to the object's first level
@@ -6568,7 +6568,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function set(key, value) {
 				var _this3 = this;
 
-				var convertToObservables = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+				var convertToObservables = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
 
 				// Convert?
@@ -6879,7 +6879,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'groupBy',
 			value: function groupBy(key) {
-				var defaultGroup = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
+				var defaultGroup = arguments.length <= 1 || arguments[1] === undefined ? 'default' : arguments[1];
 
 
 				// Loop it
@@ -6913,7 +6913,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'list',
 			value: function list(valueAttribute) {
-				var keyAttribute = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var keyAttribute = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 				var result = keyAttribute ? {} : [];
@@ -7151,7 +7151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'setValue',
 			value: function setValue(value) {
-				var morph = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var morph = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 				if (morph) {
@@ -7585,8 +7585,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @extends Dom.View
 	  */
 		function Component(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates) {
-			var initCallback = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : null;
-			var renderer = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : null;
+			var initCallback = arguments.length <= 8 || arguments[8] === undefined ? null : arguments[8];
+			var renderer = arguments.length <= 9 || arguments[9] === undefined ? null : arguments[9];
 
 			_classCallCheck(this, Component);
 
@@ -7717,7 +7717,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function sendAction() {
 				var _this2 = this;
 
-				var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+				var name = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
 
 				// No name given?
@@ -7883,7 +7883,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -7994,8 +7994,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param {Dom.Renderer} renderer 		The Renderer instance that will be used by HTMLBars
 	  */
 		function View(source) {
-			var initCallback = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-			var renderer = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+			var initCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+			var renderer = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
 			_classCallCheck(this, View);
 
@@ -8551,8 +8551,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param  {Object} ajaxOptions 	 
 	  */
 		function ApiCall(api, method, uri) {
-			var data = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-			var ajaxOptions = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+			var data = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+			var ajaxOptions = arguments.length <= 4 || arguments[4] === undefined ? {} : arguments[4];
 
 			_classCallCheck(this, ApiCall);
 
@@ -8571,12 +8571,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {string}
 	   */
 			_this.method = method;
-
-			/**
-	   * @property uri
-	   * @type {string}
-	   */
-			_this.uri = uri;
 
 			/**
 	   * Data to send along with the request
@@ -8600,7 +8594,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property queryParams
 	   * @type {Object}
 	   */
-			_this.queryParams = {};
+			_this.queryParams = _queryString2.default.parse(_queryString2.default.extract(uri));
+
+			/**
+	   * @property uri
+	   * @type {string}
+	   */
+			_this.uri = uri.split('?')[0];
 
 			/**
 	   * The model class used when it cannot be deduced from the
@@ -8673,7 +8673,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'query',
 			value: function query(keyOrHash) {
-				var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var value = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 				// Is it a key / value?
@@ -8683,6 +8683,34 @@ return /******/ (function(modules) { // webpackBootstrap
 					_jquery2.default.extend(this.queryParams, keyOrHash);
 				}
 				return this;
+			}
+
+			/**
+	   * Add given pagination page to the queryParams
+	   *
+	   * @method query
+	   * @param  pageNumber
+	   * @chainable
+	   */
+
+		}, {
+			key: 'page',
+			value: function page(pageNumber) {
+				return this.query('page[number]', pageNumber);
+			}
+
+			/**
+	   * Add given pagesize to the queryParams
+	   *
+	   * @method query
+	   * @param  pageSize
+	   * @chainable
+	   */
+
+		}, {
+			key: 'size',
+			value: function size(pageSize) {
+				return this.query('page[size]', pageSize);
 			}
 		}]);
 
@@ -8762,7 +8790,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @module Dom
 	 */
 	var ComponentDefinition = function ComponentDefinition(name, source, initCallback) {
-		var renderer = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+		var renderer = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 
 		_classCallCheck(this, ComponentDefinition);
 
@@ -9195,7 +9223,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _underscore = __webpack_require__(2);
 
@@ -9453,7 +9481,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(Router, [{
 			key: 'route',
 			value: function route(pattern, actions) {
-				var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
 
 				// Merge options
@@ -9723,8 +9751,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param {object}			[options={}]		An object containing one or more configuration options
 	  */
 		function Route(router, parent, pattern) {
-			var actions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
-			var options = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
+			var actions = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+			var options = arguments.length <= 4 || arguments[4] === undefined ? {} : arguments[4];
 
 			_classCallCheck(this, Route);
 
@@ -10816,7 +10844,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
 	 */
 	function Request(location) {
-		var application = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+		var application = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 		_classCallCheck(this, Request);
 
@@ -10869,7 +10897,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Middleware.registry = new Map();
 	Middleware.register = function (middleware) {
-		var name = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+		var name = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 		// Check arguments
@@ -10952,7 +10980,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(I18n, [{
 			key: 'addBundle',
 			value: function addBundle(url) {
-				var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 				this.bundlesToLoad.push({
@@ -10977,7 +11005,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function loadBundle(url) {
 				var _this2 = this;
 
-				var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 
 
 				return new Promise(function (resolve, reject) {
@@ -11057,8 +11085,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'translate',
 			value: function translate(key) {
-				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-				var fallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+				var attributes = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var fallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
 
 				// Dot notation
@@ -11117,8 +11145,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'get',
 			value: function get(key) {
-				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-				var fallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+				var attributes = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var fallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
 				return this.translate(key, attributes, fallback);
 			}
@@ -11227,8 +11255,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'call',
 			value: function call(method, uri) {
-				var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-				var ajaxOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+				var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+				var ajaxOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
 
 
 				// Create api call
@@ -11246,8 +11274,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'get',
 			value: function get(uri) {
-				var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-				var ajaxOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
 				return this.call('get', uri, data, ajaxOptions);
 			}
@@ -11263,8 +11291,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'post',
 			value: function post(uri) {
-				var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-				var ajaxOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
 				return this.call('post', uri, data, ajaxOptions);
 			}
@@ -11280,8 +11308,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'put',
 			value: function put(uri) {
-				var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-				var ajaxOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
 				return this.call('put', uri, data, ajaxOptions);
 			}
@@ -11297,8 +11325,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'patch',
 			value: function patch(uri) {
-				var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-				var ajaxOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
 				return this.call('patch', uri, data, ajaxOptions);
 			}
@@ -11314,8 +11342,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'delete',
 			value: function _delete(uri) {
-				var data = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-				var ajaxOptions = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
 
 				return this.call('delete', uri, data, ajaxOptions);
 			}
@@ -11498,8 +11526,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param  {Boolean} convertToObservables 
 	  */
 		function Model() {
-			var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-			var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+			var initValues = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+			var convertToObservables = arguments.length <= 1 || arguments[1] === undefined ? false : arguments[1];
 
 			_classCallCheck(this, Model);
 
@@ -11762,7 +11790,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function getAttributesForApi() {
 				var _this3 = this;
 
-				var onlyDirty = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+				var onlyDirty = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
 
 				// Which attributes to use?
@@ -11858,7 +11886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function save() {
 				var _this4 = this;
 
-				var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+				var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 
 				// Make settings
@@ -11909,7 +11937,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getValidationRules',
 			value: function getValidationRules() {
-				var formKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'default';
+				var formKey = arguments.length <= 0 || arguments[0] === undefined ? 'default' : arguments[0];
 
 
 				// Check definition
@@ -11964,7 +11992,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'isDirty',
 			value: function isDirty() {
-				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+				var key = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
 
 				// Specific key?
@@ -12058,7 +12086,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'addRelatedModel',
 			value: function addRelatedModel(relationshipName, relatedModel) {
-				var fromApi = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+				var fromApi = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 
 
 				// Check if collection exists
@@ -12197,7 +12225,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @return {Data.Model}            
 	 */
 	Model.create = function (modelName) {
-		var initValues = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+		var initValues = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
 
 
 		var ModelClass = Model.registry.get(modelName);
@@ -12315,7 +12343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		_inherits(Collection, _ObservableArray);
 
 		function Collection() {
-			var modelClass = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+			var modelClass = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
 			_classCallCheck(this, Collection);
 
@@ -12457,8 +12485,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(JsonApi, [{
 			key: 'call',
 			value: function call(method, uri) {
-				var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-				var ajaxOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+				var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+				var ajaxOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
 
 
 				// Create api call
@@ -12492,12 +12520,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'serialize',
 			value: function serialize(model) {
-				var includeRelated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+				var includeRelated = arguments.length <= 1 || arguments[1] === undefined ? true : arguments[1];
 
 				var _this2 = this;
 
-				var includeRelatedData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-				var includedModelGuids = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
+				var includeRelatedData = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+				var includedModelGuids = arguments.length <= 3 || arguments[3] === undefined ? [] : arguments[3];
 
 
 				// Basics: type and id
@@ -12837,7 +12865,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @constructor
 	  */
 		function Auth() {
-			var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+			var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 			_classCallCheck(this, Auth);
 
@@ -13061,7 +13089,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @constructor
 	  */
 		function JWTAuth() {
-			var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+			var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 			_classCallCheck(this, JWTAuth);
 
@@ -13491,7 +13519,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(ModelAttribute, [{
 			key: 'primary',
 			value: function primary() {
-				var isPrimaryKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+				var isPrimaryKey = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
 				this.isPrimaryKey = isPrimaryKey;
 				return this;
@@ -13747,7 +13775,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'validation',
 			value: function validation(rules) {
-				var formKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
+				var formKey = arguments.length <= 1 || arguments[1] === undefined ? 'default' : arguments[1];
 
 
 				this.validationRules[formKey] = rules;
@@ -13761,7 +13789,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getApiUri',
 			value: function getApiUri() {
-				var id = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+				var id = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
 				var uri = this.apiUri;
 				if (id) uri += '/' + id;
@@ -13815,8 +13843,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		_createClass(Relationship, [{
 			key: 'hasMany',
 			value: function hasMany(remoteModel) {
-				var localKey = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'id';
-				var remoteKey = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+				var localKey = arguments.length <= 1 || arguments[1] === undefined ? 'id' : arguments[1];
+				var remoteKey = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
 
 				// Basics
