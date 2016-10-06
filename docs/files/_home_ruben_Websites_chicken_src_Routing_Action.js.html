@@ -306,18 +306,28 @@ class Action extends Obj
 		///////////////////////////
 		// Check passed argument //
 		///////////////////////////
-
+		
 		if (typeof controllerActionOrCallback === &#x27;string&#x27;) {
 
-			// Parse controller name
-			var match = XRegExp.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
-			if (!match) throw new TypeError(&#x27;Invalid action string: &#x27; + controllerActionOrCallback + &#x27;. Use controller@method format.&#x27;);
-			
-			// Store this
-			this.controllerClass = match.class;
-			this.controllerAction = match.action;
+			// A view uri?
+			if (controllerActionOrCallback.match(/^[a-z\-\d\.]+$/)) {
 
+				// Create a simple view callback
+				this.callback = () =&gt; {
+					return new View(controllerActionOrCallback);
+				};
 
+			} else {
+
+				// Parse controller name
+				var match = XRegExp.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
+				if (!match) throw new TypeError(&#x27;Invalid action string: &#x27; + controllerActionOrCallback + &#x27;. Use controller@method format.&#x27;);
+				
+				// Store this
+				this.controllerClass = match.class;
+				this.controllerAction = match.action;
+
+			}
 
 		} else if (typeof controllerActionOrCallback === &#x27;function&#x27;) {
 

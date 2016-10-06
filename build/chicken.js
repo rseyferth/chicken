@@ -6951,6 +6951,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				_underscore2.default.each(this.items, callback);
 				return this;
 			}
+		}, {
+			key: 'map',
+			value: function map(callback) {
+
+				return _underscore2.default.map(this.items, callback);
+			}
 
 			/**
 	   * The number of items in the array
@@ -7558,6 +7564,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
 
+	var _inflection = __webpack_require__(4);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
 	var _Obj = __webpack_require__(33);
 
 	var _Obj2 = _interopRequireDefault(_Obj);
@@ -7630,7 +7640,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property attributes
 	   * @type {object}
 	   */
-			_this.attributes = attributeHash;
+			_this.attributes = {};
+			_underscore2.default.each(attributeHash, function (value, key) {
+				_this.attributes[_inflection2.default.camelize(key.split('-').join('_'), true)] = value;
+			});
 
 			/**
 	   * The HTMLBars visitor that was used to initialize this component
@@ -7694,6 +7707,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			if (_this.parentComponent) _this.parentComponent.childComponents.push(_this);
 
 			/**
+	   * @property view
+	   * @type {Dom.View}
+	   */
+			_this.view = _this.scope.view;
+			if (_this.view) {
+				_this.view.components[_this.getId()] = _this;
+			}
+
+			/**
 	   * The dom-object can be used to listen to dom events on the event
 	   * 
 	   * @property dom
@@ -7713,6 +7735,29 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		_createClass(Component, [{
+			key: 'getId',
+			value: function getId() {
+
+				// Already set?
+				if (!this._id) {
+
+					// Set as attribute
+					var id = this.get('id');
+					if (id) {
+						this._id = id;
+					} else {
+
+						// Do it by name
+						var name = _inflection2.default.camelize(this.name.split('-').join('_'), true);
+						if (Component.instanceCounts[name] === undefined) Component.instanceCounts[name] = 0;
+						Component.instanceCounts[name]++;
+
+						this._id = name + Component.instanceCounts[name];
+					}
+				}
+				return this._id;
+			}
+		}, {
 			key: 'sendAction',
 			value: function sendAction() {
 				var _this2 = this;
@@ -7851,6 +7896,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return block;
 			}
+		}, {
+			key: 'getAttribute',
+			value: function getAttribute(key) {
+				var defaultValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				var value = this.attributes[key];
+				if (value === undefined) value = defaultValue;
+				return value;
+			}
 		}]);
 
 		return Component;
@@ -7874,6 +7929,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	'dragStart', 'drag', 'dragEnter', 'dragLeave', 'dragOver', 'dragEnd', 'drop'];
 
 	Component.registry = new Map();
+
+	Component.instanceCounts = {};
 
 	module.exports = Component;
 
@@ -8042,6 +8099,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Object}
 	   */
 			_this.actions = {};
+
+			/**
+	   * @property components
+	   * @type {Object}
+	   */
+			_this.components = {};
 
 			/**
 	   * @property renderer
@@ -11189,7 +11252,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		_createClass(Api, [{
 			key: 'deserialize',
-			value: function deserialize() /* data, apiCall */{
+			value: function deserialize() /* data, apiCall = null */{
 				throw new Error('The Api implementation should have a deserialize method.');
 			}
 
@@ -12574,8 +12637,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: 'deserialize',
-			value: function deserialize(result, apiCall) {
+			value: function deserialize(result) {
 				var _this3 = this;
+
+				var apiCall = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
 
 				// Check included data
 				if (result.included) {
@@ -12681,11 +12747,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: 'deserializeCollection',
-			value: function deserializeCollection(data, apiCall) {
+			value: function deserializeCollection(data) {
 				var _this5 = this;
 
+				var apiCall = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
 				// Make a collection
-				var collection = new _Collection2.default(apiCall.modelClass);
+				var collection = new _Collection2.default(apiCall ? apiCall.modelClass : null);
 
 				// Add records
 				_underscore2.default.each(data, function (recordData) {

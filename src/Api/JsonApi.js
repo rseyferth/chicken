@@ -146,7 +146,7 @@ class JsonApi extends Api
 
 
 
-	deserialize(result, apiCall) {
+	deserialize(result, apiCall = null) {
 
 		// Check included data
 		if (result.included) {
@@ -263,10 +263,10 @@ class JsonApi extends Api
 		return model;
 
 	}
-	deserializeCollection(data, apiCall) {
+	deserializeCollection(data, apiCall = null) {
 
 		// Make a collection
-		let collection = new Collection(apiCall.modelClass);
+		let collection = new Collection(apiCall ? apiCall.modelClass : null);
 		
 		// Add records
 		_.each(data, (recordData) => {
