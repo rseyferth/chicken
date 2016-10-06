@@ -2,11 +2,14 @@ import _ from 'underscore';
 import HTMLBars from 'htmlbars-standalone';
 
 import Observable from '~/Core/Observable';
+import ObservableArray from '~/Core/ObservableArray';
 import Binding from '~/Dom/Binding';
 import ActionBinding from '~/Dom/ActionBinding';
 import Component from '~/Dom/Component';
 import ComponentDefinition from '~/Dom/ComponentDefinition';
 import Helpers from '~/Dom/Helpers';
+import View from '~/Dom/View';
+import Utils from '~/Helpers/Utils';
 
 /**
  * @module Dom
@@ -60,11 +63,8 @@ class Renderer
 					path = keys.join('.');
 				}
 
-				// No path? Return the whole data
-				if (path === '') return appliedScope;
-
 				// Is data an observable?
-				if (appliedScope instanceof Observable) {
+				if ((appliedScope instanceof Observable && path.length > 0) || appliedScope instanceof ObservableArray) {
 
 					// Already a binding?
 					if (appliedScope._bindings === undefined) appliedScope._bindings = {};
@@ -75,7 +75,7 @@ class Renderer
 					}
 
 					// Create a binding
-					var binding = new Binding(this, appliedScope, path);
+					var binding = new Binding(this, appliedScope, path, scope.view ? scope.view : scope.self);
 
 					// Store it
 					appliedScope._bindings[path] = binding;
@@ -83,18 +83,19 @@ class Renderer
 					// Get the value
 					return binding;
 
+				} else if (path === '') {
+
+					// Return the scope itself
+					return appliedScope;
+
 				} else {
 
 					// Do native thing (deep-get)
-					var value = this.hooks.getRoot(scope, keys[0])[0];
-					for (var i = 1; i < keys.length; i++) {
-						if (value) {
-							value = this.hooks.getChild(value, keys[i]);
-						} else {
-							break;
-						}
+					var value = appliedScope;
+					for (let q = 0; q < keys.length; q++) {
+						value = value[keys[q]];
 					}
-
+					
 				}
 				
 				return value;
@@ -137,13 +138,43 @@ class Renderer
 							
 			},
 
-			lookupHelper: (renderer, scope, helperName) => {
-				
-				// Is there a component?
-				if (Component.registry.has(helperName)) {
-					return Component.registry.get(helperName);
+			createFreshScope: () => {
+				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
+			},
+
+			createChildScope: (parentScope) => {
+
+				// Create a new scope extending the parent
+				var scope = Object.create(parentScope);
+				scope.locals = Object.create(parentScope.locals);
+				scope.localPresent = Object.create(parentScope.localPresent);
+				scope.blocks = Object.create(parentScope.blocks);
+				scope.actions = Object.create(parentScope.actions);
+
+				// Check is parent is a view
+				if (parentScope.self instanceof View) {
+					
+					// Bubble the actions
+					scope.actions = _.extend(scope.actions, parentScope.self.actions);
+
+
+					// No a component?
+					if (!(parentScope.self instanceof Component)) {
+						scope.view = parentScope.self;
+					} else {
+						scope.component = parentScope.self;
+					}
+
 				}
 
+				return scope;
+
+
+			},
+
+
+			lookupHelper: (renderer, scope, helperName) => {
+				
 				if (!renderer.helpers[helperName]) {
 					throw new Error('There is no helper registered with the name "' + helperName + '"');
 				}
@@ -191,9 +222,42 @@ class Renderer
 				// Get definition
 				let definition = Component.registry.get(tagName);
 				
+				// No known component?
+				if (!definition) {
+
+					// Do the component fallback.
+					let element = renderer.dom.createElement(tagName);
+					_.each(attributeHash, (value, key) => {
+						element.setAttribute(key, renderer.hooks.getValue(value));
+					});
+					var fragment = HTMLBars.Runtime.render(options.default, renderer, scope, {}).fragment;
+					element.appendChild(fragment);
+					morph.setNode(element);
+					return;
+
+				}
+
 				// Create a new scope and use the component as self
 				var newScope = renderer.hooks.createScope(renderer, scope);
-				newScope.self = component;
+				
+				// Are there attributes defined as an attribute?
+				if (attributeHash && attributeHash.attributes) {
+					
+					// A binding?
+					let attrs = attributeHash.attributes;
+					if (attrs instanceof Binding) attrs = attrs.getValue();
+
+					// A hash?
+					if (attrs instanceof Object) {
+
+						// Replace
+						delete attributeHash.attributes;
+						Utils.each(attrs, (value, key) => {
+							attributeHash[key] = value;
+						});
+
+					}
+				}
 				
 				// Create it
 				let component = new Component(
@@ -207,12 +271,10 @@ class Renderer
 					options,
 					definition.initCallback, 
 					this);
-				
-				// Set the data
-				component.with(attributeHash);
+				newScope.self = component;
 
 				// Now render it.
-				component.renderSync();
+				component.render();
 								
 				// Store it.
 				state.component = component;
@@ -231,8 +293,6 @@ class Renderer
 			 */
 			classify: (renderer, scope, path) => {
 	
-				console.log(scope);
-
 				// Is this a known component?
 				if (Component.registry.has(path)) return 'component';
 
@@ -245,14 +305,65 @@ class Renderer
 
 			getBlock: (scope, key) => {
 
-				return scope.blocks[key];
+				// Is the block known?
+				let block = scope.blocks[key];
+				if (block) return block;
+
+				// Are we inside a component?
+				if (scope.self instanceof Component) {
+					return scope.self.getSubTemplate(key);
+				}
+				
+				// Nothing there
+				return null;
+
+			},
+
+			getActionScope: (scope, key) => {
+
+				// Check the scope
+				if (scope.actions && scope.actions[key]) {
+
+					return scope;
+
+				} else if (scope.locals.actions && scope.locals.actions[key]) {
+
+					// Use local action
+					return scope.locals;
+
+				} else if (scope.self.actions && scope.self.actions[key]) {
+
+					// Use that
+					return scope.self;
+
+				} else if (scope.view && scope.view.actions && scope.view.actions[key]) {
+
+					// Use the veiw
+					return scope.view;
+
+				} else {
+
+					return false;
+
+				}
+
+
+			},
+
+			getAction: (scope, key) => {
+
+				let appliedScope = this.hooks.getActionScope(scope, key);
+				if (appliedScope) {
+					
+					// Get the action
+					return appliedScope.actions[key];
+
+				}
+				return false;
 
 			},
 
 
-			/**
-			 * Keywords are a sort of commands in your .hbs templates
-			 */
 			keywords: _.defaults({
 
 				/**
@@ -266,20 +377,10 @@ class Renderer
 					
 					// Check binding
 					if (morph.actionBindings) return;
-
+					
 					// Get action scope
-					let appliedScope;
-					if (scope.localPresent['actions'] && scope.locals.actions[params[0]]) {
-
-						// Use local action
-						appliedScope = scope.locals;
-
-					} else if (scope.self.actions && scope.self.actions[params[0]]) {
-
-						// Use that
-						appliedScope = scope.self;
-
-					} else {
+					let actionCallback = renderer.hooks.getAction(scope, params[0]);
+					if (!actionCallback) {
 
 						// Undefined action.
 						throw new Error('Could not find action "' + params[0] + '" within the scope');
@@ -287,11 +388,11 @@ class Renderer
 					}
 
 					// Get action
-					let actionCallback = appliedScope.actions[params[0]];
 					let parameters = params.slice(1);
 
 					// Create action binding
-					morph.actionBindings = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, appliedScope);
+					let binding = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
+					morph.actionBindings = binding;					
 
 				}
 

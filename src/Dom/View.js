@@ -5,6 +5,7 @@ import HTMLBars from 'htmlbars-standalone';
 import App from '~/Helpers/App';
 import Observable from '~/Core/Observable';
 import Binding from '~/Dom/Binding';
+import ApiCall from '~/Api/ApiCall';
 
 /**
  * @module Dom
@@ -163,15 +164,30 @@ class View extends Observable
 		this.$element = null;
 
 
+		/**
+		 * @property apiCalls
+		 * @type {Array}
+		 */
+		this.apiCalls = [];
 
+
+
+		this.hooks = {
+			beforeRender: []
+		};
 
 
 		//////////////////////////
 		// Check out the source //
 		//////////////////////////
 
-		// Is it HTML?
-		if (/^\<[a-z\!]/.test(source)) {
+		// No template (just yield)?
+		if (source === false) {
+			this.templateString = '{{yield}}';
+		}
+
+		// Is it HTML?		
+		else if (/^\<[a-z\!]/.test(source) || /^{{/.test(source)) {
 
 			// Use code now
 			this.templateString = source;
@@ -179,7 +195,7 @@ class View extends Observable
 		} 
 		
 		// Name?
-		else if (/[a-z0-9\-]+\./.test) {
+		else if (/[a-z0-9\-]+\./.test(source) || /^[a-zA-Z]+$/.test(source)) {
 
 			// Is it cached?
 			if (View.TemplateCache.has(source)) {
@@ -218,6 +234,12 @@ class View extends Observable
 
 
 
+	}
+
+
+	beforeRender(callback) {
+		this.hooks.beforeRender.push(callback);
+		return this;
 	}
 
 
@@ -315,25 +337,46 @@ class View extends Observable
 			// Is the key a string?
 			if (typeof key !== 'string') throw new TypeError('[Dom.View] The "with" method accepts either a key, value or hash-object as arguments.');
 
+			// Is it an Api call?
+			if (value instanceof ApiCall) {
+
+				// Get the promise and add to api calls list
+				this.apiCalls.push(value);
+				let promise = this.dataPromises[key] = value.getPromise('complete');
+				this.loadPromises.push(promise);
+				promise.then((result) => {
+					this.withoutNotifications(() => {							
+						this.set(key, result, true, true);
+					});
+				});
+
+			}
+
 			// Is the data a promise?
-			if (value instanceof Promise) {
+			else if (value instanceof Promise) {
 
 				// Add to promises
 				this.dataPromises[key] = value;
 				this.loadPromises.push(value);
 				value.then((result) => {
-					this.set(key, result, true, true);
+					this.withoutNotifications(() => {		
+						this.set(key, result, true, true);
+					});
 				});
 
 			} else {
 
 				// Is it a Binding?
 				if (value instanceof Binding) {
-					value = value.getValue();
+				
+					// Use value
+					value = value.getReference();
 				}
 
 				// Set it now (convert to observables, and do not trigger updates)
-				this.set(key, value, true, true);
+				this.withoutNotifications(() => {			
+					this.set(key, value, true);
+				});
 
 			}
 
@@ -367,6 +410,9 @@ class View extends Observable
 		// We make the 'render' promise.
 		return this.promise('render', () => {
 
+			// Start api calls.
+			_.invoke(this.apiCalls, 'execute');
+
 			/////////////////////////////////////////
 			// Wait for all loadPromises to finish //
 			/////////////////////////////////////////
@@ -397,6 +443,12 @@ class View extends Observable
 		// Create template //
 		/////////////////////
 
+		// Before render hook
+		_.each(this.hooks.beforeRender, (cb) => {
+			cb.apply(this);
+		});
+
+		// Render it
 		try {
 			this.renderResult = this.getTemplate().render(this, this.renderer);
 		} catch (error) {
@@ -416,11 +468,11 @@ class View extends Observable
 		// occurs. The 'dirtying' of elements (morphs) is handled by the Renderer
 		// and Binding classes.				
 		
-		// Study the object
+/*		// Study the object
 		this.study(() => {
 			this.scheduleRevalidate();
 		});
-
+*/
 
 		return this;
 
@@ -485,29 +537,6 @@ class View extends Observable
 
 
 	/**
-	 * Set the contents of this view in given $target element
-	 * 
-	 * @method addToDom
-	 * @param {jQuery} $target    The $target for the view to render in. The contents will be completely replaced
-	 *                            by this view.
-	 */
-	addToDOM($target) {
-
-		// Add to dom
-		var $view = $('<view/>');
-		$view.html(this.documentFragment);
-		$target.html($view);
-
-		// Get the element
-		this.$element = $view;
-		
-		// Done!
-		this.resolvePromise('added', this);
-
-	}
-
-
-	/**
 	 * Add the view to the ViewContainer, replacing previous contents
 	 * and making sure the ViewContainer knows it's gotten the view.
 	 * 
@@ -519,9 +548,15 @@ class View extends Observable
 		// Set view
 		viewContainer.setView(this);
 
-		// Add to DOM
-		this.addToDOM(viewContainer.$element);
+		// Create wrapper
+		let $view = $('<view/>');
+		$view.html(this.documentFragment);
 
+		// Add to DOM
+		viewContainer.setContent($view);
+
+		// Done.
+		this.resolvePromise('ready', [this]);
 
 	}
 

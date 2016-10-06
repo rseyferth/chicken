@@ -63,7 +63,7 @@ gulp.task('watch:docs', [], () => {
 
 	// Setup simple server for docs
 	connect.server({
-		port: 8080,
+		port: 9009,
 		root: './docs',
 		liveReload: true
 	});

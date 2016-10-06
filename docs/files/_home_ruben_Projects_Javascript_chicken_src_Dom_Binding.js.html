@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>/home/ruben/Projects/Javascript/chicken/src/Dom/Binding.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
+                <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
+            
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
+            
+                <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
+            
+                <li><a href="../classes/Core.Observable.html">Core.Observable</a></li>
+            
+                <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
+            
+                <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
+            
+                <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
+            
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
+            
+                <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
+            
+                <li><a href="../classes/Dom.View.html">Dom.View</a></li>
+            
+                <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
+            
+                <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
+            
+                <li><a href="../classes/Routing.Controller.html">Routing.Controller</a></li>
+            
+                <li><a href="../classes/Routing.Request.html">Routing.Request</a></li>
+            
+                <li><a href="../classes/Routing.Route.html">Routing.Route</a></li>
+            
+                <li><a href="../classes/Routing.RouteMatch.html">Routing.RouteMatch</a></li>
+            
+                <li><a href="../classes/Routing.Router.html">Routing.Router</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
+                <li><a href="../modules/Core.html">Core</a></li>
+            
+                <li><a href="../modules/Data.html">Data</a></li>
+            
+                <li><a href="../modules/Dom.html">Dom</a></li>
+            
+                <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
+            
+                <li><a href="../modules/Routing.html">Routing</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Dom/Binding.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+import $ from &#x27;jquery&#x27;;
+
+import Reference from &#x27;~/Core/Reference&#x27;;
+
+/**
+ * @module Dom
+ */
+class Binding
+{
+
+	/**
+	 * @class Dom.Binding
+	 * 
+	 * @constructor
+	 * @param  {Dom.Renderer} 							renderer   
+	 * @param  {Core.Observable|Core.ObservableArray} 	observable 
+	 * @param  {string} 								path       	
+	 * @param  {Dom.View}								view
+	 */
+	constructor(renderer, observable, path, view) {
+
+		/**
+		 * The Renderer this Binding has been created by. This is 
+		 * used to be able to hook back into Rendere functions.
+		 *
+		 * @property renderer
+		 * @type {Dom.Renderer}
+		 */
+		this.renderer = renderer;
+
+		/**
+		 * The Observable (or ObservableArray) that contains the data.
+		 * 
+		 * @property observable
+		 * @type {Core.Observable|Core.ObservableArray}
+		 */
+		this.observable = observable;
+
+		/**
+		 * The path/key in the Observable to observe
+		 *
+		 * @property path
+		 * @type {string}
+		 */
+		this.path = typeof path === &#x27;string&#x27; &amp;&amp; path.length &gt; 0 ? path : false;
+
+
+		/**
+		 * The list of &#x27;morph&#x27; objects that are bound by this Binding. A
+		 * morph refers to a specific part of the DocumentFragment that can be
+		 * updated. These morphs are provides by the HTMLBars package.
+		 * 
+		 * @property morphs
+		 * @type {Set} 
+		 */
+		this.morphs = new Set();
+
+
+
+		this.view = view;
+
+
+		////////////////
+		// Now watch! //
+		////////////////
+
+		// What to do when value changes
+		let callback = () =&gt; {
+
+			// Trigger updates for all morphs
+			this.morphs.forEach((morph) =&gt; {
+				morph.isDirty = true;
+				this.view.scheduleRevalidate();
+			});
+
+		};
+
+		// Now listen to the object
+		if (this.path) {
+			this.observable.observe(path, callback);
+		} else {
+			this.observable.study(callback);
+		}
+
+	}
+
+	/**
+	 * Get the current value of the data object
+	 *
+	 * @method getValue
+	 * @return {mixed}
+	 */
+	getValue() {
+		
+		// Get a path value
+		if (this.path) {
+			return this.observable.get(this.path);
+		}
+
+		// Then return the whole thing
+		return this.observable;
+
+	}
+
+
+	setValue(value, morph = null) {
+
+		if (morph) {
+
+			// Make sure the morph is not updated itself by this value setting
+			morph.lastValue = value;
+
+		}
+
+		return this.observable.set(this.path, value);
+
+	}
+
+
+	getReference() {
+		if (!this.reference) {
+			this.reference = new Reference(this.observable, this.path);
+		}
+		return this.reference;
+	}
+
+
+	/**
+	 * Add a morph object to the list of morphs, so that it will
+	 * be updated when the data changes. And in cases when applicable,
+	 * vice-versa.
+	 *
+	 * @method addMorph
+	 * @param {HTMLBarsMorph} morph 
+	 */
+	addMorph(morph) {
+
+		// Is this an already bound morph?
+		if (this.morphs.has(morph)) return;
+
+		//////////////////////////////////////////
+		// Add the morph, for data-&gt;dom binding //
+		//////////////////////////////////////////
+
+		this.morphs.add(morph);
+
+
+		///////////////////////////////////////////
+		// Check node type for dom-&gt;data binding //
+		///////////////////////////////////////////
+		
+		for (var key in Binding.TwoWay) {
+
+			// Check if it applies
+			var twoWay = Binding.TwoWay[key];
+			if (twoWay.match(morph)) {
+
+				// Let&#x27;s bind!
+				twoWay.bind(this, morph);
+				break;
+			}
+
+		}
+
+	}
+
+}
+
+
+Binding.TwoWay = {
+	
+	InputValue: {
+		match: (morph) =&gt; {
+			return morph.element &amp;&amp; /^INPUT$/.test(morph.element.tagName) 
+				&amp;&amp; morph.attrName === &#x27;value&#x27;
+				&amp;&amp; /^text|password|number|email$/.test(morph.element.type);
+		},
+		bind: (binding, morph) =&gt; {
+
+			// Listen to key up, etc
+			var $element = $(morph.element);
+			var lastValue = $element.val();
+			$element.on(&#x27;keyup change paste&#x27;, () =&gt; {
+				var v = $element.val();
+				if (v !== lastValue) {
+					binding.setValue(v, morph);
+					lastValue = v;
+				}
+			});
+
+		}
+	},
+
+	TextareaContent: {
+		match: (morph) =&gt; {
+			return morph.contextualElement &amp;&amp; /^TEXTAREA$/.test(morph.contextualElement.tagName) &amp;&amp; morph.attributeName === undefined;
+		},
+		bind: (binding, morph) =&gt; {
+
+			// Listen to key up, etc
+			var $element = $(morph.contextualElement);
+			$element.on(&#x27;keyup change paste&#x27;, () =&gt; {
+				binding.setValue($element.val(), morph);
+			});
+
+		}
+
+	},
+
+	SelectValue: {
+		match: (morph) =&gt; {
+			return morph.element &amp;&amp; /^SELECT$/.test(morph.element.tagName) &amp;&amp; morph.attrName === &#x27;value&#x27;;
+		},
+		bind: (binding, morph) =&gt; {
+
+			// Listen to change
+			var $element = $(morph.element);
+			$element.on(&#x27;change&#x27;, () =&gt; {
+				binding.setValue($element.val(), morph);
+			});
+
+		}
+
+	},
+
+	CheckboxChecked: {
+		match: (morph) =&gt; {
+			return morph.element &amp;&amp; /^INPUT$/.test(morph.element.tagName) 
+				&amp;&amp; morph.attrName === &#x27;checked&#x27;
+				&amp;&amp; /^checkbox$/.test(morph.element.type);
+		},
+		bind: (binding, morph) =&gt; {
+
+			// Listen to key up, etc
+			var $element = $(morph.element);
+			$element.on(&#x27;change&#x27;, () =&gt; {
+				binding.setValue($element.prop(&#x27;checked&#x27;), morph);
+			});
+
+		}
+	}
+
+
+
+};
+
+
+module.exports = Binding;
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

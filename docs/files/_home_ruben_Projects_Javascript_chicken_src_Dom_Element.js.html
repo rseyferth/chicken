@@ -41,7 +41,21 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
+            
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
@@ -51,11 +65,25 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
+            
+                <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
+            
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
             
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -73,11 +101,21 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
+            
+                <li><a href="../modules/Data.html">Data</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -120,8 +158,8 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+import _ from &#x27;underscore&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
-import Application from &#x27;~/Application&#x27;;
 
 /**
  * @module Dom
@@ -136,15 +174,9 @@ class Element extends Obj
 	 * @param {jQuery} $element
 	 * @param {Application} [application]
 	 */
-	constructor($element, application = null) {
+	constructor($element) {
 
 		super();
-
-		/**
-		 * @property application
-		 * @type {Application}
-		 */
-		this.application = application ? application : Application.getInstance();
 
 		/**
 		 * The jQuery element that is the ViewContainer
@@ -161,17 +193,43 @@ class Element extends Obj
 
 	setContent(content) {
 
+		// Fire the before hooks.
+		this._fireHooks(&#x27;beforeRender&#x27;);
+
 		// Set it
 		this.$element.html(content);
 		this.trigger(&#x27;content&#x27;, content);
 
-		// Update view containers
-		this.application.updateViewContainers(this.$element);
+		// Fire the after hooks
+		this._fireHooks(&#x27;afterRender&#x27;);
 
 	}
 
 
+	_fireHooks(type) {
+
+		_.each(Element.Hooks[type], (callback) =&gt; {
+
+			// Fire it.
+			callback.apply(this, [this.$element, this]);
+
+		});
+
+	}
+
 }
+
+
+Element.registerHook = (callback, type = &#x27;afterRender&#x27;) =&gt; {
+	Element.Hooks[type].push(callback);
+	return true;	
+};
+
+Element.Hooks = {
+	beforeRender: [],
+	afterRender: []
+};
+
 
 module.exports = Element;
     </pre>

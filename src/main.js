@@ -1,3 +1,5 @@
+/* eslint no-console: "off" */
+				
 //////////////////////
 // Vendor libraries //
 //////////////////////
@@ -5,7 +7,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import XRegExp from 'xregexp';
-
+import inflection from 'inflection';
 
 
 ///////////////////////////////////////
@@ -23,12 +25,33 @@ if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Err
 
 import Application from '~/Application';
 
+// Api
+import Api from '~/Api/Api';
+import ApiCall from '~/Api/ApiCall';
+import JsonApi from '~/Api/JsonApi';
+import JsonApiCall from '~/Api/JsonApiCall';
+
+// Auth
+import Auth from '~/Auth/Auth';
+import JWTAuth from '~/Auth/JWTAuth';
+
 // Core
 import ComputedProperty from '~/Core/ComputedProperty';
 import Obj from '~/Core/Obj';
 import Observable from '~/Core/Observable';
 import ObservableArray from '~/Core/ObservableArray';
+import Reference from '~/Core/Reference';
 import SettingsObject from '~/Core/SettingsObject';
+
+
+// Data
+import Collection from '~/Data/Collection';
+import Model from '~/Data/Model';
+import ModelAttribute from '~/Data/ModelAttribute';
+import ModelDefinition from '~/Data/ModelDefinition';
+import ModelStore from '~/Data/ModelStore';
+import Relationship from '~/Data/Relationship';
+import Service from '~/Data/Service';
 
 // Dom
 import ActionBinding from '~/Dom/ActionBinding';
@@ -47,9 +70,14 @@ import Chainable from '~/Helpers/Chainable';
 import ClassMap from '~/Helpers/ClassMap';
 import Utils from '~/Helpers/Utils';
 
+// Localization
+import I18n from '~/Localization/I18n';
+
 // Routing
 import Action from '~/Routing/Action';
 import Controller from '~/Routing/Controller';
+import Middleware from '~/Routing/Middleware';
+import Redirect from '~/Routing/Redirect';
 import Request from '~/Routing/Request';
 import Route from '~/Routing/Route';
 import RouteMatch from '~/Routing/RouteMatch';
@@ -68,14 +96,38 @@ var Chicken = {
 	// Class tree //
 	////////////////
 
+	Api: {
+		Api: Api,
+		ApiCall: ApiCall,
+		JsonApi: JsonApi,
+		JsonApiCall: JsonApiCall
+	},
+
 	Application: Application,
+
+	Auth: {
+		Auth: Auth,
+		JWTAuth: JWTAuth
+	},
 
 	Core: {
 		ComputedProperty: ComputedProperty,
 		Obj: Obj,
 		Observable: Observable,
 		ObservableArray: ObservableArray,
+		Reference: Reference,
 		SettingsObject: SettingsObject
+	},
+
+	Data: {
+	
+		Collection: Collection,
+		Model: Model,
+		ModelAttribute: ModelAttribute,
+		ModelDefinition: ModelDefinition,
+		ModelStore: ModelStore,
+		Relationship: Relationship,
+		Service: Service
 	},
 
 	Dom: {
@@ -97,14 +149,23 @@ var Chicken = {
 		Utils: Utils
 	},
 
+	Localization: {
+		I18n: I18n
+	},
+
 	Routing: {
 		Action: Action,
 		Controller: Controller,
+		Middleware: Middleware,
+		Redirect: Redirect,
 		Request: Request,
 		Route: Route,
 		RouteMatch: RouteMatch,
 		Router: Router
 	},
+
+	inflection: inflection,
+
 
 
 	/////////////////
@@ -129,6 +190,10 @@ var Chicken = {
 			return Application.getInstance();
 		}
 
+	},
+
+	api(key = 'default') {
+		return Application.getInstance().apis[key];
 	},
 
 	////////////////////////
@@ -167,10 +232,100 @@ var Chicken = {
 
 	},
 
+	model: (name, configCallback = null, methods = null) => {
 
+		// Getter?
+		if (configCallback === null) {
+
+			// Get from registry
+			return Model.registry.get(name);
+
+		}
+
+		// Create class
+		var ChickenModel = class extends Model {
+			constructor(initValues = null) {
+				super(initValues);
+			}
+		};
+
+		// Add given methods to prototype
+		if (methods) {
+			$.extend(ChickenModel.prototype, methods);
+		}
+
+		// Configure it.
+		ChickenModel.definition = new ModelDefinition(name, configCallback);
+		ChickenModel.modelName = name;
+
+		ChickenModel.create = (initValues = {}) => {
+
+			return new ChickenModel(initValues);
+
+		};
+
+		// Store it.
+		Model.registry.set(name, ChickenModel);
+		return ChickenModel;
+
+	},
+
+	service: (name, methods = null) => {
+
+		// Getter?
+		if (methods === null) {
+			return Service.get(name);
+		}
+
+		// Create class
+		var ChickenService = class extends Service {
+			constructor() {
+				super(name);
+			}
+		};
+
+		// Add given methods to prototype
+		$.extend(ChickenService.prototype, methods);
+
+		// Configure it.
+		ChickenService.serviceName = name;
+
+		// Store it.
+		Service.registry.set(name, ChickenService);
+		return ChickenService;
+
+	},	
+
+	middleware: (name, callback = null) => {
+
+		// Getter?
+		if (callback === null) {
+			return Middleware.registry.get(name);
+		}
+
+		// Make it a middleware instance
+		let middleware = new Middleware(name, callback);
+		
+		// Store it
+		Middleware.registry.set(name, middleware);
+		return middleware;
+
+	},
+
+	redirect: (uri) => {
+		return new Redirect(uri);
+	},
+
+	
 	computed: (dependencies, callback) => {
 
 		return new ComputedProperty(dependencies, callback);
+
+	},
+
+	observable: (data = null) => {
+
+		return new Observable(data);
 
 	},
 
@@ -179,11 +334,38 @@ var Chicken = {
 
 		return new View(...args);
 
-	}
+	},
 
 
+	/////////////
+	// Helpers //
+	/////////////
 
+	each: (...args) => {
+
+		return Utils.each.apply(this, args);
+		
+	},
+
+	map: (...args) => {
+		return Utils.map.apply(this, args);
+	},
+
+	debug: (message, key = null) => {
+
+		switch (Chicken.debugging) {
+
+			case 'console':
+				console.log((key ? '[' + key + '] ' : '') + message);
+				break;
+
+		}
+
+	},
+
+	debugging: 'console'
 
 };
+
 
 module.exports = Chicken;

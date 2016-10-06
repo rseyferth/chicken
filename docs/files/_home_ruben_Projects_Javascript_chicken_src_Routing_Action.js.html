@@ -41,7 +41,21 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
+            
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
@@ -51,11 +65,25 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
+            
+                <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
+            
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
             
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -73,11 +101,21 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
+            
+                <li><a href="../modules/Data.html">Data</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -122,9 +160,12 @@
     <pre class="code prettyprint linenums">
 import XRegExp from &#x27;xregexp&#x27;;
 
+import App from &#x27;~/Helpers/App&#x27;;
 import Obj from &#x27;~/Core/Obj&#x27;;
+import Redirect from &#x27;~/Routing/Redirect&#x27;;
 import Controller from &#x27;~/Routing/Controller&#x27;;
 import View from &#x27;~/Dom/View&#x27;;
+import Utils from &#x27;~/Helpers/Utils&#x27;;
 
 /**
  * @module Routing
@@ -304,6 +345,21 @@ class Action extends Obj
 				return;
 			}
 
+			// Is there currently an action in this vc?
+			if (this.viewContainer.currentAction) {
+
+				// Was it triggered by the same route?
+				if (Utils.uidFor(this.viewContainer.currentAction.route) === Utils.uidFor(this.route)) {
+
+					// That means, we&#x27;ve just navigated within nested routes of that page, and this action can be skipped.
+					resolve();
+					return;
+
+				}
+				
+			}
+
+
 			// The VC is busy now.
 			this.viewContainer.setLoading(true);
 
@@ -346,11 +402,11 @@ class Action extends Obj
 				return;
 			}
 
-		}).then((result) =&gt; {
+		}).then((/* result */) =&gt; {
 
-		}, (error) =&gt; {
+		}, (/* error */) =&gt; {
 
-			// No longer loaeding
+			// No longer loading
 			if (this.viewContainer) this.viewContainer.setLoading(false);
 
 		});
@@ -359,17 +415,29 @@ class Action extends Obj
 
 	_processResult(result, resolve, reject) {
 
+		// A redirect?
+		if (result instanceof Redirect) {
+
+			//@TODO Cancel the running request?
+			
+			App().goto(result.uri);
+
+		}
+
 		///////////////////////////
 		// Is the result a view? //
 		///////////////////////////
 
-		if (result instanceof View) {
+		else if (result instanceof View) {
 
 			// Render the view
-			result.render().then((viewResult) =&gt; {
+			let view = result;
+			view.render().then(() =&gt; {
 
-				// Process result again!
-				this._processResult(viewResult, resolve, reject);
+				// Add it
+				this.viewContainer.setAction(this);
+				view.addToContainer(this.viewContainer);
+				resolve();
 
 			}, (error) =&gt; {
 				reject(error);
@@ -383,6 +451,16 @@ class Action extends Obj
 		
 		else if (result instanceof Promise) {
 
+			// Wait for it to finish
+			result.then((promiseResult) =&gt; {
+
+				// Process result again!
+				this._processResult(promiseResult, resolve, reject);
+
+			}, (error) =&gt; {
+				reject(error);
+			});
+
 		}
 
 		/////////////////////////////////
@@ -392,10 +470,11 @@ class Action extends Obj
 		else {
 
 			// A string
-			if (typeof result === &#x27;string&#x27;) {
+			if (typeof result === &#x27;string&#x27; || result instanceof DocumentFragment) {
 
 				// Set content
-				this.viewContainer.setActionContent(this, result);
+				this.viewContainer.setAction(this);
+				this.viewContainer.setContent(result);
 				resolve();
 
 			} else {

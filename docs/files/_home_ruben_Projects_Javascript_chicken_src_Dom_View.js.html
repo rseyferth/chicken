@@ -41,7 +41,21 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
+            
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
@@ -51,11 +65,25 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
+            
+                <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
+            
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
             
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -73,11 +101,21 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
+            
+                <li><a href="../modules/Data.html">Data</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -122,16 +160,17 @@
     <pre class="code prettyprint linenums">
 import _ from &#x27;underscore&#x27;;
 import $ from &#x27;jquery&#x27;;
-import Handlebars from &#x27;handlebars&#x27;;
+import HTMLBars from &#x27;htmlbars-standalone&#x27;;
 
 import App from &#x27;~/Helpers/App&#x27;;
-import Obj from &#x27;~/Core/Obj&#x27;;
 import Observable from &#x27;~/Core/Observable&#x27;;
+import Binding from &#x27;~/Dom/Binding&#x27;;
+import ApiCall from &#x27;~/Api/ApiCall&#x27;;
 
 /**
  * @module Dom
  */
-class View extends Obj
+class View extends Observable
 {
 
 	/**
@@ -192,21 +231,15 @@ class View extends Obj
 	 * 	Chicken.view(&#x27;//my-domain.com/chicken-templates/welcome.hbs&#x27;);
 	 * 
 	 * @class Dom.View
-	 * @extends Core.Obj
+	 * @extends Core.Observable
 	 *
 	 * @constructor
-	 * @param {string} source   The source for the view
+	 * @param {string} source   			The source for the view
+	 * @param {Dom.Renderer} renderer 		The Renderer instance that will be used by HTMLBars
 	 */
-	constructor(source) {
+	constructor(source, initCallback = null, renderer = null) {
 		
 		super();
-
-		/**
-		 * @property data
-		 * @type {Core.Observable}
-		 */
-		this.data = new Observable();
-
 
 		/**
 		 * Promises for data to load, keyed by the key
@@ -235,18 +268,82 @@ class View extends Obj
 
 
 		/**
-		 * @property tempalte
-		 * @type {Handlebars}
+		 * @property template
+		 * @type {HTMLBars template}
 		 */
 		this.template = null;
+
+
+		/**
+		 * @property templateUrl
+		 * @type {string}
+		 */
+		this.templateUrl = null;
+
+
+		/**
+		 * @property actions
+		 * @type {Object}
+		 */
+		this.actions = {
+
+		};
+
+
+		/**
+		 * @property renderer
+		 * @type {Dom.Renderer}
+		 */
+		this.renderer = renderer ? renderer : App().config(&#x27;renderer&#x27;);
+
+
+		/**
+		 * The RenderResult gotten back from the Template rendering.
+		 * 
+		 * @property renderResult
+		 * @type {HTMLBars.RenderResult}
+		 */
+		this.renderResult = null;
+
+		/**
+		 * The DocumentFragment that is the rendered view.
+		 * 
+		 * @property documentFragment
+		 * @type {DocumentFragment}
+		 */
+		this.documentFragment = null;
+
+
+		/**
+		 * The jQuery version of the DocumentFragment, that can be 
+		 * used to manipulate the view&#x27;s contents.
+		 * 
+		 * @property $element
+		 * @type {jQuery}
+		 */
+		this.$element = null;
+
+
+		/**
+		 * @property apiCalls
+		 * @type {Array}
+		 */
+		this.apiCalls = [];
+
+
 
 
 		//////////////////////////
 		// Check out the source //
 		//////////////////////////
 
-		// Is it HTML?
-		if (/^\&lt;[a-z\!]/.test(source)) {
+		// No template (just yield)?
+		if (source === false) {
+			this.templateString = &#x27;{{yield}}&#x27;;
+		}
+
+		// Is it HTML?		
+		else if (/^\&lt;[a-z\!]/.test(source) || /^{{/.test(source)) {
 
 			// Use code now
 			this.templateString = source;
@@ -254,7 +351,7 @@ class View extends Obj
 		} 
 		
 		// Name?
-		else if (/[a-z0-9\-]+\./.test) {
+		else if (/[a-z0-9\-]+\./.test(source) || /^[a-zA-Z]+$/.test(source)) {
 
 			// Is it cached?
 			if (View.TemplateCache.has(source)) {
@@ -270,7 +367,7 @@ class View extends Obj
 					source.split(/\./).join(&#x27;/&#x27;), 
 					&#x27;.&#x27; + App().config(&#x27;viewExtension&#x27;)
 				);
-				this._loadTemplate(url);
+				this.templateUrl = url;
 
 			}
 
@@ -280,8 +377,14 @@ class View extends Obj
 		else { 
 
 			// Load it
-			this._loadTemplate(url);
+			this.templateUrl = url;
 
+		}
+
+
+		// Definition callback?
+		if (initCallback) {
+			initCallback.apply(this);
 		}
 
 
@@ -290,13 +393,24 @@ class View extends Obj
 	}
 
 
-	_loadTemplate(url) {
+	loadTemplate() {
+
+		// Already loading or loaded?
+		if (this._promises.has(&#x27;template&#x27;)) {
+			return this.getPromise(&#x27;template&#x27;);
+		}
 
 		// Promise.
 		var promise = this.promise(&#x27;template&#x27;, (resolve, reject) =&gt; {
 
+			// Do we have the template already?
+			if (this.templateString) {
+				resolve(this.templateString);
+				return;
+			}
+
 			// Load it.
-			$.ajax(url).then((result) =&gt; {
+			$.ajax(this.templateUrl).then((result) =&gt; {
 
 				// Set template code
 				this.templateString = result;
@@ -373,17 +487,46 @@ class View extends Obj
 			// Is the key a string?
 			if (typeof key !== &#x27;string&#x27;) throw new TypeError(&#x27;[Dom.View] The &quot;with&quot; method accepts either a key, value or hash-object as arguments.&#x27;);
 
+			// Is it an Api call?
+			if (value instanceof ApiCall) {
+
+				// Get the promise and add to api calls list
+				this.apiCalls.push(value);
+				let promise = this.dataPromises[key] = value.getPromise(&#x27;complete&#x27;);
+				this.loadPromises.push(promise);
+				promise.then((result) =&gt; {
+					this.withoutNotifications(() =&gt; {							
+						this.set(key, result, true, true);
+					});
+				});
+
+			}
+
 			// Is the data a promise?
-			if (value instanceof Promise) {
+			else if (value instanceof Promise) {
 
 				// Add to promises
 				this.dataPromises[key] = value;
 				this.loadPromises.push(value);
+				value.then((result) =&gt; {
+					this.withoutNotifications(() =&gt; {		
+						this.set(key, result, true, true);
+					});
+				});
 
 			} else {
 
-				// Set it now
-				this.data.set(key, value, true);
+				// Is it a Binding?
+				if (value instanceof Binding) {
+				
+					// Use value
+					value = value.getReference();
+				}
+
+				// Set it now (convert to observables, and do not trigger updates)
+				this.withoutNotifications(() =&gt; {			
+					this.set(key, value, true);
+				});
 
 			}
 
@@ -393,12 +536,32 @@ class View extends Obj
 
 	} 
 
+	action(key, callback) {
+
+		this.actions[key] = callback;
+		return this;
+
+	}
 
 
+
+	/**
+	 * Render the view!
+	 *
+	 * @method render
+	 * @return {Promise}  The &#x27;render&#x27; promise is returned. The &#x27;added&#x27; promise will be called
+	 *                    when the view is added to the DOM.
+	 **/
 	render() {
 
+		// Make sure the template is loaded
+		this.loadTemplate();
+
 		// We make the &#x27;render&#x27; promise.
-		return this.promise(&#x27;render&#x27;, (resolve, reject) =&gt; {
+		return this.promise(&#x27;render&#x27;, () =&gt; {
+
+			// Start api calls.
+			_.invoke(this.apiCalls, &#x27;execute&#x27;);
 
 			/////////////////////////////////////////
 			// Wait for all loadPromises to finish //
@@ -406,11 +569,7 @@ class View extends Obj
 
 			Promise.all(this.loadPromises).then(() =&gt; {
 
-				// Create template
-				this.template = Handlebars.compile(this.templateString);
-
-				console.log(this.template(this.data));
-
+				this.renderSync();
 
 			});
 
@@ -420,13 +579,157 @@ class View extends Obj
 	}
 
 
+	/**
+	 * Render the view synchronously. Only use this when you know all
+	 * the data is already loaded!
+	 *
+	 * @method renderSync
+	 * @chainable
+	 */
+
+	renderSync() {
+
+		/////////////////////
+		// Create template //
+		/////////////////////
+
+		try {
+			this.renderResult = this.getTemplate().render(this, this.renderer);
+		} catch (error) {
+			this.rejectPromise(&#x27;render&#x27;, error);
+			return;
+		}
+		
+		// Localize and be done!
+		this.documentFragment = this.renderResult.fragment;
+		this.resolvePromise(&#x27;render&#x27;, this.documentFragment);
+
+		//////////////////
+		// Revalidating //
+		//////////////////
+
+		// Have a look at the data, and revalidate the result whenever a change
+		// occurs. The &#x27;dirtying&#x27; of elements (morphs) is handled by the Renderer
+		// and Binding classes.				
+		
+/*		// Study the object
+		this.study(() =&gt; {
+			this.scheduleRevalidate();
+		});
+*/
+
+		return this;
+
+	}
+
+
+	getTemplate() {
+
+		// Create
+		if (!this.template) {
+			this.template = HTMLBars.Compiler.compile(this.templateString);
+		}
+		return this.template;
+
+	}
+
+
+
+	/**
+	 * Have the rendered view be revalidated when it&#x27;s convenient.
+	 * 
+	 * @method scheduleRevalidate
+	 * @chainable
+	 */
+	scheduleRevalidate() {
+
+		// Not already pending?
+		if (!this.revalidateTimeout)  {
+
+			// Wait a bit.
+			this.revalidateTimeout = setTimeout(() =&gt; {
+
+				// Revalidate!
+				this.revalidate();				
+
+			}, View.RevalidationDelay);
+
+		}
+		
+		return this;
+	
+
+	}
+
+	/**
+	 * Revalidate the rendered view. Revalidation means the updating of 
+	 * &#x27;dirty&#x27; elements (morphs). The dirtying is done by the Bindings, set up
+	 * by the Renderer.
+	 *
+	 * If your binding is valid, and components work as the should, you shouldn&#x27;t 
+	 * need to call this method. If you do though, it is better to call
+	 * &#x60;scheduleRevalidate&#x60; instead, to prevent undue calls.
+	 * 
+	 * @method revalidate
+	 * @chainable
+	 */
+	revalidate() {
+		if (this.renderResult) this.renderResult.revalidate();
+		this.revalidateTimeout = false;
+		return this;
+	}
+
+
+	/**
+	 * Add the view to the ViewContainer, replacing previous contents
+	 * and making sure the ViewContainer knows it&#x27;s gotten the view.
+	 * 
+	 * @method addToContainer
+	 * @param {Dom.ViewContainer} viewContainer 
+	 */
+	addToContainer(viewContainer) {
+
+		// Set view
+		viewContainer.setView(this);
+
+		// Create wrapper
+		let $view = $(&#x27;&lt;view/&gt;&#x27;);
+		$view.html(this.documentFragment);
+
+		// Add to DOM
+		viewContainer.setContent($view);
+
+		// Done.
+		this.resolvePromise(&#x27;ready&#x27;, [this]);
+
+	}
 
 
 }
 
-
+/**
+ * The TemplateCache is used to cache templates by their name. When you are
+ * building your application for production, you can also use this to bundle
+ * the templates.
+ * 
+ * @property TemplateCache
+ * @static
+ * @type {Map}
+ */
 View.TemplateCache = new Map();
 
+/**
+ * The number of milliseconds to wait before revalidating your views after
+ * a change in the data has occured.
+ *
+ * This value can be very low, as it is mostly used to bundle changes together
+ * that occur semi-simultaneously.
+ * 
+ * @property RevalidationDelay
+ * @static
+ * @type {Number}
+ */
+View.RevalidationDelay = 3;
 
 module.exports = View;
     </pre>

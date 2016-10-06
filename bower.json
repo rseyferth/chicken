@@ -9,7 +9,8 @@
     "jquery": "~2.1.1",
     "underscore": "^1.8.3",
     "xregexp": "^3.1.1",
-    "htmlbars-standalone": "0.0.*"
+    "htmlbars-standalone": "0.0.*",
+    "moment": "^2.15.0"
   },
   "license": "ISC",
   "homepage": "https://github.com/rseyferth/chicken",
@@ -19,5 +20,6 @@
     "bower_components",
     "test",
     "tests"
-  ]
+  ],
+  "version": "0.2.16"
 }

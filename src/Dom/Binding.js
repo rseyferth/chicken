@@ -1,5 +1,7 @@
 import $ from 'jquery';
 
+import Reference from '~/Core/Reference';
+
 /**
  * @module Dom
  */
@@ -13,8 +15,9 @@ class Binding
 	 * @param  {Dom.Renderer} 							renderer   
 	 * @param  {Core.Observable|Core.ObservableArray} 	observable 
 	 * @param  {string} 								path       	
+	 * @param  {Dom.View}								view
 	 */
-	constructor(renderer, observable, path) {
+	constructor(renderer, observable, path, view) {
 
 		/**
 		 * The Renderer this Binding has been created by. This is 
@@ -39,7 +42,7 @@ class Binding
 		 * @property path
 		 * @type {string}
 		 */
-		this.path = path;
+		this.path = typeof path === 'string' && path.length > 0 ? path : false;
 
 
 		/**
@@ -53,18 +56,31 @@ class Binding
 		this.morphs = new Set();
 
 
+
+		this.view = view;
+
+
 		////////////////
 		// Now watch! //
 		////////////////
 
-		this.observable.observe(path, () => {
+		// What to do when value changes
+		let callback = () => {
 
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
 				morph.isDirty = true;
+				this.view.scheduleRevalidate();
 			});
 
-		});
+		};
+
+		// Now listen to the object
+		if (this.path) {
+			this.observable.observe(path, callback);
+		} else {
+			this.observable.study(callback);
+		}
 
 	}
 
@@ -75,7 +91,15 @@ class Binding
 	 * @return {mixed}
 	 */
 	getValue() {
-		return this.observable.get(this.path);
+		
+		// Get a path value
+		if (this.path) {
+			return this.observable.get(this.path);
+		}
+
+		// Then return the whole thing
+		return this.observable;
+
 	}
 
 
@@ -92,6 +116,13 @@ class Binding
 
 	}
 
+
+	getReference() {
+		if (!this.reference) {
+			this.reference = new Reference(this.observable, this.path);
+		}
+		return this.reference;
+	}
 
 
 	/**

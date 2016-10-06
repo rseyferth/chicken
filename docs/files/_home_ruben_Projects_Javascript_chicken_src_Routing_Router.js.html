@@ -41,7 +41,21 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
+            
+                <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
                 <li><a href="../classes/Core.Obj.html">Core.Obj</a></li>
             
@@ -51,11 +65,25 @@
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
             
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
+            
+                <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
+            
+                <li><a href="../classes/Dom.Binding.html">Dom.Binding</a></li>
+            
+                <li><a href="../classes/Dom.Component.html">Dom.Component</a></li>
+            
                 <li><a href="../classes/Dom.Element.html">Dom.Element</a></li>
+            
+                <li><a href="../classes/Dom.Helpers.html">Dom.Helpers</a></li>
+            
+                <li><a href="../classes/Dom.Renderer.html">Dom.Renderer</a></li>
             
                 <li><a href="../classes/Dom.View.html">Dom.View</a></li>
             
                 <li><a href="../classes/Dom.ViewContainer.html">Dom.ViewContainer</a></li>
+            
+                <li><a href="../classes/Helpers.Utils.html">Helpers.Utils</a></li>
             
                 <li><a href="../classes/Routing.Action.html">Routing.Action</a></li>
             
@@ -73,11 +101,21 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
+            
+                <li><a href="../modules/Data.html">Data</a></li>
             
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -128,6 +166,7 @@ import Obj from &#x27;~/Core/Obj&#x27;;
 import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
 import Route from &#x27;~/Routing/Route&#x27;;
 import Request from &#x27;~/Routing/Request&#x27;;
+import Middleware from &#x27;~/Routing/Middleware&#x27;;
 
 
 /**
@@ -162,6 +201,13 @@ class Router extends Obj
 		this.application = application;
 
 
+		/**
+		 * @property namedRoutes
+		 * @type {Map}
+		 */
+		this.namedRoutes = new Map();
+
+
 		///////////////////////////////////////////
 		// Grouped configuration state variables //
 		///////////////////////////////////////////
@@ -169,9 +215,12 @@ class Router extends Obj
 		this._currentConfig = SettingsObject.create({
 
 			parentRoute: null,
-			viewContainer: &#x27;main&#x27;
+			viewContainer: &#x27;main&#x27;,
+			middleware: []
 
-		}, [&#x27;parentRoute&#x27;, &#x27;viewContainer&#x27;]);
+		}, [&#x27;parentRoute&#x27;, &#x27;viewContainer&#x27;, &#x27;middleware&#x27;]);
+
+
 
 
 
@@ -246,7 +295,7 @@ class Router extends Obj
 	 * 
 	 * @method handle
 	 * @param  {Routing.Request} request 
-	 * @returns {Routing.RouteMatch}
+	 * @return {Routing.RouteMatch}
 	 */
 	handle(request) {
 
@@ -274,67 +323,112 @@ class Router extends Obj
 
 		}
 
-
-		/////////////////////////////
-		// Start executing actions //
-		/////////////////////////////
-
-		var numberOfActionsStarted = 0;
-		var actionPromises = [];
-		routeMatch.actions.forEach((action, vcName) =&gt; {
+		// Make the execution callback
+		let executeActions = () =&gt; {
 
 
-			// Get depends on promises
-			var dependsOnPromises = _.map(action.dependsOn, (dependsOnAction) =&gt; {
-				return dependsOnAction.getPromise(&#x27;complete&#x27;);
-			});
+			/////////////////////////////
+			// Start executing actions //
+			/////////////////////////////
 
-			// Wait?
-			if (dependsOnPromises.length &gt; 0) {
+			var numberOfActionsStarted = 0;
+			var actionPromises = [];
+			routeMatch.actions.forEach((action, vcName) =&gt; {
 
-				// Wait for it
-				Promise.all(dependsOnPromises).then(() =&gt; {
-
-					// Now we&#x27;re ready!
-					action.execute(this.application);
-
-				}, (error) =&gt; {
-					throw new Error(&#x27;[Routing.Router] Action for &quot;&#x27; + vcName + &#x27;&quot; was not started, due to error in dependancy route: &#x27; + error);
+				// Get depends on promises
+				var dependsOnPromises = _.map(action.dependsOn, (dependsOnAction) =&gt; {
+					return dependsOnAction.getPromise(&#x27;complete&#x27;);
 				});
 
-			} else {
+				// Wait?
+				if (dependsOnPromises.length &gt; 0) {
 
-				// Start now
-				numberOfActionsStarted++;
-				action.execute(this.application);
+					// Wait for it
+					Promise.all(dependsOnPromises).then(() =&gt; {
+
+						// Now we&#x27;re ready!
+						action.execute(this.application);
+
+					}, (error) =&gt; {
+						throw new Error(&#x27;[Routing.Router] Action for &quot;&#x27; + vcName + &#x27;&quot; was not started, due to error in dependancy route: &#x27; + error);
+					});
+
+				} else {
+
+					// Start now
+					numberOfActionsStarted++;
+					action.execute(this.application);
+
+				}
+
+				// Add complete promise
+				actionPromises.push(action.getPromise(&#x27;complete&#x27;));
+
+			});
+
+
+			////////////////////////////
+			// Keep track of progress //
+			////////////////////////////
+
+			// Any action started?
+			if (numberOfActionsStarted === 0) {
+
+				throw new Error(&#x27;[Routing.Router] No actions for started for route &#x27; + routeMatch.matchedRoute.getFullPattern() + &#x27;. Check your configuration.&#x27;); 
 
 			}
 
-			// Add complete promise
-			actionPromises.push(action.getPromise(&#x27;complete&#x27;));
+			// Listen to the result
+			Promise.all(actionPromises).then((/*...results*/) =&gt; {
+				
+				//@TODO What to do?
+
+			});
+
+		};
+
+
+		//////////////////////
+		// Setup middleware //
+		//////////////////////
+
+		// Loop and add middleware
+		let callbacksToExecute = [];
+		_.each(routeMatch.route.getMiddlewareNames(), (mwName) =&gt; {
+
+			// Get the middleware
+			let middleware = Middleware.registry.get(mwName);
+			if (!middleware) throw new Error(&#x27;There is no middleware registered with the name &quot;&#x27; + mwName + &#x27;&quot;&#x27;);
+
+			// Add the callback
+			callbacksToExecute.push(middleware.callback);
 
 		});
 
+		// Lastly we will execute the actions
+		callbacksToExecute.push(executeActions);
 
-		////////////////////////////
-		// Keep track of progress //
-		////////////////////////////
+		////////////////////////////////////////////////////////////////
+		// Now call the first callback, to start the middleware chain //
+		////////////////////////////////////////////////////////////////
 
-		// Any action started?
-		if (numberOfActionsStarted === 0) {
+		let nextCallback = () =&gt; {
+			
+			// Get the callback to call
+			let cb = callbacksToExecute.shift();
 
-			throw new Error(&#x27;[Routing.Router] No actions for started for route &#x27; + routeMatch.matchedRoute.getFullPattern() + &#x27;. Check your configuration.&#x27;); 
+			// Get the next in line
+			let result = cb.apply(this, [nextCallback, request, routeMatch]);
 
-		}
+			// Is there a result?
+			if (result !== undefined) {
+				// &#x27;WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT&#x27;
+			}
 
-		// Listen to the result
-		Promise.all(actionPromises).then((...results) =&gt; {
-			console.log(results);
-		}, (error) =&gt; {
+		};
+		nextCallback();
 
-			throw new Error(&#x27;[Routing.Router] Executing route failed: &#x27; + error);
-
-		});
+		
 
 		return routeMatch;
 

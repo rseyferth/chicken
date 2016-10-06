@@ -1,5 +1,9 @@
+import $ from 'jquery';
+import _ from 'underscore';
 import HTMLBars from 'htmlbars-standalone';
 
+
+import Obj from '~/Core/Obj';
 import View from '~/Dom/View';
 
 /**
@@ -14,49 +18,167 @@ class Component extends View
 	 */
 	constructor(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates, initCallback = null, renderer = null) {
 
-		super(source, initCallback, renderer);
+		super(source, null, renderer);
 
+
+		/**
+		 * The tag-name that was used to initialize this component
+		 * 
+		 * @property name
+		 * @type {string}
+		 */
 		this.name = name;
 
+		/**
+		 * The HTMLBars morph that contains this component
+		 * 
+		 * @property morph
+		 * @type {HTMLBarsMorph}
+		 */
 		this.morph = morph;
 
+		/**
+		 * The HTMLBars scope for this component
+		 * 
+		 * @property scope
+		 * @type {Object}
+		 */
 		this.scope = scope;
 
+		/**
+		 * The list of non-keyed parameters used in this component
+		 * 
+		 * @property parameters
+		 * @type {array}
+		 */
 		this.parameters = parameters;
-		this.attributeHash = attributeHash;
+
+		/**
+		 * The attribute hash
+		 *
+		 * @property attributes
+		 * @type {object}
+		 */
+		this.attributes = attributeHash;
+
+		/**
+		 * The HTMLBars visitor that was used to initialize this component
+		 *
+		 * @property visitor
+		 * @type {object}
+		 */
 		this.visitor = visitor;
 
+		/**
+		 * Sub-templates used to yield within the component
+		 *
+		 * @property subTemplates
+		 * @type {object}
+		 */
 		this.subTemplates = subTemplates;
 
 
-		this.templateString = '<h1>Hoi</h1>{{yield}}';
+		/**
+		 * The tagName that will be used when creating this component. The default
+		 * value is 'div', but this can be overruled in your handlebar template, or
+		 * in the initCallback of the component.
+		 * 
+		 * @property tagName
+		 * @type {String}
+		 */
+		this.tagName = 'div';
+
+		/**
+		 * The CSS class(es) that will be added to the component upon creation. You can set
+		 * this value in the initCallback of the component.
+		 *
+		 * @property cssClass
+		 * @type {string}
+		 */
+		this.cssClass = false;
+
+		/**
+		 * @property element
+		 * @type {DOMElement}
+		 */
+		this.element = null;
+
+
+		/**
+		 * The component's child components
+		 *
+		 * @property childComponents
+		 * @type {Array}
+		 */
+		this.childComponents = [];
+
+		/**
+		 * The component instance that wrap this component, if any.
+		 * 
+		 * @property parentComponent
+		 * @type {Dom.Component}
+		 */
+		this.parentComponent = this.scope.component;
+		this.setSilently('parent', this.parentComponent);
+
+		// Do I have a parent?
+		if (this.parentComponent) this.parentComponent.childComponents.push(this);
+
+		
+		/**
+		 * The dom-object can be used to listen to dom events on the event
+		 * 
+		 * @property dom
+		 * @type {Core.Obj}
+		 */
+		this.dom = new Obj();
+
+
+		// Make attributes available
+		this.with(this.attributes);
+
+
+
+		// Definition callback?
+		if (initCallback) {
+			initCallback.apply(this);
+		}
+
 
 	}
 
+	sendAction(name = null, ...args) {
 
+		// No name given?
+		if (name === null) {
+			name = this.attributes.action;
+		}
+
+		// Get the callback.
+		let actionScope = this.renderer.hooks.getActionScope(this.scope, name);
+		if (!actionScope) throw new Error('[Component ' + this.name + '] Could not find action "' + name + '" within the scope');
+		let callback = actionScope.actions[name];
+
+		// Now call it.
+		var params = _.flatten([
+			_.map(args, (value) => {
+				return this.renderer.hooks.getValue(value);
+			}), 
+			this,	
+			actionScope
+		]);
+		callback.apply(actionScope instanceof View ? actionScope : this, params);
+
+
+	}
+
+	
 	renderSync() {
-
-		// Create block
-		let block = HTMLBars.Util.Template.blockFor(
-			HTMLBars.Runtime.render,
-			this.templateString,
-			{
-				scope: this.scope
-			}
-		);
-		console.log(this.scope);
-
-		// Render it.
-		this.renderer.hooks.block(this.morph, this.renderer, this.scope, this.name, this.parameters, this.attributeHash, this.subTemplates.default, this.subTemplates.inverse, this.visitor);
-
-		return;
 
 		// Create the template
 		try {
 
-			// Render it into the morph
-			
-			console.log(this.getTemplate());
+			// Render it
 			this.renderResult = this.getTemplate().render(this, this.renderer, {
 				scope: this.scope,
 				template: this.subTemplates.default
@@ -64,7 +186,7 @@ class Component extends View
 			this.documentFragment = this.renderResult.fragment;
 
 		} catch (error) {
-			this.rejectPromise('render', error);
+			this.rejectPromise('ready', error);
 			return;
 		}
 
@@ -74,38 +196,122 @@ class Component extends View
 			this.scheduleRevalidate();
 		});
 
+		// Create the element
+		this.element = document.createElement(this.tagName);
+		_.each(this.attributes, (value, key) => {
 
-		this.morph.setNode(this.documentFragment);
+			// Check value type
+			if (value === 'true') value = true;
+			if (value === 'false') value = false;
+			if ($.isNumeric(value)) value = parseFloat(value);
+			if (value !== this.attributes[key]) {
+				this.attributes[key] = value;
+			}
 
-	}
+			// Is it a useful value?
+			if (typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number') {
+				this.element.setAttribute(key, value);
+			}
 
+		});
 
-	getTemplate() {
+		this.$element = $(this.element);
+		this.$element.append(this.documentFragment);
 
-		// Create
-		if (!this.template) {
-			this.template = HTMLBars.Util.Template.blockFor(
-				HTMLBars.Runtime.render,
-				this.templateString,
-				{
+		// CSS class
+		if (this.cssClass) this.$element.addClass(this.cssClass);
 
-				});
-			console.log('template', this.template);
+		// Trigger beforeAdded
+		this.trigger('beforeAdd', this.$element);
+
+		// Put element in result
+		this.morph.setNode(this.$element[0]);
+
+		// Done.
+		this.trigger('added', this.$element);
+
+		// Enable DOM events
+		this.enableDomEvents();
+
+		// Find child components
+		if (this.childComponents.length > 0) {
+
+			// Wait for the children to complete first
+			let promises = _.map(this.childComponents, (child) => {
+				return child.getPromise('ready');
+			});
+			Promise.all(promises).then(() => {
+				this.resolvePromise('ready');
+			});
+
+		} else {
+
+			// We are ready now.
+			this.resolvePromise('ready');
 		}
-		return this.template;
 
 	}
 
+	enableDomEvents() {
+
+		// Loop through callbacks
+		this.dom._listeners.forEach((callbacks, name) => {
+			
+			// Proper event?
+			if (!_.contains(Component.DomEventNames, name)) {
+				throw new Error('The "' + name + '" event is not a valid DOM event.');
+			}
+
+			// Listen and connect.
+			this.$element.on(name, (...args) => {
+				args.unshift(name);
+				this.dom.trigger.apply(this.dom, args);				
+			});
+
+		});
+
+	}
+
+
+
+	getSubTemplate(key) {
+
+		let block = HTMLBars.Util.Template.blockFor(
+			HTMLBars.Runtime.render,
+			this.subTemplates[key],
+			{
+				scope: this.scope
+			}
+		);
+
+		return block;
+
+	}
 
 
 }
 
 
+Component.DomEventNames = [
+	
+	// Touch events
+	'touchStart', 'touchMove', 'touchEnd', 'touchCancel',
 
+	// Keyboard
+	'keyDown', 'keyUp', 'keyPress',
 
+	// Mouse
+	'mouseDown', 'mouseUp', 'contextMenu', 'click', 'doubleClick', 'mouseMove', 'focusIn', 'focusOut', 'mouseEnter', 'mouseLeave',
+
+	// Form
+	'submit', 'change', 'focusIn', 'focusOut', 'input',
+
+	// HTML5
+	'dragStart', 'drag', 'dragEnter', 'dragLeave', 'dragOver', 'dragEnd', 'drop'
+
+];
 
 
 Component.registry = new Map();
-
 
 module.exports = Component;

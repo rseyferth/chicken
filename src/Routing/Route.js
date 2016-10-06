@@ -85,7 +85,8 @@ class Route extends Obj
 		this.options = _.defaults(options, {
 			abstract: actions === null,
 			as: null,
-			viewContainer: 'main'
+			viewContainer: 'main',
+			middleware: []
 		});
 
 
@@ -150,6 +151,12 @@ class Route extends Obj
 
 		return this;
 
+	}
+
+
+	abstract() {
+		this.options.abstract = true;
+		return this;
 	}
 
 
@@ -274,6 +281,14 @@ class Route extends Obj
 	}
 
 
+	getMiddlewareNames() {
+
+		return this.options.middleware;
+
+	}
+
+
+
 	/**
 	 * Get the Route's complete Regular Expression, including
 	 * parameters
@@ -364,6 +379,14 @@ class Route extends Obj
 		// Store in router
 		this.router.namedRoutes.set(name, this);
 
+		return this;
+
+	}
+
+
+	middleware(...keys) {
+
+		this.options.middleware = _.unique(_.flatten([this.options.middleware, keys]));
 		return this;
 
 	}

@@ -30,10 +30,20 @@ class ObservableArray extends Obj
 		this.import(initValues, convertToObservables, true);
 
 
+		/**
+		 * Whenever this property is true, no notifications will be triggered
+		 * 
+		 * @attribute notificationsDisabled
+		 * @type {Boolean}
+		 */
+		this.notificationsDisabled = false;
+
+
+
 	}
 
 
-	import(arr, convertToObservables = true, doNotNotify = false) {
+	import(arr, convertToObservables = true) {
 
 		// Go through to the object's first level
 		_.each(arr, (value) => {
@@ -63,16 +73,13 @@ class ObservableArray extends Obj
 
 		});	
 
-		// Trigger import
-		this.trigger(ObservableArray.Events.Import);
-
-		// Notify of change?
-		if (!doNotNotify) {
-			this.trigger('change');
-			this.trigger('added', arr);
+		// Trigger changes
+		if (!this.notificationsDisabled) {
+			this.trigger(ObservableArray.Events.Import);
+			this.trigger(ObservableArray.Events.Change);
+			this.trigger(ObservableArray.Events.Add, arr);
 		}
-
-
+		
 		return this;
 
 	}
@@ -126,6 +133,7 @@ class ObservableArray extends Obj
 
 
 	}
+
 
 	set(key, value, convertToObservables = false) {
 
@@ -205,28 +213,46 @@ class ObservableArray extends Obj
 	 */
 	add(...values) {
 
+		// Is the last value a boolean?
+		let doNotNotify = false;
+		if (values.length > 1 && typeof values[values.length - 1] === 'boolean') {
+			doNotNotify = values.pop();
+		}
+
 		// Add items
 		_.each(values, (value) => {
 			
-			// Add it.
-			this.items.push(value);
-
-			// Is it observable?
-			if (ObservableArray.isObservable(value)) {
-				value.on('change', () => {
-					this.trigger('change');
-				});
-			}
+			this._add(value);
 
 		});
 
 		// Trigger events
-		this.trigger(ObservableArray.Events.Change);
-		this.trigger(ObservableArray.Events.Add, values);
+		if (!doNotNotify) {
+			this.trigger(ObservableArray.Events.Change);
+			this.trigger(ObservableArray.Events.Add, values);
+		}
 
 		return this;
 
 	}
+
+
+	_add(value) {
+
+		// Add it.
+		this.items.push(value);
+
+		// Is it observable?
+		if (ObservableArray.isObservable(value)) {
+			value.on('change', () => {
+				this.trigger('change');
+			});
+		}
+
+		return this;
+
+	}
+
 
 	/**
 	 * Delete one or more items from the array
@@ -270,6 +296,19 @@ class ObservableArray extends Obj
 		return this;
 
 	}
+
+
+	/**
+	 * Get the first item in the collection
+	 * 
+	 * @method first
+	 * @return {mixed} 
+	 */
+	first() {
+		return _.first(this.items);
+	}
+
+
 
 	/**
 	 * Listen for any changes in any of the object's attributes. 
@@ -350,6 +389,126 @@ class ObservableArray extends Obj
 		});
 
 	}
+
+
+	/**
+	 * Get a keyed array containing all items in this ObservableArray
+	 * by the value of given key.
+	 *
+	 * @method keyBy
+	 * @param  {string} key 	The attribute key. You can also use dot-notation in this key.
+	 * @return {Object}     
+	 */
+	keyBy(key) {
+
+		// Loop it.
+		let result = {};
+		_.each(this.items, (item) => {
+			let keyValue = item.get(key);
+			if (keyValue) result[keyValue] = item;
+		});
+
+		return result;
+
+	}
+
+
+	sortBy(keyOrCallback) {
+
+		// Is it a key?
+		let callback = keyOrCallback;
+		if (typeof keyOrCallback === 'string') {
+			callback = (item) => {
+				return item.get(keyOrCallback);
+			};
+		}
+
+		// Now sort!
+		this.items = _.sortBy(this.items, callback);
+		return this;
+
+	}
+
+
+	/**
+	 * Get a keyed array containing ObservableArray's with values that have the same
+	 * value for given key.
+	 *
+	 * @method groupBy
+	 * @param  {string} key  The attribute key. You can also use dot-notation in this key.
+	 * @param  {string} [defaultGroup=default] The key under which to put items that have no value for given key
+	 * @return {Object}
+	 */
+	groupBy(key, defaultGroup = 'default') {
+
+		// Loop it
+		let result = {};
+		_.each(this.items, (item) => {
+
+			// Get value
+			let keyValue = item.get(key);
+
+			// Nothing?
+			if (!keyValue) keyValue = defaultGroup;
+
+			// Group known?
+			if (!result[keyValue]) result[keyValue] = new ObservableArray;
+			result[keyValue].add(item);
+
+		});
+
+		return result;
+
+	}
+
+	/**
+	 * Get value for given valueAttribute key from all items
+	 * 
+	 *
+	 * @method list 
+	 * @param  {string} valueAttribute 
+	 * @param  {string} keyAttribute   
+	 * @return {[type]}                [description]
+	 */
+	list(valueAttribute, keyAttribute = null) {
+
+		let result = keyAttribute ? {} : [];
+		_.each(this.items, (item) => {
+			if (keyAttribute) {
+				result[item.get(keyAttribute)] = item.get(valueAttribute);
+			} else {
+				result.push(item.get(valueAttribute));
+			}
+		});
+		
+		return result;
+
+	}
+
+	/**
+	 * Get the lowest value for objects in this array
+	 *
+	 * @method getLowestValue
+	 * @param  {string}  key          
+	 * @return {mixed}
+	 */
+	getLowestValue(key) {
+
+		// Get a list.
+		let list = this.list(key);
+		return _.min(list);
+
+	}
+
+
+	each(callback) {
+
+		_.each(this.items, callback);
+		return this;
+
+	}
+
+
 
 
 

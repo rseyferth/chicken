@@ -1,5 +1,4 @@
 import App from '~/Helpers/App';
-import Component from '~/Dom/Component';
 
 /**
  * @module Dom
@@ -47,16 +46,6 @@ class ComponentDefinition
 
 	}
 
-
-	create() {
-
-		// Create the component
-		let component = new Component(this.name, this.source, this.initCallback, this.renderer);
-		console.log(component);
-
-
-
-	}
 
 
 

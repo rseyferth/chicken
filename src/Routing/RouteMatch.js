@@ -125,8 +125,18 @@ class RouteMatch
 		});	
 
 		// Add these actions
+		let actionsToMakeDependentOn = [];
 		_.each(myActions, (myAction, targetViewContainer) => {
+			
+			// My this action dependent on previous actions defined in this route
+			_.each(actionsToMakeDependentOn, (depAction) => {
+				myAction.dependsOn.push(depAction);
+			});
+
+			// Add the action to my actions
 			this.actions.set(targetViewContainer, myAction);
+			actionsToMakeDependentOn.push(myAction);
+
 		});
 
 		// Now look into the parent

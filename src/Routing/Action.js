@@ -1,8 +1,11 @@
 import XRegExp from 'xregexp';
 
+import App from '~/Helpers/App';
 import Obj from '~/Core/Obj';
+import Redirect from '~/Routing/Redirect';
 import Controller from '~/Routing/Controller';
 import View from '~/Dom/View';
+import Utils from '~/Helpers/Utils';
 
 /**
  * @module Routing
@@ -143,18 +146,28 @@ class Action extends Obj
 		///////////////////////////
 		// Check passed argument //
 		///////////////////////////
-
+		
 		if (typeof controllerActionOrCallback === 'string') {
 
-			// Parse controller name
-			var match = XRegExp.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
-			if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
-			
-			// Store this
-			this.controllerClass = match.class;
-			this.controllerAction = match.action;
+			// A view uri?
+			if (controllerActionOrCallback.match(/^[a-z\-\d\.]+$/)) {
 
+				// Create a simple view callback
+				this.callback = () => {
+					return new View(controllerActionOrCallback);
+				};
 
+			} else {
+
+				// Parse controller name
+				var match = XRegExp.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
+				if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
+				
+				// Store this
+				this.controllerClass = match.class;
+				this.controllerAction = match.action;
+
+			}
 
 		} else if (typeof controllerActionOrCallback === 'function') {
 
@@ -181,6 +194,21 @@ class Action extends Obj
 				reject('There is no ViewContainer available with the name "' + this.targetViewContainer + '"');
 				return;
 			}
+
+			// Is there currently an action in this vc?
+			if (this.viewContainer.currentAction) {
+
+				// Was it triggered by the same route?
+				if (Utils.uidFor(this.viewContainer.currentAction.route) === Utils.uidFor(this.route)) {
+
+					// That means, we've just navigated within nested routes of that page, and this action can be skipped.
+					resolve();
+					return;
+
+				}
+				
+			}
+
 
 			// The VC is busy now.
 			this.viewContainer.setLoading(true);
@@ -237,11 +265,20 @@ class Action extends Obj
 
 	_processResult(result, resolve, reject) {
 
+		// A redirect?
+		if (result instanceof Redirect) {
+
+			//@TODO Cancel the running request?
+			
+			App().goto(result.uri);
+
+		}
+
 		///////////////////////////
 		// Is the result a view? //
 		///////////////////////////
 
-		if (result instanceof View) {
+		else if (result instanceof View) {
 
 			// Render the view
 			let view = result;
@@ -250,6 +287,7 @@ class Action extends Obj
 				// Add it
 				this.viewContainer.setAction(this);
 				view.addToContainer(this.viewContainer);
+				resolve();
 
 			}, (error) => {
 				reject(error);

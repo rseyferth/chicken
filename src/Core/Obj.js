@@ -26,7 +26,6 @@ class Obj {
 	////////////////////
 
 	promise(key, callback) {
-
 		
 		// Do the callback
 		var promise = this._getPromiseInfo(key);

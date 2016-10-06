@@ -41,7 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
@@ -52,6 +64,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -87,6 +101,12 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -94,6 +114,8 @@
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -142,10 +164,16 @@ import Observable from &#x27;~/Core/Observable&#x27;;
 import ObservableArray from &#x27;~/Core/ObservableArray&#x27;;
 
 
+let uid = 0;
+let UniqueIdKey = &#x27;___chicken_&#x27; + (+ new Date());
+
+
+
+
 /**
  * @module Helpers
  */
-module.exports = {
+let Utils = {
 
 	/**
 	 * @class Helpers.Utils
@@ -153,6 +181,14 @@ module.exports = {
 	 */
 
 
+	/**
+	 * @method each
+	 * @static
+	 * 
+	 * @param  {Object}   obj      
+	 * @param  {Function} callback 
+	 * @param  {Object}   context  
+	 */
 	each: (obj, callback, context) =&gt; {
 		if (obj instanceof Observable) {
 			obj = obj.attributes;
@@ -164,6 +200,32 @@ module.exports = {
 	},
 
 
+	/**
+	 * @method map
+	 * @static
+	 * 
+	 * @param  {Object}   obj      
+	 * @param  {Function} callback 
+	 * @param  {Object}   context  
+	 */
+	map: (obj, callback, context) =&gt; {
+		if (obj instanceof Observable) {
+			obj = obj.attributes;
+		} else if (obj instanceof ObservableArray) {
+			obj = obj.items;
+		}
+		return _.map(obj, callback, context);
+	},
+
+	/**
+	 * Determine whether given value is truthlike
+	 * 
+	 * @method isTruthlike
+	 * @static
+	 *	 
+	 * @param  {mixed} value 
+	 * @return {boolean}
+	 */
 	isTruthlike: (value) =&gt; {
 
 		// Null/undef
@@ -190,10 +252,61 @@ module.exports = {
 		// Do it natively
 		return !!value;
 
+	},
+
+
+
+	/**
+	 * Get a unique string identifier for given object or variable. For objects
+	 * this identifier will remain the same, making it useful for comparing objects.
+	 *
+	 * @method uidFor
+	 * @param  {mixed} obj 
+	 * @return {string}
+	 */
+	uidFor: (obj) =&gt; {
+
+		// Already set for this object?
+		if (obj &amp;&amp; obj[UniqueIdKey] !== undefined) return obj[UniqueIdKey];
+
+		// Non-existing things?
+		if (obj === undefined) return &#x27;(undefined)&#x27;;
+		if (obj === null) return &#x27;(null)&#x27;;
+
+		// Check what type the value is
+		let type = typeof obj;
+		switch(type) {
+
+			case &#x27;number&#x27;:
+			case &#x27;string&#x27;:
+				return type + &#x27;:&#x27; + obj;
+
+			case &#x27;boolean&#x27;: 
+				return obj ? &#x27;(true)&#x27; : &#x27;(false)&#x27;;				
+
+		}
+
+		// Is it a standard object?
+		if (obj === Object) return &#x27;(Object)&#x27;;
+		if (obj === Array) return &#x27;(Array)&#x27;;
+
+		// Store the id on the obj
+		let uid = Utils.uid();
+		obj[UniqueIdKey] = uid;
+		return uid;
+
+
+
+	},
+
+	uid() {
+		return &#x27;*&#x27; + (++uid) + &#x27;*&#x27;;
 	}
 
 
 };
+
+module.exports = Utils;
     </pre>
 </div>
 

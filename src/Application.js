@@ -2,6 +2,7 @@
 // Vendor libraries //
 //////////////////////
 
+import moment from 'moment';
 import QueryString from 'query-string';
 import { createHistory } from 'history';		// https://www.npmjs.com/package/history
 import $ from 'jquery';
@@ -17,13 +18,14 @@ import ViewContainer from '~/Dom/ViewContainer';
 import Renderer from '~/Dom/Renderer';
 import ClassMap from '~/Helpers/ClassMap';
 import Router from '~/Routing/Router';
-import Component from '~/Dom/Component';
+import Element from '~/Dom/Element';
+import I18n from '~/Localization/I18n';
 
 //////////////////////
 // Class definitino //
 //////////////////////
 
-var __instance = undefined;
+var _instance = undefined;
 
 class Application extends Observable {
 
@@ -37,7 +39,7 @@ class Application extends Observable {
 
 		// Basics
 		super();
-		__instance = this;
+		_instance = this;
 
 		////////////////
 		// Properties //
@@ -57,9 +59,9 @@ class Application extends Observable {
 		 * kept up to date to contain all and only still existing containers.
 		 *
 		 * @property viewContainers
-		 * @type {Map}
+		 * @type {Object}
 		 */
-		this.viewContainers = new Map();
+		this.viewContainers = {};
 
 
 
@@ -72,19 +74,61 @@ class Application extends Observable {
 
 
 		/**
+		 * One or more Api.Api instances
+		 * 
+		 * @property apis
+		 * @type {Object}
+		 */
+		this.apis = {};
+
+
+		/**
+		 * One or more Auth.Auth instances
+		 *
+		 * @property auths
+		 * @type {Object}
+		 */
+		this.auths = {};
+
+		/**
+		 * Array of promises to fulfill before the application
+		 * can start.
+		 * 
+		 * @property loadPromises
+		 * @type {Array}
+		 */
+		this.loadPromises = [];
+
+
+
+		/**
 		 * @property settings
 		 * @type {Core.SettingsObject}
 		 */
 		this.settings = SettingsObject.create({
 			baseUrl: '/',
 			
+			language: $('html').attr('lang'),
+
 			viewPath: 'views',
 			viewExtension: 'hbs',
 
+			elementLinkAttribute: 'link-to',
+
 			renderer: settings.renderer === undefined ? new Renderer() : null
 
-		}, [ 'baseUrl', 'viewPath', 'viewExtension', 'renderer' ]).apply(settings);
+		}, [ 'baseUrl', 'viewPath', 'viewExtension', 'renderer', 'elementLinkAttribute' ]).apply(settings);
 
+
+
+		/**
+		 * @property i18n
+		 * @type {Localization.I18n}
+		 */
+		this.i18n = new I18n(this.settings.get('language'));
+
+
+	
 		
 
 		/**
@@ -110,12 +154,12 @@ class Application extends Observable {
 			var vc = new ViewContainer($(el), this);
 
 			// Already known?
-			if (this.viewContainers.has(vc.name)) {
+			if (this.viewContainers[vc.name]) {
 				throw new Error('There is already a view named "' + vc.name + '". It is not possible to have two views with the same name at the same time.');
 			}
 
 			// Store it.
-			this.viewContainers.set(vc.name, vc);
+			this.viewContainers[vc.name] = vc;
 
 			// Initialize
 			vc.initialize();
@@ -129,7 +173,14 @@ class Application extends Observable {
 	updateViewContainers($lookForNewOnesIn = null) {
 
 		// Check if all old ones are still there
-		
+		_.each(this.viewContainers, (vc, key) => {
+
+			// Removed?
+			if (!vc.isInDom()) {
+				delete this.viewContainers[key];
+			}
+			
+		});
 
 		// Look for new ones
 		if ($lookForNewOnesIn) this.findViewContainers($lookForNewOnesIn);
@@ -139,7 +190,7 @@ class Application extends Observable {
 	}
 
 	getViewContainer(key) {
-		return this.viewContainers.get(key);
+		return this.viewContainers[key];
 	}
 
 
@@ -155,19 +206,109 @@ class Application extends Observable {
 	}
 
 
+	api(key = null, apiInstance = null) {
+		
+		// Get?
+		if (apiInstance === null) {
+			if (key === null) key = _.first(_.keys(this.apis));
+			return this.apis[key];
+		}
+
+		// Set
+		this.apis[key] = apiInstance;
+
+		return this;
+	}
+
+
+	auth(key = null, authInstance = null) {
+
+		// Get?
+		if (authInstance === null) {
+			if (key === null) key = _.first(_.keys(this.auths));
+			return this.auths[key];
+		}
+
+		// Set
+		this.auths[key] = authInstance;
+
+		return this;
+	}
+
+	
+	translations(callback) {
+
+		callback.apply(this.i18n, [this.i18n]);
+		return this;
+
+	}
+
+
+
 	start() {
 
-		// Find initial view containers
-		this.findViewContainers();
+		// Enable momentJS
+		moment.locale(this.settings.get('language'));
+		
+		// Add i18n to promises
+		this.loadPromises.unshift(this.i18n.load());
 
-		// Listen to browser's address bar
-		this.history.listen((location) => {
-			this.router.handle(location);
+		// Do auth initialization
+		_.each(this.auths, (auth) => {
+			this.loadPromises.unshift(auth.initialize());
 		});
 
-		// Start with current location
-		this.router.handle(this.history.getCurrentLocation());
+		// When all is done.
+		Promise.all(this.loadPromises).then(() => {
 
+			// Find initial view containers
+			this.findViewContainers();
+
+			// Update view containers whenever element contents are set.
+			Element.registerHook(($element) => {
+
+				// Update view containers
+				this.updateViewContainers($element);
+
+				// Find links
+				$element.find('[' + this.settings.get('elementLinkAttribute') + ']').on('click', (e) => {
+
+					// Open the uri!
+					e.preventDefault();
+					let uri = $(e.target).attr('href');
+					this.goto(uri);
+
+				}).each((index, el) => {
+
+					// Get uri
+					let $el = $(el);
+					let uri = $el.attr(this.settings.get('elementLinkAttribute'));
+					if (uri) {
+
+						// Store in href for easy visilbility, and remove link-to, so it won't be found again by this script
+						$el.removeAttr(this.settings.get('elementLinkAttribute'));
+						$el.attr('href', uri);
+						
+					}
+
+				});
+
+			});
+			
+			// Done!
+			this.resolvePromise('ready');
+
+			// Listen to browser's address bar
+			this.history.listen((location) => {
+				this.router.handle(location);
+			});
+
+			// Start with current location
+			this.router.handle(this.history.getCurrentLocation());
+
+
+
+		});
 
 		return this;
 
@@ -186,13 +327,19 @@ class Application extends Observable {
 		}
 
 		// Change the history state
-		history.push({
+		this.history.push({
 			pathname: uri,
 			search: query
 		});
 
 		return this;
 
+
+	}
+
+	getCurrentUri() {
+
+		return this.history.getCurrentLocation().pathname;
 
 	}
 
@@ -243,7 +390,7 @@ class Application extends Observable {
 
 
 Application.getInstance = () => {
-	return __instance;
+	return _instance;
 };
 
 
