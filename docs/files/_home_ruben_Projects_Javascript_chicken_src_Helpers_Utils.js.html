@@ -162,7 +162,7 @@ import _ from &#x27;underscore&#x27;;
 
 import Observable from &#x27;~/Core/Observable&#x27;;
 import ObservableArray from &#x27;~/Core/ObservableArray&#x27;;
-
+import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 
 let uid = 0;
 let UniqueIdKey = &#x27;___chicken_&#x27; + (+ new Date());
@@ -255,6 +255,23 @@ let Utils = {
 	},
 
 
+	areEqual: function(value1, value2) {
+
+		// Identical?
+		if (value1 === value2) return true;
+
+		// One of them null or undefined?
+		if (value1 === undefined || value2 === undefined || value1 === null || value2 === null) return false;
+		if (typeof value1 !== &#x27;object&#x27; || typeof value2 !== &#x27;object&#x27;) return false;
+		if (value1 instanceof Array || value2 instanceof Array) return false;
+
+		// Same id?
+		if (this.uidFor(value1) === this.uidFor(value2)) return true;
+
+		return false;
+
+	},
+
 
 	/**
 	 * Get a unique string identifier for given object or variable. For objects
@@ -305,6 +322,8 @@ let Utils = {
 
 
 };
+
+ClassMap.register(&#x27;Utils&#x27;, Utils);
 
 module.exports = Utils;
     </pre>

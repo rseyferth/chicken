@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Projects/Javascript/chicken/src/Api/Api.js</title>
+    <title>/home/erik/Www/chicken/src/Application.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -41,19 +41,7 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
-            
-                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
-            
-                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
-            
-                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
-            
                 <li><a href="../classes/Application.html">Application</a></li>
-            
-                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
-            
-                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
@@ -64,8 +52,6 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
-            
-                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -101,12 +87,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="../modules/Api.html">Api</a></li>
-            
-                <li><a href="../modules/Auth.html">Auth</a></li>
-            
-                <li><a href="../modules/AuthError.html">AuthError</a></li>
-            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -114,8 +94,6 @@
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
-            
-                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -154,231 +132,267 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Api/Api.js</h1>
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Application.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
+//////////////////////
+// Vendor libraries //
+//////////////////////
+
+import QueryString from &#x27;query-string&#x27;;
+import { createHistory } from &#x27;history&#x27;;		// https://www.npmjs.com/package/history
 import $ from &#x27;jquery&#x27;;
+import _ from &#x27;underscore&#x27;;
 
-import Model from &#x27;~/Data/Model&#x27;;
-import ApiCall from &#x27;~/Api/ApiCall&#x27;;
-import App from &#x27;~/Helpers/App&#x27;;
+/////////////////////
+// Chicken classes //
+/////////////////////
 
-/**
- * @module Api
- */
-class Api {
+import Observable from &#x27;~/Core/Observable&#x27;;
+import SettingsObject from &#x27;~/Core/SettingsObject&#x27;;
+import ViewContainer from &#x27;~/Dom/ViewContainer&#x27;;
+import Renderer from &#x27;~/Dom/Renderer&#x27;;
+import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
+import Router from &#x27;~/Routing/Router&#x27;;
+import Component from &#x27;~/Dom/Component&#x27;;
+
+//////////////////////
+// Class definitino //
+//////////////////////
+
+var __instance = undefined;
+
+class Application extends Observable {
 
 	/**
-	 * @class Api.Api
+	 * The Application class is 
 	 *
-	 * @constructor
-	 * @param  {Object} options 	 
+	 * @class Application
+	 * @extends Core.Observable
 	 */
-	constructor(options) {
-		
-		this.settings = $.extend({
-			baseUrl: &#x27;/api&#x27;,
+	constructor($app, settings, history) {
+
+		// Basics
+		super();
+		__instance = this;
+
+		////////////////
+		// Properties //
+		////////////////
+
+		/**
+		 * The jQuery element that is the Application
+		 * 
+		 * @property $app
+		 * @type {jQuery}
+		 */
+		this.$app = $app ? $app : $(&#x27;#application&#x27;);
+
+
+		/**
+		 * All ViewContainers in the application. This is automatically
+		 * kept up to date to contain all and only still existing containers.
+		 *
+		 * @property viewContainers
+		 * @type {Map}
+		 */
+		this.viewContainers = new Map();
+
+
+
+		/**
+		 * @property router
+		 * @type {Routing.Router}
+		 */
+		this.router = new Router(this);
+
+
+
+		/**
+		 * @property settings
+		 * @type {Core.SettingsObject}
+		 */
+		this.settings = SettingsObject.create({
+			baseUrl: &#x27;/&#x27;,
 			
-			auth: false,
+			viewPath: &#x27;views&#x27;,
+			viewExtension: &#x27;hbs&#x27;,
 
-		}, options);
+			renderer: settings.renderer === undefined ? new Renderer() : null
 
-	}
+		}, [ &#x27;baseUrl&#x27;, &#x27;viewPath&#x27;, &#x27;viewExtension&#x27;, &#x27;renderer&#x27; ]).apply(settings);
 
-	/**
-	 * @method deserialize
-	 * @return {Data.Model|Data.Collection}
-	 */
-	deserialize(/* data, apiCall = null */) {
-		throw new Error(&#x27;The Api implementation should have a deserialize method.&#x27;);		
-	}
+		
 
-	/**
-	 * @method getAuth
-	 * @return {Auth.Auth} 
-	 */
-	getAuth() {
+		/**
+		 * @property history
+		 * @type {History}
+		 */
+		this.history = history ? history : createHistory();
 
-		// Set already?
-		if (this.auth) return this.auth;
-		if (this.settings.auth === false) return false;
 
-		// Look it up.
-		this.auth = App().auth(this.settings.auth);
-		return this.auth;
+
 
 	}
 
+	findViewContainers($element = null) {
 
+		// No element to look in?
+		if (!$element) $element = this.$app;
 
-	//////////////////
-	// HTTP methods //
-	//////////////////
+		// Find view containers
+		$element.find(ViewContainer.ElementSelector).each((index, el) =&gt; {
 
-	/**
-	 * @method call
-	 * @param  {string} method      
-	 * @param  {string} uri         
-	 * @param  {Object} [data={}]
-	 * @param  {Object} [ajaxOptions={}]
-	 * @return {Api.ApiCall}
-	 */
-	call(method, uri, data = {}, ajaxOptions = {}) {
+			// Create view container
+			var vc = new ViewContainer($(el), this);
 
-		// Create api call
-		return new ApiCall(this, method, uri, data, ajaxOptions);
+			// Already known?
+			if (this.viewContainers.has(vc.name)) {
+				throw new Error(&#x27;There is already a view named &quot;&#x27; + vc.name + &#x27;&quot;. It is not possible to have two views with the same name at the same time.&#x27;);
+			}
 
-	}
+			// Store it.
+			this.viewContainers.set(vc.name, vc);
 
-	/**
-	 * @method get
-	 * @param  {string} uri         
-	 * @param  {Object} [data={}]
-	 * @param  {Object} [ajaxOptions={}]
-	 * @return {Api.ApiCall}
-	 */
-	get(uri, data = {}, ajaxOptions = {}) {
-		return this.call(&#x27;get&#x27;, uri, data, ajaxOptions);
-	}
+			// Initialize
+			vc.initialize();
 
-	/**
-	 * @method post
-	 * @param  {string} uri         
-	 * @param  {Object} [data={}]
-	 * @param  {Object} [ajaxOptions={}]
-	 * @return {Api.ApiCall}
-	 */
-	post(uri, data = {}, ajaxOptions = {}) {
-		return this.call(&#x27;post&#x27;, uri, data, ajaxOptions);
-	}
-
-	/**
-	 * @method put
-	 * @param  {string} uri         
-	 * @param  {Object} [data={}]
-	 * @param  {Object} [ajaxOptions={}]
-	 * @return {Api.ApiCall}
-	 */
-	put(uri, data = {}, ajaxOptions = {}) {
-		return this.call(&#x27;put&#x27;, uri, data, ajaxOptions);
-	}
-
-	/**
-	 * @method path
-	 * @param  {string} uri         
-	 * @param  {Object} [data={}]
-	 * @param  {Object} [ajaxOptions={}]
-	 * @return {Api.ApiCall}
-	 */
-	patch(uri, data = {}, ajaxOptions = {}) {
-		return this.call(&#x27;patch&#x27;, uri, data, ajaxOptions);
-	}
-
-	/**
-	 * @method delete
-	 * @param  {string} uri         
-	 * @param  {Object} [data={}]
-	 * @param  {Object} [ajaxOptions={}]
-	 * @return {Api.ApiCall}
-	 */
-	delete(uri, data = {}, ajaxOptions = {}) {
-		return this.call(&#x27;delete&#x27;, uri, data, ajaxOptions);
-	}
-
-
-	////////////////////
-	// Helper methods //
-	////////////////////
-
-	/**
-	 * @method makeUrl
-	 * @param  {string} uri 	Relative url within the API
-	 * @return {string} Fully formed url
-	 */
-	makeUrl(uri) {
-		return this.settings.baseUrl + uri;
-	}
-
-	/**
-	 * Make an ajax call using jQuery
-	 * 
-	 * @method ajax
-	 * @param  {Object} options 
-	 * @return {jQuery Ajax call}         
-	 */
-	ajax(options) {
-		options.dataType = &#x27;json&#x27;;
-		return $.ajax(options);
-	}
-
-
-	///////////////////
-	// Model methods //
-	///////////////////
-
-	/**
-	 * Get a single Model record from the Api
-	 * 
-	 * @method one
-	 * @param  {string} modelName 
-	 * @param  {string} id        
-	 * @return {Api.ApiCall}
-	 */
-	one(modelName, id) {
-
-		// Get uri from model
-		let ModelClass = Model.registry.get(modelName);
-		if (!ModelClass) throw new Error(&#x27;There is no model registered with the name &quot;&#x27; + modelName + &#x27;&quot;&#x27;);
-		let uri = ModelClass.definition.getApiUri(id);
-
-		// Make the call
-		let call = this.get(uri);
-		call.modelClass = ModelClass;
-		return call;
+		});
+		
+		return this;
 
 	}
 
-	/**
-	 * Get all Model records from the Api
-	 * 
-	 * @method all
-	 * @param  {string} modelName
-	 * @return {Api.ApiCall}
-	 */
-	all(modelName) {
+	updateViewContainers($lookForNewOnesIn = null) {
 
-		// Get uri from model
-		let ModelClass = Model.registry.get(modelName);
-		if (!ModelClass) throw new Error(&#x27;There is no model registered with the name &quot;&#x27; + modelName + &#x27;&quot;&#x27;);
-		let uri = ModelClass.definition.getApiUri();
+		// Check if all old ones are still there
+		
 
-		// Make the call
-		let call = this.get(uri);
-		call.modelClass = ModelClass;
-		return call;
+		// Look for new ones
+		if ($lookForNewOnesIn) this.findViewContainers($lookForNewOnesIn);
+
+		return this;
+
+	}
+
+	getViewContainer(key) {
+		return this.viewContainers.get(key);
+	}
+
+
+
+
+
+	routes(callback) {
+
+		// Run callback with router
+		callback.apply(this.router, []);
+		return this;
 
 	}
 
 
-	/**
-	 * Save given model to the Api
-	 *
-	 * @method saveModel
-	 * @param 	{string}	uri
-	 * @param 	{Data.Model} model
-	 * @return {Api.ApiCall}
-	 */
-	saveModel(/* uri, model */) {
-		throw new Error(&#x27;The Api implementation should have a saveModel method.&#x27;);		
+	start() {
+
+		// Find initial view containers
+		this.findViewContainers();
+
+		// Listen to browser&#x27;s address bar
+		this.history.listen((location) =&gt; {
+			this.router.handle(location);
+		});
+
+		// Start with current location
+		this.router.handle(this.history.getCurrentLocation());
+
+
+		return this;
+
 	}
 
+	goto(uri, query = null) {
+
+		// Check the query
+		if (query) {
+
+			// Is it a hash?
+			if (typeof query !== &#x27;string&#x27;) {
+				query = QueryString.stringify(query);
+			}
+
+		}
+
+		// Change the history state
+		history.push({
+			pathname: uri,
+			search: query
+		});
+
+		return this;
+
+
+	}
+
+
+
+
+	config(...args) {
+
+		// Get all?
+		if (args.length === 0) {
+			return this.settings;
+		} 
+
+		// Get one?
+		else if (args.length === 1) {
+			return this.settings.get(args[0]);
+		}
+
+		// Set?
+		else {
+			return this.settings.set(args[0], args[1]);
+		}
+
+	}
+
+
+	uri(...args) {
+
+		// Add baseUrl
+		args.unshift(this.settings.get(&#x27;baseUrl&#x27;) === &#x27;/&#x27; ? &#x27;&#x27; : this.settings.get(&#x27;baseUrl&#x27;));
+		var url = args.join(&#x27;/&#x27;);
+
+		// Was the last one an extension?
+		if (/^\.[a-z]+$/.test(_.last(args))) {
+
+			// Replace last slash
+			url = url.replace(/\/\.[a-z]+$/, _.last(args));
+
+		}
+		return url;
+
+	}
 
 
 
 
 }
-module.exports = Api;
+
+
+Application.getInstance = () =&gt; {
+	return __instance;
+};
+
+
+
+ClassMap.register(&#x27;Application&#x27;, Application);
+
+
+
+
+
+module.exports = Application;
     </pre>
 </div>
 

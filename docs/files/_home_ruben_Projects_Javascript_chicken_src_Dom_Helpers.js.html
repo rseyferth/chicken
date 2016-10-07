@@ -164,6 +164,7 @@ import _ from &#x27;underscore&#x27;;
 import $ from &#x27;jquery&#x27;;
 import QueryString from &#x27;query-string&#x27;;
 import inflection from &#x27;inflection&#x27;;
+import moment from &#x27;moment&#x27;;
 
 import ActionBinding from &#x27;~/Dom/ActionBinding&#x27;;
 import Utils from &#x27;~/Helpers/Utils&#x27;;
@@ -436,6 +437,21 @@ class Helpers
 
 		return inflection.camelize(string, !capitalFirstLetter);
 
+	}
+
+
+	/////////////////////
+	// Dates and times //
+	/////////////////////
+
+	momentFormat(params) {
+		let value = this._getValue(params[0]);
+		let format = this._getValue(params[1]);
+		if (moment.isMoment(value)){ 
+			return value.format(format);
+		} else {
+			return value;
+		}
 	}
 
 

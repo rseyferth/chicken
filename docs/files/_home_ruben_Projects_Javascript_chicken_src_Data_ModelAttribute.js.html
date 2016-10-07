@@ -170,9 +170,16 @@ class ModelAttribute {
 
 		this.isPrimaryKey = false;
 
+		this.defaultValue = undefined;
+
 		this.size = null;
 
 	}
+
+	default(value) {
+		this.defaultValue = value;
+		return this;
+	} 
 
 	primary(isPrimaryKey = true) {
 		this.isPrimaryKey = isPrimaryKey;
@@ -287,8 +294,11 @@ ModelAttribute.Integer = &#x27;Integer&#x27;;
 ModelAttribute.String = &#x27;String&#x27;;
 ModelAttribute.Enum = &#x27;Enum&#x27;;
 
+
 ModelAttribute.Date = &#x27;Date&#x27;;
 ModelAttribute.DateTime = &#x27;DateTime&#x27;;
+ModelAttribute.Time = &#x27;Time&#x27;;
+
 
 module.exports = ModelAttribute;
     </pre>

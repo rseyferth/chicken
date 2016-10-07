@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>/home/ruben/Projects/Javascript/chicken/src/Data/ModelDefinition.js</title>
+    <title>/home/erik/Www/chicken/src/Routing/Request.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -41,19 +41,7 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
-            
-                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
-            
-                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
-            
-                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
-            
                 <li><a href="../classes/Application.html">Application</a></li>
-            
-                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
-            
-                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
@@ -64,8 +52,6 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
-            
-                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -101,12 +87,6 @@
 
             <ul id="api-modules" class="apis modules">
             
-                <li><a href="../modules/Api.html">Api</a></li>
-            
-                <li><a href="../modules/Auth.html">Auth</a></li>
-            
-                <li><a href="../modules/AuthError.html">AuthError</a></li>
-            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -114,8 +94,6 @@
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
-            
-                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -154,184 +132,67 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1 class="file-heading">File: /home/ruben/Projects/Javascript/chicken/src/Data/ModelDefinition.js</h1>
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Routing/Request.js</h1>
 
 <div class="file">
     <pre class="code prettyprint linenums">
-import inflection from &#x27;inflection&#x27;;
-import _ from &#x27;underscore&#x27;;
-
-import ModelAttribute from &#x27;~/Data/ModelAttribute&#x27;;
-import Relationship from &#x27;~/Data/Relationship&#x27;;
-import ComputedProperty from &#x27;~/Core/ComputedProperty&#x27;;
+import ClassMap from &#x27;~/Helpers/ClassMap&#x27;;
 
 /**
- * @module Data
+ * @module Routing
  */
-class ModelDefinition
+class Request
 {
 
-	constructor(name, callback) {	
+	/**
+	 * @class Routing.Request
+	 *
+	 * @constructor
+	 * @param {object} 			location 		The location received from the History library
+	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
+	 */
+	constructor(location, application = null) {
 
-		this.name = name;
+		// Guess application if not given
+		if (!application) application = ClassMap.get(&#x27;Application&#x27;).getInstance();
 
-		this.apiUri = &#x27;/&#x27; + inflection.underscore(inflection.pluralize(name));
-		this.api = &#x27;default&#x27;;
-
-		this.attributes = {};
-		this.attributeNames = [];
-		this.relationships = {};
-
-		this.computedAttributes = {};
-
-		this.validationRules = {};
-
-
-
-		callback.apply(this, [this]);
-
-	}
-
-
-	initializeModel(model) {
-
-		// Don&#x27;t notify
-		model.withoutNotifications(() =&gt; {
-
-			// Default values
-			_.each(this.attributes, (attr) =&gt; {
-				if (attr.defaultValue &amp;&amp; model.attributes[attr.name] === undefined) {
-					model.set(attr.name, attr.defaultValue);
-				}
-			});
-			
-			// Add computed
-			_.each(this.computedAttributes, (attr, key) =&gt; {
-				model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
-			});			
-		});
-
-		return model;
-
-	}
-
-
-
-	attribute(name, type) {
-		let attr = new ModelAttribute(name, type);
-		this.attributeNames.push(name);
-		this.attributes[name] = attr;
-		return attr;
-	}
-
-	computed(name, dependencies, callback) {
-
-		this.computedAttributes[name] = {
-			dependencies: dependencies,
-			callback: callback
-		};
-		return true;
-
-	}
-
-
-
-	//////////////////////
-	// Column defitions //
-	//////////////////////
-
-	integer(name) {
-		let attr = this.attribute(name, ModelAttribute.Integer);
-		return attr;
-	}
-
-	string(name, size) {
-		let attr = this.attribute(name, ModelAttribute.String);
-		attr.size = size;
-		return attr;
-	}
-
-	date(name) {
-		let attr = this.attribute(name, ModelAttribute.Date);
-		return attr;
-	}
-
-
-	dateTime(name) {
-		let attr = this.attribute(name, ModelAttribute.DateTime);
-		return attr;
-	}
-
-	time(name) {
-		let attr = this.attribute(name, ModelAttribute.Time);
-		return attr;
-	}
-
-	text(name) {
-		let attr = this.attribute(name, ModelAttribute.Text);
-		return attr;		
-	}
-
-	boolean(name) {
-		let attr = this.attribute(name, ModelAttribute.Boolean);
-		return attr;		
-	}
-
-
-
-	//////////////////////
-	// Column shortcuts //
-	//////////////////////
-
-	timestamps() {
-		this.attribute(&#x27;createdAt&#x27;, ModelAttribute.DateTime);
-		this.attribute(&#x27;updatedAt&#x27;, ModelAttribute.DateTime);
-		return this;
-	}
-
-
-	///////////////////
-	// Relationships //
-	///////////////////
-
-	relationship(name) {
-		let rel = new Relationship(name, this.name);
-		this.relationships[name] = rel;
-		return rel;
-	}
-
-
-	/////////////////////
-	// Form validation //
-	/////////////////////
-
-	validation(rules, formKey = &#x27;default&#x27;) {
-
-		this.validationRules[formKey] = rules;
-		return this;
-
-	}
+		// Parse the uri 
+		let uri = Request.cleanUri(location.pathname);
 		
+		// Strip of base part
+		var baseUrl = Request.cleanUri(application.settings.get(&#x27;baseUrl&#x27;));
+		if (uri.length &gt;= baseUrl.length &amp;&amp; uri.substr(0, baseUrl.length)) {
+			uri = uri.substr(baseUrl.length);
+		}
 
+		// Add the / back again
+		uri = &#x27;/&#x27; + uri;
 
+		/**
+		 * @property uri
+		 * @type {string}
+		 */
+		this.uri = uri;
 
-
-	/////////
-	// Api //
-	/////////
-
-	getApiUri(id = null) {
-		let uri = this.apiUri;
-		if (id) uri += &#x27;/&#x27; + id;
-		return uri;
 	}
 
 
+	
 
 
 }
 
-module.exports = ModelDefinition;
+Request.cleanUri = (uri) =&gt; {
+
+	if (/^\//.test(uri)) uri = uri.substr(1);
+	if (/\/$/.test(uri)) uri = uri.substr(0, uri.length - 1);
+	return uri;
+
+};
+
+
+module.exports = Request;
+
     </pre>
 </div>
 

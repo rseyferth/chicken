@@ -8783,12 +8783,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.method = method;
 
 			/**
-	   * @property uri
-	   * @type {string}
-	   */
-			_this.uri = uri;
-
-			/**
 	   * Data to send along with the request
 	   * 
 	   * @property data
@@ -8810,7 +8804,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property queryParams
 	   * @type {Object}
 	   */
-			_this.queryParams = {};
+			_this.queryParams = _queryString2.default.parse(_queryString2.default.extract(uri));
+
+			/**
+	   * @property uri
+	   * @type {string}
+	   */
+			_this.uri = uri.split('?')[0];
 
 			/**
 	   * The model class used when it cannot be deduced from the
@@ -8893,6 +8893,34 @@ return /******/ (function(modules) { // webpackBootstrap
 					_jquery2.default.extend(this.queryParams, keyOrHash);
 				}
 				return this;
+			}
+
+			/**
+	   * Add given pagination page to the queryParams
+	   *
+	   * @method query
+	   * @param  pageNumber
+	   * @chainable
+	   */
+
+		}, {
+			key: 'page',
+			value: function page(pageNumber) {
+				return this.query('page[number]', pageNumber);
+			}
+
+			/**
+	   * Add given pagesize to the queryParams
+	   *
+	   * @method query
+	   * @param  pageSize
+	   * @chainable
+	   */
+
+		}, {
+			key: 'size',
+			value: function size(pageSize) {
+				return this.query('page[size]', pageSize);
 			}
 		}]);
 
