@@ -36,8 +36,11 @@ class Model extends Observable
 		 * @property originalValues
 		 * @type {object}
 		 */
-		this.originalValues = initValues;
-
+		this.originalValues = {};
+		_.each(initValues, (value, key) => {
+			this.originalValues[key] = this.uncastValue(key, value);
+		});
+		
 		/**
 		 * Values of relationships, keyed by the relationshipname
 		 * 
@@ -77,6 +80,11 @@ class Model extends Observable
 			// Apply to model
 			this.constructor.definition.initializeModel(this);
 
+		}
+
+		// A initialize method on the model?
+		if (typeof this.initialize === 'function') {
+			this.initialize();
 		}
 		
 	}
@@ -141,7 +149,7 @@ class Model extends Observable
 		}
 
 		// Is it a relationship?
-		if (this.related[key]) return this.related[key];
+		if (this.related && this.related[key]) return this.related[key];
 
 
 		// Nothing special. Do basics
@@ -150,7 +158,13 @@ class Model extends Observable
 	}
 
 	_set(key, value) {
-	
+		
+		// Is there a setter?
+		let methodName = 'set' + inflection.camelize(key);
+		if (this[methodName] && typeof this[methodName] === 'function') {
+			return this[methodName].apply(this, [value]);
+		}
+
 		// Is it a relationship that was not yet loaded
 		let relationship = this.getRelationship(key);
 		if (relationship) {
@@ -408,6 +422,38 @@ class Model extends Observable
 
 
 
+	///////////////////
+	// Handy methods //
+	///////////////////
+
+	toObject() {
+
+		// Get basics
+		let obj = super.toObject();
+
+		// Add relationships
+		_.each(this.related, (item, key) => {
+		
+			// Observable?
+			if (Observable.isObservable(item)) {
+
+				// Array?
+				if (item instanceof Observable) {
+					item = item.toObject();
+				} else {
+					item = item.toArray();
+				}
+
+			}
+
+			obj[key] = item;
+
+		});
+		return obj;
+
+	}
+
+
 	//////////////////////////
 	// Forms and validation //
 	//////////////////////////
@@ -489,6 +535,29 @@ class Model extends Observable
 			return false;
 
 		}
+
+	}
+
+	/**
+	 * Reset dirtyness of model, for given key of for whole model
+	 *
+	 * @method resetDirty
+	 * @param  {string|array} [keys]  	Optional attribute name(s)
+	 * @chainable
+	 */
+	resetDirty(keys = null) {
+
+		// Null?
+		if (keys === null) keys = _.keys(this.attributes);
+		if (typeof keys === 'string') keys = [keys];
+
+		// Specific key?
+		_.each(keys, (key) => {
+
+			this.originalValues[key] = this.uncastValue(key, this.attributes[key]);
+
+		});
+		return this;
 
 	}
 

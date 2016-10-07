@@ -158,6 +158,8 @@
 
 <div class="file">
     <pre class="code prettyprint linenums">
+import inflection from &#x27;inflection&#x27;;
+
 import ApiCall from &#x27;~/Api/ApiCall&#x27;;
 
 /**
@@ -187,6 +189,11 @@ class JsonApiCall extends ApiCall {
 	  */
 	include(relations) {
 		return this.query(&#x27;include&#x27;, relations);
+	}
+
+
+	filter(key, value) {
+		return this.query(&#x27;filter[&#x27; + inflection.underscore(key) + &#x27;]&#x27;, value);
 	}
 
 

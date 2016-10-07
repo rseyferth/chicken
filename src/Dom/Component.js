@@ -64,6 +64,7 @@ class Component extends View
 			this.attributes[inflection.camelize(key.split('-').join('_'), true)] = value;
 		});
 
+
 		/**
 		 * The HTMLBars visitor that was used to initialize this component
 		 *
@@ -107,15 +108,7 @@ class Component extends View
 		this.element = null;
 
 
-		/**
-		 * The component's child components
-		 *
-		 * @property childComponents
-		 * @type {Array}
-		 */
-		this.childComponents = [];
-
-		/**
+			/**
 		 * The component instance that wrap this component, if any.
 		 * 
 		 * @property parentComponent
@@ -125,7 +118,9 @@ class Component extends View
 		this.setSilently('parent', this.parentComponent);
 
 		// Do I have a parent?
-		if (this.parentComponent) this.parentComponent.childComponents.push(this);
+		if (this.parentComponent) {
+			this.parentComponent.components[this.getId()] = this;
+		}
 
 
 		/**
@@ -248,7 +243,8 @@ class Component extends View
 
 			// Is it a useful value?
 			if (typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number') {
-				this.element.setAttribute(key, value);
+				let attrKey = inflection.underscore(key).split('_').join('-');
+				this.element.setAttribute(attrKey, value);
 			}
 
 		});
@@ -272,7 +268,7 @@ class Component extends View
 		this.enableDomEvents();
 
 		// Find child components
-		if (this.childComponents.length > 0) {
+		if (_.size(this.components) > 0) {
 
 			// Wait for the children to complete first
 			let promises = _.map(this.childComponents, (child) => {
