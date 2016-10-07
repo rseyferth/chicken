@@ -198,12 +198,6 @@ class ApiCall extends Obj {
 		this.method = method;
 		
 		/**
-		 * @property uri
-		 * @type {string}
-		 */
-		this.uri = uri;
-
-		/**
 		 * Data to send along with the request
 		 * 
 		 * @property data
@@ -225,8 +219,14 @@ class ApiCall extends Obj {
 		 * @property queryParams
 		 * @type {Object}
 		 */
-		this.queryParams = {};
+		this.queryParams = QueryString.parse(QueryString.extract(uri));
 
+
+		/**
+		 * @property uri
+		 * @type {string}
+		 */
+		this.uri = uri.split(&#x27;?&#x27;)[0];
 
 		/**
 		 * The model class used when it cannot be deduced from the
@@ -296,7 +296,7 @@ class ApiCall extends Obj {
 	 * @param  {Mixed} value     When given a single key/value pair, enter the value as the second argument
 	 * @chainable
 	 */
-	query(keyOrHash, value = null) {
+	query(keyOrHash, value = null) {	
 
 		// Is it a key / value?
 		if (typeof keyOrHash === &#x27;string&#x27;) {
@@ -306,9 +306,30 @@ class ApiCall extends Obj {
 		}
 		return this;
 
-
+	}
+	
+	/**
+	 * Add given pagination page to the queryParams
+	 *
+	 * @method query
+	 * @param  pageNumber
+	 * @chainable
+	 */
+	page(pageNumber, pageSize = null) {
+		if (is_null(pageSize)) this.pageSize(pageSize);
+		return this.query(&#x27;page[number]&#x27;, pageNumber);
 	}
 
+	/**
+	 * Add given pagesize to the queryParams
+	 *
+	 * @method query
+	 * @param  pageSize
+	 * @chainable
+	 */
+	pageSize(pageSize) {
+		return this.query(&#x27;page[size]&#x27;, pageSize);
+	}
 
 }
 module.exports = ApiCall;

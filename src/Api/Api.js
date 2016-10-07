@@ -30,7 +30,7 @@ class Api {
 	 * @method deserialize
 	 * @return {Data.Model|Data.Collection}
 	 */
-	deserialize(/* data, apiCall */) {
+	deserialize(/* data, apiCall = null */) {
 		throw new Error('The Api implementation should have a deserialize method.');		
 	}
 

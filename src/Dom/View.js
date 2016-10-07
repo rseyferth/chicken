@@ -129,6 +129,14 @@ class View extends Observable
 
 		};
 
+		/**
+		 * @property components
+		 * @type {Object}
+		 */
+		this.components = {
+
+		};
+
 
 		/**
 		 * @property renderer

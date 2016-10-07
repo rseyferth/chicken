@@ -190,7 +190,7 @@ class Api {
 	 * @method deserialize
 	 * @return {Data.Model|Data.Collection}
 	 */
-	deserialize(/* data, apiCall */) {
+	deserialize(/* data, apiCall = null */) {
 		throw new Error(&#x27;The Api implementation should have a deserialize method.&#x27;);		
 	}
 
@@ -209,7 +209,6 @@ class Api {
 		return this.auth;
 
 	}
-
 
 
 

@@ -342,20 +342,21 @@ class JWTAuth extends Auth
 	}
 
 
-	authorizeApiCall(apiCall) {
+	getAjaxOptions() {
 
 		// Add token.
+		let options = {};
 		if (this.token) {
 
 			// Add the bearer token
-			apiCall.ajaxOptions.beforeSend = (xhr) => {
+			options.beforeSend = (xhr) => {
 				xhr.setRequestHeader('Authorization', 'Bearer ' + this.token.token);
 			};
 
 		}
 
-
-		return apiCall;
+		return options;
+		
 	}
 
 

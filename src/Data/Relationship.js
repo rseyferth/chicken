@@ -1,5 +1,6 @@
 import inflection from 'inflection';
 
+import Model from '~/Data/Model';
 import Collection from '~/Data/Collection';
 
 class Relationship {
@@ -32,10 +33,25 @@ class Relationship {
 		// Guess/store the keys
 		if (!this.localKey) this.localKey = localKey;
 		if (remoteKey || !this.remoteKey) {
-			this.remoteKey = remoteKey ? remoteKey : inflection.underscore(inflection.singularize(this.localModel));
+			this.remoteKey = remoteKey || inflection.underscore(inflection.singularize(this.localModel)) + 'Id';
 		}
 
 		return this;
+
+	}
+
+	belongsTo(remoteModel, localKey = null, remoteKey = 'id') {
+
+		// Basics
+		this.type = Relationship.BelongsTo;
+		this.remoteModel = remoteModel;
+
+		// Guess/store the keys
+		if (localKey || !this.localKey) {
+			this.localKey = localKey || inflection.underscore(inflection.singularize(this.localModel)) + 'Id';
+		}
+		if (!this.remoteKey) this.remoteKey = remoteKey;
+
 
 	}
 
@@ -49,7 +65,7 @@ class Relationship {
 			case Relationship.HasMany:
 			case Relationship.HasManyThrough:
 			case Relationship.BelongsToMany:
-				return new Collection();
+				return new Collection(Model.registry.get(this.remoteModel));
 
 			default:
 				return null;

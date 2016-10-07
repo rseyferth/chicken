@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 import HTMLBars from 'htmlbars-standalone';
-
+import inflection from 'inflection';
 
 import Obj from '~/Core/Obj';
 import View from '~/Dom/View';
@@ -59,7 +59,11 @@ class Component extends View
 		 * @property attributes
 		 * @type {object}
 		 */
-		this.attributes = attributeHash;
+		this.attributes = {};
+		_.each(attributeHash, (value, key) => {
+			this.attributes[inflection.camelize(key.split('-').join('_'), true)] = value;
+		});
+
 
 		/**
 		 * The HTMLBars visitor that was used to initialize this component
@@ -104,15 +108,7 @@ class Component extends View
 		this.element = null;
 
 
-		/**
-		 * The component's child components
-		 *
-		 * @property childComponents
-		 * @type {Array}
-		 */
-		this.childComponents = [];
-
-		/**
+			/**
 		 * The component instance that wrap this component, if any.
 		 * 
 		 * @property parentComponent
@@ -122,8 +118,19 @@ class Component extends View
 		this.setSilently('parent', this.parentComponent);
 
 		// Do I have a parent?
-		if (this.parentComponent) this.parentComponent.childComponents.push(this);
+		if (this.parentComponent) {
+			this.parentComponent.components[this.getId()] = this;
+		}
 
+
+		/**
+		 * @property view
+		 * @type {Dom.View}
+		 */
+		this.view = this.scope.view;
+		if (this.view) {
+			this.view.components[this.getId()] = this;
+		}
 		
 		/**
 		 * The dom-object can be used to listen to dom events on the event
@@ -146,6 +153,32 @@ class Component extends View
 
 
 	}
+
+	getId() {
+
+		// Already set?
+		if (!this._id) {
+
+			// Set as attribute
+			let id = this.get('id');
+			if (id) {
+				this._id = id;
+			} else {
+
+				// Do it by name
+				let name = inflection.camelize(this.name.split('-').join('_'), true);
+				if (Component.instanceCounts[name] === undefined) Component.instanceCounts[name] = 0;
+				Component.instanceCounts[name]++;
+
+				this._id = name + Component.instanceCounts[name];
+
+			}
+
+		}
+		return this._id;
+
+	}
+
 
 	sendAction(name = null, ...args) {
 
@@ -210,7 +243,8 @@ class Component extends View
 
 			// Is it a useful value?
 			if (typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number') {
-				this.element.setAttribute(key, value);
+				let attrKey = inflection.underscore(key).split('_').join('-');
+				this.element.setAttribute(attrKey, value);
 			}
 
 		});
@@ -234,7 +268,7 @@ class Component extends View
 		this.enableDomEvents();
 
 		// Find child components
-		if (this.childComponents.length > 0) {
+		if (_.size(this.components) > 0) {
 
 			// Wait for the children to complete first
 			let promises = _.map(this.childComponents, (child) => {
@@ -289,6 +323,16 @@ class Component extends View
 	}
 
 
+	getAttribute(key, defaultValue = null) {
+
+		let value = this.attributes[key];
+		if (value === undefined) value = defaultValue;
+		return value;
+
+	}
+
+
+
 }
 
 
@@ -313,5 +357,7 @@ Component.DomEventNames = [
 
 
 Component.registry = new Map();
+
+Component.instanceCounts = {};
 
 module.exports = Component;

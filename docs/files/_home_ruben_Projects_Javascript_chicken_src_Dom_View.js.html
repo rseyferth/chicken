@@ -289,6 +289,14 @@ class View extends Observable
 
 		};
 
+		/**
+		 * @property components
+		 * @type {Object}
+		 */
+		this.components = {
+
+		};
+
 
 		/**
 		 * @property renderer
@@ -331,6 +339,10 @@ class View extends Observable
 		this.apiCalls = [];
 
 
+
+		this.hooks = {
+			beforeRender: []
+		};
 
 
 		//////////////////////////
@@ -390,6 +402,12 @@ class View extends Observable
 
 
 
+	}
+
+
+	beforeRender(callback) {
+		this.hooks.beforeRender.push(callback);
+		return this;
 	}
 
 
@@ -593,6 +611,12 @@ class View extends Observable
 		// Create template //
 		/////////////////////
 
+		// Before render hook
+		_.each(this.hooks.beforeRender, (cb) =&gt; {
+			cb.apply(this);
+		});
+
+		// Render it
 		try {
 			this.renderResult = this.getTemplate().render(this, this.renderer);
 		} catch (error) {

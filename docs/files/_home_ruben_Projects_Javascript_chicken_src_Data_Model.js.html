@@ -186,7 +186,7 @@ class Model extends Observable
 	 * @param  {Object}  initValues           
 	 * @param  {Boolean} convertToObservables 
 	 */
-	constructor(initValues = {}, convertToObservables = true) {	
+	constructor(initValues = {}, convertToObservables = false) {	
 
 		super(initValues, convertToObservables);
 
@@ -196,8 +196,11 @@ class Model extends Observable
 		 * @property originalValues
 		 * @type {object}
 		 */
-		this.originalValues = initValues;
-
+		this.originalValues = {};
+		_.each(initValues, (value, key) =&gt; {
+			this.originalValues[key] = this.uncastValue(key, value);
+		});
+		
 		/**
 		 * Values of relationships, keyed by the relationshipname
 		 * 
@@ -237,6 +240,11 @@ class Model extends Observable
 			// Apply to model
 			this.constructor.definition.initializeModel(this);
 
+		}
+
+		// A initialize method on the model?
+		if (typeof this.initialize === &#x27;function&#x27;) {
+			this.initialize();
 		}
 		
 	}
@@ -301,7 +309,7 @@ class Model extends Observable
 		}
 
 		// Is it a relationship?
-		if (this.related[key]) return this.related[key];
+		if (this.related &amp;&amp; this.related[key]) return this.related[key];
 
 
 		// Nothing special. Do basics
@@ -310,7 +318,13 @@ class Model extends Observable
 	}
 
 	_set(key, value) {
-	
+		
+		// Is there a setter?
+		let methodName = &#x27;set&#x27; + inflection.camelize(key);
+		if (this[methodName] &amp;&amp; typeof this[methodName] === &#x27;function&#x27;) {
+			return this[methodName].apply(this, [value]);
+		}
+
 		// Is it a relationship that was not yet loaded
 		let relationship = this.getRelationship(key);
 		if (relationship) {
@@ -568,6 +582,38 @@ class Model extends Observable
 
 
 
+	///////////////////
+	// Handy methods //
+	///////////////////
+
+	toObject() {
+
+		// Get basics
+		let obj = super.toObject();
+
+		// Add relationships
+		_.each(this.related, (item, key) =&gt; {
+		
+			// Observable?
+			if (Observable.isObservable(item)) {
+
+				// Array?
+				if (item instanceof Observable) {
+					item = item.toObject();
+				} else {
+					item = item.toArray();
+				}
+
+			}
+
+			obj[key] = item;
+
+		});
+		return obj;
+
+	}
+
+
 	//////////////////////////
 	// Forms and validation //
 	//////////////////////////
@@ -649,6 +695,29 @@ class Model extends Observable
 			return false;
 
 		}
+
+	}
+
+	/**
+	 * Reset dirtyness of model, for given key of for whole model
+	 *
+	 * @method resetDirty
+	 * @param  {string|array} [keys]  	Optional attribute name(s)
+	 * @chainable
+	 */
+	resetDirty(keys = null) {
+
+		// Null?
+		if (keys === null) keys = _.keys(this.attributes);
+		if (typeof keys === &#x27;string&#x27;) keys = [keys];
+
+		// Specific key?
+		_.each(keys, (key) =&gt; {
+
+			this.originalValues[key] = this.uncastValue(key, this.attributes[key]);
+
+		});
+		return this;
 
 	}
 

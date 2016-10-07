@@ -508,6 +508,11 @@ class ObservableArray extends Obj
 
 	}
 
+	map(callback) {
+
+		return _.map(this.items, callback);
+
+	}
 
 
 
