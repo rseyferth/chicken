@@ -27,16 +27,25 @@ class ModelDefinition
 		this.validationRules = {};
 
 
-		callback.apply(this, [this]);
 
+		callback.apply(this, [this]);
 
 	}
 
 
 	initializeModel(model) {
 
-		// Add computed
+		// Don't notify
 		model.withoutNotifications(() => {
+
+			// Default values
+			_.each(this.attributes, (attr) => {
+				if (attr.defaultValue && model.attributes[attr.name] === undefined) {
+					model.set(attr.name, attr.defaultValue);
+				}
+			});
+			
+			// Add computed
 			_.each(this.computedAttributes, (attr, key) => {
 				model.set(key, new ComputedProperty(attr.dependencies, attr.callback));
 			});			
@@ -85,6 +94,27 @@ class ModelDefinition
 	date(name) {
 		let attr = this.attribute(name, ModelAttribute.Date);
 		return attr;
+	}
+
+
+	dateTime(name) {
+		let attr = this.attribute(name, ModelAttribute.DateTime);
+		return attr;
+	}
+
+	time(name) {
+		let attr = this.attribute(name, ModelAttribute.Time);
+		return attr;
+	}
+
+	text(name) {
+		let attr = this.attribute(name, ModelAttribute.Text);
+		return attr;		
+	}
+
+	boolean(name) {
+		let attr = this.attribute(name, ModelAttribute.Boolean);
+		return attr;		
 	}
 
 

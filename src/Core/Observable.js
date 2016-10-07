@@ -270,15 +270,8 @@ class Observable extends Obj {
 
 				}
 
-				/*// Study it
-				newValue.study(() => {
-					this._scheduleAttributeChanged(currentPart);
-				});
-				*/
 				// Store it
 				this.attributes[currentPart] = newValue;
-
-			
 
 			}
 
@@ -297,6 +290,11 @@ class Observable extends Obj {
 
 	}
 	setAttribute(key, value) {
+
+		// Is the value identical?
+		if (ClassMap.get('Utils').areEqual(value, this.get(key))) {
+			return this;
+		}
 
 		// Set it
 		this._set(key, value);

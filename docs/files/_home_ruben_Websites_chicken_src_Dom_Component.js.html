@@ -161,7 +161,7 @@
 import $ from &#x27;jquery&#x27;;
 import _ from &#x27;underscore&#x27;;
 import HTMLBars from &#x27;htmlbars-standalone&#x27;;
-
+import inflection from &#x27;inflection&#x27;;
 
 import Obj from &#x27;~/Core/Obj&#x27;;
 import View from &#x27;~/Dom/View&#x27;;
@@ -219,7 +219,10 @@ class Component extends View
 		 * @property attributes
 		 * @type {object}
 		 */
-		this.attributes = attributeHash;
+		this.attributes = {};
+		_.each(attributeHash, (value, key) =&gt; {
+			this.attributes[inflection.camelize(key.split(&#x27;-&#x27;).join(&#x27;_&#x27;), true)] = value;
+		});
 
 		/**
 		 * The HTMLBars visitor that was used to initialize this component
@@ -284,6 +287,15 @@ class Component extends View
 		// Do I have a parent?
 		if (this.parentComponent) this.parentComponent.childComponents.push(this);
 
+
+		/**
+		 * @property view
+		 * @type {Dom.View}
+		 */
+		this.view = this.scope.view;
+		if (this.view) {
+			this.view.components[this.getId()] = this;
+		}
 		
 		/**
 		 * The dom-object can be used to listen to dom events on the event
@@ -306,6 +318,32 @@ class Component extends View
 
 
 	}
+
+	getId() {
+
+		// Already set?
+		if (!this._id) {
+
+			// Set as attribute
+			let id = this.get(&#x27;id&#x27;);
+			if (id) {
+				this._id = id;
+			} else {
+
+				// Do it by name
+				let name = inflection.camelize(this.name.split(&#x27;-&#x27;).join(&#x27;_&#x27;), true);
+				if (Component.instanceCounts[name] === undefined) Component.instanceCounts[name] = 0;
+				Component.instanceCounts[name]++;
+
+				this._id = name + Component.instanceCounts[name];
+
+			}
+
+		}
+		return this._id;
+
+	}
+
 
 	sendAction(name = null, ...args) {
 
@@ -449,6 +487,16 @@ class Component extends View
 	}
 
 
+	getAttribute(key, defaultValue = null) {
+
+		let value = this.attributes[key];
+		if (value === undefined) value = defaultValue;
+		return value;
+
+	}
+
+
+
 }
 
 
@@ -473,6 +521,8 @@ Component.DomEventNames = [
 
 
 Component.registry = new Map();
+
+Component.instanceCounts = {};
 
 module.exports = Component;
     </pre>

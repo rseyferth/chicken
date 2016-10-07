@@ -199,6 +199,24 @@ let Utils = {
 
 	},
 
+
+	/**
+	 * @method map
+	 * @static
+	 * 
+	 * @param  {Object}   obj      
+	 * @param  {Function} callback 
+	 * @param  {Object}   context  
+	 */
+	map: (obj, callback, context) =&gt; {
+		if (obj instanceof Observable) {
+			obj = obj.attributes;
+		} else if (obj instanceof ObservableArray) {
+			obj = obj.items;
+		}
+		return _.map(obj, callback, context);
+	},
+
 	/**
 	 * Determine whether given value is truthlike
 	 * 
