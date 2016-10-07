@@ -156,7 +156,7 @@ class ApiCall extends Obj {
 	 * @chainable
 	 */
 	page(pageNumber, pageSize = null) {
-		if (is_null(pageSize)) this.pageSize(pageSize);
+		if (pageSize !== null) this.pageSize(pageSize);
 		return this.query('page[number]', pageNumber);
 	}
 
