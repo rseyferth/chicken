@@ -204,9 +204,10 @@ class Helpers
 
 	equal(params) {
 
-		// Get params
+				// Get params
 		let value1 = this._getValue(params[0]);
 		let value2 = this._getValue(params[1]);
+
 		return value1 == value2;
 
 	}

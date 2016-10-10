@@ -144,7 +144,7 @@ class Model extends Observable
 
 		// Is it a relationship that was not yet loaded
 		let relationship = this.getRelationship(key);
-		if (relationship) {
+		if (relationship && !this.related[key]) {
 			this.related[key] = relationship.getInitValue();
 		}
 

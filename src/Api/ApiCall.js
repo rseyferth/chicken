@@ -155,14 +155,14 @@ class ApiCall extends Obj {
 	 * @param  pageNumber
 	 * @chainable
 	 */
-	page(pageNumber, pageSize = null) {
+	page(pageNumber, pageSize = null) { 
 		if (pageSize !== null) this.pageSize(pageSize);
 		return this.query('page[number]', pageNumber);
 	}
 
 	/**
 	 * Add given pagesize to the queryParams
-	 *
+	 *``
 	 * @method query
 	 * @param  pageSize
 	 * @chainable

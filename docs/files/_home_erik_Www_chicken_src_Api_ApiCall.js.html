@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Auth</title>
+    <title>/home/erik/Www/chicken/src/Api/ApiCall.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,55 +154,186 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Auth Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Api/ApiCall.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import $ from &#x27;jquery&#x27;;
+import QueryString from &#x27;query-string&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Auth_JWTAuth.js.html#l13"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Auth&#x2F;JWTAuth.js:13</code></a>
-        </div>
-    
+import ApiError from &#x27;~/Api/ApiError&#x27;;
+import Obj from &#x27;~/Core/Obj&#x27;;
 
-    
-</div>
+/**
+ * @module Api
+ */
+class ApiCall extends Obj {
+
+	/**
+	 * @class Api.ApiCall 
+	 * 
+	 * @constructor 
+	 * @param  {Api.Api} api 	The Api instance this call originates from
+	 * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+	 * @param  {string} uri			The uri to call
+	 * @param  {Object} data        
+	 * @param  {Object} ajaxOptions 	 
+	 */
+	constructor(api, method, uri, data = {}, ajaxOptions = {}) {
+
+		super();
+
+		/**
+		 * @property api
+		 * @type {Api.Api}
+		 */
+		this.api = api;
+
+		/**
+		 * The HTTP method (get, post, put, patch, or delete)
+		 * 
+		 * @property method
+		 * @type {string}
+		 */
+		this.method = method;
+		
+		/**
+		 * Data to send along with the request
+		 * 
+		 * @property data
+		 * @type {Mixed}
+		 */
+		this.data = data;
+
+		/**
+		 * Configuration options for the Ajax call
+		 *
+		 * @property ajaxOptions
+		 * @type {Object}
+		 */
+		this.ajaxOptions = ajaxOptions;
+
+		/**
+		 * Query parameters to add onto the url
+		 *
+		 * @property queryParams
+		 * @type {Object}
+		 */
+		this.queryParams = QueryString.parse(QueryString.extract(uri));
 
 
+		/**
+		 * @property uri
+		 * @type {string}
+		 */
+		this.uri = uri.split(&#x27;?&#x27;)[0];
 
-<div class="box intro">
-    
-</div>
+		/**
+		 * The model class used when it cannot be deduced from the
+		 * Api result
+		 * 
+		 * @property modelClass
+		 * @type {Class}
+		 */
+		this.modelClass = null;
+
+	}
+
+	/**
+	 * Execute the Api Call
+	 *
+	 * @method execute
+	 * @return {Promise}
+	 */
+	execute() {
+
+		// Authorize it
+		let auth = this.api.getAuth();
+		if (auth) auth.authorizeApiCall(this);
+
+		// Make a promise
+		return this.promise(&#x27;complete&#x27;, (resolve, reject) =&gt; {
+
+			// Combine options
+			let queryString = QueryString.stringify(this.queryParams);
+			if (queryString.length &gt; 0) queryString = &#x27;?&#x27; + queryString;
+			let options = $.extend({
+				
+				url: this.api.makeUrl(this.uri) + queryString,
+				method: this.method,
+				data: this.data
+				
+			}, this.ajaxOptions);
+
+			// Make the call
+			this.api.ajax(options)
+				.then((result) =&gt; {
+
+					resolve(this.api.deserialize(result, this));
+					
+				}).fail((error) =&gt; {
+
+					// Make error
+					let errorObj = new ApiError(this, error);
+					if (auth) {
+						errorObj = auth.processApiError(errorObj);
+					} 
+					reject(errorObj);
+
+				});
 
 
+		});
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
+	}
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Auth.Auth.html">
-                        Auth.Auth
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Auth.JWTAuth.html">
-                        Auth.JWTAuth
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+	/**
+	 * Add given key/value(s) to the queryParams
+	 *
+	 * @method query
+	 * @param  {string|Object} keyOrHash  Either a key or a key/value hash
+	 * @param  {Mixed} value     When given a single key/value pair, enter the value as the second argument
+	 * @chainable
+	 */
+	query(keyOrHash, value = null) {	
+
+		// Is it a key / value?
+		if (typeof keyOrHash === &#x27;string&#x27;) {
+			this.queryParams[keyOrHash] = value;
+		} else {
+			$.extend(this.queryParams, keyOrHash);
+		}
+		return this;
+
+	}
+	
+	/**
+	 * Add given pagination page to the queryParams
+	 *
+	 * @method query
+	 * @param  pageNumber
+	 * @chainable
+	 */
+	page(pageNumber, pageSize = null) { 
+		if (pageSize !== null) this.pageSize(pageSize);
+		return this.query(&#x27;page[number]&#x27;, pageNumber);
+	}
+
+	/**
+	 * Add given pagesize to the queryParams
+	 *&#x60;&#x60;
+	 * @method query
+	 * @param  pageSize
+	 * @chainable
+	 */
+	pageSize(pageSize) {
+		return this.query(&#x27;page[size]&#x27;, pageSize);
+	}
+
+}
+module.exports = ApiCall;
+    </pre>
 </div>
 
                     </div>

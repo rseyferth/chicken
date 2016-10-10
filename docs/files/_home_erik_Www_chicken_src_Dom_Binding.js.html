@@ -41,7 +41,19 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
+                <li><a href="../classes/Api.Api.html">Api.Api</a></li>
+            
+                <li><a href="../classes/Api.ApiCall.html">Api.ApiCall</a></li>
+            
+                <li><a href="../classes/Api.JsonApi.html">Api.JsonApi</a></li>
+            
+                <li><a href="../classes/Api.JsonApiCall.html">Api.JsonApiCall</a></li>
+            
                 <li><a href="../classes/Application.html">Application</a></li>
+            
+                <li><a href="../classes/Auth.Auth.html">Auth.Auth</a></li>
+            
+                <li><a href="../classes/Auth.JWTAuth.html">Auth.JWTAuth</a></li>
             
                 <li><a href="../classes/Core.ComputedProperty.html">Core.ComputedProperty</a></li>
             
@@ -52,6 +64,8 @@
                 <li><a href="../classes/Core.ObservableArray.html">Core.ObservableArray</a></li>
             
                 <li><a href="../classes/Core.SettingsObject.html">Core.SettingsObject</a></li>
+            
+                <li><a href="../classes/Data.Model.html">Data.Model</a></li>
             
                 <li><a href="../classes/Dom.ActionBinding.html">Dom.ActionBinding</a></li>
             
@@ -87,6 +101,12 @@
 
             <ul id="api-modules" class="apis modules">
             
+                <li><a href="../modules/Api.html">Api</a></li>
+            
+                <li><a href="../modules/Auth.html">Auth</a></li>
+            
+                <li><a href="../modules/AuthError.html">AuthError</a></li>
+            
                 <li><a href="../modules/Core.html">Core</a></li>
             
                 <li><a href="../modules/Data.html">Data</a></li>
@@ -94,6 +114,8 @@
                 <li><a href="../modules/Dom.html">Dom</a></li>
             
                 <li><a href="../modules/Helpers.html">Helpers</a></li>
+            
+                <li><a href="../modules/Localization.html">Localization</a></li>
             
                 <li><a href="../modules/Routing.html">Routing</a></li>
             
@@ -138,6 +160,8 @@
     <pre class="code prettyprint linenums">
 import $ from &#x27;jquery&#x27;;
 
+import Reference from &#x27;~/Core/Reference&#x27;;
+
 /**
  * @module Dom
  */
@@ -151,8 +175,9 @@ class Binding
 	 * @param  {Dom.Renderer} 							renderer   
 	 * @param  {Core.Observable|Core.ObservableArray} 	observable 
 	 * @param  {string} 								path       	
+	 * @param  {Dom.View}								view
 	 */
-	constructor(renderer, observable, path) {
+	constructor(renderer, observable, path, view) {
 
 		/**
 		 * The Renderer this Binding has been created by. This is 
@@ -177,7 +202,7 @@ class Binding
 		 * @property path
 		 * @type {string}
 		 */
-		this.path = path;
+		this.path = typeof path === &#x27;string&#x27; &amp;&amp; path.length &gt; 0 ? path : false;
 
 
 		/**
@@ -191,18 +216,31 @@ class Binding
 		this.morphs = new Set();
 
 
+
+		this.view = view;
+
+
 		////////////////
 		// Now watch! //
 		////////////////
 
-		this.observable.observe(path, () =&gt; {
+		// What to do when value changes
+		let callback = () =&gt; {
 
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) =&gt; {
 				morph.isDirty = true;
+				this.view.scheduleRevalidate();
 			});
 
-		});
+		};
+
+		// Now listen to the object
+		if (this.path) {
+			this.observable.observe(path, callback);
+		} else {
+			this.observable.study(callback);
+		}
 
 	}
 
@@ -213,7 +251,15 @@ class Binding
 	 * @return {mixed}
 	 */
 	getValue() {
-		return this.observable.get(this.path);
+		
+		// Get a path value
+		if (this.path) {
+			return this.observable.get(this.path);
+		}
+
+		// Then return the whole thing
+		return this.observable;
+
 	}
 
 
@@ -230,6 +276,13 @@ class Binding
 
 	}
 
+
+	getReference() {
+		if (!this.reference) {
+			this.reference = new Reference(this.observable, this.path);
+		}
+		return this.reference;
+	}
 
 
 	/**

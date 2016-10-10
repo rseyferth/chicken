@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Auth</title>
+    <title>/home/erik/Www/chicken/src/Api/Api.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,55 +154,232 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Auth Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Api/Api.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import $ from &#x27;jquery&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Auth_JWTAuth.js.html#l13"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Auth&#x2F;JWTAuth.js:13</code></a>
-        </div>
-    
+import Model from &#x27;~/Data/Model&#x27;;
+import ApiCall from &#x27;~/Api/ApiCall&#x27;;
+import App from &#x27;~/Helpers/App&#x27;;
 
-    
-</div>
+/**
+ * @module Api
+ */
+class Api {
+
+	/**
+	 * @class Api.Api
+	 *
+	 * @constructor
+	 * @param  {Object} options 	 
+	 */
+	constructor(options) {
+		
+		this.settings = $.extend({
+			baseUrl: &#x27;/api&#x27;,
+			
+			auth: false,
+
+		}, options);
+
+	}
+
+	/**
+	 * @method deserialize
+	 * @return {Data.Model|Data.Collection}
+	 */
+	deserialize(/* data, apiCall = null */) {
+		throw new Error(&#x27;The Api implementation should have a deserialize method.&#x27;);		
+	}
+
+	/**
+	 * @method getAuth
+	 * @return {Auth.Auth} 
+	 */
+	getAuth() {
+
+		// Set already?
+		if (this.auth) return this.auth;
+		if (this.settings.auth === false) return false;
+
+		// Look it up.
+		this.auth = App().auth(this.settings.auth);
+		return this.auth;
+
+	}
 
 
 
-<div class="box intro">
-    
-</div>
+	//////////////////
+	// HTTP methods //
+	//////////////////
+
+	/**
+	 * @method call
+	 * @param  {string} method      
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	call(method, uri, data = {}, ajaxOptions = {}) {
+
+		// Create api call
+		return new ApiCall(this, method, uri, data, ajaxOptions);
+
+	}
+
+	/**
+	 * @method get
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	get(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;get&#x27;, uri, data, ajaxOptions);
+	}
+
+	/**
+	 * @method post
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	post(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;post&#x27;, uri, data, ajaxOptions);
+	}
+
+	/**
+	 * @method put
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	put(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;put&#x27;, uri, data, ajaxOptions);
+	}
+
+	/**
+	 * @method path
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	patch(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;patch&#x27;, uri, data, ajaxOptions);
+	}
+
+	/**
+	 * @method delete
+	 * @param  {string} uri         
+	 * @param  {Object} [data={}]
+	 * @param  {Object} [ajaxOptions={}]
+	 * @return {Api.ApiCall}
+	 */
+	delete(uri, data = {}, ajaxOptions = {}) {
+		return this.call(&#x27;delete&#x27;, uri, data, ajaxOptions);
+	}
+
+
+	////////////////////
+	// Helper methods //
+	////////////////////
+
+	/**
+	 * @method makeUrl
+	 * @param  {string} uri 	Relative url within the API
+	 * @return {string} Fully formed url
+	 */
+	makeUrl(uri) {
+		return this.settings.baseUrl + uri;
+	}
+
+	/**
+	 * Make an ajax call using jQuery
+	 * 
+	 * @method ajax
+	 * @param  {Object} options 
+	 * @return {jQuery Ajax call}         
+	 */
+	ajax(options) {
+		options.dataType = &#x27;json&#x27;;
+		return $.ajax(options);
+	}
+
+
+	///////////////////
+	// Model methods //
+	///////////////////
+
+	/**
+	 * Get a single Model record from the Api
+	 * 
+	 * @method one
+	 * @param  {string} modelName 
+	 * @param  {string} id        
+	 * @return {Api.ApiCall}
+	 */
+	one(modelName, id) {
+
+		// Get uri from model
+		let ModelClass = Model.registry.get(modelName);
+		if (!ModelClass) throw new Error(&#x27;There is no model registered with the name &quot;&#x27; + modelName + &#x27;&quot;&#x27;);
+		let uri = ModelClass.definition.getApiUri(id);
+
+		// Make the call
+		let call = this.get(uri);
+		call.modelClass = ModelClass;
+		return call;
+
+	}
+
+	/**
+	 * Get all Model records from the Api
+	 * 
+	 * @method all
+	 * @param  {string} modelName
+	 * @return {Api.ApiCall}
+	 */
+	all(modelName) {
+
+		// Get uri from model
+		let ModelClass = Model.registry.get(modelName);
+		if (!ModelClass) throw new Error(&#x27;There is no model registered with the name &quot;&#x27; + modelName + &#x27;&quot;&#x27;);
+		let uri = ModelClass.definition.getApiUri();
+
+		// Make the call
+		let call = this.get(uri);
+		call.modelClass = ModelClass;
+		return call;
+
+	}
+
+
+	/**
+	 * Save given model to the Api
+	 *
+	 * @method saveModel
+	 * @param 	{string}	uri
+	 * @param 	{Data.Model} model
+	 * @return {Api.ApiCall}
+	 */
+	saveModel(/* uri, model */) {
+		throw new Error(&#x27;The Api implementation should have a saveModel method.&#x27;);		
+	}
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Auth.Auth.html">
-                        Auth.Auth
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Auth.JWTAuth.html">
-                        Auth.JWTAuth
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+}
+module.exports = Api;
+    </pre>
 </div>
 
                     </div>

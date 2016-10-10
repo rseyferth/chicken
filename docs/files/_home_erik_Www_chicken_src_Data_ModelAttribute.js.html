@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Auth</title>
+    <title>/home/erik/Www/chicken/src/Data/ModelAttribute.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,55 +154,154 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Auth Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Data/ModelAttribute.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import moment from &#x27;moment&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Auth_JWTAuth.js.html#l13"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Auth&#x2F;JWTAuth.js:13</code></a>
-        </div>
-    
+class ModelAttribute {
 
-    
-</div>
+	constructor(name, type) {
+
+		this.name = name;
+		this.type = type;
 
 
+		this.isPrimaryKey = false;
 
-<div class="box intro">
-    
-</div>
+		this.defaultValue = undefined;
+
+		this.size = null;
+
+	}
+
+	default(value) {
+		this.defaultValue = value;
+		return this;
+	} 
+
+	primary(isPrimaryKey = true) {
+		this.isPrimaryKey = isPrimaryKey;
+		return this;
+	}
+
+	/**
+	 * Cast given (database) value for use in the application,
+	 * according to the type of this attribute
+	 * 
+	 * @method cast
+	 * @param  {mixed} value 
+	 * @return {mixed}       
+	 */
+	cast(value) {
+
+		switch (this.type) {
+
+			////////////////
+			// Primitives //
+			////////////////
+
+			// Number
+			case ModelAttribute.Number: 
+				return value instanceof Number ? value : Number.parseFloat(value);
+
+			// Integer
+			case ModelAttribute.Integer:
+				return Number.isInteger(value) ? value : Number.parseInt(value);
+
+			// String
+			case ModelAttribute.String:
+				return value instanceof String ? value : &#x27;&#x27; + value;
+
+
+			///////////
+			// Dates //
+			///////////
+
+			// Date or date time
+			case ModelAttribute.Date:
+			case ModelAttribute.DateTime:
+				return value; // ? moment(value) : value;
+
+			default:
+				return value;
+
+		}
+
+	}
+
+	/**
+	 * Cast given application value back for use in the database/api.
+	 *
+	 * @method uncast
+	 * @param  {mixed} value 
+	 * @return {mixed}       
+	 */
+	uncast(value) {
+
+		switch (this.type) {
+
+			////////////////
+			// Primitives //
+			////////////////
+
+			// Number
+			case ModelAttribute.Number: 
+				return value instanceof Number ? value : Number.parseFloat(value);
+
+			// Integer
+			case ModelAttribute.Integer:
+				return Number.isInteger(value) ? value : Number.parseInt(value);
+
+			// String
+			case ModelAttribute.String:
+				return value instanceof String ? value : &#x27;&#x27; + value;
+
+
+			///////////
+			// Dates //
+			///////////
+
+			// Date or date time
+			case ModelAttribute.Date:
+				return moment.isMoment(value) ? value.format(&#x27;YYYY-MM-DD&#x27;) : value;
+
+			case ModelAttribute.DateTime:
+				return moment.isMoment(value) ? value.format(&#x27;YYYY-MM-DD HH:mm:ss&#x27;) : value;
+
+			default:
+				return value;
+
+		}
+
+
+	}
 
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
 
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Auth.Auth.html">
-                        Auth.Auth
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Auth.JWTAuth.html">
-                        Auth.JWTAuth
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
 
-    <div class="yui3-u-1-2">
-        
-    </div>
+
+}
+
+
+
+
+
+ModelAttribute.Number = &#x27;Number&#x27;;
+ModelAttribute.Integer = &#x27;Integer&#x27;;
+ModelAttribute.String = &#x27;String&#x27;;
+ModelAttribute.Enum = &#x27;Enum&#x27;;
+
+
+ModelAttribute.Date = &#x27;Date&#x27;;
+ModelAttribute.DateTime = &#x27;DateTime&#x27;;
+ModelAttribute.Time = &#x27;Time&#x27;;
+
+
+module.exports = ModelAttribute;
+    </pre>
 </div>
 
                     </div>

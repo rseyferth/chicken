@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
     <meta charset="utf-8">
-    <title>Auth</title>
+    <title>/home/erik/Www/chicken/src/Localization/I18n.js</title>
     <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
     <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
     <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
@@ -154,55 +154,212 @@
             <div class="apidocs">
                 <div id="docs-main">
                     <div class="content">
-                        <h1>Auth Module</h1>
-<div class="box clearfix meta">
-    
+                        <h1 class="file-heading">File: /home/erik/Www/chicken/src/Localization/I18n.js</h1>
 
-    
+<div class="file">
+    <pre class="code prettyprint linenums">
+import $ from &#x27;jquery&#x27;;
+import _ from &#x27;underscore&#x27;;
 
-    
-        <div class="foundat">
-            Defined in: <a href="../files/_home_erik_Www_chicken_src_Auth_JWTAuth.js.html#l13"><code>&#x2F;home&#x2F;erik&#x2F;Www&#x2F;chicken&#x2F;src&#x2F;Auth&#x2F;JWTAuth.js:13</code></a>
-        </div>
-    
+import Obj from &#x27;~/Core/Obj&#x27;;
+/**
+ * @module Localization
+ */
+class I18n extends Obj {
 
-    
-</div>
+	constructor() {
+
+		super();
+
+		/**
+		 * @property data
+		 * @type {Object}
+		 */
+		this.data = {};
+
+		/**
+		 * @property bundlesToLoad
+		 * @type {Array}
+		 */
+		this.bundlesToLoad = [];
+
+	}
+
+	/**
+	 * Add a bundle that will be loaded when the application starts
+	 *
+	 * @method addBundle
+	 * @param  {string} url 
+	 * @param  {string} [key=null]  Optional key to add loaded data under.
+	 * @chainable
+	 */
+	addBundle(url, key = null) {
+
+		this.bundlesToLoad.push({
+			url: url,
+			key: key
+		});
+
+		return this;
+
+	}
+
+	/**
+	 * Manually load a bundle into I18n
+	 *
+	 * @method loadBundle
+	 * @param  {string} url 
+	 * @param  {string} [key=null]  Optional key to add loaded data under.
+	 * @return {Promise}     
+	 */
+	loadBundle(url, key = null) {
+
+		return new Promise((resolve, reject) =&gt; {
+
+			// Do we have it in cache?
+			if (I18n.Cache[url]) {
+
+				resolve(I18n.Cache[url]);
+				return;
+			}
+
+			// Load it.
+			$.ajax(url).then((result) =&gt; {
+				resolve(result);
+			}).fail((error) =&gt; {
+				reject(error);
+			});
+
+		}).then((result) =&gt; {
+
+			// Is there a key?
+			if (key) {
+				let r = {};
+				r[key] = result;
+				result = r;
+			}
+
+			// Extend
+			$.extend(this.data, result);
+
+		});
+
+	}
+
+	/**
+	 * Load all added bundles
+	 *
+	 * @method load
+	 * @return {Promise}
+	 */
+	load() {
+
+		// Main prmomise for loading
+		return this.promise(&#x27;loaded&#x27;, (resolve) =&gt; {
+
+			// Nothing to load?
+			if (this.bundlesToLoad.length === 0) {
+				resolve();
+				return;
+			}
+
+			// Collect promises
+			let promises = [];
+			_.each(this.bundlesToLoad, (bundle) =&gt; {
+
+				promises.push(this.loadBundle(bundle.url, bundle.key));
+
+			});
+
+			// When all is done.
+			Promise.all(promises).then(() =&gt; {
+				resolve();
+			});
+
+		});
+
+	}
+
+	/**
+	 * Get the translation for given key
+	 * 
+	 * @method translate
+	 * @param  {string} key        			Dot-notation key to get value of
+	 * @param  {Object} [attributes={}] 	Optional object containing attributes to pass to the template in the translated value
+	 * @param  {mixed} [fallback=null]		Optional fallback value when the key is nout found
+	 * @return {mixed}
+	 */
+	translate(key, attributes = {}, fallback = null) {
+
+		// Dot notation
+		let obj = this.data;
+		let parts = key.split(/\./);
+		while (parts.length &gt; 0) {
+			
+			// Get firs tpart
+			let part = parts.shift();
+
+			// Not existing?
+			if (!obj[part]) return fallback ? fallback : &#x27;[&#x27; + key + &#x27;]&#x27;;
+			
+			// Dive in.
+			obj = obj[part];
+		}
+
+		// String?
+		if (typeof obj === &#x27;string&#x27;) {
+
+			/////////////////
+			// Templating? //
+			/////////////////
+			
+			if (obj.match(/&lt;%/)) {
+
+				// Convert attributes into real values
+				let attr = _.mapObject(attributes, (value) =&gt; {
+				
+					// Get value?
+					if (typeof value.getValue === &#x27;function&#x27;) {
+						value = value.getValue();
+					}
+					return value;
+
+				});
+				
+				// Make a template and run it
+				let template = _.template(obj);
+				obj = template(attr);
+
+			}
+
+		}
+
+		return obj;
+		
+
+	}
+
+	/**
+	 * Alias of translate
+	 * 
+	 * @method get
+	 * @param  {string} key        
+	 * @param  {Object} [attributes={}] 
+	 * @param  {mixed} [fallback=null]
+	 * @return {mixed}
+	 */
+	get(key, attributes = {}, fallback = null) {
+		return this.translate(key, attributes, fallback);
+	}
 
 
+}
 
-<div class="box intro">
-    
-</div>
-
+I18n.Cache = {};
 
 
-<div class="yui3-g">
-    <div class="yui3-u-1-2">
-        
-            <p>This module provides the following classes:</p>
-
-            <ul class="module-classes">
-            
-                <li class="module-class">
-                    <a href="../classes/Auth.Auth.html">
-                        Auth.Auth
-                    </a>
-                </li>
-            
-                <li class="module-class">
-                    <a href="../classes/Auth.JWTAuth.html">
-                        Auth.JWTAuth
-                    </a>
-                </li>
-            
-            </ul>
-        
-    </div>
-
-    <div class="yui3-u-1-2">
-        
-    </div>
+module.exports = I18n;
+    </pre>
 </div>
 
                     </div>
