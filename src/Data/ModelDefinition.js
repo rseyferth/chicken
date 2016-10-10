@@ -27,18 +27,17 @@ class ModelDefinition
 
 		this.validationRules = {};
 
-
-
 		callback.apply(this, [this]);
 
 	}
 
-	getRelationshipByLocalKey(localKey) {
+	getRelationshipsByLocalKey() {
 
 		// Initialized?
 		if (!this.relationshipsByLocalKey) {
 
 			// Loop through relationships
+			this.relationshipsByLocalKey = {};
 			_.each(this.relationships, (relationship) => {
 
 				// Stored on local model?
@@ -49,10 +48,21 @@ class ModelDefinition
 			});
 
 		}
-		return this.relationshipsByLocalKey[localKey];
+		return this.relationshipsByLocalKey;
 
 	}
 
+	getRelationshipByLocalKey(localKey) {
+
+		
+		return this.getRelationshipsByLocalKey()[localKey];
+
+	}
+
+
+	hasAttribute(key) {
+		return this.attributes[key] !== undefined;
+	}
 
 
 	initializeModel(model) {
@@ -106,6 +116,10 @@ class ModelDefinition
 		let attr = this.attribute(name, ModelAttribute.Integer);
 		return attr;
 	}
+	number(name) {
+		let attr = this.attribute(name, ModelAttribute.Number);
+		return attr;	
+	}
 
 	string(name, size) {
 		let attr = this.attribute(name, ModelAttribute.String);
@@ -139,6 +153,20 @@ class ModelDefinition
 		return attr;		
 	}
 
+
+	//////////
+	// JSON //
+	//////////
+
+	array(name) {
+		let attr = this.attribute(name, ModelAttribute.Array);
+		return attr;
+	}
+
+	object(name) {
+		let attr = this.attribute(name, ModelAttribute.Object);
+		return attr;	
+	}
 
 
 	//////////////////////

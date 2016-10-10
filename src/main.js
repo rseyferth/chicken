@@ -232,6 +232,19 @@ var Chicken = {
 
 	},
 
+	helper: (name, callback, renderer = null, overwrite = false) => {
+
+		// Already there?
+		if (Chicken.Dom.Helpers.User[name] !== undefined && overwrite !== true) {
+			throw new Error('A helper with the name ' + name + ' was already defined. If you want to overwrite this, use the "overwrite" parameter.');
+		}
+
+		// Register
+		Chicken.Dom.Helpers.User[name] = callback;
+		return Chicken.Dom.Helpers.User;
+
+	},
+
 	model: (name, configCallback = null, methods = null) => {
 
 		// Getter?
@@ -361,6 +374,16 @@ var Chicken = {
 
 		}
 
+	},
+
+	getValue: (obj) => {
+
+		return Utils.getValue(obj);
+
+	},
+
+	translate: (key) => {
+		return Application.getInstance().i18n.translate(key);
 	},
 
 	debugging: 'console'

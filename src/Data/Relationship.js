@@ -18,11 +18,16 @@ class Relationship {
 		this.remoteModel = null;
 		this.remoteKey = null;
 
+		this.morphModelKey = null;
 
 		this.pivotModel = null;
 
 
 	}
+
+	////////////////////////
+	// Relationship types //
+	////////////////////////
 
 	hasMany(remoteModel, localKey = 'id', remoteKey = null) {
 
@@ -33,7 +38,7 @@ class Relationship {
 		// Guess/store the keys
 		if (!this.localKey) this.localKey = localKey;
 		if (remoteKey || !this.remoteKey) {
-			this.remoteKey = remoteKey || inflection.underscore(inflection.singularize(this.localModel)) + 'Id';
+			this.remoteKey = remoteKey || inflection.camelize(inflection.singularize(this.localModel), true) + 'Id';
 		}
 
 		return this;
@@ -48,18 +53,80 @@ class Relationship {
 
 		// Guess/store the keys
 		if (localKey || !this.localKey) {
-			this.localKey = localKey || inflection.underscore(inflection.singularize(this.localModel)) + 'Id';
+			this.localKey = localKey || inflection.camelize(inflection.singularize(this.remoteModel), true) + 'Id';
 		}
 		if (!this.remoteKey) this.remoteKey = remoteKey;
 
+		return this;
+
+	}
+
+	hasOne(remoteModel, localKey = 'id', remoteKey = null) {
+
+		// Basics
+		this.type = Relationship.HasOne;
+		this.remoteModel = remoteModel;
+
+		// Guess/store the keys
+		if (!this.localKey) this.localKey = localKey;
+		if (remoteKey || !this.remoteKey) {
+			this.remoteKey = remoteKey || inflection.camelize(inflection.singularize(this.localModel), true) + 'Id';
+		}
+
+		return this;
+
+	}
+
+
+	/////////////////////////
+	// Morph relationships //
+	/////////////////////////
+
+	belongsToMorph(morphModelKey, localKey, remoteKey = 'id') {
+
+		// Basics
+		this.type = Relationship.BelongsToMorph;
+		this.remoteModel = null;
+
+		// Guess/store the keys
+		this.localKey = localKey;
+		this.remoteKey = remoteKey;
+		this.morphModelKey = morphModelKey;
+
+		return this;
 
 	}
 
 
 
+	/////////////
+	// Setters //
+	/////////////
+
+	setLocalKey(value) {
+		this.localKey = value;
+		return this;
+	}
+	setRemoteKey(value) {
+		this.remoteKey = value;
+		return this;
+	}
+
+
+
+	/////////////
+	// Methods //
+	/////////////
+
 	isStoredOnLocalModel() {
 
 		return this.type === Relationship.BelongsTo;
+
+	}
+
+	isStoredOnRemoteModel() {
+
+		return this.type === Relationship.HasOne || this.type === Relationship.HasMany;
 
 	}
 
@@ -92,6 +159,8 @@ Relationship.BelongsTo = 'BelongsTo';
 
 Relationship.HasManyThrough = 'HasManyThrough';
 Relationship.BelongsToMany = 'BelongsToMany';
+
+Relationship.BelongsToMorph = 'BelongsToMorph';
 
 
 

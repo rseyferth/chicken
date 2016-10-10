@@ -2,6 +2,9 @@ import _ from 'underscore';
 
 import Observable from '~/Core/Observable';
 import ObservableArray from '~/Core/ObservableArray';
+import Binding from '~/Dom/Binding';
+import ComputedProperty from '~/Core/ComputedProperty';
+import Reference from '~/Core/Reference';
 import ClassMap from '~/Helpers/ClassMap';
 
 let uid = 0;
@@ -19,6 +22,14 @@ let Utils = {
 	 * @class Helpers.Utils
 	 * @static
 	 */
+
+
+	getValue: (obj) => {
+		if (obj instanceof Binding || obj instanceof ComputedProperty || obj instanceof Reference) {
+			return obj.getValue();
+		}
+		return obj;
+	},
 
 
 	/**

@@ -176,10 +176,17 @@ class Renderer
 
 			lookupHelper: (renderer, scope, helperName) => {
 				
-				if (!renderer.helpers[helperName]) {
-					throw new Error('There is no helper registered with the name "' + helperName + '"');
+				// Use helper?
+				if (Helpers.User[helperName]) {
+					return Helpers.User[helperName];
 				}
-				return renderer.helpers[helperName];
+
+				// Chicken helper?
+				if (renderer.helpers[helperName]) {
+					return renderer.helpers[helperName];
+				}
+
+				throw new Error('There is no helper registered with the name "' + helperName + '"');
 			},
 
 			invokeHelper: (morph, renderer, scope, visitor, params, attributeHash, helper, options) => {

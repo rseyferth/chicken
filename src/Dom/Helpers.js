@@ -352,4 +352,8 @@ class Helpers
 
 }
 
+
+Helpers.User = {};
+
+
 module.exports = Helpers;

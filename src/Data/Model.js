@@ -9,6 +9,7 @@ import ObservableArray from '~/Core/ObservableArray';
 import ModelStore from '~/Data/ModelStore';
 import Collection from '~/Data/Collection';
 import ClassMap from '~/Helpers/ClassMap';
+import Utils from '~/Helpers/Utils';
 
 /**
  * @module Data
@@ -293,34 +294,68 @@ class Model extends Observable
 
 		// Which attributes to use?
 		let attr = onlyDirty ? this.getDirty() : _.defaults({}, this.attributes);
-		attr = _.mapObject(attr, (value, key) => {
 
-			// Do we need to cast it?
-			let attributeDefinition = this.getAttributeDefinition(key);
-			if (attributeDefinition) {
-				value = attributeDefinition.cast(value);
-			} else {
+		// Check model definition
+		let modelDefinition = this.getDefinition();
+		if (modelDefinition) {
 
-				// Is it a moment?
-				if (moment.isMoment(value)) {
+			// Use only attributes in the model definition
+			let modelAttr = _.pick(attr, (value, key) => {
+			
+				// Has property?
+				return modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined;
 
-					// Make it ISO 8601
-					value = value.format('YYYY-MM-DD HH:mm:ss');
+			});
 
-				} 
+			// Now uncast the values
+			attr = _.mapObject(modelAttr, (value, key) => {
 
-				// Is it an array or model?
-				else if (value instanceof ObservableArray) {
-					value = JSON.stringify(value.toArray());
-				}				
-				else if (value instanceof Model) {
-					value = JSON.stringify(value.getAttributesForApi(onlyDirty));
+				// Get the actual value
+				value = Utils.getValue(value);
+
+				// Uncast it for DB usage
+				return this.getAttributeDefinition(key).uncast(value);
+
+			});
+
+			return attr;
+
+		} else {
+
+			// Loop attributes
+			attr = _.mapObject(attr, (value, key) => {
+
+				// Get the actual value
+				value = Utils.getValue(value);
+
+				// Do we need to cast it?
+				let attributeDefinition = this.getAttributeDefinition(key);
+				if (attributeDefinition) {
+					value = attributeDefinition.uncast(value);
+				} else {
+
+					// Is it a moment?
+					if (moment.isMoment(value)) {
+
+						// Make it ISO 8601
+						value = value.format('YYYY-MM-DD HH:mm:ss');
+
+					}
+
+					// Is it an array or model?
+					else if (value instanceof ObservableArray) {
+						value = JSON.stringify(value.toArray());
+					}				
+					else if (value instanceof Model) {
+						value = JSON.stringify(value.getAttributesForApi(onlyDirty));
+					}
+
 				}
 
-			}
+				return value;
+			});
 
-			return value;
-		});
+		}
 		
 		delete attr.id;
 		return attr;
@@ -611,12 +646,24 @@ class Model extends Observable
 	 */
 	setRelatedModel(relationshipName, relatedModel) {
 
+		// Get the relationship itself
+		let relationship = this.getRelationship(relationshipName);
+		if (!relationship) throw new Error('There is no relationship defined on "' + this.getModelName() + '" by the name "' + relationshipName + '"');
+		if (relationship.isStoredOnLocalModel()) {
+			
+			// Get the remote key's value and set it on the local key
+			this.set(relationship.localKey, relatedModel.get(relationship.remoteKey));
+
+		} else if (relationship.isStoredOnRemoteModel()) {
+
+			// Get the local key's value and set it on the remote key
+			relatedModel.set(relationship.remoteKey, this.get(relationship.localKey));
+
+		}
+		
 		// Set it
 		this.related[relationshipName] = relatedModel;
-
-		// Also set the local key if necessary
-		// @TODO
-
+		
 		return this;
 
 	}
@@ -662,6 +709,19 @@ class Model extends Observable
 	//////////////////////
 	// Model definition //
 	//////////////////////
+
+	/**
+	 * Get the model class name for the current instance. When no definition was
+	 * made for this model, 'DefaultModel' will be returned.
+	 *
+	 * @method getModelName
+	 * @return {string} 
+	 */
+	getModelName() {
+		let definition = this.getDefinition();
+		if (!definition) return 'DefaultModel';
+		return definition.name;
+	}
 
 	/**
 	 * Get this model's ModelDefinition. 

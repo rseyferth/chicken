@@ -9,6 +9,7 @@ class ModelAttribute {
 
 
 		this.isPrimaryKey = false;
+		this.isNullable = false;
 
 		this.defaultValue = undefined;
 
@@ -25,6 +26,12 @@ class ModelAttribute {
 		this.isPrimaryKey = isPrimaryKey;
 		return this;
 	}
+
+	nullable(isNullable = true) {
+		this.isNullable = isNullable;
+		return this;
+	}
+
 
 	/**
 	 * Cast given (database) value for use in the application,
@@ -134,10 +141,12 @@ ModelAttribute.Integer = 'Integer';
 ModelAttribute.String = 'String';
 ModelAttribute.Enum = 'Enum';
 
-
 ModelAttribute.Date = 'Date';
 ModelAttribute.DateTime = 'DateTime';
 ModelAttribute.Time = 'Time';
+
+ModelAttribute.Array = 'Array';
+ModelAttribute.Object = 'Object';
 
 
 module.exports = ModelAttribute;

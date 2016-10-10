@@ -440,6 +440,21 @@ return /******/ (function(modules) { // webpackBootstrap
 			return def;
 		},
 
+		helper: function helper(name, callback) {
+			var renderer = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+			var overwrite = arguments.length <= 3 || arguments[3] === undefined ? false : arguments[3];
+
+
+			// Already there?
+			if (Chicken.Dom.Helpers.User[name] !== undefined && overwrite !== true) {
+				throw new Error('A helper with the name ' + name + ' was already defined. If you want to overwrite this, use the "overwrite" parameter.');
+			}
+
+			// Register
+			Chicken.Dom.Helpers.User[name] = callback;
+			return Chicken.Dom.Helpers.User;
+		},
+
 		model: function model(name) {
 			var configCallback = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
 			var methods = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
@@ -593,6 +608,15 @@ return /******/ (function(modules) { // webpackBootstrap
 					break;
 
 			}
+		},
+
+		getValue: function getValue(obj) {
+
+			return _Utils2.default.getValue(obj);
+		},
+
+		translate: function translate(key) {
+			return _Application2.default.getInstance().i18n.translate(key);
 		},
 
 		debugging: 'console'
@@ -6336,10 +6360,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			lookupHelper: function lookupHelper(renderer, scope, helperName) {
 
-				if (!renderer.helpers[helperName]) {
-					throw new Error('There is no helper registered with the name "' + helperName + '"');
+				// Use helper?
+				if (_Helpers2.default.User[helperName]) {
+					return _Helpers2.default.User[helperName];
 				}
-				return renderer.helpers[helperName];
+
+				// Chicken helper?
+				if (renderer.helpers[helperName]) {
+					return renderer.helpers[helperName];
+				}
+
+				throw new Error('There is no helper registered with the name "' + helperName + '"');
 			},
 
 			invokeHelper: function invokeHelper(morph, renderer, scope, visitor, params, attributeHash, helper, options) {
@@ -9450,6 +9481,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		return Helpers;
 	}();
 
+	Helpers.User = {};
+
 	module.exports = Helpers;
 
 /***/ },
@@ -9472,6 +9505,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
+	var _Binding = __webpack_require__(47);
+
+	var _Binding2 = _interopRequireDefault(_Binding);
+
+	var _ComputedProperty = __webpack_require__(39);
+
+	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
+
+	var _Reference = __webpack_require__(37);
+
+	var _Reference2 = _interopRequireDefault(_Reference);
+
 	var _ClassMap = __webpack_require__(38);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
@@ -9490,6 +9535,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @class Helpers.Utils
 	  * @static
 	  */
+
+		getValue: function getValue(obj) {
+			if (obj instanceof _Binding2.default || obj instanceof _ComputedProperty2.default || obj instanceof _Reference2.default) {
+				return obj.getValue();
+			}
+			return obj;
+		},
 
 		/**
 	  * @method each
@@ -11758,6 +11810,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
+	var _Utils = __webpack_require__(57);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -12068,31 +12124,61 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Which attributes to use?
 				var attr = onlyDirty ? this.getDirty() : _underscore2.default.defaults({}, this.attributes);
-				attr = _underscore2.default.mapObject(attr, function (value, key) {
 
-					// Do we need to cast it?
-					var attributeDefinition = _this3.getAttributeDefinition(key);
-					if (attributeDefinition) {
-						value = attributeDefinition.cast(value);
-					} else {
+				// Check model definition
+				var modelDefinition = this.getDefinition();
+				if (modelDefinition) {
 
-						// Is it a moment?
-						if (_moment2.default.isMoment(value)) {
+					// Use only attributes in the model definition
+					var modelAttr = _underscore2.default.pick(attr, function (value, key) {
 
-							// Make it ISO 8601
-							value = value.format('YYYY-MM-DD HH:mm:ss');
+						// Has property?
+						return modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined;
+					});
+
+					// Now uncast the values
+					attr = _underscore2.default.mapObject(modelAttr, function (value, key) {
+
+						// Get the actual value
+						value = _Utils2.default.getValue(value);
+
+						// Uncast it for DB usage
+						return _this3.getAttributeDefinition(key).uncast(value);
+					});
+
+					return attr;
+				} else {
+
+					// Loop attributes
+					attr = _underscore2.default.mapObject(attr, function (value, key) {
+
+						// Get the actual value
+						value = _Utils2.default.getValue(value);
+
+						// Do we need to cast it?
+						var attributeDefinition = _this3.getAttributeDefinition(key);
+						if (attributeDefinition) {
+							value = attributeDefinition.uncast(value);
+						} else {
+
+							// Is it a moment?
+							if (_moment2.default.isMoment(value)) {
+
+								// Make it ISO 8601
+								value = value.format('YYYY-MM-DD HH:mm:ss');
+							}
+
+							// Is it an array or model?
+							else if (value instanceof _ObservableArray2.default) {
+									value = JSON.stringify(value.toArray());
+								} else if (value instanceof Model) {
+									value = JSON.stringify(value.getAttributesForApi(onlyDirty));
+								}
 						}
 
-						// Is it an array or model?
-						else if (value instanceof _ObservableArray2.default) {
-								value = JSON.stringify(value.toArray());
-							} else if (value instanceof Model) {
-								value = JSON.stringify(value.getAttributesForApi(onlyDirty));
-							}
-					}
-
-					return value;
-				});
+						return value;
+					});
+				}
 
 				delete attr.id;
 				return attr;
@@ -12399,11 +12485,21 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'setRelatedModel',
 			value: function setRelatedModel(relationshipName, relatedModel) {
 
+				// Get the relationship itself
+				var relationship = this.getRelationship(relationshipName);
+				if (!relationship) throw new Error('There is no relationship defined on "' + this.getModelName() + '" by the name "' + relationshipName + '"');
+				if (relationship.isStoredOnLocalModel()) {
+
+					// Get the remote key's value and set it on the local key
+					this.set(relationship.localKey, relatedModel.get(relationship.remoteKey));
+				} else if (relationship.isStoredOnRemoteModel()) {
+
+					// Get the local key's value and set it on the remote key
+					relatedModel.set(relationship.remoteKey, this.get(relationship.localKey));
+				}
+
 				// Set it
 				this.related[relationshipName] = relatedModel;
-
-				// Also set the local key if necessary
-				// @TODO
 
 				return this;
 			}
@@ -12450,6 +12546,22 @@ return /******/ (function(modules) { // webpackBootstrap
 			//////////////////////
 			// Model definition //
 			//////////////////////
+
+			/**
+	   * Get the model class name for the current instance. When no definition was
+	   * made for this model, 'DefaultModel' will be returned.
+	   *
+	   * @method getModelName
+	   * @return {string} 
+	   */
+
+		}, {
+			key: 'getModelName',
+			value: function getModelName() {
+				var definition = this.getDefinition();
+				if (!definition) return 'DefaultModel';
+				return definition.name;
+			}
 
 			/**
 	   * Get this model's ModelDefinition. 
@@ -13879,6 +13991,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.type = type;
 
 			this.isPrimaryKey = false;
+			this.isNullable = false;
 
 			this.defaultValue = undefined;
 
@@ -13897,6 +14010,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				var isPrimaryKey = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
 
 				this.isPrimaryKey = isPrimaryKey;
+				return this;
+			}
+		}, {
+			key: 'nullable',
+			value: function nullable() {
+				var isNullable = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+				this.isNullable = isNullable;
 				return this;
 			}
 
@@ -14006,6 +14127,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	ModelAttribute.DateTime = 'DateTime';
 	ModelAttribute.Time = 'Time';
 
+	ModelAttribute.Array = 'Array';
+	ModelAttribute.Object = 'Object';
+
 	module.exports = ModelAttribute;
 
 /***/ },
@@ -14065,14 +14189,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		_createClass(ModelDefinition, [{
-			key: 'getRelationshipByLocalKey',
-			value: function getRelationshipByLocalKey(localKey) {
+			key: 'getRelationshipsByLocalKey',
+			value: function getRelationshipsByLocalKey() {
 				var _this = this;
 
 				// Initialized?
 				if (!this.relationshipsByLocalKey) {
 
 					// Loop through relationships
+					this.relationshipsByLocalKey = {};
 					_underscore2.default.each(this.relationships, function (relationship) {
 
 						// Stored on local model?
@@ -14081,7 +14206,18 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 					});
 				}
-				return this.relationshipsByLocalKey[localKey];
+				return this.relationshipsByLocalKey;
+			}
+		}, {
+			key: 'getRelationshipByLocalKey',
+			value: function getRelationshipByLocalKey(localKey) {
+
+				return this.getRelationshipsByLocalKey()[localKey];
+			}
+		}, {
+			key: 'hasAttribute',
+			value: function hasAttribute(key) {
+				return this.attributes[key] !== undefined;
 			}
 		}, {
 			key: 'initializeModel',
@@ -14136,6 +14272,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				return attr;
 			}
 		}, {
+			key: 'number',
+			value: function number(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Number);
+				return attr;
+			}
+		}, {
 			key: 'string',
 			value: function string(name, size) {
 				var attr = this.attribute(name, _ModelAttribute2.default.String);
@@ -14170,6 +14312,23 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'boolean',
 			value: function boolean(name) {
 				var attr = this.attribute(name, _ModelAttribute2.default.Boolean);
+				return attr;
+			}
+
+			//////////
+			// JSON //
+			//////////
+
+		}, {
+			key: 'array',
+			value: function array(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Array);
+				return attr;
+			}
+		}, {
+			key: 'object',
+			value: function object(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Object);
 				return attr;
 			}
 
@@ -14270,8 +14429,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.remoteModel = null;
 			this.remoteKey = null;
 
+			this.morphModelKey = null;
+
 			this.pivotModel = null;
 		}
+
+		////////////////////////
+		// Relationship types //
+		////////////////////////
 
 		_createClass(Relationship, [{
 			key: 'hasMany',
@@ -14287,7 +14452,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Guess/store the keys
 				if (!this.localKey) this.localKey = localKey;
 				if (remoteKey || !this.remoteKey) {
-					this.remoteKey = remoteKey || _inflection2.default.underscore(_inflection2.default.singularize(this.localModel)) + 'Id';
+					this.remoteKey = remoteKey || _inflection2.default.camelize(_inflection2.default.singularize(this.localModel), true) + 'Id';
 				}
 
 				return this;
@@ -14305,15 +14470,86 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Guess/store the keys
 				if (localKey || !this.localKey) {
-					this.localKey = localKey || _inflection2.default.underscore(_inflection2.default.singularize(this.localModel)) + 'Id';
+					this.localKey = localKey || _inflection2.default.camelize(_inflection2.default.singularize(this.remoteModel), true) + 'Id';
 				}
 				if (!this.remoteKey) this.remoteKey = remoteKey;
+
+				return this;
 			}
+		}, {
+			key: 'hasOne',
+			value: function hasOne(remoteModel) {
+				var localKey = arguments.length <= 1 || arguments[1] === undefined ? 'id' : arguments[1];
+				var remoteKey = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+
+				// Basics
+				this.type = Relationship.HasOne;
+				this.remoteModel = remoteModel;
+
+				// Guess/store the keys
+				if (!this.localKey) this.localKey = localKey;
+				if (remoteKey || !this.remoteKey) {
+					this.remoteKey = remoteKey || _inflection2.default.camelize(_inflection2.default.singularize(this.localModel), true) + 'Id';
+				}
+
+				return this;
+			}
+
+			/////////////////////////
+			// Morph relationships //
+			/////////////////////////
+
+		}, {
+			key: 'belongsToMorph',
+			value: function belongsToMorph(morphModelKey, localKey) {
+				var remoteKey = arguments.length <= 2 || arguments[2] === undefined ? 'id' : arguments[2];
+
+
+				// Basics
+				this.type = Relationship.BelongsToMorph;
+				this.remoteModel = null;
+
+				// Guess/store the keys
+				this.localKey = localKey;
+				this.remoteKey = remoteKey;
+				this.morphModelKey = morphModelKey;
+
+				return this;
+			}
+
+			/////////////
+			// Setters //
+			/////////////
+
+		}, {
+			key: 'setLocalKey',
+			value: function setLocalKey(value) {
+				this.localKey = value;
+				return this;
+			}
+		}, {
+			key: 'setRemoteKey',
+			value: function setRemoteKey(value) {
+				this.remoteKey = value;
+				return this;
+			}
+
+			/////////////
+			// Methods //
+			/////////////
+
 		}, {
 			key: 'isStoredOnLocalModel',
 			value: function isStoredOnLocalModel() {
 
 				return this.type === Relationship.BelongsTo;
+			}
+		}, {
+			key: 'isStoredOnRemoteModel',
+			value: function isStoredOnRemoteModel() {
+
+				return this.type === Relationship.HasOne || this.type === Relationship.HasMany;
 			}
 		}, {
 			key: 'getInitValue',
@@ -14343,6 +14579,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	Relationship.HasManyThrough = 'HasManyThrough';
 	Relationship.BelongsToMany = 'BelongsToMany';
+
+	Relationship.BelongsToMorph = 'BelongsToMorph';
 
 	module.exports = Relationship;
 
