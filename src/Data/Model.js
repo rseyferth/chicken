@@ -166,16 +166,20 @@ class Model extends Observable
 		}
 
 		// Is it a relationship that was not yet loaded
-		let relationship = this.getRelationship(key);
-		if (relationship) {
-			this.related[key] = value;
-		}
+		if (this.getRelationship(key)) {
 
-		// Cast if necessary
-		value = this.castValue(key, value);
+			// Set the model
+			this.setRelatedModel(key, value);			
+
+		} else {
 		
-		// Continue with it
-		super._set(key, value);
+			// Cast if necessary
+			value = this.castValue(key, value);
+			
+			// Continue with it
+			super._set(key, value);
+			
+		}
 
 		// Is dirty?
 		if (this.state) {
@@ -609,6 +613,10 @@ class Model extends Observable
 
 		// Set it
 		this.related[relationshipName] = relatedModel;
+
+		// Also set the local key if necessary
+		// @TODO
+
 		return this;
 
 	}
@@ -693,8 +701,21 @@ class Model extends Observable
 		let def = this.getDefinition();
 		if (!def) return null;
 
-		// Get the attribute
-		return def.relationships[key];
+		// Get the relationship
+		let relationship = def.relationships[key];
+		return relationship;
+
+	}
+
+	getRelationshipByLocalKey(key) {
+
+		// Check if the model has a definition at all
+		let def = this.getDefinition();
+		if (!def) return null;
+
+		// Is it the local key?
+		return def.getRelationshipByLocalKey(key);
+
 
 	}
 

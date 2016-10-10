@@ -21,6 +21,7 @@ class ModelDefinition
 		this.attributes = {};
 		this.attributeNames = [];
 		this.relationships = {};
+		this.relationshipsByLocalKey = null;
 
 		this.computedAttributes = {};
 
@@ -31,6 +32,27 @@ class ModelDefinition
 		callback.apply(this, [this]);
 
 	}
+
+	getRelationshipByLocalKey(localKey) {
+
+		// Initialized?
+		if (!this.relationshipsByLocalKey) {
+
+			// Loop through relationships
+			_.each(this.relationships, (relationship) => {
+
+				// Stored on local model?
+				if (relationship.isStoredOnLocalModel()) {
+					this.relationshipsByLocalKey[relationship.localKey] = relationship;
+				}
+
+			});
+
+		}
+		return this.relationshipsByLocalKey[localKey];
+
+	}
+
 
 
 	initializeModel(model) {

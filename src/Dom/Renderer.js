@@ -93,6 +93,7 @@ class Renderer
 					// Do native thing (deep-get)
 					var value = appliedScope;
 					for (let q = 0; q < keys.length; q++) {
+						if (value === undefined || value === null) return value;
 						value = value[keys[q]];
 					}
 					

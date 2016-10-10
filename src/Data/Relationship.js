@@ -57,6 +57,13 @@ class Relationship {
 
 
 
+	isStoredOnLocalModel() {
+
+		return this.type === Relationship.BelongsTo;
+
+	}
+
+
 	getInitValue() {
 
 		// Depends on the type
@@ -80,7 +87,7 @@ class Relationship {
 }
 
 Relationship.HasMany = 'HasMany';
-Relationship.HasOne = 'BelongsTo';	// Practically the same.
+Relationship.HasOne = 'HasOne';
 Relationship.BelongsTo = 'BelongsTo';
 
 Relationship.HasManyThrough = 'HasManyThrough';
