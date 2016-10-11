@@ -11,7 +11,8 @@ class ModelAttribute {
 		this.isPrimaryKey = false;
 		this.isNullable = false;
 
-		this.defaultValue = undefined;
+		this.defaultValue = undefined;		
+		this.includeInRequests = true;
 
 		this.size = null;
 
@@ -32,6 +33,10 @@ class ModelAttribute {
 		return this;
 	}
 
+	hidden(isHiddenFromRequests = true) {
+		this.includeInRequests = !isHiddenFromRequests;
+	}
+
 
 	/**
 	 * Cast given (database) value for use in the application,
@@ -42,6 +47,9 @@ class ModelAttribute {
 	 * @return {mixed}       
 	 */
 	cast(value) {
+
+		// Undefined and null will remain so
+		if (value === undefined || value === null) return value;
 
 		switch (this.type) {
 
@@ -87,6 +95,9 @@ class ModelAttribute {
 	 */
 	uncast(value) {
 
+		// Undefined and null will remain so
+		if (value === undefined || value === null) return value;
+
 		switch (this.type) {
 
 			////////////////
@@ -125,6 +136,54 @@ class ModelAttribute {
 
 	}
 
+
+	getDefaultValue() {
+
+		// Is there a value?
+		if (this.defaultValue) return this.defaultValue;
+
+		// Nullable?
+		if (this.isNullable) return null;
+
+		// Default for type
+		switch (this.type) {
+
+
+			////////////////
+			// Primitives //
+			////////////////
+
+			// Number
+			case ModelAttribute.Number: 
+			case ModelAttribute.Integer:
+				return 0;
+
+			// String
+			case ModelAttribute.String:
+				return '';
+
+			// Boolean
+			case ModelAttribute.Boolean:
+				return false;
+
+
+			///////////
+			// Dates //
+			///////////
+
+			// Date or date time
+			case ModelAttribute.DateTime:
+			case ModelAttribute.Time:
+			case ModelAttribute.Date:
+				return moment();
+
+			default:
+				return null;
+ 
+
+		}
+
+	}
 
 
 

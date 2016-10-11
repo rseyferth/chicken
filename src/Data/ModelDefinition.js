@@ -22,10 +22,12 @@ class ModelDefinition
 		this.attributeNames = [];
 		this.relationships = {};
 		this.relationshipsByLocalKey = null;
+		this.apiAttributeNames = null;
 
 		this.computedAttributes = {};
 
 		this.validationRules = {};
+
 
 		callback.apply(this, [this]);
 
@@ -56,6 +58,18 @@ class ModelDefinition
 
 		
 		return this.getRelationshipsByLocalKey()[localKey];
+
+	}
+
+	getApiAttributeNames() {
+
+		// Initialized?
+		if (!this.apiAttributeNames) {
+			this.apiAttributeNames = _.filter(this.attributeNames, (name) => {
+				return this.attributes[name].includeInRequests;
+			});
+		}
+		return this.apiAttributeNames;
 
 	}
 
@@ -174,8 +188,8 @@ class ModelDefinition
 	//////////////////////
 
 	timestamps() {
-		this.attribute('createdAt', ModelAttribute.DateTime);
-		this.attribute('updatedAt', ModelAttribute.DateTime);
+		this.dateTime('createdAt').hidden();
+		this.dateTime('updatedAt').hidden();
 		return this;
 	}
 

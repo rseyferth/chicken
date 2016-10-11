@@ -9345,6 +9345,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
+	var _moment = __webpack_require__(6);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
 	var _Observable = __webpack_require__(32);
 
 	var _Observable2 = _interopRequireDefault(_Observable);
@@ -9465,6 +9469,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			// Identical?
 			if (value1 === value2) return true;
+
+			// Is one or both a moment?
+			if (_moment2.default.isMoment(value1)) return value1.isSame(value2);
+			if (_moment2.default.isMoment(value2)) return value2.isSame(value1);
 
 			// One of them null or undefined?
 			if (value1 === undefined || value2 === undefined || value1 === null || value2 === null) return false;
@@ -11662,6 +11670,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
+	var _ComputedProperty = __webpack_require__(36);
+
+	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11994,6 +12006,16 @@ return /******/ (function(modules) { // webpackBootstrap
 						return _this3.getAttributeDefinition(key).uncast(value);
 					});
 
+					// Not only dirty?
+					if (!onlyDirty) {
+
+						// Also add defined attributes that were not set in the model (by default value)
+						var missingKeys = _underscore2.default.difference(modelDefinition.getApiAttributeNames(), _underscore2.default.keys(attr));
+						_underscore2.default.each(missingKeys, function (key) {
+							attr[key] = _this3.getAttributeDefinition(key).getDefaultValue();
+						});
+					}
+
 					return attr;
 				} else {
 
@@ -12100,7 +12122,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var settings = _jquery2.default.extend({
 					uri: null,
 					includeRelated: true,
-					includeRelatedData: false
+					includeRelatedData: false // False, true or an array of relationship-names to save
 				}, options);
 
 				// Busy?
@@ -12113,7 +12135,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				var apiCall = this.getApi().saveModel(this, settings);
 
 				// Handle it.
-				apiCall.getPromise('complete').then(function () {
+				apiCall.getPromise('complete').then(function (result) {
+
+					// Check result
+					if (result instanceof Model) {
+
+						// Use id for me.
+						if (!_this4.get('id')) _this4.set('id', result.get('id'));
+					}
 
 					// No longer dirty!
 					_this4.state.set('dirty', false);
@@ -12235,16 +12264,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Specific key?
 				if (key) {
 
+					// Get value
+					var newValue = this.attributes[key];
+					var oldValue = this.originalValues[key];
+
 					// None at all?
-					if (this.attributes[key] === undefined) return false;
+					if (newValue === undefined) return false;
+
+					// Is the value computed?
+					if (newValue instanceof _ComputedProperty2.default) return false;
 
 					// Is it new?
-					if (this.attributes[key] && this.originalValues[key] === undefined) return true;
+					if (newValue !== undefined && oldValue === undefined) return true;
 
 					// Has it changed
-					var oldValue = this.originalValues[key];
-					var newValue = this.uncastValue(key, this.attributes[key]);
-					return oldValue != newValue;
+					return !_Utils2.default.areEqual(oldValue, newValue);
 				} else {
 
 					// Loop to see if anything is dirty
@@ -12806,7 +12840,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Make settings
 				var settings = _jquery2.default.extend({
 					includeRelated: true,
-					includeRelatedData: false
+					includeRelatedData: false // False, true, or array of relationship names
 				}, options);
 				if (!settings.uri) settings.uri = model.getApiUri();
 
@@ -12834,6 +12868,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				var includeRelatedData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 				var includedModelGuids = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
 
+
+				// Check related data
+				if (typeof includeRelatedData === 'string') includeRelatedData = [includeRelatedData];
 
 				// Basics: type and id
 				var data = {
@@ -12878,8 +12915,10 @@ return /******/ (function(modules) { // webpackBootstrap
 										// Add them all
 										relationships[key] = { data: _underscore2.default.map(relatedData.items, function (item) {
 
-												// Store original model to prevent recursive loop
-												if (!includeRelatedData) includedModelGuids.push(_Utils2.default.uidFor(item));
+												// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
+												if (includeRelatedData === false || _underscore2.default.indexOf(includeRelatedData, key) === -1) {
+													includedModelGuids.push(_Utils2.default.uidFor(item));
+												}
 
 												// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
 												return _this2.serialize(item, true, includeRelatedData, includedModelGuids);
@@ -12887,12 +12926,17 @@ return /******/ (function(modules) { // webpackBootstrap
 									}
 								} else if (relatedData instanceof _Model2.default) {
 
-									// Store original model to prevent recursive loop
-									if (!includeRelatedData) includedModelGuids.push(_Utils2.default.uidFor(model));
+									// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
+									if (includeRelatedData === false || _underscore2.default.indexOf(includeRelatedData, key) === -1) {
+										includedModelGuids.push(_Utils2.default.uidFor(relatedData));
+									}
 
-									// We always insert the related model
-									// @TODO Implement check wheter this relationship's local key has changed
-									relationships[key] = { data: _this2.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
+									// Is it dirty?
+									if (relatedData.isDirty()) {
+
+										// We always add the related model data
+										relationships[key] = { data: _this2.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
+									}
 								} else {
 									// What is this
 									throw new TypeError('Unrecognized data found in model\'s relationship ' + key);
@@ -13842,6 +13886,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.isNullable = false;
 
 			this.defaultValue = undefined;
+			this.includeInRequests = true;
 
 			this.size = null;
 		}
@@ -13868,6 +13913,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.isNullable = isNullable;
 				return this;
 			}
+		}, {
+			key: 'hidden',
+			value: function hidden() {
+				var isHiddenFromRequests = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+				this.includeInRequests = !isHiddenFromRequests;
+			}
 
 			/**
 	   * Cast given (database) value for use in the application,
@@ -13881,6 +13933,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'cast',
 			value: function cast(value) {
+
+				// Undefined and null will remain so
+				if (value === undefined || value === null) return value;
 
 				switch (this.type) {
 
@@ -13927,6 +13982,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'uncast',
 			value: function uncast(value) {
 
+				// Undefined and null will remain so
+				if (value === undefined || value === null) return value;
+
 				switch (this.type) {
 
 					////////////////
@@ -13958,6 +14016,51 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					default:
 						return value;
+
+				}
+			}
+		}, {
+			key: 'getDefaultValue',
+			value: function getDefaultValue() {
+
+				// Is there a value?
+				if (this.defaultValue) return this.defaultValue;
+
+				// Nullable?
+				if (this.isNullable) return null;
+
+				// Default for type
+				switch (this.type) {
+
+					////////////////
+					// Primitives //
+					////////////////
+
+					// Number
+					case ModelAttribute.Number:
+					case ModelAttribute.Integer:
+						return 0;
+
+					// String
+					case ModelAttribute.String:
+						return '';
+
+					// Boolean
+					case ModelAttribute.Boolean:
+						return false;
+
+					///////////
+					// Dates //
+					///////////
+
+					// Date or date time
+					case ModelAttribute.DateTime:
+					case ModelAttribute.Time:
+					case ModelAttribute.Date:
+						return (0, _moment2.default)();
+
+					default:
+						return null;
 
 				}
 			}
@@ -14028,6 +14131,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.attributeNames = [];
 			this.relationships = {};
 			this.relationshipsByLocalKey = null;
+			this.apiAttributeNames = null;
 
 			this.computedAttributes = {};
 
@@ -14063,6 +14167,19 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this.getRelationshipsByLocalKey()[localKey];
 			}
 		}, {
+			key: 'getApiAttributeNames',
+			value: function getApiAttributeNames() {
+				var _this2 = this;
+
+				// Initialized?
+				if (!this.apiAttributeNames) {
+					this.apiAttributeNames = _underscore2.default.filter(this.attributeNames, function (name) {
+						return _this2.attributes[name].includeInRequests;
+					});
+				}
+				return this.apiAttributeNames;
+			}
+		}, {
 			key: 'hasAttribute',
 			value: function hasAttribute(key) {
 				return this.attributes[key] !== undefined;
@@ -14070,20 +14187,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'initializeModel',
 			value: function initializeModel(model) {
-				var _this2 = this;
+				var _this3 = this;
 
 				// Don't notify
 				model.withoutNotifications(function () {
 
 					// Default values
-					_underscore2.default.each(_this2.attributes, function (attr) {
+					_underscore2.default.each(_this3.attributes, function (attr) {
 						if (attr.defaultValue && model.attributes[attr.name] === undefined) {
 							model.set(attr.name, attr.defaultValue);
 						}
 					});
 
 					// Add computed
-					_underscore2.default.each(_this2.computedAttributes, function (attr, key) {
+					_underscore2.default.each(_this3.computedAttributes, function (attr, key) {
 						model.set(key, new _ComputedProperty2.default(attr.dependencies, attr.callback));
 					});
 				});
@@ -14187,8 +14304,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'timestamps',
 			value: function timestamps() {
-				this.attribute('createdAt', _ModelAttribute2.default.DateTime);
-				this.attribute('updatedAt', _ModelAttribute2.default.DateTime);
+				this.dateTime('createdAt').hidden();
+				this.dateTime('updatedAt').hidden();
 				return this;
 			}
 
