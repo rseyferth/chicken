@@ -35,10 +35,10 @@ class JWTAuth extends Auth
 			identifierKey: 'email',
 			passwordKey: 'password',
 
-			tokenValidForMinutes: 60,
+			tokenValidForMinutes: 360,
 
 			autoRefreshToken: true,
-			autoRefreshInterval: 600,	// 10 minutes
+			autoRefreshInterval: 7200,	// 2 hours
 
 			localStorageKey: 'ChickenJWTAuthToken'
 
