@@ -38,6 +38,7 @@ class JsonApi extends Api
 
 		// Make settings
 		let settings = $.extend({
+			modelIsDynamic: false,
 			includeRelated: true,
 			includeRelatedData: false		// False, true, or array of relationship names
 		}, options);
@@ -45,7 +46,7 @@ class JsonApi extends Api
 
 		// Make the data
 		let data = {
-			data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
+			data: this.serialize(model, settings.includeRelated, settings.includeRelatedData, settings.modelIsDynamic)
 		};
 
 		// Check method
@@ -60,7 +61,7 @@ class JsonApi extends Api
 
 	}
 
-	serialize(model, includeRelated = true, includeRelatedData = false, includedModelGuids = []) {
+	serialize(model, includeRelated = true, includeRelatedData = false, modelIsDynamic = false, includedModelGuids = []) {
 
 		// Check related data
 		if (typeof includeRelatedData === 'string') includeRelatedData = [includeRelatedData];
@@ -76,7 +77,7 @@ class JsonApi extends Api
 		if (!_.contains(includedModelGuids, Utils.uidFor(model))) {
 
 			// Attributes?
-			let attr = model.getAttributesForApi(!model.isNew());
+			let attr = model.getAttributesForApi(!model.isNew(), modelIsDynamic);
 			if (_.size(attr) > 0) {
 				data.attributes = {};
 				_.each(attr, (value, key) => {
@@ -114,7 +115,7 @@ class JsonApi extends Api
 								}
 								
 								// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-								return this.serialize(item, true, includeRelatedData, includedModelGuids);
+								return this.serialize(item, true, includeRelatedData, false, includedModelGuids);
 
 							}) };
 
@@ -131,7 +132,7 @@ class JsonApi extends Api
 						if (relatedData.isDirty()) {
 
 							// We always add the related model data
-							relationships[key] = { data: this.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
+							relationships[key] = { data: this.serialize(relatedData, true, includeRelatedData, false, includedModelGuids) };
 
 						}
 

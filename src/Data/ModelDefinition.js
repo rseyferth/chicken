@@ -28,10 +28,27 @@ class ModelDefinition
 
 		this.validationRules = {};
 
+		this.isDynamic = false;
+
 
 		callback.apply(this, [this]);
 
 	}
+
+	/**
+	 * Making a model dynamic means that not all attributes are defined,
+	 * and when submitting the model to an API, all set attributes will
+	 * be sent.
+	 * 
+	 * @method dynamic
+	 * @param  {Boolean} [isDynamic=true] 	
+	 * @chainable
+	 */
+	dynamic(isDynamic = true) {
+		this.isDynamic = isDynamic;
+		return this;
+	}
+
 
 	getRelationshipsByLocalKey() {
 

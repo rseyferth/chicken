@@ -35,6 +35,7 @@
   },
   "dependencies": {
     "babel-polyfill": "^6.13.0",
+    "filesize.js": "^1.0.2",
     "handlebars": "^4.0.5",
     "history": "^3.0.0",
     "htmlbars-standalone": "*",

@@ -5,6 +5,7 @@ import $ from 'jquery';
 import QueryString from 'query-string';
 import inflection from 'inflection';
 import moment from 'moment';
+import filesize from 'filesize.js';
 
 import ActionBinding from '~/Dom/ActionBinding';
 import Utils from '~/Helpers/Utils';
@@ -295,6 +296,11 @@ class Helpers
 		}
 	}
 
+
+	fileSize(params) {
+		let value = this._getValue(params[0]);
+		return filesize(value);
+	}
 
 
 	///////////
