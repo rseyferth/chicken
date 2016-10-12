@@ -302,8 +302,8 @@ class Model extends Observable
 		if (modelDefinition) {
 
 			// Use only attributes in the model definition
-			let modelAttr = modelIsDynamic || modelDefinition.dynamic ? attr : _.pick(attr, (value, key) => {
-			
+			let modelAttr = modelIsDynamic || modelDefinition.isDynamic ? attr : _.pick(attr, (value, key) => {
+
 				// Has property?
 				return modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined;
 
