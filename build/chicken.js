@@ -8377,6 +8377,30 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.actions[key] = callback;
 				return this;
 			}
+		}, {
+			key: 'sendAction',
+			value: function sendAction() {
+				var _this4 = this;
+
+				var name = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+
+				// Get the callback.
+				var actionScope = this;
+
+				var callback = actionScope.actions[name];
+
+				// Now call it.
+
+				for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+					args[_key2 - 1] = arguments[_key2];
+				}
+
+				var params = _underscore2.default.flatten([_underscore2.default.map(args, function (value) {
+					return _this4.renderer.hooks.getValue(value);
+				}), this, actionScope]);
+				callback.apply(actionScope, params);
+			}
 
 			/**
 	   * Render the view!
@@ -8389,7 +8413,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'render',
 			value: function render() {
-				var _this4 = this;
+				var _this5 = this;
 
 				// Make sure the template is loaded
 				this.loadTemplate();
@@ -8398,15 +8422,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this.promise('render', function () {
 
 					// Start api calls.
-					_underscore2.default.invoke(_this4.apiCalls, 'execute');
+					_underscore2.default.invoke(_this5.apiCalls, 'execute');
 
 					/////////////////////////////////////////
 					// Wait for all loadPromises to finish //
 					/////////////////////////////////////////
 
-					Promise.all(_this4.loadPromises).then(function () {
+					Promise.all(_this5.loadPromises).then(function () {
 
-						_this4.renderSync();
+						_this5.renderSync();
 					});
 				});
 			}
@@ -8422,7 +8446,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'renderSync',
 			value: function renderSync() {
-				var _this5 = this;
+				var _this6 = this;
 
 				/////////////////////
 				// Create template //
@@ -8430,7 +8454,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Before render hook
 				_underscore2.default.each(this.hooks.beforeRender, function (cb) {
-					cb.apply(_this5);
+					cb.apply(_this6);
 				});
 
 				// Render it
@@ -8482,7 +8506,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'scheduleRevalidate',
 			value: function scheduleRevalidate() {
-				var _this6 = this;
+				var _this7 = this;
 
 				// Not already pending?
 				if (!this.revalidateTimeout) {
@@ -8491,7 +8515,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					this.revalidateTimeout = setTimeout(function () {
 
 						// Revalidate!
-						_this6.revalidate();
+						_this7.revalidate();
 					}, View.RevalidationDelay);
 				}
 

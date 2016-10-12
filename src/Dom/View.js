@@ -402,6 +402,25 @@ class View extends Observable
 	}
 
 
+	sendAction(name = null, ...args) {
+
+		// Get the callback.
+		let actionScope = this;		
+		let callback = actionScope.actions[name];
+
+		// Now call it.
+		var params = _.flatten([
+			_.map(args, (value) => {
+				return this.renderer.hooks.getValue(value);
+			}), 
+			this,	
+			actionScope
+		]);
+		callback.apply(actionScope, params);
+
+	}
+
+
 
 	/**
 	 * Render the view!
