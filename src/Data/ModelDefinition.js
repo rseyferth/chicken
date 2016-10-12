@@ -22,14 +22,33 @@ class ModelDefinition
 		this.attributeNames = [];
 		this.relationships = {};
 		this.relationshipsByLocalKey = null;
+		this.apiAttributeNames = null;
 
 		this.computedAttributes = {};
 
 		this.validationRules = {};
 
+		this.isDynamic = false;
+
+
 		callback.apply(this, [this]);
 
 	}
+
+	/**
+	 * Making a model dynamic means that not all attributes are defined,
+	 * and when submitting the model to an API, all set attributes will
+	 * be sent.
+	 * 
+	 * @method dynamic
+	 * @param  {Boolean} [isDynamic=true] 	
+	 * @chainable
+	 */
+	dynamic(isDynamic = true) {
+		this.isDynamic = isDynamic;
+		return this;
+	}
+
 
 	getRelationshipsByLocalKey() {
 
@@ -56,6 +75,18 @@ class ModelDefinition
 
 		
 		return this.getRelationshipsByLocalKey()[localKey];
+
+	}
+
+	getApiAttributeNames() {
+
+		// Initialized?
+		if (!this.apiAttributeNames) {
+			this.apiAttributeNames = _.filter(this.attributeNames, (name) => {
+				return this.attributes[name].includeInRequests;
+			});
+		}
+		return this.apiAttributeNames;
 
 	}
 
@@ -174,8 +205,8 @@ class ModelDefinition
 	//////////////////////
 
 	timestamps() {
-		this.attribute('createdAt', ModelAttribute.DateTime);
-		this.attribute('updatedAt', ModelAttribute.DateTime);
+		this.dateTime('createdAt').hidden();
+		this.dateTime('updatedAt').hidden();
 		return this;
 	}
 

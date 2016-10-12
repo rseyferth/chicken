@@ -38,14 +38,15 @@ class JsonApi extends Api
 
 		// Make settings
 		let settings = $.extend({
+			modelIsDynamic: false,
 			includeRelated: true,
-			includeRelatedData: false
+			includeRelatedData: false		// False, true, or array of relationship names
 		}, options);
 		if (!settings.uri) settings.uri = model.getApiUri();		
 
 		// Make the data
 		let data = {
-			data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
+			data: this.serialize(model, settings.includeRelated, settings.includeRelatedData, settings.modelIsDynamic)
 		};
 
 		// Check method
@@ -60,7 +61,10 @@ class JsonApi extends Api
 
 	}
 
-	serialize(model, includeRelated = true, includeRelatedData = false, includedModelGuids = []) {
+	serialize(model, includeRelated = true, includeRelatedData = false, modelIsDynamic = false, includedModelGuids = []) {
+
+		// Check related data
+		if (typeof includeRelatedData === 'string') includeRelatedData = [includeRelatedData];
 
 		// Basics: type and id
 		let data = {
@@ -73,7 +77,7 @@ class JsonApi extends Api
 		if (!_.contains(includedModelGuids, Utils.uidFor(model))) {
 
 			// Attributes?
-			let attr = model.getAttributesForApi(!model.isNew());
+			let attr = model.getAttributesForApi(!model.isNew(), modelIsDynamic);
 			if (_.size(attr) > 0) {
 				data.attributes = {};
 				_.each(attr, (value, key) => {
@@ -105,11 +109,13 @@ class JsonApi extends Api
 							// Add them all
 							relationships[key] = { data: _.map(relatedData.items, (item) => {
 
-								// Store original model to prevent recursive loop
-								if (!includeRelatedData) includedModelGuids.push(Utils.uidFor(item));
-
+								// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
+								if (includeRelatedData === false || _.indexOf(includeRelatedData, key) === -1) {
+									includedModelGuids.push(Utils.uidFor(item));
+								}
+								
 								// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-								return this.serialize(item, true, includeRelatedData, includedModelGuids);
+								return this.serialize(item, true, includeRelatedData, false, includedModelGuids);
 
 							}) };
 
@@ -117,12 +123,18 @@ class JsonApi extends Api
 
 					} else if (relatedData instanceof Model) {
 
-						// Store original model to prevent recursive loop
-						if (!includeRelatedData) includedModelGuids.push(Utils.uidFor(model));
+						// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
+						if (includeRelatedData === false || _.indexOf(includeRelatedData, key) === -1) {
+							includedModelGuids.push(Utils.uidFor(relatedData));
+						}
 			
-						// We always insert the related model
-						// @TODO Implement check wheter this relationship's local key has changed
-						relationships[key] = { data: this.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
+						// Is it dirty?
+						if (relatedData.isDirty()) {
+
+							// We always add the related model data
+							relationships[key] = { data: this.serialize(relatedData, true, includeRelatedData, false, includedModelGuids) };
+
+						}
 
 
 					} else {
@@ -142,6 +154,8 @@ class JsonApi extends Api
 		return data;
 
 	}
+
+
 
 
 

@@ -93,32 +93,6 @@ describe('Core.Observable', () => {
 		});
 	});
 
-	describe('#study(callback)', () => {
-
-		it('should return itself', () => {
-			assert.equal(obj.study(function() {}), obj);
-		});
-		it('should call the callback when any attribute is updated', (done) => {
-
-			var callback = () => {
-				done();
-				obj.neglect(callback);
-			};
-			obj.study(callback);
-			obj.set('foo', 'bar');
-
-		});
-	});
-
-	
-	describe('#neglect(callback)', () => {
-
-		it('should return itself', () => {
-			assert.equal(obj.neglect(function() {}), obj);
-		});
-		
-	});
-
 
 
 

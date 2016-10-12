@@ -10,6 +10,7 @@ import ModelStore from '~/Data/ModelStore';
 import Collection from '~/Data/Collection';
 import ClassMap from '~/Helpers/ClassMap';
 import Utils from '~/Helpers/Utils';
+import ComputedProperty from '~/Core/ComputedProperty';
 
 /**
  * @module Data
@@ -287,10 +288,11 @@ class Model extends Observable
 	 * Get attribute values for use in the API.
 	 *
 	 * @method getAttributesForApi
-	 * @param  {Boolean} onlyDirty  When true, only attributes that have been changed will be retrieved
+	 * @param  {Boolean} [onlyDirty=true]  When true, only attributes that have been changed will be retrieved
+	 * @param  {Boolean} [modelIsDynamic=false]	 When true, attributes that are not in the model definition are also passed along. This overrides the model definition's 'dynamic' value
 	 * @return {Object}      A hash containing attribute key/values
 	 */
-	getAttributesForApi(onlyDirty = true) {
+	getAttributesForApi(onlyDirty = true, modelIsDynamic = false) {
 
 		// Which attributes to use?
 		let attr = onlyDirty ? this.getDirty() : _.defaults({}, this.attributes);
@@ -300,7 +302,7 @@ class Model extends Observable
 		if (modelDefinition) {
 
 			// Use only attributes in the model definition
-			let modelAttr = _.pick(attr, (value, key) => {
+			let modelAttr = modelIsDynamic || modelDefinition.dynamic ? attr : _.pick(attr, (value, key) => {
 			
 				// Has property?
 				return modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined;
@@ -314,9 +316,22 @@ class Model extends Observable
 				value = Utils.getValue(value);
 
 				// Uncast it for DB usage
-				return this.getAttributeDefinition(key).uncast(value);
+				let definition = this.getAttributeDefinition(key);
+				if (definition) value = definition.uncast(value);
+				return value;
 
 			});
+
+			// Not only dirty?
+			if (!onlyDirty) {
+
+				// Also add defined attributes that were not set in the model (by default value)
+				let missingKeys = _.difference(modelDefinition.getApiAttributeNames(), _.keys(attr));
+				_.each(missingKeys, (key) => {
+					attr[key] = this.getAttributeDefinition(key).getDefaultValue();
+				});
+				
+			}
 
 			return attr;
 
@@ -418,8 +433,9 @@ class Model extends Observable
 		// Make settings
 		let settings = $.extend({
 			uri: null,
+			modelIsDynamic: false,
 			includeRelated: true,
-			includeRelatedData: false
+			includeRelatedData: false	// False, true or an array of relationship-names to save
 		}, options);
 
 		// Busy?
@@ -432,7 +448,15 @@ class Model extends Observable
 		let apiCall = this.getApi().saveModel(this, settings);
 
 		// Handle it.
-		apiCall.getPromise('complete').then(() => {
+		apiCall.getPromise('complete').then((result) => {
+
+			// Check result
+			if (result instanceof Model) {
+
+				// Use id for me.
+				if (!this.get('id')) this.set('id', result.get('id'));
+
+			}
 
 			// No longer dirty!
 			this.state.set('dirty', false);
@@ -554,16 +578,21 @@ class Model extends Observable
 		// Specific key?
 		if (key) {
 
+			// Get value
+			let newValue = this.attributes[key];
+			let oldValue = this.originalValues[key];
+
 			// None at all?
-			if (this.attributes[key] === undefined) return false;
+			if (newValue === undefined) return false;
+
+			// Is the value computed?
+			if (newValue instanceof ComputedProperty) return false;
 
 			// Is it new?
-			if (this.attributes[key] && this.originalValues[key] === undefined) return true;
+			if (newValue !== undefined && oldValue === undefined) return true;
 
 			// Has it changed
-			let oldValue = this.originalValues[key];
-			let newValue = this.uncastValue(key, this.attributes[key]);
-			return oldValue != newValue;
+			return !Utils.areEqual(oldValue, newValue);
 
 		} else {
 
