@@ -528,7 +528,7 @@ class Observable extends Obj {
 	 * @method toObject
 	 * @return {object}
 	 */
-	toObject() { 
+	toObject(includedUids = []) { 
 
 		var obj = {};
 		_.each(this.attributes, (item, key) => {
@@ -536,11 +536,19 @@ class Observable extends Obj {
 			// Observable?
 			if (Observable.isObservable(item)) {
 
+				// Already included?
+				let guid = ClassMap.get('Utils').uidFor(item);
+				if (_.indexOf(includedUids, guid) !== -1) {
+					obj[key] = '...recursive...';
+					return;
+				}
+				includedUids.push(guid);
+				
 				// Array?
 				if (item instanceof Observable) {
-					item = item.toObject();
+					item = item.toObject(includedUids);
 				} else {
-					item = item.toArray();
+					item = item.toArray(includedUids);
 				}
 
 			}

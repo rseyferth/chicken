@@ -28,6 +28,9 @@ class JsonApiCall extends ApiCall {
 	  * @param  {string} relations  JSONAPI include options for request
 	  */
 	include(relations) {
+		if (relations instanceof Array) {
+			relations = relations.join(',');
+		}
 		return this.query('include', relations);
 	}
 

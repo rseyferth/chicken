@@ -49,8 +49,7 @@ class Model extends Observable
 		 * @property related
 		 * @type {Object}
 		 */
-		this.related = {};
-
+		this.related = this.related || {};
 
 		/**
 		 * The watchable current state of this model. This
@@ -146,6 +145,7 @@ class Model extends Observable
 
 		// Is it a relationship that was not yet loaded
 		let relationship = this.getRelationship(key);
+		if (!this.related) this.related = {};
 		if (relationship && !this.related[key]) {
 			this.related[key] = relationship.getInitValue();
 		}
@@ -168,6 +168,7 @@ class Model extends Observable
 		}
 
 		// Is it a relationship that was not yet loaded
+		if (!this.related) this.related = {};
 		if (this.getRelationship(key)) {
 
 			// Set the model
@@ -489,10 +490,10 @@ class Model extends Observable
 	// Handy methods //
 	///////////////////
 
-	toObject() {
+	toObject(includedUids = []) {
 
 		// Get basics
-		let obj = super.toObject();
+		let obj = super.toObject(includedUids);
 
 		// Add relationships
 		_.each(this.related, (item, key) => {
@@ -502,9 +503,9 @@ class Model extends Observable
 
 				// Array?
 				if (item instanceof Observable) {
-					item = item.toObject();
+					item = item.toObject(includedUids);
 				} else {
-					item = item.toArray();
+					item = item.toArray(includedUids);
 				}
 
 			}

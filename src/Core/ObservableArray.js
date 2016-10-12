@@ -369,18 +369,26 @@ class ObservableArray extends Obj
 
 
 
-	toArray() {
+	toArray(includedUids = []) {
 
 		return this.items.map((item) => {
 
+
 			// Observable?
 			if (ObservableArray.isObservable(item)) {
-
+				
+				// Already included?
+				let guid = ClassMap.get('Utils').uidFor(item);
+				if (_.indexOf(includedUids, guid) !== -1) {
+					return '...recursive...';
+				}
+				includedUids.push(guid);
+				
 				// Array?
 				if (item instanceof ObservableArray) {
-					return item.toArray();
+					return item.toArray(includedUids);
 				} else {
-					return item.toObject();
+					return item.toObject(includedUids);
 				}
 
 			}
