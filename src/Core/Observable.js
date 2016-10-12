@@ -170,6 +170,7 @@ class Observable extends Obj {
 	get(key) {
 
 		// Split
+		if (key === undefined) throw new TypeError('There was no key provided');
 		let parts = Number.isInteger(key) ? [key] : key.split(/\./);
 		let currentPart = parts.shift();
 

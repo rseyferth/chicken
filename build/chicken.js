@@ -4772,6 +4772,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function get(key) {
 
 				// Split
+				if (key === undefined) throw new TypeError('There was no key provided');
 				var parts = Number.isInteger(key) ? [key] : key.split(/\./);
 				var currentPart = parts.shift();
 
