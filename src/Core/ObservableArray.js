@@ -516,6 +516,31 @@ class ObservableArray extends Obj
 
 	}
 
+
+	find(idOrAttribute, value = undefined) {
+
+		let attribute = 'id';
+		if (value === undefined) {
+			value = idOrAttribute;
+		} else {
+			attribute = idOrAttribute;
+		}
+
+		return _.find(this.items, (item) => {
+
+			if (ClassMap.isA(item, 'Observable') || item instanceof ObservableArray) {
+				return item.get(attribute) == value;
+			} else if (item instanceof Object) {
+				return item[attribute] == value;
+			} else {
+				return item == value;
+			}
+
+		});
+
+	}
+
+
 	map(callback) {
 
 		return _.map(this.items, callback);

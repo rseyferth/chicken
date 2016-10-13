@@ -355,9 +355,11 @@ var Chicken = {
 	/////////////
 
 	each: (...args) => {
-
 		return Utils.each.apply(this, args);
-		
+	},
+
+	findWhere: (...args) => {
+		return Utils.findWhere.apply(this, args);
 	},
 
 	map: (...args) => {
@@ -377,9 +379,7 @@ var Chicken = {
 	},
 
 	getValue: (obj) => {
-
 		return Utils.getValue(obj);
-
 	},
 
 	translate: (key) => {
