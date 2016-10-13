@@ -5151,7 +5151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Already included?
 						var guid = _ClassMap2.default.get('Utils').uidFor(item);
 						if (_underscore2.default.indexOf(includedUids, guid) !== -1) {
-							obj[key] = '...recursive...';
+							obj[key] = '...recursive(' + guid + ')...';
 							return;
 						}
 						includedUids.push(guid);
@@ -7015,7 +7015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Already included?
 						var guid = _ClassMap2.default.get('Utils').uidFor(item);
 						if (_underscore2.default.indexOf(includedUids, guid) !== -1) {
-							return '...recursive...';
+							return '...recursive(' + guid + ')...';
 						}
 						includedUids.push(guid);
 
@@ -13209,7 +13209,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Loop and store them in the model stores
 					_underscore2.default.each(result.included, function (recordData) {
-						_this3.deserializeModel(recordData);
+						_this3.deserializeModel(recordData, apiCall, false);
+					});
+					_underscore2.default.each(result.included, function (recordData) {
+						_this3._deserializeRelationships(recordData);
 					});
 				}
 
@@ -13229,8 +13232,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: 'deserializeModel',
-			value: function deserializeModel(data /* , apiCall */) {
-				var _this4 = this;
+			value: function deserializeModel(data, apiCall) {
+				var _deserializeRelationships = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
 
 				// Look for the type of model
 				var resourceType = data.type;
@@ -13267,6 +13270,51 @@ return /******/ (function(modules) { // webpackBootstrap
 					model.setAttributesFromApi(attributes);
 				}
 
+				// Also deserialize relationships?
+				if (_deserializeRelationships) {
+
+					this._deserializeRelationships(data, model);
+				}
+
+				return model;
+			}
+		}, {
+			key: 'deserializeCollection',
+			value: function deserializeCollection(data) {
+				var _this4 = this;
+
+				var apiCall = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+				// Make a collection
+				var collection = new _Collection2.default(apiCall ? apiCall.modelClass : null);
+
+				// Add records
+				_underscore2.default.each(data, function (recordData) {
+					collection.addFromApi(_this4.deserializeModel(recordData), true);
+				});
+
+				return collection;
+			}
+		}, {
+			key: '_deserializeRelationships',
+			value: function _deserializeRelationships(data) {
+				var _this5 = this;
+
+				var model = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+				// Model given?
+				if (model === null) {
+
+					// Look it up in the store			
+					var modelType = _inflection2.default.singularize(_inflection2.default.camelize(data.type));
+					model = _Model2.default.getFromStore(modelType, data.id);
+
+					// Not known?
+					if (!model) throw new Error('Could not deserialize relationships for unknown model: ' + modelType + ' with id ' + data.id);
+				}
+
 				// Check relationships records.
 				if (data.relationships) {
 
@@ -13280,7 +13328,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 								// Loop and add
 								_underscore2.default.each(rel.data, function (relData) {
-									var relatedModel = _this4._getRelatedModel(relData);
+									var relatedModel = _this5._getRelatedModel(relData);
 									if (relatedModel) {
 
 										// Add to model
@@ -13290,7 +13338,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							} else if (rel.data instanceof Object) {
 
 								// Get the one
-								var relatedModel = _this4._getRelatedModel(rel.data);
+								var relatedModel = _this5._getRelatedModel(rel.data);
 								if (relatedModel) {
 
 									// Set it
@@ -13303,26 +13351,6 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 					});
 				}
-
-				return model;
-			}
-		}, {
-			key: 'deserializeCollection',
-			value: function deserializeCollection(data) {
-				var _this5 = this;
-
-				var apiCall = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-
-				// Make a collection
-				var collection = new _Collection2.default(apiCall ? apiCall.modelClass : null);
-
-				// Add records
-				_underscore2.default.each(data, function (recordData) {
-					collection.addFromApi(_this5.deserializeModel(recordData), true);
-				});
-
-				return collection;
 			}
 		}, {
 			key: '_getRelatedModel',
@@ -13337,7 +13365,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Find model in store
 				relType = _inflection2.default.singularize(_inflection2.default.camelize(relType));
 				var relModel = _Model2.default.getFromStore(relType, relId);
-
 				return relModel;
 			}
 		}]);

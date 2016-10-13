@@ -380,7 +380,7 @@ class ObservableArray extends Obj
 				// Already included?
 				let guid = ClassMap.get('Utils').uidFor(item);
 				if (_.indexOf(includedUids, guid) !== -1) {
-					return '...recursive...';
+					return '...recursive(' + guid + ')...';
 				}
 				includedUids.push(guid);
 				

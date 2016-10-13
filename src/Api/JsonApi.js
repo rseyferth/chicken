@@ -167,7 +167,10 @@ class JsonApi extends Api
 
 			// Loop and store them in the model stores
 			_.each(result.included, (recordData) => { 
-				this.deserializeModel(recordData);
+				this.deserializeModel(recordData, apiCall, false);
+			});
+			_.each(result.included, (recordData) => { 
+				this._deserializeRelationships(recordData);
 			});
 			
 		}
@@ -190,7 +193,7 @@ class JsonApi extends Api
 
 	}
 
-	deserializeModel(data/* , apiCall */) {
+	deserializeModel(data, apiCall, _deserializeRelationships = true) {
 
 		// Look for the type of model
 		let resourceType = data.type;
@@ -228,6 +231,46 @@ class JsonApi extends Api
 			model.setAttributesFromApi(attributes);
 
 		}
+
+		// Also deserialize relationships?
+		if (_deserializeRelationships) {
+
+			this._deserializeRelationships(data, model);
+
+		}
+
+		return model;
+
+	}
+	deserializeCollection(data, apiCall = null) {
+
+		// Make a collection
+		let collection = new Collection(apiCall ? apiCall.modelClass : null);
+		
+		// Add records
+		_.each(data, (recordData) => {
+			collection.addFromApi(this.deserializeModel(recordData), true);
+		});
+		
+		return collection;
+
+	}
+
+
+	_deserializeRelationships(data, model = null) {
+
+		// Model given?
+		if (model === null) {
+
+			// Look it up in the store			
+			let modelType = inflection.singularize(inflection.camelize(data.type));
+			model = Model.getFromStore(modelType, data.id);
+
+			// Not known?
+			if (!model) throw new Error('Could not deserialize relationships for unknown model: ' + modelType + ' with id ' + data.id);
+
+		}
+
 
 		// Check relationships records.
 		if (data.relationships) {
@@ -272,25 +315,11 @@ class JsonApi extends Api
 				}
 
 			});
+
 		}
 
-		return model;
 
 	}
-	deserializeCollection(data, apiCall = null) {
-
-		// Make a collection
-		let collection = new Collection(apiCall ? apiCall.modelClass : null);
-		
-		// Add records
-		_.each(data, (recordData) => {
-			collection.addFromApi(this.deserializeModel(recordData), true);
-		});
-		
-		return collection;
-
-	}
-
 
 
 	_getRelatedModel(relationshipData) {
@@ -304,7 +333,6 @@ class JsonApi extends Api
 		// Find model in store
 		relType = inflection.singularize(inflection.camelize(relType));
 		let relModel = Model.getFromStore(relType, relId);
-	
 		return relModel;
 
 
