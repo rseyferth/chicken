@@ -17,6 +17,12 @@ class Collection extends ObservableArray
 
 	}
 
+	knows(id) {
+		if (ClassMap.isA(id, 'Model')) id = id.get('id');
+		return this.itemsById[id] !== undefined;
+	}
+
+
 	addFromApi(item) {
 
 		// Add it
@@ -75,4 +81,20 @@ class Collection extends ObservableArray
 
 
 }
+
+Collection.combine = (...collections) => {
+
+	// Combine items by id
+	collections = _.flatten(collections);
+	let itemArrays = _.pluck(collections, 'itemsById');
+	itemArrays.unshift({});
+	let resultArray = _.extend.apply(this, itemArrays);
+
+	// Create new collection
+	let result = new Collection();
+	result.import(resultArray, false);
+	return result;
+
+};
+
 module.exports = Collection;

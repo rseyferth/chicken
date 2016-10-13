@@ -12919,6 +12919,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		_createClass(Collection, [{
+			key: 'knows',
+			value: function knows(id) {
+				if (_ClassMap2.default.isA(id, 'Model')) id = id.get('id');
+				return this.itemsById[id] !== undefined;
+			}
+		}, {
 			key: 'addFromApi',
 			value: function addFromApi(item) {
 
@@ -12973,6 +12979,23 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		return Collection;
 	}(_ObservableArray3.default);
+
+	Collection.combine = function () {
+		for (var _len = arguments.length, collections = Array(_len), _key = 0; _key < _len; _key++) {
+			collections[_key] = arguments[_key];
+		}
+
+		// Combine items by id
+		collections = _underscore2.default.flatten(collections);
+		var itemArrays = _underscore2.default.pluck(collections, 'itemsById');
+		itemArrays.unshift({});
+		var resultArray = _underscore2.default.extend.apply(undefined, itemArrays);
+
+		// Create new collection
+		var result = new Collection();
+		result.import(resultArray, false);
+		return result;
+	};
 
 	module.exports = Collection;
 
