@@ -358,10 +358,6 @@ var Chicken = {
 		return Utils.each.apply(this, args);
 	},
 
-	findWhere: (...args) => {
-		return Utils.findWhere.apply(this, args);
-	},
-
 	map: (...args) => {
 		return Utils.map.apply(this, args);
 	},
