@@ -271,7 +271,7 @@ class Component extends View
 		if (_.size(this.components) > 0) {
 
 			// Wait for the children to complete first
-			let promises = _.map(this.childComponents, (child) => {
+			let promises = _.map(this.components, (child) => {
 				return child.getPromise('ready');
 			});
 			Promise.all(promises).then(() => {

@@ -665,7 +665,6 @@ class Observable extends Obj {
 			// Students as well.
 			this.trigger(Observable.Events.Change, attrs);
 
-
 		}
 
 

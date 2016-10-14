@@ -382,8 +382,8 @@ var Chicken = {
 
 	},
 
-	translate: (key) => {
-		return Application.getInstance().i18n.translate(key);
+	translate: (key, attributes = {}) => {
+		return Application.getInstance().i18n.translate(key, attributes);
 	},
 
 	debugging: 'console'

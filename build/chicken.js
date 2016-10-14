@@ -616,7 +616,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		},
 
 		translate: function translate(key) {
-			return _Application2.default.getInstance().i18n.translate(key);
+			var attributes = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+
+			return _Application2.default.getInstance().i18n.translate(key, attributes);
 		},
 
 		debugging: 'console'
@@ -8049,7 +8051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (_underscore2.default.size(this.components) > 0) {
 
 					// Wait for the children to complete first
-					var promises = _underscore2.default.map(this.childComponents, function (child) {
+					var promises = _underscore2.default.map(this.components, function (child) {
 						return child.getPromise('ready');
 					});
 					Promise.all(promises).then(function () {
