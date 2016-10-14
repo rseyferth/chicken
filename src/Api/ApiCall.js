@@ -3,6 +3,7 @@ import QueryString from 'query-string';
 
 import ApiError from '~/Api/ApiError';
 import Obj from '~/Core/Obj';
+import Model from '~/Data/Model';
 
 /**
  * @module Api
@@ -77,6 +78,23 @@ class ApiCall extends Obj {
 		 */
 		this.modelClass = null;
 
+		/**
+		 * When true, the models will be linked to the global Model stores. When false,
+		 * a local store, specific to this ApiCall, will be used. (Default = true)
+		 * 
+		 * @property useGlobalStore
+		 * @type {Boolean}
+		 */
+		this.useGlobalStore = true;
+
+		/**
+		 * Local model store, used when useGlobalStore is false.
+		 * 
+		 * @property store
+		 * @type {Object}
+		 */
+		this.store = {};
+
 	}
 
 	/**
@@ -124,6 +142,55 @@ class ApiCall extends Obj {
 
 
 		});
+
+	}
+
+	////////////
+	// Stores //
+	////////////
+
+	useLocalStore(value = true) {
+		this.useGlobalStore = !value;
+		return this;
+	}
+
+
+	getResponseModel(modelName, id) {
+
+		// Global?
+		if (this.useGlobalStore) {
+
+			// Get from Model store
+			return Model.getFromStore(modelName, id);
+
+		} else {
+
+			// Known?
+			if (this.store[modelName] === undefined) return null;
+			return this.store[modelName][id];
+			
+		}
+
+
+	}
+	storeReponseModel(model) {
+
+		// Global?
+		if (this.useGlobalStore) {
+
+			// Store it
+			let store = Model.getStore(model.getModelName());
+			store.set(model.get('id'), model);
+
+		} else {
+
+			// Set it locally
+			let modelName = model.getModelName();
+			if (this.store[modelName] === undefined) this.store[modelName] = {};
+			this.store[modelName][model.get('id')] = model;
+			
+		}
+		return this;
 
 	}
 

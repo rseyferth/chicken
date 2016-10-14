@@ -188,10 +188,6 @@ class JsonApi extends Api
 	}
 
 
-
-
-
-
 	deserialize(result, apiCall = null) {
 
 		// Check included data
@@ -202,7 +198,7 @@ class JsonApi extends Api
 				this.deserializeModel(recordData, apiCall, false);
 			});
 			_.each(result.included, (recordData) => { 
-				this._deserializeRelationships(recordData);
+				this._deserializeRelationships(recordData, apiCall);
 			});
 			
 		}
@@ -225,7 +221,7 @@ class JsonApi extends Api
 
 	}
 
-	deserializeModel(data, apiCall, _deserializeRelationships = true) {
+	deserializeModel(data, apiCall, deserializeRelationships = true) {
 
 		// Look for the type of model
 		let resourceType = data.type;
@@ -245,43 +241,39 @@ class JsonApi extends Api
 		});
 		
 		// Check if the model is already in the store
-		let store = Model.getStore(modelName);
-		let model;
-		if (!store.has(data.id)) {
+		let model = apiCall.getResponseModel(modelName, data.id);
+		if (!model) {
 
 			// Create a new model.
 			attributes.id = data.id;
 			model = new modelClass(attributes);
-			store.set(data.id, model);
+			apiCall.storeReponseModel(model);
 
 		} else {
 
-			// Get and use the model
-			model = store.get(data.id);
-			
 			// Set the attributes (not overwriting dirty ones)
 			model.setAttributesFromApi(attributes);
 
 		}
 
 		// Also deserialize relationships?
-		if (_deserializeRelationships) {
+		if (deserializeRelationships) {
 
-			this._deserializeRelationships(data, model);
+			this._deserializeRelationships(data, apiCall, model);
 
 		}
 
 		return model;
 
 	}
-	deserializeCollection(data, apiCall = null) {
+	deserializeCollection(data, apiCall) {
 
 		// Make a collection
-		let collection = new Collection(apiCall ? apiCall.modelClass : null);
+		let collection = new Collection(apiCall.modelClass);
 		
 		// Add records
 		_.each(data, (recordData) => {
-			collection.addFromApi(this.deserializeModel(recordData), true);
+			collection.addFromApi(this.deserializeModel(recordData, apiCall), true);
 		});
 		
 		return collection;
@@ -289,14 +281,14 @@ class JsonApi extends Api
 	}
 
 
-	_deserializeRelationships(data, model = null) {
+	_deserializeRelationships(data, apiCall, model = null) {
 
 		// Model given?
 		if (model === null) {
 
 			// Look it up in the store			
 			let modelType = inflection.singularize(inflection.camelize(data.type));
-			model = Model.getFromStore(modelType, data.id);
+			model = apiCall.getResponseModel(modelType, data.id);
 
 			// Not known?
 			if (!model) throw new Error('Could not deserialize relationships for unknown model: ' + modelType + ' with id ' + data.id);
@@ -317,7 +309,7 @@ class JsonApi extends Api
 
 						// Loop and add
 						_.each(rel.data, (relData) => {
-							let relatedModel = this._getRelatedModel(relData);
+							let relatedModel = this._getRelatedModel(relData, apiCall);
 							if (relatedModel) {
 
 								// Add to model
@@ -329,7 +321,7 @@ class JsonApi extends Api
 					} else if (rel.data instanceof Object) {
 
 						// Get the one
-						let relatedModel = this._getRelatedModel(rel.data);
+						let relatedModel = this._getRelatedModel(rel.data, apiCall);
 						if (relatedModel) {
 
 							// Set it
@@ -354,7 +346,7 @@ class JsonApi extends Api
 	}
 
 
-	_getRelatedModel(relationshipData) {
+	_getRelatedModel(relationshipData, apiCall) {
 
 		// Check data integrity
 		let relType = relationshipData.type;
@@ -364,7 +356,7 @@ class JsonApi extends Api
 
 		// Find model in store
 		relType = inflection.singularize(inflection.camelize(relType));
-		let relModel = Model.getFromStore(relType, relId);
+		let relModel = apiCall.getResponseModel(relType, relId);
 		return relModel;
 
 
