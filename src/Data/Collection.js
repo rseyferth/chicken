@@ -15,6 +15,7 @@ class Collection extends ObservableArray
 		this.itemsById = {};
 		this.originalIds = [];
 
+
 	}
 
 	knows(id) {
@@ -45,6 +46,11 @@ class Collection extends ObservableArray
 		if (!ClassMap.isA(value, 'Model')) {
 			console.log(value);
 			throw new TypeError('You cannot add non-Model values to a Collection');
+		}
+
+		// Studying?
+		if (this.isStudyingModels) {
+			value.study(this.modelStudyCallback);
 		}
 
 		// Not already in there?

@@ -6703,6 +6703,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.notificationsDisabled = false;
 
+			_this.isStudyingChildren = false;
+			_this.childStudyCallback = function () {
+
+				// Trigger on.
+				_this._scheduleChanged();
+			};
+
 			return _this;
 		}
 
@@ -6835,9 +6842,12 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 
 						// Study it
-						newValue.study(function () {
-							_this3.trigger(ObservableArray.Events.Change);
-						});
+						if (this.isStudyingChildren) {
+
+							newValue.study(function () {
+								_this3.trigger(ObservableArray.Events.Change);
+							});
+						}
 
 						// Store it
 						this.items[currentPart] = newValue;
@@ -6878,7 +6888,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Add items
 				_underscore2.default.each(values, function (value) {
-
 					_this4._add(value);
 				});
 
@@ -6897,6 +6906,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Add it.
 				this.items.push(value);
+
+				// Studying?
+				if (this.isStudyingChildren) {
+					value.study(this.childStudyCallback);
+				}
 
 				// Is it observable?
 				if (ObservableArray.isObservable(value)) {
@@ -6919,11 +6933,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'delete',
 			value: function _delete() {
+				var _this6 = this;
+
 				for (var _len2 = arguments.length, values = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 					values[_key2] = arguments[_key2];
 				}
 
 				this.items = _underscore2.default.difference(this.items, values);
+
+				// Studying?
+				if (this.isStudyingChildren) {
+					_underscore2.default.each(values, function (item) {
+						item.neglect(_this6.childStudyCallback);
+					});
+				}
 
 				// Trigger events
 				this.trigger('change');
@@ -6942,9 +6965,17 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'empty',
 			value: function empty() {
+				var _this7 = this;
 
 				// Values that are deleted
 				var deleted = _underscore2.default.difference(this.items, []);
+
+				// Remove all listeners
+				if (this.isStudyingChildren) {
+					_underscore2.default.each(this.items, function (item) {
+						item.neglect(_this7.childStudyCallback);
+					});
+				}
 
 				// Now clear
 				this.items = [];
@@ -7004,8 +7035,21 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'study',
 			value: function study(callback) {
+				var _this8 = this;
 
-				// This is an alias of the 'changed' event
+				// Already studying?
+				if (!this.isStudyingChildren) {
+
+					// Set
+					this.isStudyingChildren = true;
+
+					// Watch all current children
+					_underscore2.default.each(this.items, function (item) {
+						item.study(_this8.childStudyCallback);
+					});
+				}
+
+				// Connect to change-event
 				return this.on('change', callback);
 			}
 
@@ -7228,6 +7272,31 @@ return /******/ (function(modules) { // webpackBootstrap
 				return true;
 			}
 		}, {
+			key: '_scheduleChanged',
+			value: function _scheduleChanged() {
+				var _this9 = this;
+
+				// Notifications disabled?
+				if (this.notificationsDisabled) return;
+
+				// Already something scheduled?
+				if (!this._scheduleChangedTimeout) {
+
+					// Schedule it
+					this._scheduleChangedTimeout = setTimeout(function () {
+
+						// Trigger it now!
+						_this9._scheduleChangedTimeout = false;
+						_this9._triggerChanged();
+					}, ObservableArray.ChangedDelay);
+				}
+			}
+		}, {
+			key: '_triggerChanged',
+			value: function _triggerChanged() {
+				this.trigger(ObservableArray.Events.Change);
+			}
+		}, {
 			key: 'length',
 			get: function get() {
 				return this.items.length;
@@ -7288,6 +7357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
 	};
+	ObservableArray.ChangedDelay = 100;
 
 	_ClassMap2.default.register('ObservableArray', ObservableArray);
 
@@ -9972,7 +10042,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					relatedModel.set(relationship.remoteKey, this.get(relationship.localKey));
 				}
 
-				// Set it
+				// Set it and watch it
 				relatedModel.study(function () {
 					_this8._scheduleAttributeChanged(relationshipName);
 				});
@@ -9994,8 +10064,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'addRelatedModel',
 			value: function addRelatedModel(relationshipName, relatedModel) {
-				var _this9 = this;
-
 				var fromApi = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
 				var pivotAttributes = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 
@@ -10024,11 +10092,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					var Pivot = _ClassMap2.default.get('Pivot');
 					relatedModel = Pivot.createFor(relatedModel, pivotAttributes);
 				}
-
-				// Watch for changes in the model.
-				relatedModel.study(function () {
-					_this9._scheduleAttributeChanged(relationshipName);
-				});
 
 				// Add model
 				var coll = this.related[relationshipName];
@@ -10348,6 +10411,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!_ClassMap2.default.isA(value, 'Model')) {
 					console.log(value);
 					throw new TypeError('You cannot add non-Model values to a Collection');
+				}
+
+				// Studying?
+				if (this.isStudyingModels) {
+					value.study(this.modelStudyCallback);
 				}
 
 				// Not already in there?

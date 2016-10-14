@@ -710,7 +710,7 @@ class Model extends Observable
 
 		}
 		
-		// Set it
+		// Set it and watch it
 		relatedModel.study(() => {
 			this._scheduleAttributeChanged(relationshipName);
 		});
@@ -757,12 +757,7 @@ class Model extends Observable
 			relatedModel = Pivot.createFor(relatedModel, pivotAttributes);
 
 		}
-
-		// Watch for changes in the model.
-		relatedModel.study(() => {
-			this._scheduleAttributeChanged(relationshipName);
-		});
-
+		
 		// Add model
 		let coll = this.related[relationshipName];
 		if (fromApi) {
