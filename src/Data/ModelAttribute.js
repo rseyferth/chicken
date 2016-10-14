@@ -11,7 +11,7 @@ class ModelAttribute {
 		this.isNullable = false;
 
 		this.defaultValue = undefined;		
-		this.includeInRequests = type !== 'Model';
+		this.includeInRequests = true;
 
 		this.size = null;
 

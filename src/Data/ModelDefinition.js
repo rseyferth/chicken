@@ -200,7 +200,7 @@ class ModelDefinition
 	// Model //
 	///////////
 	model(name) {
-		let attr = this.attribute(name, ModelAttribute.Model);
+		let attr = this.attribute(name, ModelAttribute.Model).hidden();
 		return attr;
 	}
 
