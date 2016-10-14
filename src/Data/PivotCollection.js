@@ -24,7 +24,7 @@ class PivotCollection extends Collection
 
 		// Check pivot
 		if (_.size(pivotAttributes) > 0) {
-			model.setPivot(this.relationship.pivotModel + model.get('id'), pivotAttributes);
+			model.setPivot(this.relationship.pivotModel, pivotAttributes);
 		}
 		
 		return this;

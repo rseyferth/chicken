@@ -7,7 +7,7 @@ class Collection extends ObservableArray
 {
 
 	constructor(modelClass = null) {
-
+		
 		super();
 
 		this.modelClass = modelClass;

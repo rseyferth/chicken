@@ -193,6 +193,12 @@ class Relationship {
 
 	}
 
+	isPivot() {
+
+		return this.type === Relationship.BelongsToMany;
+		
+	}
+
 
 
 

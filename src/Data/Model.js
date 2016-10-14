@@ -11,6 +11,7 @@ import Collection from '~/Data/Collection';
 import ClassMap from '~/Helpers/ClassMap';
 import Utils from '~/Helpers/Utils';
 import ComputedProperty from '~/Core/ComputedProperty';
+import Pivot from '~/Data/Pivot';
 
 /**
  * @module Data
@@ -59,7 +60,7 @@ class Model extends Observable
 		 * @property pivotAttributes
 		 * @type {Object}
 		 */
-		this.pivotAttributes = this.pivotAttributes || {};
+		this.pivotAttributes = this.pivotAttributes || new Observable();
 
 
 
@@ -507,6 +508,10 @@ class Model extends Observable
 	// Pivoting //
 	//////////////
 
+	getPivot() {
+		return this.pivotAttributes;
+	}
+
 	setPivot(pivotKey, attributes, attributeValue = null) {
 
 		// Key, value?
@@ -516,32 +521,14 @@ class Model extends Observable
 			attributes[key] = attributeValue;
 		}
 
-		// Key known?
-		if (this.pivotAttributes[pivotKey] === undefined) {
-			this.pivotAttributes[pivotKey] = {};
-		}
-
-		// Merge.
-		$.extend(this.pivotAttributes[pivotKey], attributes);
+		// Loop 'n add
+		_.each(attributes, (value, key) => {
+			this.pivotAttributes.set(pivotKey + '.' + key, value, true);
+		});
 
 		return this;
 
 	}
-
-	getPivot(pivotKey, attributeKey = null) {
-
-		// Basics
-		let attr = this.pivotAttributes[pivotKey];
-		if (!attr) return {};
-
-		// Specific key?
-		if (attributeKey) return attr[attributeKey];
-
-		// Whole thing
-		return attr;
-
-	}
-
 
 
 
@@ -769,13 +756,18 @@ class Model extends Observable
 	 * @param {boolean} fromApi		
 	 * @chainable
 	 */
-	addRelatedModel(relationshipName, relatedModel, fromApi = false) {
+	addRelatedModel(relationshipName, relatedModel, fromApi = false, pivotAttributes = null) {
 		
 		// Check if collection exists
+		let relationship = this.getRelationship(relationshipName);
 		if (this.related[relationshipName] === undefined) {
 				
 			// Make collection
-			this.related[relationshipName] = new Collection(relatedModel.constructor);
+			if (relationship) {
+				this.related[relationshipName] = relationship.getInitValue();
+			} else {
+				this.related[relationshipName] = new Collection(relatedModel.constructor);
+			}
 
 		} 
 		
@@ -784,6 +776,15 @@ class Model extends Observable
 			throw new TypeError('Tried to add a related model to an existing object that is not a Collection');
 		}
 
+		// Check relationship
+		if (relationship.isPivot() && !(relatedModel instanceof Pivot)) {
+
+			// Create pivot wrapper
+			relatedModel = new Pivot(relatedModel, this, relationship, pivotAttributes);
+
+		}
+
+		// Watch for changes in the model.
 		relatedModel.study(() => {
 			this._scheduleAttributeChanged(relationshipName);
 		});

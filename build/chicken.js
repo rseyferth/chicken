@@ -84,19 +84,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ApiCall2 = _interopRequireDefault(_ApiCall);
 
-	var _JsonApi = __webpack_require__(72);
+	var _JsonApi = __webpack_require__(73);
 
 	var _JsonApi2 = _interopRequireDefault(_JsonApi);
 
-	var _JsonApiCall = __webpack_require__(73);
+	var _JsonApiCall = __webpack_require__(74);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _Auth = __webpack_require__(74);
+	var _Auth = __webpack_require__(75);
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
-	var _JWTAuth = __webpack_require__(75);
+	var _JWTAuth = __webpack_require__(76);
 
 	var _JWTAuth2 = _interopRequireDefault(_JWTAuth);
 
@@ -132,11 +132,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelAttribute = __webpack_require__(77);
+	var _ModelAttribute = __webpack_require__(78);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _ModelDefinition = __webpack_require__(78);
+	var _ModelDefinition = __webpack_require__(79);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
 
@@ -144,15 +144,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
-	var _PivotCollection = __webpack_require__(80);
+	var _PivotCollection = __webpack_require__(81);
 
 	var _PivotCollection2 = _interopRequireDefault(_PivotCollection);
 
-	var _Relationship = __webpack_require__(79);
+	var _Relationship = __webpack_require__(80);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
-	var _Service2 = __webpack_require__(81);
+	var _Service2 = __webpack_require__(82);
 
 	var _Service3 = _interopRequireDefault(_Service2);
 
@@ -11918,6 +11918,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
 
+	var _Pivot = __webpack_require__(72);
+
+	var _Pivot2 = _interopRequireDefault(_Pivot);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11976,7 +11980,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property pivotAttributes
 	   * @type {Object}
 	   */
-			_this.pivotAttributes = _this.pivotAttributes || {};
+			_this.pivotAttributes = _this.pivotAttributes || new _Observable3.default();
 
 			/**
 	   * The watchable current state of this model. This
@@ -12434,8 +12438,15 @@ return /******/ (function(modules) { // webpackBootstrap
 			//////////////
 
 		}, {
+			key: 'getPivot',
+			value: function getPivot() {
+				return this.pivotAttributes;
+			}
+		}, {
 			key: 'setPivot',
 			value: function setPivot(pivotKey, attributes) {
+				var _this5 = this;
+
 				var attributeValue = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
 
@@ -12446,31 +12457,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					attributes[key] = attributeValue;
 				}
 
-				// Key known?
-				if (this.pivotAttributes[pivotKey] === undefined) {
-					this.pivotAttributes[pivotKey] = {};
-				}
-
-				// Merge.
-				_jquery2.default.extend(this.pivotAttributes[pivotKey], attributes);
+				// Loop 'n add
+				_underscore2.default.each(attributes, function (value, key) {
+					_this5.pivotAttributes.set(pivotKey + '.' + key, value, true);
+				});
 
 				return this;
-			}
-		}, {
-			key: 'getPivot',
-			value: function getPivot(pivotKey) {
-				var attributeKey = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-
-				// Basics
-				var attr = this.pivotAttributes[pivotKey];
-				if (!attr) return {};
-
-				// Specific key?
-				if (attributeKey) return attr[attributeKey];
-
-				// Whole thing
-				return attr;
 			}
 
 			///////////////////
@@ -12538,14 +12530,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getDirty',
 			value: function getDirty() {
-				var _this5 = this;
+				var _this6 = this;
 
 				// Get dirty values
 				var dirty = {};
 				_underscore2.default.each(this.attributes, function (value, key) {
 
 					// Not in original or changed?
-					if (_this5.isDirty(key)) {
+					if (_this6.isDirty(key)) {
 
 						// Then it's dirty
 						dirty[key] = value;
@@ -12609,7 +12601,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'resetDirty',
 			value: function resetDirty() {
-				var _this6 = this;
+				var _this7 = this;
 
 				var keys = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
 
@@ -12621,7 +12613,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Specific key?
 				_underscore2.default.each(keys, function (key) {
 
-					_this6.originalValues[key] = _this6.uncastValue(key, _this6.attributes[key]);
+					_this7.originalValues[key] = _this7.uncastValue(key, _this7.attributes[key]);
 				});
 				return this;
 			}
@@ -12647,15 +12639,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_scheduleUpdateDirty',
 			value: function _scheduleUpdateDirty() {
-				var _this7 = this;
+				var _this8 = this;
 
 				// Already going?
 				if (this._scheduleUpdateDirtyTimeout) return;
 
 				// Wait a bit
 				this._scheduleUpdateDirtyTimeout = setTimeout(function () {
-					_this7.updateDirty();
-					_this7._scheduleUpdateDirtyTimeout = null;
+					_this8.updateDirty();
+					_this8._scheduleUpdateDirtyTimeout = null;
 				}, Model.UpdateDirtyDelay);
 			}
 
@@ -12675,7 +12667,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'setRelatedModel',
 			value: function setRelatedModel(relationshipName, relatedModel) {
-				var _this8 = this;
+				var _this9 = this;
 
 				// Get the relationship itself
 				var relationship = this.getRelationship(relationshipName);
@@ -12692,7 +12684,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Set it
 				relatedModel.study(function () {
-					_this8._scheduleAttributeChanged(relationshipName);
+					_this9._scheduleAttributeChanged(relationshipName);
 				});
 				this.related[relationshipName] = relatedModel;
 
@@ -12712,16 +12704,22 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'addRelatedModel',
 			value: function addRelatedModel(relationshipName, relatedModel) {
-				var _this9 = this;
+				var _this10 = this;
 
 				var fromApi = arguments.length <= 2 || arguments[2] === undefined ? false : arguments[2];
+				var pivotAttributes = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
 
 
 				// Check if collection exists
+				var relationship = this.getRelationship(relationshipName);
 				if (this.related[relationshipName] === undefined) {
 
 					// Make collection
-					this.related[relationshipName] = new _Collection2.default(relatedModel.constructor);
+					if (relationship) {
+						this.related[relationshipName] = relationship.getInitValue();
+					} else {
+						this.related[relationshipName] = new _Collection2.default(relatedModel.constructor);
+					}
 				}
 
 				// Is it a valid collection?
@@ -12729,8 +12727,16 @@ return /******/ (function(modules) { // webpackBootstrap
 						throw new TypeError('Tried to add a related model to an existing object that is not a Collection');
 					}
 
+				// Check relationship
+				if (relationship.isPivot() && !(relatedModel instanceof _Pivot2.default)) {
+
+					// Create pivot wrapper
+					relatedModel = new _Pivot2.default(relatedModel, this, relationship, pivotAttributes);
+				}
+
+				// Watch for changes in the model.
 				relatedModel.study(function () {
-					_this9._scheduleAttributeChanged(relationshipName);
+					_this10._scheduleAttributeChanged(relationshipName);
 				});
 
 				// Add model
@@ -13104,6 +13110,72 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _Observable2 = __webpack_require__(35);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Data
+	 */
+	var Pivot = function (_Observable) {
+		_inherits(Pivot, _Observable);
+
+		/**
+	  * @class Data.Pivot
+	  *
+	  * @constructor
+	  * @param  {Data.Model} model        
+	  * @param  {Data.Model} owner        
+	  * @param  {Data.Relationship} relationship 
+	  */
+		function Pivot(model, owner, relationship) {
+			var initValues = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
+			_classCallCheck(this, Pivot);
+
+			// Localize
+			var _this = _possibleConstructorReturn(this, (Pivot.__proto__ || Object.getPrototypeOf(Pivot)).call(this, initValues));
+
+			_this.model = model;
+			_this.owner = owner;
+			_this.relationship = relationship;
+
+			return _this;
+		}
+
+		_createClass(Pivot, [{
+			key: 'getModel',
+			value: function getModel() {
+				return this.model;
+			}
+		}, {
+			key: 'getOwner',
+			value: function getOwner() {
+				return this.owner;
+			}
+		}]);
+
+		return Pivot;
+	}(_Observable3.default);
+
+	module.exports = Pivot;
+
+/***/ },
+/* 73 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
@@ -13124,7 +13196,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Api3 = _interopRequireDefault(_Api2);
 
-	var _JsonApiCall = __webpack_require__(73);
+	var _JsonApiCall = __webpack_require__(74);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
@@ -13292,14 +13364,8 @@ return /******/ (function(modules) { // webpackBootstrap
 														includedModelGuids.push(_Utils2.default.uidFor(item));
 													}
 
-													// Pivot?
-													var pivotKey = null;
-													if (relationship.pivotModel) {
-														pivotKey = relationship.pivotModel + item.get('id');
-													}
-
 													// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-													return _this2.serialize(item, true, includeRelatedData, false, includedModelGuids, pivotKey);
+													return _this2.serialize(item, true, includeRelatedData, false, includedModelGuids, relationship.pivotModel);
 												}) };
 										})();
 									}
@@ -13460,16 +13526,37 @@ return /******/ (function(modules) { // webpackBootstrap
 
 							// Is it one record?
 							if (rel.data instanceof Array) {
+								(function () {
 
-								// Loop and add
-								_underscore2.default.each(rel.data, function (relData) {
-									var relatedModel = _this5._getRelatedModel(relData);
-									if (relatedModel) {
+									// Find relationship
+									var relationship = model.getRelationship(relationshipName);
 
-										// Add to model
-										model.addRelatedModel(relationshipName, relatedModel, true);
-									}
-								});
+									// Loop and add
+									_underscore2.default.each(rel.data, function (relData) {
+
+										// Get the model
+										var relatedModel = _this5._getRelatedModel(relData);
+
+										if (relatedModel) {
+											(function () {
+
+												// Pivot data defined?
+												var pivotAttributes = null;
+												if (relData.meta && relationship.isPivot() && relationship.pivotModel) {
+
+													// Collect pivot attributes
+													pivotAttributes = {};
+													_underscore2.default.each(relData.meta, function (value, key) {
+														pivotAttributes[_inflection2.default.camelize(key, true)] = value;
+													});
+												}
+
+												// Add to collection
+												model.addRelatedModel(relationshipName, relatedModel, true, pivotAttributes);
+											})();
+										}
+									});
+								})();
 							} else if (rel.data instanceof Object) {
 
 								// Get the one
@@ -13510,7 +13597,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApi;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13588,7 +13675,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApiCall;
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13824,7 +13911,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Auth;
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13839,11 +13926,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _Auth2 = __webpack_require__(74);
+	var _Auth2 = __webpack_require__(75);
 
 	var _Auth3 = _interopRequireDefault(_Auth2);
 
-	var _AuthError = __webpack_require__(76);
+	var _AuthError = __webpack_require__(77);
 
 	var _AuthError2 = _interopRequireDefault(_AuthError);
 
@@ -14217,7 +14304,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JWTAuth;
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -14270,7 +14357,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = AuthError;
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14501,7 +14588,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelAttribute;
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14516,11 +14603,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _ModelAttribute = __webpack_require__(77);
+	var _ModelAttribute = __webpack_require__(78);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _Relationship = __webpack_require__(79);
+	var _Relationship = __webpack_require__(80);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
@@ -14819,7 +14906,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelDefinition;
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14838,7 +14925,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _PivotCollection = __webpack_require__(80);
+	var _PivotCollection = __webpack_require__(81);
 
 	var _PivotCollection2 = _interopRequireDefault(_PivotCollection);
 
@@ -15052,6 +15139,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.pivotAttributes = _.union(this.pivotAttributes, attributes);
 				return this;
 			}
+		}, {
+			key: 'isPivot',
+			value: function isPivot() {
+
+				return this.type === Relationship.BelongsToMany;
+			}
 		}]);
 
 		return Relationship;
@@ -15069,7 +15162,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Relationship;
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15122,7 +15215,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Check pivot
 				if (_underscore2.default.size(pivotAttributes) > 0) {
-					model.setPivot(this.relationship.pivotModel + model.get('id'), pivotAttributes);
+					model.setPivot(this.relationship.pivotModel, pivotAttributes);
 				}
 
 				return this;
@@ -15135,7 +15228,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PivotCollection;
 
 /***/ },
-/* 81 */
+/* 82 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

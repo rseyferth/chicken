@@ -140,14 +140,8 @@ class JsonApi extends Api
 									includedModelGuids.push(Utils.uidFor(item));
 								}
 
-								// Pivot?
-								let pivotKey = null;
-								if (relationship.pivotModel) {
-									pivotKey = relationship.pivotModel + item.get('id');
-								}
-
 								// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-								return this.serialize(item, true, includeRelatedData, false, includedModelGuids, pivotKey);
+								return this.serialize(item, true, includeRelatedData, false, includedModelGuids, relationship.pivotModel);
 
 							}) };
 
@@ -315,13 +309,31 @@ class JsonApi extends Api
 					// Is it one record?
 					if (rel.data instanceof Array) {
 
+						// Find relationship
+						let relationship = model.getRelationship(relationshipName);
+
 						// Loop and add
 						_.each(rel.data, (relData) => {
+							
+							// Get the model
 							let relatedModel = this._getRelatedModel(relData);
+
 							if (relatedModel) {
 
-								// Add to model
-								model.addRelatedModel(relationshipName, relatedModel, true);
+								// Pivot data defined?
+								let pivotAttributes = null;
+								if (relData.meta && relationship.isPivot() && relationship.pivotModel) {
+
+									// Collect pivot attributes
+									pivotAttributes = {};
+									_.each(relData.meta, (value, key) => {
+										pivotAttributes[inflection.camelize(key, true)] = value;
+									});
+
+								}
+
+								// Add to collection
+								model.addRelatedModel(relationshipName, relatedModel, true, pivotAttributes);
 
 							}
 						});
