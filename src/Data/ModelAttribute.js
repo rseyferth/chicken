@@ -181,7 +181,7 @@ class ModelAttribute {
 			// Model //
 			///////////
 			case ModelAttribute.Model:
-				return [];
+				return {};
 
 			default:
 				return null;
