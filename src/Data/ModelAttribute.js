@@ -7,7 +7,6 @@ class ModelAttribute {
 		this.name = name;
 		this.type = type;
 
-
 		this.isPrimaryKey = false;
 		this.isNullable = false;
 
@@ -128,6 +127,7 @@ class ModelAttribute {
 			case ModelAttribute.DateTime:
 				return moment.isMoment(value) ? value.format('YYYY-MM-DD HH:mm:ss') : value;
 
+
 			default:
 				return value;
 
@@ -177,6 +177,12 @@ class ModelAttribute {
 			case ModelAttribute.Date:
 				return moment();
 
+			///////////
+			// Model //
+			///////////
+			case ModelAttribute.Model:
+				return {};
+
 			default:
 				return null;
  
@@ -206,6 +212,7 @@ ModelAttribute.Time = 'Time';
 
 ModelAttribute.Array = 'Array';
 ModelAttribute.Object = 'Object';
+ModelAttribute.Model = 'Model';
 
 
 module.exports = ModelAttribute;

@@ -23,6 +23,7 @@ class ModelDefinition
 		this.relationships = {};
 		this.relationshipsByLocalKey = null;
 		this.apiAttributeNames = null;
+		this.hiddenAttributeNames = null;
 
 		this.computedAttributes = {};
 
@@ -88,6 +89,16 @@ class ModelDefinition
 		}
 		return this.apiAttributeNames;
 
+	}
+
+	getHiddenAttributeNames() {
+		// Initialized?
+		if (!this.hiddenAttributeNames) {
+			this.hiddenAttributeNames = _.filter(this.attributeNames, (name) => {				
+				return !this.attributes[name].includeInRequests;
+			});
+		}
+		return this.hiddenAttributeNames;
 	}
 
 
@@ -183,6 +194,16 @@ class ModelDefinition
 		let attr = this.attribute(name, ModelAttribute.Boolean);
 		return attr;		
 	}
+
+
+	///////////
+	// Model //
+	///////////
+	model(name) {
+		let attr = this.attribute(name, ModelAttribute.Model);
+		return attr;
+	}
+
 
 
 	//////////

@@ -52,6 +52,7 @@ let Utils = {
 	},
 
 
+
 	/**
 	 * @method map
 	 * @static
