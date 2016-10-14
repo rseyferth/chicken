@@ -42,6 +42,16 @@ class ObservableArray extends Obj
 		this.notificationsDisabled = false;
 
 
+		this.isStudyingChildren = false;
+		this.childStudyCallback = () => {
+
+			// Trigger on.
+			console.log('child changed');
+			//this._scheduleChanged();
+
+		};
+
+
 
 	}
 
@@ -184,9 +194,13 @@ class ObservableArray extends Obj
 				}
 
 				// Study it
-				newValue.study(() => {
-					this.trigger(ObservableArray.Events.Change);
-				});
+				if (this.isStudyingChildren) {
+
+					newValue.study(() => {
+						this.trigger(ObservableArray.Events.Change);
+					});
+
+				}
 				
 				// Store it
 				this.items[currentPart] = newValue;	
@@ -223,10 +237,8 @@ class ObservableArray extends Obj
 		}
 
 		// Add items
-		_.each(values, (value) => {
-			
+		_.each(values, (value) => {			
 			this._add(value);
-
 		});
 
 		// Trigger events
@@ -244,6 +256,11 @@ class ObservableArray extends Obj
 
 		// Add it.
 		this.items.push(value);
+
+		// Studying?
+		if (this.isStudyingChildren) {
+			value.study(this.childStudyCallback);
+		}
 
 		// Is it observable?
 		if (ObservableArray.isObservable(value)) {
@@ -268,6 +285,14 @@ class ObservableArray extends Obj
 
 		this.items = _.difference(this.items, values);
 
+		// Studying?
+		if (this.isStudyingChildren) {
+			_.each(values, (item) => {
+				item.neglect(this.childStudyCallback);
+			});
+				
+		}
+
 		// Trigger events
 		this.trigger('change');
 		this.trigger('delete', values);
@@ -287,6 +312,13 @@ class ObservableArray extends Obj
 
 		// Values that are deleted
 		var deleted = _.difference(this.items, []);
+
+		// Remove all listeners
+		if (this.isStudyingChildren) {
+			_.each(this.items, (item) => {
+				item.neglect(this.childStudyCallback);
+			});
+		}
 
 		// Now clear
 		this.items = [];
@@ -345,7 +377,20 @@ class ObservableArray extends Obj
 	 */
 	study(callback) {
 
-		// This is an alias of the 'changed' event
+		// Already studying?
+		if (!this.isStudyingChildren) {
+
+			// Set
+			this.isStudyingChildren = true;
+
+			// Watch all current children
+			_.each(this.items, (item) => {
+				item.study(this.childStudyCallback);
+			});
+
+		}
+
+		// Connect to change-event
 		return this.on('change', callback);
 
 	}
@@ -569,6 +614,32 @@ class ObservableArray extends Obj
 	}
 
 
+	_scheduleChanged() {
+
+		// Notifications disabled?
+		if (this.notificationsDisabled) return;
+
+		// Already something scheduled?
+		if (!this._scheduleChangedTimeout) {
+
+			// Schedule it
+			this._scheduleChangedTimeout = setTimeout(() => {
+
+				// Trigger it now!
+				this._scheduleChangedTimeout = false;
+				this._triggerChanged();
+
+			}, ObservableArray.ChangedDelay);
+
+		}
+		
+	}
+
+	_triggerChanged() {
+		this.trigger(ObservableArray.Events.Change);
+	}
+
+
 
 }
 
@@ -626,6 +697,7 @@ ObservableArray.isObservable = (obj) => {
 	return typeof obj === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
 
 };
+ObservableArray.ChangedDelay = 100;
 
 ClassMap.register('ObservableArray', ObservableArray);
 
