@@ -16,7 +16,7 @@ const ClassMap = {
 	},
 
 	create(className, args = []) {
-		let c = this.get(className);
+		let c = ClassMap.get(className);
 		if (c === undefined) throw new Error('The ' + className + ' class is not registered in the ClassMap');
 		return new c(...args);
 	},

@@ -11,7 +11,6 @@ import Collection from '~/Data/Collection';
 import ClassMap from '~/Helpers/ClassMap';
 import Utils from '~/Helpers/Utils';
 import ComputedProperty from '~/Core/ComputedProperty';
-import Pivot from '~/Data/Pivot';
 
 /**
  * @module Data
@@ -51,17 +50,6 @@ class Model extends Observable
 		 * @type {Object}
 		 */
 		this.related = this.related || {};
-
-
-		/**
-		 * Values of attributes that are stored in pivot tables,
-		 * keyed by the pivot-model name.
-		 * 
-		 * @property pivotAttributes
-		 * @type {Object}
-		 */
-		this.pivotAttributes = this.pivotAttributes || new Observable();
-
 
 
 		/**
@@ -383,12 +371,14 @@ class Model extends Observable
 				}
 
 
+				// Set it
+				convertedAttr[key] = value;
 
-				return value;
 			});
 
 			// Switch
 			attr = convertedAttr;
+
 
 		}
 		
@@ -502,34 +492,6 @@ class Model extends Observable
 		return apiCall.execute();
 		
 	}
-
-
-	//////////////
-	// Pivoting //
-	//////////////
-
-	getPivot() {
-		return this.pivotAttributes;
-	}
-
-	setPivot(pivotKey, attributes, attributeValue = null) {
-
-		// Key, value?
-		if (attributeValue !== null) {
-			let key = attributes;
-			attributes = {};
-			attributes[key] = attributeValue;
-		}
-
-		// Loop 'n add
-		_.each(attributes, (value, key) => {
-			this.pivotAttributes.set(pivotKey + '.' + key, value, true);
-		});
-
-		return this;
-
-	}
-
 
 
 	///////////////////
@@ -777,10 +739,11 @@ class Model extends Observable
 		}
 
 		// Check relationship
-		if (relationship.isPivot() && !(relatedModel instanceof Pivot)) {
+		if (relationship && relationship.isPivot() && relatedModel.isPivot) {
 
 			// Create pivot wrapper
-			relatedModel = new Pivot(relatedModel, this, relationship, pivotAttributes);
+			let Pivot = ClassMap.get('Pivot');
+			relatedModel = Pivot.createFor(relatedModel, pivotAttributes);
 
 		}
 
@@ -876,6 +839,10 @@ class Model extends Observable
 
 	}
 
+
+	isPivot() {
+		return false;
+	}
 
 
 

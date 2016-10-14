@@ -1,6 +1,7 @@
 import _ from 'underscore';
 
 import Collection from '~/Data/Collection';
+import Pivot from '~/Data/Pivot';
 
 /**
  * @module Data
@@ -19,13 +20,16 @@ class PivotCollection extends Collection
 
 	add(model, pivotAttributes = {}) {
 
+		// Already a pivot?
+		if (!model.isPivot()) {
+		
+			// Proxy it
+			model = Pivot.createFor(model, pivotAttributes);
+
+		}
+
 		// Add it.
 		super.add(model);
-
-		// Check pivot
-		if (_.size(pivotAttributes) > 0) {
-			model.setPivot(this.relationship.pivotModel, pivotAttributes);
-		}
 		
 		return this;
 

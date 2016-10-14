@@ -74,7 +74,7 @@ class JsonApi extends Api
 
 	}
 
-	serialize(model, includeRelated = true, includeRelatedData = false, modelIsDynamic = false, includedModelGuids = [], includePivotDataKey = null) {
+	serialize(model, includeRelated = true, includeRelatedData = false, modelIsDynamic = false, includedModelGuids = []) {
 
 		// Check related data
 		if (typeof includeRelatedData === 'string') includeRelatedData = [includeRelatedData];
@@ -86,12 +86,25 @@ class JsonApi extends Api
 		let id = model.get('id');
 		if (id) data.id = id;
 
-		// Add pivot data?
-		if (includePivotDataKey) {
+		// Add pivot data?		
+		if (model.isPivot()) {
 
-			// Get attributes
-			let pivotAttributes = model.getPivot(includePivotDataKey);
-			data.meta = pivotAttributes;
+
+			// Get attributes (non-dirty as well.)
+			let pivotAttributes = model.getPivot().getAttributesForApi(false);
+			if (_.size(pivotAttributes) > 0) {
+
+				// Convert for API
+				let meta = {};
+				_.each(pivotAttributes, (value, key) => {
+					meta[inflection.underscore(key)] = value;
+				});
+
+				// Set as meta data
+				data.meta = meta;
+
+			}
+			
 
 		}
 
@@ -129,9 +142,6 @@ class JsonApi extends Api
 						// Is dirty?
 						if (relatedData.isDirty()) {
 
-							// Get relationship from model definition
-							let relationship = model.getRelationship(key);
-							
 							// Add them all
 							relationships[key] = { data: _.map(relatedData.items, (item) => {
 
@@ -141,7 +151,7 @@ class JsonApi extends Api
 								}
 
 								// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-								return this.serialize(item, true, includeRelatedData, false, includedModelGuids, relationship.pivotModel);
+								return this.serialize(item, true, includeRelatedData, false, includedModelGuids);
 
 							}) };
 
