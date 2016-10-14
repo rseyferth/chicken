@@ -52,8 +52,21 @@ class JsonApi extends Api
 		// Check method
 		let method = model.isNew() ? 'post' : 'patch';
 
+
 		// Do the call
-		let apiCall = this.call(method, settings.uri, JSON.stringify(data), settings.ajax);
+		var cache = [];
+		let apiCall = this.call(method, settings.uri, JSON.stringify(data, function(key, value){
+			if (typeof value === 'object' && value !== null) {
+				if (cache.indexOf(value) !== -1) {
+					// Circular reference found, discard key
+					return;
+				}
+				// Store value in our collection
+				cache.push(value);
+			}
+			return value;		
+		}), settings.ajax);
+		cache = null; // Enable garbage collection
 		
 
 		// Return it
@@ -136,8 +149,8 @@ class JsonApi extends Api
 
 						}
 
+					} else if (relatedData) {
 
-					} else {
 						// What is this
 						throw new TypeError('Unrecognized data found in model\'s relationship ' + key);
 					}
