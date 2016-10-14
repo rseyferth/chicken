@@ -26,6 +26,9 @@ class ObservableArray extends Obj
 		this.items = [];
 		
 
+		// Single initvalue given
+		if (!(initValues instanceof Array)) initValues = [initValues];
+
 		// Import start values
 		this.import(initValues, convertToObservables, true);
 

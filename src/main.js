@@ -50,6 +50,7 @@ import Model from '~/Data/Model';
 import ModelAttribute from '~/Data/ModelAttribute';
 import ModelDefinition from '~/Data/ModelDefinition';
 import ModelStore from '~/Data/ModelStore';
+import PivotCollection from '~/Data/PivotCollection';
 import Relationship from '~/Data/Relationship';
 import Service from '~/Data/Service';
 
@@ -126,6 +127,7 @@ var Chicken = {
 		ModelAttribute: ModelAttribute,
 		ModelDefinition: ModelDefinition,
 		ModelStore: ModelStore,
+		PivotCollection: PivotCollection,
 		Relationship: Relationship,
 		Service: Service
 	},

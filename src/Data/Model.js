@@ -51,6 +51,18 @@ class Model extends Observable
 		 */
 		this.related = this.related || {};
 
+
+		/**
+		 * Values of attributes that are stored in pivot tables,
+		 * keyed by the pivot-model name.
+		 * 
+		 * @property pivotAttributes
+		 * @type {Object}
+		 */
+		this.pivotAttributes = this.pivotAttributes || {};
+
+
+
 		/**
 		 * The watchable current state of this model. This
 		 * contains attributes for 'busy', 'saving', and 'dirty'.
@@ -337,42 +349,45 @@ class Model extends Observable
 			//remove hidden attributes
 			attr = _.omit(attr, modelDefinition.getHiddenAttributeNames());
 
+			
+
 			return attr;
 
 		} else {
 
 			// Loop attributes
-			attr = _.mapObject(attr, (value, key) => {
+			let convertedAttr =  {};
+			_.each(attr, (value, key) => {
+
+				// Is the value computed?
+				if (value instanceof ComputedProperty) return;
 
 				// Get the actual value
 				value = Utils.getValue(value);
 
-				// Do we need to cast it?
-				let attributeDefinition = this.getAttributeDefinition(key);
-				if (attributeDefinition) {
-					value = attributeDefinition.uncast(value);
-				} else {
+				// Is it a moment?
+				if (moment.isMoment(value)) {
 
-					// Is it a moment?
-					if (moment.isMoment(value)) {
-
-						// Make it ISO 8601
-						value = value.format('YYYY-MM-DD HH:mm:ss');
-
-					}
-
-					// Is it an array or model?
-					else if (value instanceof ObservableArray) {
-						value = JSON.stringify(value.toArray());
-					}				
-					else if (value instanceof Model) {
-						value = JSON.stringify(value.getAttributesForApi(onlyDirty));
-					}
+					// Make it ISO 8601
+					value = value.format('YYYY-MM-DD HH:mm:ss');
 
 				}
 
+				// Is it an array or model?
+				else if (value instanceof ObservableArray) {
+					value = JSON.stringify(value.toArray());
+				}				
+				else if (value instanceof Model) {
+					value = JSON.stringify(value.getAttributesForApi(onlyDirty));
+				}
+
+
+
 				return value;
 			});
+
+			// Switch
+			attr = convertedAttr;
 
 		}
 		
@@ -486,6 +501,47 @@ class Model extends Observable
 		return apiCall.execute();
 		
 	}
+
+
+	//////////////
+	// Pivoting //
+	//////////////
+
+	setPivot(pivotKey, attributes, attributeValue = null) {
+
+		// Key, value?
+		if (attributeValue !== null) {
+			let key = attributes;
+			attributes = {};
+			attributes[key] = attributeValue;
+		}
+
+		// Key known?
+		if (this.pivotAttributes[pivotKey] === undefined) {
+			this.pivotAttributes[pivotKey] = {};
+		}
+
+		// Merge.
+		$.extend(this.pivotAttributes[pivotKey], attributes);
+
+		return this;
+
+	}
+
+	getPivot(pivotKey, attributeKey = null) {
+
+		// Basics
+		let attr = this.pivotAttributes[pivotKey];
+		if (!attr) return {};
+
+		// Specific key?
+		if (attributeKey) return attr[attributeKey];
+
+		// Whole thing
+		return attr;
+
+	}
+
 
 
 

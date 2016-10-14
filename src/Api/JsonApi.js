@@ -74,7 +74,7 @@ class JsonApi extends Api
 
 	}
 
-	serialize(model, includeRelated = true, includeRelatedData = false, modelIsDynamic = false, includedModelGuids = []) {
+	serialize(model, includeRelated = true, includeRelatedData = false, modelIsDynamic = false, includedModelGuids = [], includePivotDataKey = null) {
 
 		// Check related data
 		if (typeof includeRelatedData === 'string') includeRelatedData = [includeRelatedData];
@@ -85,6 +85,15 @@ class JsonApi extends Api
 		};
 		let id = model.get('id');
 		if (id) data.id = id;
+
+		// Add pivot data?
+		if (includePivotDataKey) {
+
+			// Get attributes
+			let pivotAttributes = model.getPivot(includePivotDataKey);
+			data.meta = pivotAttributes;
+
+		}
 
 		// Was this model already added before? Then we skip attributes and relationships
 		if (!_.contains(includedModelGuids, Utils.uidFor(model))) {
@@ -113,12 +122,16 @@ class JsonApi extends Api
 				let relationships = {};
 				_.each(model.related, (relatedData, key) => {
 
+
 					// Is it a collection?
 					if (relatedData instanceof Collection) {
 
 						// Is dirty?
 						if (relatedData.isDirty()) {
 
+							// Get relationship from model definition
+							let relationship = model.getRelationship(key);
+							
 							// Add them all
 							relationships[key] = { data: _.map(relatedData.items, (item) => {
 
@@ -126,9 +139,15 @@ class JsonApi extends Api
 								if (includeRelatedData === false || _.indexOf(includeRelatedData, key) === -1) {
 									includedModelGuids.push(Utils.uidFor(item));
 								}
-								
+
+								// Pivot?
+								let pivotKey = null;
+								if (relationship.pivotModel) {
+									pivotKey = relationship.pivotModel + item.get('id');
+								}
+
 								// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-								return this.serialize(item, true, includeRelatedData, false, includedModelGuids);
+								return this.serialize(item, true, includeRelatedData, false, includedModelGuids, pivotKey);
 
 							}) };
 

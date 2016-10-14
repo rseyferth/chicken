@@ -2,6 +2,7 @@ import inflection from 'inflection';
 
 import Model from '~/Data/Model';
 import Collection from '~/Data/Collection';
+import PivotCollection from '~/Data/PivotCollection';
 
 class Relationship {
 
@@ -21,6 +22,8 @@ class Relationship {
 		this.morphModelKey = null;
 
 		this.pivotModel = null;
+
+		this.pivotAttributes = [];
 
 
 	}
@@ -53,7 +56,7 @@ class Relationship {
 
 		// Guess/store the keys
 		if (localKey || !this.localKey) {
-			this.localKey = localKey || inflection.camelize(inflection.singularize(this.remoteModel), true) + 'Id';
+			this.localKey = localKey || inflection.camelize(inflection.singularize(this.name), true) + 'Id';
 		}
 		if (!this.remoteKey) this.remoteKey = remoteKey;
 
@@ -76,6 +79,32 @@ class Relationship {
 		return this;
 
 	}
+
+
+	///////////
+	// Pivot //
+	///////////
+
+	belongsToMany(remoteModel, localKey = 'id', remoteKey = 'id', pivotModel = null) {
+
+		// Basics 
+		this.type = Relationship.BelongsToMany;
+		this.remoteModel = remoteModel;
+		this.localKey = localKey;
+		this.remoteKey = remoteKey;
+
+		// Pivot model given?
+		if (!pivotModel) {
+			let models = [this.localModel, this.remoteModel];
+			models.sort();
+			pivotModel = models.join('');
+		}
+		this.pivotModel = pivotModel;
+		
+		return this;
+
+	}
+
 
 
 	/////////////////////////
@@ -138,13 +167,29 @@ class Relationship {
 
 			case Relationship.HasMany:
 			case Relationship.HasManyThrough:
-			case Relationship.BelongsToMany:
 				return new Collection(Model.registry.get(this.remoteModel));
+
+			case Relationship.BelongsToMany:
+				return new PivotCollection(Model.registry.get(this.remoteModel), this);
 
 			default:
 				return null;
 				
 		}
+
+	}
+
+	/**
+	 * Add one or more attributes as pivot attributes
+	 * 
+	 * @method withPivot
+	 * @param  {...string} attributes  One or more attribute names
+	 * @chainable
+	 */
+	withPivot(...attributes) {
+
+		this.pivotAttributes = _.union(this.pivotAttributes, attributes);
+		return this;
 
 	}
 
