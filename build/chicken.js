@@ -9560,10 +9560,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (modelDefinition) {
 
 					// Use only attributes in the model definition
-					var modelAttr = modelIsDynamic || modelDefinition.isDynamic ? attr : _underscore2.default.pick(attr, function (value, key) {
+					var modelAttr = _underscore2.default.pick(attr, function (value, key) {
 
-						// Has property?
-						return modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined;
+						// Dynamic?
+						if (modelIsDynamic || modelDefinition.isDynamic) {
+
+							// Has property?
+							if (!(modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined)) return false;
+						}
+
+						// Is the value computed?
+						if (value instanceof _ComputedProperty2.default) return false;
+
+						// OK.
+						return true;
 					});
 
 					// Now uncast the values
@@ -9588,7 +9598,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						});
 					}
 
-					//remove hidden attributes
+					// Remove hidden attributes
 					attr = _underscore2.default.omit(attr, modelDefinition.getHiddenAttributeNames());
 
 					return attr;

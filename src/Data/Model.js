@@ -304,10 +304,22 @@ class Model extends Observable
 		if (modelDefinition) {
 
 			// Use only attributes in the model definition
-			let modelAttr = modelIsDynamic || modelDefinition.isDynamic ? attr : _.pick(attr, (value, key) => {
+			let modelAttr = _.pick(attr, (value, key) => {
 
-				// Has property?
-				return modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined;
+				// Dynamic?
+				if (modelIsDynamic || modelDefinition.isDynamic) {
+
+					// Has property?
+					if (!(modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined)) return false;
+
+				}
+
+				// Is the value computed?
+				if (value instanceof ComputedProperty) return false;
+
+
+				// OK.
+				return true;
 
 			});
 
@@ -335,7 +347,7 @@ class Model extends Observable
 				
 			}
 
-			//remove hidden attributes
+			// Remove hidden attributes
 			attr = _.omit(attr, modelDefinition.getHiddenAttributeNames());
 
 			
@@ -369,7 +381,6 @@ class Model extends Observable
 				else if (value instanceof Model) {
 					value = JSON.stringify(value.getAttributesForApi(onlyDirty));
 				}
-
 
 				// Set it
 				convertedAttr[key] = value;
