@@ -46,8 +46,7 @@ class ObservableArray extends Obj
 		this.childStudyCallback = () => {
 
 			// Trigger on.
-			console.log('child changed');
-			//this._scheduleChanged();
+			this._scheduleChanged();
 
 		};
 

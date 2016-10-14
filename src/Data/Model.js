@@ -750,7 +750,7 @@ class Model extends Observable
 
 		}
 		
-		// Set it
+		// Set it and watch it
 		relatedModel.study(() => {
 			this._scheduleAttributeChanged(relationshipName);
 		});
@@ -783,10 +783,6 @@ class Model extends Observable
 		else if ((!this.related instanceof Collection)) {
 			throw new TypeError('Tried to add a related model to an existing object that is not a Collection');
 		}
-
-		relatedModel.study(() => {
-			this._scheduleAttributeChanged(relationshipName);
-		});
 
 		// Add model
 		let coll = this.related[relationshipName];
