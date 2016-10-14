@@ -334,6 +334,21 @@ class Application extends Observable {
 
 		return this;
 
+	}
+
+	refresh(viewContainerKeys = null) {
+
+		let viewContainers;
+
+		viewContainerKeys = viewContainerKeys || _.keys(this.viewContainers);
+			
+		//clear the currentAction of all viewContainer
+		_.each(viewContainerKeys, (viewContainerKey) => {
+			this.viewContainers[viewContainerKey].currentAction = null;
+		});
+
+		// Start with current location
+		this.router.handle(this.history.getCurrentLocation());
 
 	}
 

@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Application2 = _interopRequireDefault(_Application);
 
-	var _Api = __webpack_require__(68);
+	var _Api = __webpack_require__(72);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
@@ -124,11 +124,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Collection = __webpack_require__(71);
+	var _Collection = __webpack_require__(57);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _Model2 = __webpack_require__(69);
+	var _Model2 = __webpack_require__(55);
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
@@ -140,7 +140,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
 
-	var _ModelStore = __webpack_require__(70);
+	var _ModelStore = __webpack_require__(56);
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
@@ -168,7 +168,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _ComponentDefinition = __webpack_require__(55);
+	var _ComponentDefinition = __webpack_require__(60);
 
 	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
 
@@ -176,7 +176,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Element2 = _interopRequireDefault(_Element);
 
-	var _Helpers = __webpack_require__(56);
+	var _Helpers = __webpack_require__(61);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -208,39 +208,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
-	var _I18n = __webpack_require__(67);
+	var _I18n = __webpack_require__(71);
 
 	var _I18n2 = _interopRequireDefault(_I18n);
 
-	var _Action = __webpack_require__(62);
+	var _Action = __webpack_require__(66);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
-	var _Controller2 = __webpack_require__(64);
+	var _Controller2 = __webpack_require__(68);
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
-	var _Middleware = __webpack_require__(66);
+	var _Middleware = __webpack_require__(70);
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
 
-	var _Redirect = __webpack_require__(63);
+	var _Redirect = __webpack_require__(67);
 
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 
-	var _Request = __webpack_require__(65);
+	var _Request = __webpack_require__(69);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
-	var _Route = __webpack_require__(60);
+	var _Route = __webpack_require__(64);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _RouteMatch = __webpack_require__(61);
+	var _RouteMatch = __webpack_require__(65);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
-	var _Router = __webpack_require__(59);
+	var _Router = __webpack_require__(63);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -1784,7 +1784,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Router = __webpack_require__(59);
+	var _Router = __webpack_require__(63);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
@@ -1792,7 +1792,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Element2 = _interopRequireDefault(_Element);
 
-	var _I18n = __webpack_require__(67);
+	var _I18n = __webpack_require__(71);
 
 	var _I18n2 = _interopRequireDefault(_I18n);
 
@@ -2117,6 +2117,26 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 
 				return this;
+			}
+		}, {
+			key: 'refresh',
+			value: function refresh() {
+				var _this5 = this;
+
+				var viewContainerKeys = arguments.length <= 0 || arguments[0] === undefined ? null : arguments[0];
+
+
+				var viewContainers = void 0;
+
+				viewContainerKeys = viewContainerKeys || _underscore2.default.keys(this.viewContainers);
+
+				//clear the currentAction of all viewContainer
+				_underscore2.default.each(viewContainerKeys, function (viewContainerKey) {
+					_this5.viewContainers[viewContainerKey].currentAction = null;
+				});
+
+				// Start with current location
+				this.router.handle(this.history.getCurrentLocation());
 			}
 		}, {
 			key: 'getCurrentUri',
@@ -6201,11 +6221,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _ComponentDefinition = __webpack_require__(55);
+	var _ComponentDefinition = __webpack_require__(60);
 
 	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
 
-	var _Helpers = __webpack_require__(56);
+	var _Helpers = __webpack_require__(61);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
@@ -8844,6 +8864,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
+	var _Model = __webpack_require__(55);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -8929,6 +8953,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.modelClass = null;
 
+			/**
+	   * When true, the models will be linked to the global Model stores. When false,
+	   * a local store, specific to this ApiCall, will be used. (Default = true)
+	   * 
+	   * @property useGlobalStore
+	   * @type {Boolean}
+	   */
+			_this.useGlobalStore = true;
+
+			/**
+	   * Local model store, used when useGlobalStore is false.
+	   * 
+	   * @property store
+	   * @type {Object}
+	   */
+			_this.store = {};
+
 			return _this;
 		}
 
@@ -8977,6 +9018,54 @@ return /******/ (function(modules) { // webpackBootstrap
 						reject(errorObj);
 					});
 				});
+			}
+
+			////////////
+			// Stores //
+			////////////
+
+		}, {
+			key: 'useLocalStore',
+			value: function useLocalStore() {
+				var value = arguments.length <= 0 || arguments[0] === undefined ? true : arguments[0];
+
+				this.useGlobalStore = !value;
+				return this;
+			}
+		}, {
+			key: 'getResponseModel',
+			value: function getResponseModel(modelName, id) {
+
+				// Global?
+				if (this.useGlobalStore) {
+
+					// Get from Model store
+					return _Model2.default.getFromStore(modelName, id);
+				} else {
+
+					// Known?
+					if (this.store[modelName] === undefined) return null;
+					return this.store[modelName][id];
+				}
+			}
+		}, {
+			key: 'storeReponseModel',
+			value: function storeReponseModel(model) {
+
+				// Global?
+				if (this.useGlobalStore) {
+
+					// Store it
+					var store = _Model2.default.getStore(model.getModelName());
+					store.set(model.get('id'), model);
+				} else {
+
+					// Set it locally
+					var modelName = model.getModelName();
+					if (this.store[modelName] === undefined) this.store[modelName] = {};
+					this.store[modelName][model.get('id')] = model;
+				}
+				return this;
 			}
 
 			/**
@@ -9099,2773 +9188,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _App = __webpack_require__(52);
-
-	var _App2 = _interopRequireDefault(_App);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Dom
-	 */
-	var ComponentDefinition = function ComponentDefinition(name, source, initCallback) {
-		var renderer = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
-
-		_classCallCheck(this, ComponentDefinition);
-
-		/**
-	  * The name of the component. This is also the name you use
-	  * in your templates, to insert the component.
-	  * 
-	  * @property name
-	  * @type {string}
-	  */
-		this.name = name;
-
-		/**
-	  * The template source
-	  *
-	  * @property source
-	  * @type {string}
-	  */
-		this.source = source;
-
-		/**
-	  * The method that is called when the Dom.Component instance is created.
-	  * 
-	  * @property initCallback
-	  * @type {[type]}
-	  */
-		this.initCallback = initCallback;
-
-		/**
-	  * The Dom.Renderer instance that is used to render the component. This is also the
-	  * renderer in which this component will be automatically registered as a helper.
-	  *
-	  * @property renderer
-	  * @type {Dom.Renderer}
-	  */
-		this.renderer = renderer ? renderer : (0, _App2.default)() ? (0, _App2.default)().config('renderer') : null;
-	};
-
-	module.exports = ComponentDefinition;
-
-/***/ },
-/* 56 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint no-console: ["error", { allow: ["log"] }] */
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _queryString = __webpack_require__(7);
-
-	var _queryString2 = _interopRequireDefault(_queryString);
-
-	var _inflection = __webpack_require__(4);
-
-	var _inflection2 = _interopRequireDefault(_inflection);
-
-	var _moment = __webpack_require__(6);
-
-	var _moment2 = _interopRequireDefault(_moment);
-
-	var _filesize = __webpack_require__(57);
-
-	var _filesize2 = _interopRequireDefault(_filesize);
-
-	var _ActionBinding = __webpack_require__(48);
-
-	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
-
-	var _Utils = __webpack_require__(58);
-
-	var _Utils2 = _interopRequireDefault(_Utils);
-
-	var _App = __webpack_require__(52);
-
-	var _App2 = _interopRequireDefault(_App);
-
-	var _Observable = __webpack_require__(35);
-
-	var _Observable2 = _interopRequireDefault(_Observable);
-
-	var _ObservableArray = __webpack_require__(46);
-
-	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Dom
-	 */
-	var Helpers = function () {
-
-		/**
-	  * @class Dom.Helpers
-	  *
-	  * @constructor 
-	  * @param  {Dom.Renderer} renderer
-	  */
-		function Helpers(renderer) {
-			_classCallCheck(this, Helpers);
-
-			this.renderer = renderer;
-		}
-
-		/////////////
-		// Actions //
-		/////////////
-
-		_createClass(Helpers, [{
-			key: 'action',
-			value: function action(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-
-				// There should be an ActionBinding for this element
-				var element = blocks.element;
-				if (element && element.getAttribute('data-chicken-action')) {
-
-					// Get the action
-					var binding = _ActionBinding2.default.get(element.getAttribute('data-chicken-action'));
-					binding.apply();
-				} else {
-					throw new Error('The "action" keyword was not correctly configured in your Renderer... Or you are trying to add an action to a Component.');
-				}
-			}
-
-			/////////////
-			// Routing //
-			/////////////
-
-		}, {
-			key: 'link',
-			value: function link(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-				var _this = this;
-
-				// Add listener
-				if (blocks.element) {
-
-					// Add click listener
-					var $el = (0, _jquery2.default)(blocks.element);
-					$el.each(function (index, el) {
-
-						// Set href for easy debuggin' and statusbar info
-						(0, _jquery2.default)(el).attr('href', _this._getValue(params[0]));
-					}).on('click', function (e) {
-						e.preventDefault();
-
-						// Get uri value
-						var uri = _this._getValue(params[0]);
-
-						// Go there.
-						(0, _App2.default)().goto(uri);
-					});
-				}
-			}
-
-			////////////////////////
-			// Control statements //
-			////////////////////////
-
-
-			/**
-	   * @method each
-	   */
-
-		}, {
-			key: 'each',
-			value: function each(params, attributeHash, blocks, morph /*, renderer, scope, visitor*/) {
-
-				// Check uid for this each-block
-				var eachUid = _Utils2.default.uidFor(morph);
-
-				// Get the value
-				var list = this._getValue(params[0]);
-				_Utils2.default.each(list, function (item, i) {
-
-					// Get a unique id for the item.
-					var uid = _Utils2.default.uidFor(item);
-					var itemKey = 'each:' + eachUid + ':' + i + ':' + uid;
-
-					// Render item
-					blocks.template.yieldItem(itemKey, [item, i]);
-				});
-			}
-
-			/**
-	   * @method if	 
-	   */
-
-		}, {
-			key: 'if',
-			value: function _if(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-
-				// Get the value
-				var value = this._getValue(params[0]);
-				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(value));
-			}
-
-			/**
-	   * @method unless
-	   */
-
-		}, {
-			key: 'unless',
-			value: function unless(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-
-				// Get the value
-				var value = this._getValue(params[0]);
-				return this._ifUnless(params, blocks, !_Utils2.default.isTruthlike(value));
-			}
-		}, {
-			key: '_ifUnless',
-			value: function _ifUnless(params, blocks, show) {
-
-				// Is the param truth-like?
-				if (show) {
-
-					// Is it a yielding-if?
-					if (blocks.template && blocks.template.yield) {
-						blocks.template.yield();
-
-						// Or parameter-if?
-					} else {
-
-						return this._getValue(params[1]);
-					}
-				} else {
-
-					// Render the inverse yield
-					if (blocks.inverse && blocks.inverse.yield) {
-						blocks.inverse.yield();
-
-						// Or the inverse param
-					} else {
-						return this._getValue(params[2]);
-					}
-				}
-			}
-
-			////////////
-			// Values //
-			////////////
-
-		}, {
-			key: 'concat',
-			value: function concat(params, attributeHash /*, blocks, morph, renderer, scope, visitor*/) {
-
-				attributeHash = _underscore2.default.defaults(attributeHash, {
-					separator: ''
-				});
-				return this._getValues(params).join(attributeHash.separator);
-			}
-		}, {
-			key: 'get',
-			value: function get(params) {
-
-				// Get params
-				var obj = this._getValue(params[0]);
-				var key = this._getValue(params[1]);
-
-				// Is it an observable?
-				if (obj instanceof _Observable2.default || obj instanceof _ObservableArray2.default) {
-					return obj.get(key);
-				} else {
-					return obj[key];
-				}
-			}
-		}, {
-			key: 'firstIn',
-			value: function firstIn(params) {
-
-				var arr = this._getValue(params[0]);
-				if (arr instanceof _ObservableArray2.default) {
-					return arr.first();
-				} else {
-					return _underscore2.default.first(arr);
-				}
-			}
-		}, {
-			key: 'equal',
-			value: function equal(params) {
-
-				// Get params
-				var value1 = this._getValue(params[0]);
-				var value2 = this._getValue(params[1]);
-
-				return value1 == value2;
-			}
-		}, {
-			key: 'notEqual',
-			value: function notEqual(params) {
-				return !this.equal(params);
-			}
-		}, {
-			key: 'gt',
-			value: function gt(params) {
-
-				// Get params
-				var value1 = this._getValue(params[0]);
-				var value2 = this._getValue(params[1]);
-				return value1 > value2;
-			}
-		}, {
-			key: 'gte',
-			value: function gte(params) {
-
-				// Get params
-				var value1 = this._getValue(params[0]);
-				var value2 = this._getValue(params[1]);
-				return value1 >= value2;
-			}
-		}, {
-			key: 'lt',
-			value: function lt(params) {
-
-				// Get params
-				var value1 = this._getValue(params[0]);
-				var value2 = this._getValue(params[1]);
-				return value1 < value2;
-			}
-		}, {
-			key: 'lte',
-			value: function lte(params) {
-
-				// Get params
-				var value1 = this._getValue(params[0]);
-				var value2 = this._getValue(params[1]);
-				return value1 <= value2;
-			}
-		}, {
-			key: 'isObject',
-			value: function isObject(params) {
-				// Get param
-				var value = this._getValue(params[0]);
-				return value instanceof Object;
-			}
-
-			//////////////////
-			// HTML Helpers //
-			//////////////////
-
-		}, {
-			key: 'attributesFrom',
-			value: function attributesFrom(params, attributeHash, blocks, morph) {
-
-				console.log(params, attributeHash, blocks, morph);
-			}
-
-			/////////////
-			// Strings //
-			/////////////
-
-		}, {
-			key: 'camelize',
-			value: function camelize(params) {
-
-				var string = this._getValue(params[0]);
-				var capitalFirstLetter = !!this._getValue(params[1]);
-
-				return _inflection2.default.camelize(string, !capitalFirstLetter);
-			}
-
-			/////////////////////
-			// Dates and times //
-			/////////////////////
-
-		}, {
-			key: 'momentFormat',
-			value: function momentFormat(params) {
-				var value = this._getValue(params[0]);
-				var format = this._getValue(params[1]);
-				if (_moment2.default.isMoment(value)) {
-					return value.format(format);
-				} else {
-					return value;
-				}
-			}
-		}, {
-			key: 'fileSize',
-			value: function fileSize(params) {
-				var value = this._getValue(params[0]);
-				return (0, _filesize2.default)(value);
-			}
-
-			///////////
-			// Debug //
-			///////////
-
-		}, {
-			key: 'log',
-			value: function log(params /*, attributeHash, blocks, morph, renderer, scope, visitor*/) {
-				console.log.apply(console, this._getValues(params));
-			}
-		}, {
-			key: 'query-params',
-			value: function queryParams(params, attributeHash /*, blocks, morph, renderer, scope, visitor*/) {
-				return _queryString2.default.stringify(this._getHashValues(attributeHash));
-			}
-
-			//////////////////
-			// Localization //
-			//////////////////
-
-		}, {
-			key: 't',
-			value: function t(params, attributeHash) {
-
-				// Get the key
-				var key = this._getValue(params[0]);
-
-				// Get from app
-				return (0, _App2.default)().i18n.translate(key, attributeHash);
-			}
-
-			//////////////
-			// Internal //
-			//////////////
-
-		}, {
-			key: '_getValue',
-			value: function _getValue(param) {
-				return this.renderer.hooks.getValue(param);
-			}
-		}, {
-			key: '_getValues',
-			value: function _getValues(params) {
-				var _this2 = this;
-
-				return params.map(function (value) {
-					return _this2._getValue(value);
-				});
-			}
-		}, {
-			key: '_getHashValues',
-			value: function _getHashValues(attributeHash) {
-				var _this3 = this;
-
-				var result = {};
-				_underscore2.default.each(attributeHash, function (value, key) {
-					result[key] = _this3._getValue(value);
-				});
-				return result;
-			}
-		}]);
-
-		return Helpers;
-	}();
-
-	Helpers.User = {};
-
-	module.exports = Helpers;
-
-/***/ },
-/* 57 */
-/***/ function(module, exports) {
-
-	!function(i,e){"object"==typeof module&&module.exports?module.exports=e():i.filesize=e()}("undefined"!=typeof window?window:this,function(){var i={iec:"_Ki_Mi_Gi_Ti_Pi_Ei_Zi_Yi",si:"_K_M_G_T_P_E_Z_Y"};return function(e,_,o){e=Math.abs(e),_||0===_||(_=1);var t="si"==o?1e3:1024,n=0;for(i[o]||(o="si");e>=t;)e/=t,++n;return e.toFixed(_)+" "+i[o].split("_")[n]+"b"}});
-
-/***/ },
-/* 58 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _moment = __webpack_require__(6);
-
-	var _moment2 = _interopRequireDefault(_moment);
-
-	var _Observable = __webpack_require__(35);
-
-	var _Observable2 = _interopRequireDefault(_Observable);
-
-	var _ObservableArray = __webpack_require__(46);
-
-	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
-
-	var _Binding = __webpack_require__(47);
-
-	var _Binding2 = _interopRequireDefault(_Binding);
-
-	var _ComputedProperty = __webpack_require__(39);
-
-	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
-
-	var _Reference = __webpack_require__(37);
-
-	var _Reference2 = _interopRequireDefault(_Reference);
-
-	var _ClassMap = __webpack_require__(38);
-
-	var _ClassMap2 = _interopRequireDefault(_ClassMap);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var _uid = 0;
-	var UniqueIdKey = '___chicken_' + +new Date();
-
-	/**
-	 * @module Helpers
-	 */
-	var Utils = {
-
-		/**
-	  * @class Helpers.Utils
-	  * @static
-	  */
-
-		getValue: function getValue(obj) {
-			if (obj instanceof _Binding2.default || obj instanceof _ComputedProperty2.default || obj instanceof _Reference2.default) {
-				return obj.getValue();
-			}
-			return obj;
-		},
-
-		/**
-	  * @method each
-	  * @static
-	  * 
-	  * @param  {Object}   obj      
-	  * @param  {Function} callback 
-	  * @param  {Object}   context  
-	  */
-		each: function each(obj, callback, context) {
-			if (obj instanceof _Observable2.default) {
-				obj = obj.attributes;
-			} else if (obj instanceof _ObservableArray2.default) {
-				obj = obj.items;
-			}
-			return _underscore2.default.each(obj, callback, context);
-		},
-
-		/**
-	  * @method map
-	  * @static
-	  * 
-	  * @param  {Object}   obj      
-	  * @param  {Function} callback 
-	  * @param  {Object}   context  
-	  */
-		map: function map(obj, callback, context) {
-			if (obj instanceof _Observable2.default) {
-				obj = obj.attributes;
-			} else if (obj instanceof _ObservableArray2.default) {
-				obj = obj.items;
-			}
-			return _underscore2.default.map(obj, callback, context);
-		},
-
-		/**
-	  * Determine whether given value is truthlike
-	  * 
-	  * @method isTruthlike
-	  * @static
-	  *	 
-	  * @param  {mixed} value 
-	  * @return {boolean}
-	  */
-		isTruthlike: function isTruthlike(value) {
-
-			// Null/undef
-			if (value === null || value === undefined) return false;
-
-			// Bool?
-			if (value === true) return true;
-			if (value === false) return false;
-
-			// 0 and 1?
-			if (value === 1 || value === '1') return true;
-			if (value === 0 || value === '0') return false;
-
-			// Array?
-			if (Array.isArray(value) || value instanceof _ObservableArray2.default) {
-				return value.length > 0;
-			}
-
-			// Object
-			if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.contructor === Object) {
-				return _underscore2.default.key(value).length > 0;
-			}
-
-			// Do it natively
-			return !!value;
-		},
-
-		areEqual: function areEqual(value1, value2) {
-
-			// Identical?
-			if (value1 === value2) return true;
-
-			// Is one or both a moment?
-			if (_moment2.default.isMoment(value1)) return value1.isSame(value2);
-			if (_moment2.default.isMoment(value2)) return value2.isSame(value1);
-
-			// One of them null or undefined?
-			if (value1 === undefined || value2 === undefined || value1 === null || value2 === null) return false;
-			if ((typeof value1 === 'undefined' ? 'undefined' : _typeof(value1)) !== 'object' || (typeof value2 === 'undefined' ? 'undefined' : _typeof(value2)) !== 'object') return false;
-			if (value1 instanceof Array || value2 instanceof Array) return false;
-
-			// Same id?
-			if (this.uidFor(value1) === this.uidFor(value2)) return true;
-
-			return false;
-		},
-
-		/**
-	  * Get a unique string identifier for given object or variable. For objects
-	  * this identifier will remain the same, making it useful for comparing objects.
-	  *
-	  * @method uidFor
-	  * @param  {mixed} obj 
-	  * @return {string}
-	  */
-		uidFor: function uidFor(obj) {
-
-			// Already set for this object?
-			if (obj && obj[UniqueIdKey] !== undefined) return obj[UniqueIdKey];
-
-			// Non-existing things?
-			if (obj === undefined) return '(undefined)';
-			if (obj === null) return '(null)';
-
-			// Check what type the value is
-			var type = typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
-			switch (type) {
-
-				case 'number':
-				case 'string':
-					return type + ':' + obj;
-
-				case 'boolean':
-					return obj ? '(true)' : '(false)';
-
-			}
-
-			// Is it a standard object?
-			if (obj === Object) return '(Object)';
-			if (obj === Array) return '(Array)';
-
-			// Store the id on the obj
-			var uid = Utils.uid();
-			obj[UniqueIdKey] = uid;
-			return uid;
-		},
-
-		uid: function uid() {
-			return '*' + ++_uid + '*';
-		}
-	};
-
-	_ClassMap2.default.register('Utils', Utils);
-
-	module.exports = Utils;
-
-/***/ },
-/* 59 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _Obj2 = __webpack_require__(36);
-
-	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	var _SettingsObject = __webpack_require__(40);
-
-	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
-
-	var _Route = __webpack_require__(60);
-
-	var _Route2 = _interopRequireDefault(_Route);
-
-	var _Request = __webpack_require__(65);
-
-	var _Request2 = _interopRequireDefault(_Request);
-
-	var _Middleware = __webpack_require__(66);
-
-	var _Middleware2 = _interopRequireDefault(_Middleware);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint no-console: ["error", { allow: ["table"] }] */
-
-	/**
-	 * @module Routing
-	 */
-	var Router = function (_Obj) {
-		_inherits(Router, _Obj);
-
-		/**
-	  * 
-	  * 
-	  * @class Routing.Router
-	  * @extends Core.Object
-	  */
-		function Router(application) {
-			_classCallCheck(this, Router);
-
-			////////////////
-			// Properties //
-			////////////////
-
-			/**
-	   * @property routes
-	   * @type {Array}
-	   */
-			var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this));
-
-			_this.routes = [];
-
-			/**
-	   * @property application
-	   * @type {Application}
-	   */
-			_this.application = application;
-
-			/**
-	   * @property namedRoutes
-	   * @type {Map}
-	   */
-			_this.namedRoutes = new Map();
-
-			///////////////////////////////////////////
-			// Grouped configuration state variables //
-			///////////////////////////////////////////
-
-			_this._currentConfig = _SettingsObject2.default.create({
-
-				parentRoute: null,
-				viewContainer: 'main',
-				middleware: []
-
-			}, ['parentRoute', 'viewContainer', 'middleware']);
-
-			return _this;
-		}
-
-		////////////////////////
-		// Definition methods //
-		////////////////////////
-
-		/**
-	  * Create a Route and add it to the Router.
-	  *
-	  * @method route
-	  * @param  {string} 			pattern 	The uri pattern
-	  * @param  {Object|String} 		actions     
-	  * @param  {Object} 			[options] 
-	  * @return {Routing.Route}        
-	  */
-
-
-		_createClass(Router, [{
-			key: 'route',
-			value: function route(pattern, actions) {
-				var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-
-				// Merge options
-				options = _underscore2.default.defaults({}, options, _underscore2.default.omit(this._currentConfig.toObject(), 'parentRoute'));
-
-				// Create the route
-				var route = new _Route2.default(this, this._currentConfig.get('parentRoute'), pattern, actions, options);
-
-				// Add route
-				this.routes.push(route);
-
-				// Return route
-				return route;
-			}
-
-			/**
-	   * Configure the Router to add the given options to
-	   * the Routes you define within the callback.
-	   *
-	   * @method group
-	   * @param  {object}   options  
-	   * @param  {Function} callback 
-	   * @chainable
-	   */
-
-		}, {
-			key: 'group',
-			value: function group(options, callback) {
-
-				// Store options
-				var oldConfig = this._currentConfig.clone();
-				this._currentConfig.apply(options);
-
-				// Do the callback
-				callback.apply(this);
-
-				// Restore options
-				this._currentConfig = oldConfig;
-
-				return this;
-			}
-
-			//////////////////////
-			// Router in action //
-			//////////////////////
-
-			/**
-	   * Handle given Request, by finding a matching Route
-	   * and executing it.
-	   * 
-	   * @method handle
-	   * @param  {Routing.Request} request 
-	   * @return {Routing.RouteMatch}
-	   */
-
-		}, {
-			key: 'handle',
-			value: function handle(request) {
-				var _this2 = this;
-
-				/////////////////
-				// Match route //
-				/////////////////
-
-				// Is it just a URL passed along?
-				if (!(request instanceof _Request2.default)) {
-					request = new _Request2.default(request);
-				}
-
-				// Loop through routes until we found something.
-				var routeMatch = false;
-				_underscore2.default.find(this.routes, function (route) {
-					routeMatch = route.match(request);
-					return routeMatch;
-				});
-
-				// Found something?
-				if (routeMatch === false) {
-
-					// There is no route matching the request
-					throw new Error('[Routing.Router] Could not find matching route. 404 handling is not implemented yet.');
-				}
-
-				// Make the execution callback
-				var executeActions = function executeActions() {
-
-					/////////////////////////////
-					// Start executing actions //
-					/////////////////////////////
-
-					var numberOfActionsStarted = 0;
-					var actionPromises = [];
-					routeMatch.actions.forEach(function (action, vcName) {
-
-						// Get depends on promises
-						var dependsOnPromises = _underscore2.default.map(action.dependsOn, function (dependsOnAction) {
-							return dependsOnAction.getPromise('complete');
-						});
-
-						// Wait?
-						if (dependsOnPromises.length > 0) {
-
-							// Wait for it
-							Promise.all(dependsOnPromises).then(function () {
-
-								// Now we're ready!
-								action.execute(_this2.application);
-							}, function (error) {
-								throw new Error('[Routing.Router] Action for "' + vcName + '" was not started, due to error in dependancy route: ' + error);
-							});
-						} else {
-
-							// Start now
-							numberOfActionsStarted++;
-							action.execute(_this2.application);
-						}
-
-						// Add complete promise
-						actionPromises.push(action.getPromise('complete'));
-					});
-
-					////////////////////////////
-					// Keep track of progress //
-					////////////////////////////
-
-					// Any action started?
-					if (numberOfActionsStarted === 0) {
-
-						throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.matchedRoute.getFullPattern() + '. Check your configuration.');
-					}
-
-					// Listen to the result
-					Promise.all(actionPromises).then(function () /*...results*/{
-
-						//@TODO What to do?
-
-					});
-				};
-
-				//////////////////////
-				// Setup middleware //
-				//////////////////////
-
-				// Loop and add middleware
-				var callbacksToExecute = [];
-				_underscore2.default.each(routeMatch.route.getMiddlewareNames(), function (mwName) {
-
-					// Get the middleware
-					var middleware = _Middleware2.default.registry.get(mwName);
-					if (!middleware) throw new Error('There is no middleware registered with the name "' + mwName + '"');
-
-					// Add the callback
-					callbacksToExecute.push(middleware.callback);
-				});
-
-				// Lastly we will execute the actions
-				callbacksToExecute.push(executeActions);
-
-				////////////////////////////////////////////////////////////////
-				// Now call the first callback, to start the middleware chain //
-				////////////////////////////////////////////////////////////////
-
-				var nextCallback = function nextCallback() {
-
-					// Get the callback to call
-					var cb = callbacksToExecute.shift();
-
-					// Get the next in line
-					var result = cb.apply(_this2, [nextCallback, request, routeMatch]);
-
-					// Is there a result?
-					if (result !== undefined) {
-						// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'
-					}
-				};
-				nextCallback();
-
-				return routeMatch;
-			}
-
-			/**
-	   * Output a table to the console containing an overview
-	   * of all defined routes.
-	   *
-	   * Note: This is not supported in all browsers!
-	   * https://developer.mozilla.org/en-US/docs/Web/API/Console/table
-	   *  
-	   * @method outputToConsole
-	   * @chainable
-	   */
-
-		}, {
-			key: 'outputToConsole',
-			value: function outputToConsole() {
-
-				// Loop and log
-				console.table(_underscore2.default.map(this.routes, function (route) {
-					return {
-						'Pattern': route.getFullPattern(),
-						'Actions': route.isAbstract() ? '(abstract)' : _underscore2.default.map(route.getFullActions(), function (action, targetViewContainer) {
-							return targetViewContainer + ': ' + (typeof action === 'function' ? '(Callback)' : action);
-						}).join(', '),
-						'Regular expression': route.getRegExp()
-					};
-				}));
-
-				return this;
-			}
-		}]);
-
-		return Router;
-	}(_Obj3.default);
-
-	module.exports = Router;
-
-/***/ },
-/* 60 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _xregexp = __webpack_require__(3);
-
-	var _xregexp2 = _interopRequireDefault(_xregexp);
-
-	var _Obj2 = __webpack_require__(36);
-
-	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	var _RouteMatch = __webpack_require__(61);
-
-	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Routing
-	 */
-	var Route = function (_Obj) {
-		_inherits(Route, _Obj);
-
-		/**
-	  * A Route configures a uri and its actions, parameters,
-	  * and models.
-	  * 
-	  * @class Routing.Route
-	  * @extends Core.Object
-	  * 
-	  * @constructor
-	  * @param {Routing.Router} 	router 				The application's Router instance
-	  * @param {Routing.Route} 	parent 				The route that the route you are creating is to be child of. Use `null` when there is no parent.
-	  * @param {string} 			pattern 			The route's pattern, not including the parent's pattern
-	  * @param {object|string}	[actions=null]		An action string o object containing one or more actions, keyed by the target ViewContainer. 
-	  *                                        		If you don't define actions this route will be made abstract.
-	  * @param {object}			[options={}]		An object containing one or more configuration options
-	  */
-		function Route(router, parent, pattern) {
-			var actions = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
-			var options = arguments.length <= 4 || arguments[4] === undefined ? {} : arguments[4];
-
-			_classCallCheck(this, Route);
-
-			// Private vars
-			var _this = _possibleConstructorReturn(this, (Route.__proto__ || Object.getPrototypeOf(Route)).call(this));
-
-			// Basics
-
-
-			_this._parameterConstraints = new Map();
-			_this._actions = actions;
-
-			////////////////
-			// Properties //
-			////////////////
-
-			/**
-	   * The Route that this Route is nested in
-	   * 
-	   * @property parentRoute
-	   * @type {Routing.Route}
-	   */
-			_this.parentRoute = parent;
-
-			/**
-	   * The Router that this Route is a part of
-	   * 
-	   * @property router
-	   * @type {Routing.Router}
-	   */
-			_this.router = router;
-
-			/**
-	   * The defined pattern, not including any parent patterns
-	   * 
-	   * @property pattern
-	   * @type {string}
-	   */
-			_this.pattern = pattern.replace(/(.)\/$/, '$1'); // Remove trailing slash
-
-
-			/**
-	   * The parameter names used in this route
-	   * 
-	   * @property parameters
-	   * @type {array}
-	   */
-			_this.parameters = [];
-
-			/**
-	   * The options used when defining this Route
-	   * 
-	   * @property options
-	   * @type {object}
-	   */
-			_this.options = _underscore2.default.defaults(options, {
-				abstract: actions === null,
-				as: null,
-				viewContainer: 'main',
-				middleware: []
-			});
-
-			/**
-	   * The name of the route you can use to link to. This is only 
-	   * set if you used the 'as' option.
-	   * 
-	   * @property name
-	   * @type {string}
-	   */
-			_this.name = null;
-
-			return _this;
-		}
-
-		////////////////////
-		// Public methods //
-		////////////////////
-
-		/**
-	  * Call this when you want to define routes nested under the current one. The provided callback
-	  * will be called with the Router as context, allowing you to use this.route to define the nested
-	  * routes.
-	  *
-	  * @example
-	  * 	Chicken.createApplication($('#application'), {
-	  * 		baseUrl: '/'
-	  * 	}).routes(function() {
-	  *  
-	  *  	this.route('/animals', 'Animal@index')                            // /animals
-	  *  		.nest(function() {
-	  *  			this.route('/dog', 'Animal@dog')                          // /animals/dog
-	  *  				.nest({ viewContainer: 'dogs'}, function() {
-	  *      				this.route('/:dogName', 'Animal@dogDetails');     // /animals/dog/:dogName
-	  *      				this.route('/about-dogs', 'Animal@aboutDogs');    // /animals/dog/about-dogs
-	  *  				});  				
-	  *      		this.route('/cat', 'Animal@cat');                         // /animals/cat
-	  *  		 });
-	  *  	
-	  *   
-	  * 	});
-	  * 	
-	  *
-	  * @method nest
-	  * @param {object} 		[options]   An optional options hash, to apply to all nested routes
-	  * @param {function} 	callback 	Your callback
-	  * @chainable
-	  */
-
-
-		_createClass(Route, [{
-			key: 'nest',
-			value: function nest() {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
-
-				// Check if options were given
-				var callback = args.pop();
-				var options = args.length > 0 ? args.pop() : {};
-
-				// Make me the parent route
-				this.router.group(_underscore2.default.defaults({
-					parentRoute: this
-				}, options), callback);
-
-				return this;
-			}
-		}, {
-			key: 'abstract',
-			value: function abstract() {
-				this.options.abstract = true;
-				return this;
-			}
-
-			/**
-	   * Check whether this Route matches the given Request. If so, the method
-	   * will return a complete RouteMatch. If not, the method will return `false`.
-	   * 
-	   * @method match
-	   * @param  {Routing.Request} request     
-	   * @return {Routing.RouteMatch|boolean}  
-	   */
-
-		}, {
-			key: 'match',
-			value: function match(request) {
-
-				// Am I an abstract route?
-				if (this.isAbstract()) return;
-
-				// Does it match?
-				var match = _xregexp2.default.exec(request.uri, this.getRegExp());
-
-				// No match?
-				if (!match) return false;
-
-				// We matched! Let's create a match object.
-				return new _RouteMatch2.default(this, match, request);
-			}
-
-			/**
-	   * Get the action definitions for the Route. An action definition can either
-	   * be a Controller action (e.g.: `Product@index`), or a callback. The result
-	   * is keyed by the target ViewContainer name.
-	   *
-	   * @method getActions
-	   * @return {object} 
-	   */
-
-		}, {
-			key: 'getActions',
-			value: function getActions() {
-
-				// Is it still a string (Controller@action) or callback?
-				if (typeof this._actions === 'string' || typeof this._actions === 'function') {
-
-					// Wrap in object using default view container
-					var actions = {};
-					actions[this.options.viewContainer] = this._actions;
-					this._actions = actions;
-				}
-
-				return this._actions;
-			}
-
-			/**
-	   * Get the action definitions for this Route, and any parent routes that it may have.
-	   *
-	   * @method getFullActions
-	   * @return {object} [description]
-	   */
-
-		}, {
-			key: 'getFullActions',
-			value: function getFullActions() {
-
-				// Start with mine
-				var actions = this.getActions();
-
-				// Add parent
-				if (this.parentRoute) {
-					return _underscore2.default.defaults(actions, this.parentRoute.actions);
-				}
-				return actions;
-			}
-
-			/**
-	   * Get the full Route pattern within the application for this route,
-	   * including any parent Routes.
-	   *
-	   * @method getFullPattern
-	   * @return {string}
-	   */
-
-		}, {
-			key: 'getFullPattern',
-			value: function getFullPattern() {
-
-				// My pattern as base
-				var p = this.pattern;
-
-				// Get parent's full pattern
-				if (this.parentRoute) {
-					var parentPart = this.parentRoute.getFullPattern();
-					if (parentPart !== '/') {
-						p = parentPart + p;
-					}
-				}
-
-				return p;
-			}
-
-			/**
-	   * Get all parameter constraints for this Route, combining constraints
-	   * defined by parent routes.
-	   *
-	   * @method getAllParameterConstraints
-	   * @return {Map} Map with a regular expression constraint for each constrained parameter
-	   */
-
-		}, {
-			key: 'getAllParameterConstraints',
-			value: function getAllParameterConstraints() {
-
-				// My constraints (don't overwrite)
-				var c = new Map(this._parameterConstraints);
-
-				// Get parent's constraints
-				if (this.parentRoute) {
-
-					// Prefix the pattern
-					this.parentRoute.getAllParameterConstraints().forEach(function (regex, key) {
-						if (!c.has(key)) c.set(key, regex);
-					});
-				}
-
-				return c;
-			}
-		}, {
-			key: 'getMiddlewareNames',
-			value: function getMiddlewareNames() {
-
-				return this.options.middleware;
-			}
-
-			/**
-	   * Get the Route's complete Regular Expression, including
-	   * parameters
-	   * 
-	   * @method getRegExp
-	   * @return {XRegExp}
-	   */
-
-		}, {
-			key: 'getRegExp',
-			value: function getRegExp() {
-				var _this2 = this;
-
-				// Not yet set?
-				if (this._regExp === undefined) {
-					(function () {
-
-						// Collect buildingBlocks (a regular expression pattern for each parameter)
-						var buildingBlocks = {};
-
-						// Convert :params into regex with building blocks 
-						// (see XRegExp.build documentation)
-						var constraints = _this2.getAllParameterConstraints();
-						var exp = _xregexp2.default.replace(_this2.getFullPattern(), /(([\:\*])([a-zA-Z\-\_]+))/, function (match, complete, paramType, paramName) {
-
-							// Wildcard?
-							var paramRegex = void 0;
-							if (paramType === '*') {
-
-								// Use wildcard
-								paramRegex = Route.ParameterType.Wildcard;
-							} else {
-
-								// Check if there is a constraint
-								paramRegex = constraints.has(paramName) ? constraints.get(paramName) : Route.ParameterType.Standard;
-							}
-
-							// Store as building block for regex
-							buildingBlocks[paramName] = paramRegex;
-
-							// Store parameter
-							_this2.parameters.push(paramName);
-
-							// Replace with a building block using named parameter
-							return '({{' + paramName + '}})';
-						}, 'all');
-
-						// Create it
-						_this2._regExp = _xregexp2.default.build('^' + exp + '$', buildingBlocks);
-					})();
-				}
-
-				// Return it
-				return this._regExp;
-			}
-
-			/**
-	   * Add a constraint to a parameter, by supplying a regular expression.
-	   * 
-	   * @method constrain
-	   * @param  {string} parameterName The name of the parameter to add constrains to
-	   * @param  {RegExp} regExp        A regular expression to use when matching the parameter
-	   * @chainable
-	   */
-
-		}, {
-			key: 'constrain',
-			value: function constrain(parameterName, regExp) {
-
-				// Store it
-				this._parameterConstraints.set(parameterName, regExp);
-
-				return this;
-			}
-
-			/**
-	   * Set the name of this Route
-	   *
-	   * @method as
-	   * @param  {string} name 
-	   * @chainable
-	   */
-
-		}, {
-			key: 'as',
-			value: function as(name) {
-
-				// Store name
-				this.name = name;
-
-				// Store in router
-				this.router.namedRoutes.set(name, this);
-
-				return this;
-			}
-		}, {
-			key: 'middleware',
-			value: function middleware() {
-				for (var _len2 = arguments.length, keys = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-					keys[_key2] = arguments[_key2];
-				}
-
-				this.options.middleware = _underscore2.default.unique(_underscore2.default.flatten([this.options.middleware, keys]));
-				return this;
-			}
-
-			/**
-	   * An abstract Route can never be matched. This is useful when you have a Route
-	   * that only has subroutes, but no actions itself. If you define a Route without
-	   * actions, this will automatically be set to true.
-	   * 
-	   * @method isAbstract
-	   * @return {Boolean}
-	   */
-
-		}, {
-			key: 'isAbstract',
-			value: function isAbstract() {
-				return !!this.options.abstract;
-			}
-		}]);
-
-		return Route;
-	}(_Obj3.default);
-
-	Route.ParameterType = {
-
-		/**
-	  * Regular expression for a standard parameter 
-	  *
-	  * Default: `/[^\/]+/`
-	  * 
-	  * @property ParameterType.Standard
-	  * @static
-	  * @type {RegExp}
-	  */
-		Standard: /[^\/]+/,
-
-		/**
-	  * Regular expression for a wildcard parameter
-	  *
-	  * Default: `/.+/`
-	  * 
-	  * @property ParameterType.Wildcard
-	  * @static
-	  * @type {RegExp}
-	  */
-		Wildcard: /.+/
-
-	};
-
-	module.exports = Route;
-
-/***/ },
-/* 61 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _Action = __webpack_require__(62);
-
-	var _Action2 = _interopRequireDefault(_Action);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Routing
-	 */
-	var RouteMatch = function () {
-
-		/**
-	  * When a Request is matched by a Route, a RouteMatch is created,
-	  * containing all the information necessary to process the request. 
-	  * The Router will use the RouteMatch to execute all the actions defined
-	  * in the route(s).
-	  * 
-	  * @class Routing.RouteMatch
-	  *
-	  * @constructor
-	  * @param {Routing.Route} 		route 			The route that matched
-	  * @param {array}  				regExpMatch 	The result from the XRegExp.exec call
-	  * @param {Routing.Request}		request 		The request that made this RouteMatch possible
-	  */
-		function RouteMatch(route, regExpMatch, request) {
-			var _this = this;
-
-			_classCallCheck(this, RouteMatch);
-
-			/**
-	   * The Route that matched
-	   *
-	   * @property route
-	   * @type {Routing.Route}
-	   */
-			this.route = route;
-
-			/**
-	   * The result from the XRegExp.exec call when the Route was matched
-	   * 
-	   * @property regExpMatch
-	   * @type {array}
-	   */
-			this.regExpMatch = regExpMatch;
-
-			/**
-	   * The request that made this RouteMatch possible
-	   *
-	   * @property request
-	   * @type {Routing.Request}
-	   */
-			this.request = request;
-
-			/**
-	   * The actions that are part of this match,
-	   * keyed by the target ViewContainer
-	   * 
-	   * @property actions
-	   * @type {Map}	
-	   */
-			this.actions = new Map();
-
-			/**
-	   * The parameters from the Request and matched route
-	   *
-	   * @property parameters
-	   * @type {Map}
-	   */
-			this.parameters = new Map();
-
-			////////////////////
-			// Create actions //
-			////////////////////
-
-			// Read parameters from match
-			_underscore2.default.each(route.parameters, function (paramName) {
-				_this.parameters.set(paramName, regExpMatch[paramName]);
-			});
-
-			// Start with the matched route
-			this._readActionsFromRoute(route);
-		}
-
-		_createClass(RouteMatch, [{
-			key: '_readActionsFromRoute',
-			value: function _readActionsFromRoute(route) {
-				var _this2 = this;
-
-				// Collect parameters from route
-				var params = new Map();
-				var paramArray = [];
-				_underscore2.default.each(route.parameters, function (paramName) {
-					paramArray.push(_this2.parameters.get(paramName));
-					params.set(paramName, _this2.parameters.get(paramName));
-				});
-
-				// Get actions
-				var myActions = {};
-				_underscore2.default.each(route.getActions(), function (routeAction, targetViewContainer) {
-
-					// Is there already an action defined for this target
-					if (_this2.actions.has(targetViewContainer)) return;
-
-					// Make it.
-					var action = new _Action2.default(targetViewContainer, routeAction, _this2.request);
-
-					// Set routes
-					action.route = route;
-					action.matchedRoute = _this2.route;
-					action.routeMatch = _this2;
-
-					// Set parameters
-					action.parameters = params;
-					action.parameterArray = paramArray;
-
-					// Add it.
-					myActions[targetViewContainer] = action;
-				});
-
-				// Make any actions that are already there dependent on the new ones, 
-				// because these actions are the parent(s) of the existing actions.
-				this.actions.forEach(function (previousAction) {
-					_underscore2.default.each(myActions, function (myAction) {
-						previousAction.dependsOn.push(myAction);
-					});
-				});
-
-				// Add these actions
-				var actionsToMakeDependentOn = [];
-				_underscore2.default.each(myActions, function (myAction, targetViewContainer) {
-
-					// My this action dependent on previous actions defined in this route
-					_underscore2.default.each(actionsToMakeDependentOn, function (depAction) {
-						myAction.dependsOn.push(depAction);
-					});
-
-					// Add the action to my actions
-					_this2.actions.set(targetViewContainer, myAction);
-					actionsToMakeDependentOn.push(myAction);
-				});
-
-				// Now look into the parent
-				if (route.parentRoute) {
-					this._readActionsFromRoute(route.parentRoute);
-				}
-
-				// We're done!
-				return this.actions;
-			}
-		}]);
-
-		return RouteMatch;
-	}();
-
-	module.exports = RouteMatch;
-
-/***/ },
-/* 62 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _xregexp = __webpack_require__(3);
-
-	var _xregexp2 = _interopRequireDefault(_xregexp);
-
-	var _App = __webpack_require__(52);
-
-	var _App2 = _interopRequireDefault(_App);
-
-	var _Obj2 = __webpack_require__(36);
-
-	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	var _Redirect = __webpack_require__(63);
-
-	var _Redirect2 = _interopRequireDefault(_Redirect);
-
-	var _Controller = __webpack_require__(64);
-
-	var _Controller2 = _interopRequireDefault(_Controller);
-
-	var _View = __webpack_require__(51);
-
-	var _View2 = _interopRequireDefault(_View);
-
-	var _Utils = __webpack_require__(58);
-
-	var _Utils2 = _interopRequireDefault(_Utils);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Routing
-	 */
-	var Action = function (_Obj) {
-		_inherits(Action, _Obj);
-
-		/**
-	  * @class Routing.Action
-	  * @extends Core.Obj
-	  */
-		function Action(targetViewContainer, controllerActionOrCallback, request) {
-			_classCallCheck(this, Action);
-
-			////////////////
-			// Attributes //
-			////////////////
-
-			/**
-	   * The name of the ViewContainer that this action is targeting.
-	   * 
-	   * @property targetViewContainer
-	   * @type {string}
-	   */
-			var _this = _possibleConstructorReturn(this, (Action.__proto__ || Object.getPrototypeOf(Action)).call(this));
-
-			_this.targetViewContainer = targetViewContainer;
-
-			/**
-	   * The Request instance that was used to create this action
-	   * 
-	   * @property request
-	   * @type {Routing.Request}
-	   */
-			_this.request = request;
-
-			/**
-	   * The Route that defined this action
-	   *
-	   * @property route
-	   * @type {Routing.Route}
-	   */
-			_this.route = null;
-
-			/**
-	   * The Route that matched the Request
-	   *
-	   * @property matchedRoute
-	   * @type {Routing.Route}
-	   */
-			_this.matchedRoute = null;
-
-			/**
-	   * The RouteMatch that this Action is a part
-	   *
-	   * @property routeMatch
-	   * @type {Routing.RouteMatch}
-	   */
-			_this.routeMatch = null;
-
-			/**
-	   * The instance of the Controller that has been created by 
-	   * this action.
-	   * 
-	   * @property controller
-	   * @type {Routing.Controller}
-	   */
-			_this.controller = null;
-
-			/**
-	   * The name of the Controller class used by this action
-	   * 
-	   * @property controllerClass
-	   * @type {string}
-	   */
-			_this.controllerClass = null;
-
-			/**
-	   * The name of the Controller method used by this action
-	   * 
-	   * @property controllerMethod
-	   * @type {string}
-	   */
-			_this.controllerMethod = null;
-
-			/**
-	   * A callback function, when the route did not configure
-	   * a Controller to be used, but an inline callback instead.
-	   * 
-	   * @property callback
-	   * @type {function}
-	   */
-			_this.callback = false;
-
-			/**
-	   * A map of request parameters that are supplied to this action.
-	   * 
-	   * @property parameters
-	   * @type {Map}
-	   */
-			_this.parameters = new Map();
-
-			/**
-	   * An array of request parameters, in the order of the route's
-	   * pattern definition
-	   *
-	   * @property parameterArray
-	   * @type {Array}
-	   */
-			_this.parameterArray = [];
-
-			/**
-	   * An array of other Actions that this Action depends on, 
-	   * meaning it will wait for them to finish, before executing.
-	   *
-	   * This is useful when you have a route where the second action
-	   * renders into a ViewContainer that is created by the first action.
-	   * Child routes will automatically wait for the parent route to finish
-	   * before running it's own actions.
-	   * 
-	   * @property dependsOn
-	   * @type {Array}
-	   */
-			_this.dependsOn = [];
-
-			///////////////////////////
-			// Check passed argument //
-			///////////////////////////
-
-			if (typeof controllerActionOrCallback === 'string') {
-
-				// A view uri?
-				if (controllerActionOrCallback.match(/^[a-z\-\d\.]+$/)) {
-
-					// Create a simple view callback
-					_this.callback = function () {
-						return new _View2.default(controllerActionOrCallback);
-					};
-				} else {
-
-					// Parse controller name
-					var match = _xregexp2.default.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
-					if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
-
-					// Store this
-					_this.controllerClass = match.class;
-					_this.controllerAction = match.action;
-				}
-			} else if (typeof controllerActionOrCallback === 'function') {
-
-				// Store it
-				_this.callback = controllerActionOrCallback;
-			} else {
-
-				throw new TypeError('[Routing.Action] Did not understand action: ' + controllerActionOrCallback);
-			}
-
-			return _this;
-		}
-
-		_createClass(Action, [{
-			key: 'execute',
-			value: function execute(application) {
-				var _this2 = this;
-
-				// Make the promise
-				return this.promise('complete', function (resolve, reject) {
-
-					// Get the view container
-					_this2.viewContainer = application.getViewContainer(_this2.targetViewContainer);
-					if (_this2.viewContainer === undefined) {
-						reject('There is no ViewContainer available with the name "' + _this2.targetViewContainer + '"');
-						return;
-					}
-
-					// Is there currently an action in this vc?
-					if (_this2.viewContainer.currentAction) {
-
-						// Was it triggered by the same route?
-						if (_Utils2.default.uidFor(_this2.viewContainer.currentAction.route) === _Utils2.default.uidFor(_this2.route)) {
-
-							// That means, we've just navigated within nested routes of that page, and this action can be skipped.
-							resolve();
-							return;
-						}
-					}
-
-					// The VC is busy now.
-					_this2.viewContainer.setLoading(true);
-
-					////////////////
-					// Controller //
-					////////////////
-
-					if (_this2.controllerClass) {
-
-						// Make controller
-						var ChickenController = _Controller2.default.registry.get(_this2.controllerClass);
-						if (ChickenController === undefined) {
-							reject('No controller defined with name "' + _this2.controllerClass + '"');
-							return;
-						}
-						_this2.controller = new ChickenController(_this2);
-
-						// Call action
-						var controllerAction = _this2.controller[_this2.controllerAction];
-						if (controllerAction === 'undefined' || typeof controllerAction !== 'function') {
-							reject('There is no action on the "' + _this2.controllerClass + '" controller with the name "' + _this2.controllerAction + '"');
-							return;
-						}
-
-						// Make the call
-						_this2._processResult(controllerAction.apply(_this2.controller, _this2.parameterArray), resolve, reject);
-					}
-
-					//////////////
-					// Callback //
-					//////////////
-					else if (_this2.callback) {
-
-							// Do the callback
-							_this2._processResult(_this2.callback.apply(_this2.controller, _this2.parameterArray), resolve, reject);
-						} else {
-							reject('There is no controller or callback defined... This shouldn\'t happen.');
-							return;
-						}
-				}).then(function () /* result */{}, function () /* error */{
-
-					// No longer loading
-					if (_this2.viewContainer) _this2.viewContainer.setLoading(false);
-				});
-			}
-		}, {
-			key: '_processResult',
-			value: function _processResult(result, resolve, reject) {
-				var _this3 = this;
-
-				// A redirect?
-				if (result instanceof _Redirect2.default) {
-
-					//@TODO Cancel the running request?
-
-					(0, _App2.default)().goto(result.uri);
-				}
-
-				///////////////////////////
-				// Is the result a view? //
-				///////////////////////////
-
-				else if (result instanceof _View2.default) {
-						(function () {
-
-							// Render the view
-							var view = result;
-							view.render().then(function () {
-
-								// Add it
-								_this3.viewContainer.setAction(_this3);
-								view.addToContainer(_this3.viewContainer);
-								resolve();
-							}, function (error) {
-								reject(error);
-							});
-						})();
-					}
-
-					//////////////////////////////
-					// Is the result a promise? //
-					//////////////////////////////
-
-					else if (result instanceof Promise) {
-
-							// Wait for it to finish
-							result.then(function (promiseResult) {
-
-								// Process result again!
-								_this3._processResult(promiseResult, resolve, reject);
-							}, function (error) {
-								reject(error);
-							});
-						}
-
-						/////////////////////////////////
-						// Is it rendarable by itself? //
-						/////////////////////////////////
-
-						else {
-
-								// A string
-								if (typeof result === 'string' || result instanceof DocumentFragment) {
-
-									// Set content
-									this.viewContainer.setAction(this);
-									this.viewContainer.setContent(result);
-									resolve();
-								} else {
-
-									// Don't know how to render this...
-									reject('I don\'t know how to render the result for "' + this.targetViewContainer + '"');
-									return;
-								}
-							}
-			}
-		}]);
-
-		return Action;
-	}(_Obj3.default);
-
-	var _controllerActionRegExp;
-	Action.getControllerActionRegExp = function () {
-		if (_controllerActionRegExp === undefined) {
-			_controllerActionRegExp = (0, _xregexp2.default)('^(?<class>[A-Z][a-zA-Z0-9\-\.]+)@(?<action>[a-z][a-zA-Z0-9\_]+)$');
-		}
-		return _controllerActionRegExp;
-	};
-
-	module.exports = Action;
-
-/***/ },
-/* 63 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Redirect = function Redirect(uri) {
-		_classCallCheck(this, Redirect);
-
-		this.uri = uri;
-	};
-
-	module.exports = Redirect;
-
-/***/ },
-/* 64 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Routing
-	 */
-	var Controller = function () {
-
-		/**
-	  * @class Routing.Controller
-	  * 
-	  * @constructor
-	  * @param {Routing.Action} action  The routing action that leads to the creation of this controller
-	  */
-		function Controller(action, application) {
-			_classCallCheck(this, Controller);
-
-			/**
-	   * @property action
-	   * @type {Routing.Action}
-	   */
-			this.action = action;
-
-			/**
-	   * @property application
-	   * @type {Application}
-	   */
-			this.application = application;
-		}
-
-		////////////////
-		// Properties //
-		////////////////
-
-
-		/**
-	  * Request parameters
-	  * 
-	  * @property parameters
-	  * @type {Map}
-	  */
-
-
-		_createClass(Controller, [{
-			key: "parameters",
-			get: function get() {
-				return this.action.parameters;
-			}
-
-			/**
-	   * The ViewContainer into which this controller action will render
-	   * 
-	   * @property viewContainer
-	   * @type {Dom.ViewContainer}
-	   */
-
-		}, {
-			key: "viewContainer",
-			get: function get() {
-				return this.action.viewContainer;
-			}
-
-			/**
-	   * @property request
-	   * @type {Routing.Request}
-	   */
-
-		}, {
-			key: "request",
-			get: function get() {
-				return this.action.request;
-			}
-
-			/**
-	   * @property route
-	   * @type {Routing.Route} 
-	   */
-
-		}, {
-			key: "route",
-			get: function get() {
-				return this.action.route;
-			}
-		}]);
-
-		return Controller;
-	}();
-
-	Controller.registry = new Map();
-
-	module.exports = Controller;
-
-/***/ },
-/* 65 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _ClassMap = __webpack_require__(38);
-
-	var _ClassMap2 = _interopRequireDefault(_ClassMap);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Routing
-	 */
-	var Request =
-
-	/**
-	 * @class Routing.Request
-	 *
-	 * @constructor
-	 * @param {object} 			location 		The location received from the History library
-	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
-	 */
-	function Request(location) {
-		var application = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-		_classCallCheck(this, Request);
-
-		// Guess application if not given
-		if (!application) application = _ClassMap2.default.get('Application').getInstance();
-
-		// Parse the uri 
-		var uri = Request.cleanUri(location.pathname);
-
-		// Strip of base part
-		var baseUrl = Request.cleanUri(application.settings.get('baseUrl'));
-		if (uri.length >= baseUrl.length && uri.substr(0, baseUrl.length)) {
-			uri = uri.substr(baseUrl.length);
-		}
-
-		// Add the / back again
-		uri = '/' + uri;
-
-		/**
-	  * @property uri
-	  * @type {string}
-	  */
-		this.uri = uri;
-	};
-
-	Request.cleanUri = function (uri) {
-
-		if (/^\//.test(uri)) uri = uri.substr(1);
-		if (/\/$/.test(uri)) uri = uri.substr(0, uri.length - 1);
-		return uri;
-	};
-
-	module.exports = Request;
-
-/***/ },
-/* 66 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Middleware = function Middleware(name, callback) {
-		_classCallCheck(this, Middleware);
-
-		this.name = name;
-
-		this.callback = callback;
-	};
-
-	Middleware.registry = new Map();
-	Middleware.register = function (middleware) {
-		var name = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-
-		// Check arguments
-		if (!(middleware instanceof Middleware)) {
-			middleware = new Middleware(name, middleware);
-		} else if (name === null) {
-			name = middleware.name;
-		}
-
-		// Store it.
-		Middleware.registry.set(name, middleware);
-	};
-
-	module.exports = Middleware;
-
-/***/ },
-/* 67 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _Obj2 = __webpack_require__(36);
-
-	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Localization
-	 */
-	var I18n = function (_Obj) {
-		_inherits(I18n, _Obj);
-
-		function I18n() {
-			_classCallCheck(this, I18n);
-
-			/**
-	   * @property data
-	   * @type {Object}
-	   */
-			var _this = _possibleConstructorReturn(this, (I18n.__proto__ || Object.getPrototypeOf(I18n)).call(this));
-
-			_this.data = {};
-
-			/**
-	   * @property bundlesToLoad
-	   * @type {Array}
-	   */
-			_this.bundlesToLoad = [];
-
-			return _this;
-		}
-
-		/**
-	  * Add a bundle that will be loaded when the application starts
-	  *
-	  * @method addBundle
-	  * @param  {string} url 
-	  * @param  {string} [key=null]  Optional key to add loaded data under.
-	  * @chainable
-	  */
-
-
-		_createClass(I18n, [{
-			key: 'addBundle',
-			value: function addBundle(url) {
-				var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-
-				this.bundlesToLoad.push({
-					url: url,
-					key: key
-				});
-
-				return this;
-			}
-
-			/**
-	   * Manually load a bundle into I18n
-	   *
-	   * @method loadBundle
-	   * @param  {string} url 
-	   * @param  {string} [key=null]  Optional key to add loaded data under.
-	   * @return {Promise}     
-	   */
-
-		}, {
-			key: 'loadBundle',
-			value: function loadBundle(url) {
-				var _this2 = this;
-
-				var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-
-				return new Promise(function (resolve, reject) {
-
-					// Do we have it in cache?
-					if (I18n.Cache[url]) {
-
-						resolve(I18n.Cache[url]);
-						return;
-					}
-
-					// Load it.
-					_jquery2.default.ajax(url).then(function (result) {
-						resolve(result);
-					}).fail(function (error) {
-						reject(error);
-					});
-				}).then(function (result) {
-
-					// Is there a key?
-					if (key) {
-						var r = {};
-						r[key] = result;
-						result = r;
-					}
-
-					// Extend
-					_jquery2.default.extend(_this2.data, result);
-				});
-			}
-
-			/**
-	   * Load all added bundles
-	   *
-	   * @method load
-	   * @return {Promise}
-	   */
-
-		}, {
-			key: 'load',
-			value: function load() {
-				var _this3 = this;
-
-				// Main prmomise for loading
-				return this.promise('loaded', function (resolve) {
-
-					// Nothing to load?
-					if (_this3.bundlesToLoad.length === 0) {
-						resolve();
-						return;
-					}
-
-					// Collect promises
-					var promises = [];
-					_underscore2.default.each(_this3.bundlesToLoad, function (bundle) {
-
-						promises.push(_this3.loadBundle(bundle.url, bundle.key));
-					});
-
-					// When all is done.
-					Promise.all(promises).then(function () {
-						resolve();
-					});
-				});
-			}
-
-			/**
-	   * Get the translation for given key
-	   * 
-	   * @method translate
-	   * @param  {string} key        			Dot-notation key to get value of
-	   * @param  {Object} [attributes={}] 	Optional object containing attributes to pass to the template in the translated value
-	   * @param  {mixed} [fallback=null]		Optional fallback value when the key is nout found
-	   * @return {mixed}
-	   */
-
-		}, {
-			key: 'translate',
-			value: function translate(key) {
-				var attributes = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var fallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-
-
-				// Dot notation
-				var obj = this.data;
-				var parts = key.split(/\./);
-				while (parts.length > 0) {
-
-					// Get firs tpart
-					var part = parts.shift();
-
-					// Not existing?
-					if (!obj[part]) return fallback ? fallback : '[' + key + ']';
-
-					// Dive in.
-					obj = obj[part];
-				}
-
-				// String?
-				if (typeof obj === 'string') {
-
-					/////////////////
-					// Templating? //
-					/////////////////
-
-					if (obj.match(/<%/)) {
-
-						// Convert attributes into real values
-						var attr = _underscore2.default.mapObject(attributes, function (value) {
-
-							// Get value?
-							if (typeof value.getValue === 'function') {
-								value = value.getValue();
-							}
-							return value;
-						});
-
-						// Make a template and run it
-						var template = _underscore2.default.template(obj);
-						obj = template(attr);
-					}
-				}
-
-				return obj;
-			}
-
-			/**
-	   * Alias of translate
-	   * 
-	   * @method get
-	   * @param  {string} key        
-	   * @param  {Object} [attributes={}] 
-	   * @param  {mixed} [fallback=null]
-	   * @return {mixed}
-	   */
-
-		}, {
-			key: 'get',
-			value: function get(key) {
-				var attributes = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var fallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
-
-				return this.translate(key, attributes, fallback);
-			}
-		}]);
-
-		return I18n;
-	}(_Obj3.default);
-
-	I18n.Cache = {};
-
-	module.exports = I18n;
-
-/***/ },
-/* 68 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _Model = __webpack_require__(69);
-
-	var _Model2 = _interopRequireDefault(_Model);
-
-	var _ApiCall = __webpack_require__(53);
-
-	var _ApiCall2 = _interopRequireDefault(_ApiCall);
-
-	var _App = __webpack_require__(52);
-
-	var _App2 = _interopRequireDefault(_App);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Api
-	 */
-	var Api = function () {
-
-		/**
-	  * @class Api.Api
-	  *
-	  * @constructor
-	  * @param  {Object} options 	 
-	  */
-		function Api(options) {
-			_classCallCheck(this, Api);
-
-			this.settings = _jquery2.default.extend({
-				baseUrl: '/api',
-
-				auth: false
-
-			}, options);
-		}
-
-		/**
-	  * @method deserialize
-	  * @return {Data.Model|Data.Collection}
-	  */
-
-
-		_createClass(Api, [{
-			key: 'deserialize',
-			value: function deserialize() /* data, apiCall = null */{
-				throw new Error('The Api implementation should have a deserialize method.');
-			}
-
-			/**
-	   * @method getAuth
-	   * @return {Auth.Auth} 
-	   */
-
-		}, {
-			key: 'getAuth',
-			value: function getAuth() {
-
-				// Set already?
-				if (this.auth) return this.auth;
-				if (this.settings.auth === false) return false;
-
-				// Look it up.
-				this.auth = (0, _App2.default)().auth(this.settings.auth);
-				return this.auth;
-			}
-
-			//////////////////
-			// HTTP methods //
-			//////////////////
-
-			/**
-	   * @method call
-	   * @param  {string} method      
-	   * @param  {string} uri         
-	   * @param  {Object} [data={}]
-	   * @param  {Object} [ajaxOptions={}]
-	   * @return {Api.ApiCall}
-	   */
-
-		}, {
-			key: 'call',
-			value: function call(method, uri) {
-				var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-				var ajaxOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
-
-
-				// Create api call
-				return new _ApiCall2.default(this, method, uri, data, ajaxOptions);
-			}
-
-			/**
-	   * @method get
-	   * @param  {string} uri         
-	   * @param  {Object} [data={}]
-	   * @param  {Object} [ajaxOptions={}]
-	   * @return {Api.ApiCall}
-	   */
-
-		}, {
-			key: 'get',
-			value: function get(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('get', uri, data, ajaxOptions);
-			}
-
-			/**
-	   * @method post
-	   * @param  {string} uri         
-	   * @param  {Object} [data={}]
-	   * @param  {Object} [ajaxOptions={}]
-	   * @return {Api.ApiCall}
-	   */
-
-		}, {
-			key: 'post',
-			value: function post(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('post', uri, data, ajaxOptions);
-			}
-
-			/**
-	   * @method put
-	   * @param  {string} uri         
-	   * @param  {Object} [data={}]
-	   * @param  {Object} [ajaxOptions={}]
-	   * @return {Api.ApiCall}
-	   */
-
-		}, {
-			key: 'put',
-			value: function put(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('put', uri, data, ajaxOptions);
-			}
-
-			/**
-	   * @method path
-	   * @param  {string} uri         
-	   * @param  {Object} [data={}]
-	   * @param  {Object} [ajaxOptions={}]
-	   * @return {Api.ApiCall}
-	   */
-
-		}, {
-			key: 'patch',
-			value: function patch(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('patch', uri, data, ajaxOptions);
-			}
-
-			/**
-	   * @method delete
-	   * @param  {string} uri         
-	   * @param  {Object} [data={}]
-	   * @param  {Object} [ajaxOptions={}]
-	   * @return {Api.ApiCall}
-	   */
-
-		}, {
-			key: 'delete',
-			value: function _delete(uri) {
-				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
-				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
-
-				return this.call('delete', uri, data, ajaxOptions);
-			}
-
-			////////////////////
-			// Helper methods //
-			////////////////////
-
-			/**
-	   * @method makeUrl
-	   * @param  {string} uri 	Relative url within the API
-	   * @return {string} Fully formed url
-	   */
-
-		}, {
-			key: 'makeUrl',
-			value: function makeUrl(uri) {
-				return this.settings.baseUrl + uri;
-			}
-
-			/**
-	   * Make an ajax call using jQuery
-	   * 
-	   * @method ajax
-	   * @param  {Object} options 
-	   * @return {jQuery Ajax call}         
-	   */
-
-		}, {
-			key: 'ajax',
-			value: function ajax(options) {
-				options.dataType = 'json';
-				return _jquery2.default.ajax(options);
-			}
-
-			///////////////////
-			// Model methods //
-			///////////////////
-
-			/**
-	   * Get a single Model record from the Api
-	   * 
-	   * @method one
-	   * @param  {string} modelName 
-	   * @param  {string} id        
-	   * @return {Api.ApiCall}
-	   */
-
-		}, {
-			key: 'one',
-			value: function one(modelName, id) {
-
-				// Get uri from model
-				var ModelClass = _Model2.default.registry.get(modelName);
-				if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
-				var uri = ModelClass.definition.getApiUri(id);
-
-				// Make the call
-				var call = this.get(uri);
-				call.modelClass = ModelClass;
-				return call;
-			}
-
-			/**
-	   * Get all Model records from the Api
-	   * 
-	   * @method all
-	   * @param  {string} modelName
-	   * @return {Api.ApiCall}
-	   */
-
-		}, {
-			key: 'all',
-			value: function all(modelName) {
-
-				// Get uri from model
-				var ModelClass = _Model2.default.registry.get(modelName);
-				if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
-				var uri = ModelClass.definition.getApiUri();
-
-				// Make the call
-				var call = this.get(uri);
-				call.modelClass = ModelClass;
-				return call;
-			}
-
-			/**
-	   * Save given model to the Api
-	   *
-	   * @method saveModel
-	   * @param 	{string}	uri
-	   * @param 	{Data.Model} model
-	   * @return {Api.ApiCall}
-	   */
-
-		}, {
-			key: 'saveModel',
-			value: function saveModel() /* uri, model */{
-				throw new Error('The Api implementation should have a saveModel method.');
-			}
-		}]);
-
-		return Api;
-	}();
-
-	module.exports = Api;
-
-/***/ },
-/* 69 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _get2 = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -11898,11 +9220,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
-	var _ModelStore = __webpack_require__(70);
+	var _ModelStore = __webpack_require__(56);
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
-	var _Collection = __webpack_require__(71);
+	var _Collection = __webpack_require__(57);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
@@ -11918,7 +9240,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
 
-	var _Pivot = __webpack_require__(72);
+	var _Pivot = __webpack_require__(59);
 
 	var _Pivot2 = _interopRequireDefault(_Pivot);
 
@@ -12914,7 +10236,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Model;
 
 /***/ },
-/* 70 */
+/* 56 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12978,7 +10300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelStore;
 
 /***/ },
-/* 71 */
+/* 57 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13105,7 +10427,208 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Collection;
 
 /***/ },
-/* 72 */
+/* 58 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _moment = __webpack_require__(6);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	var _Observable = __webpack_require__(35);
+
+	var _Observable2 = _interopRequireDefault(_Observable);
+
+	var _ObservableArray = __webpack_require__(46);
+
+	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
+
+	var _Binding = __webpack_require__(47);
+
+	var _Binding2 = _interopRequireDefault(_Binding);
+
+	var _ComputedProperty = __webpack_require__(39);
+
+	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
+
+	var _Reference = __webpack_require__(37);
+
+	var _Reference2 = _interopRequireDefault(_Reference);
+
+	var _ClassMap = __webpack_require__(38);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var _uid = 0;
+	var UniqueIdKey = '___chicken_' + +new Date();
+
+	/**
+	 * @module Helpers
+	 */
+	var Utils = {
+
+		/**
+	  * @class Helpers.Utils
+	  * @static
+	  */
+
+		getValue: function getValue(obj) {
+			if (obj instanceof _Binding2.default || obj instanceof _ComputedProperty2.default || obj instanceof _Reference2.default) {
+				return obj.getValue();
+			}
+			return obj;
+		},
+
+		/**
+	  * @method each
+	  * @static
+	  * 
+	  * @param  {Object}   obj      
+	  * @param  {Function} callback 
+	  * @param  {Object}   context  
+	  */
+		each: function each(obj, callback, context) {
+			if (obj instanceof _Observable2.default) {
+				obj = obj.attributes;
+			} else if (obj instanceof _ObservableArray2.default) {
+				obj = obj.items;
+			}
+			return _underscore2.default.each(obj, callback, context);
+		},
+
+		/**
+	  * @method map
+	  * @static
+	  * 
+	  * @param  {Object}   obj      
+	  * @param  {Function} callback 
+	  * @param  {Object}   context  
+	  */
+		map: function map(obj, callback, context) {
+			if (obj instanceof _Observable2.default) {
+				obj = obj.attributes;
+			} else if (obj instanceof _ObservableArray2.default) {
+				obj = obj.items;
+			}
+			return _underscore2.default.map(obj, callback, context);
+		},
+
+		/**
+	  * Determine whether given value is truthlike
+	  * 
+	  * @method isTruthlike
+	  * @static
+	  *	 
+	  * @param  {mixed} value 
+	  * @return {boolean}
+	  */
+		isTruthlike: function isTruthlike(value) {
+
+			// Null/undef
+			if (value === null || value === undefined) return false;
+
+			// Bool?
+			if (value === true) return true;
+			if (value === false) return false;
+
+			// 0 and 1?
+			if (value === 1 || value === '1') return true;
+			if (value === 0 || value === '0') return false;
+
+			// Array?
+			if (Array.isArray(value) || value instanceof _ObservableArray2.default) {
+				return value.length > 0;
+			}
+
+			// Object
+			if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.contructor === Object) {
+				return _underscore2.default.key(value).length > 0;
+			}
+
+			// Do it natively
+			return !!value;
+		},
+
+		areEqual: function areEqual(value1, value2) {
+
+			// Identical?
+			if (value1 === value2) return true;
+
+			// Is one or both a moment?
+			if (_moment2.default.isMoment(value1)) return value1.isSame(value2);
+			if (_moment2.default.isMoment(value2)) return value2.isSame(value1);
+
+			// One of them null or undefined?
+			if (value1 === undefined || value2 === undefined || value1 === null || value2 === null) return false;
+			if ((typeof value1 === 'undefined' ? 'undefined' : _typeof(value1)) !== 'object' || (typeof value2 === 'undefined' ? 'undefined' : _typeof(value2)) !== 'object') return false;
+			if (value1 instanceof Array || value2 instanceof Array) return false;
+
+			// Same id?
+			if (this.uidFor(value1) === this.uidFor(value2)) return true;
+
+			return false;
+		},
+
+		/**
+	  * Get a unique string identifier for given object or variable. For objects
+	  * this identifier will remain the same, making it useful for comparing objects.
+	  *
+	  * @method uidFor
+	  * @param  {mixed} obj 
+	  * @return {string}
+	  */
+		uidFor: function uidFor(obj) {
+
+			// Already set for this object?
+			if (obj && obj[UniqueIdKey] !== undefined) return obj[UniqueIdKey];
+
+			// Non-existing things?
+			if (obj === undefined) return '(undefined)';
+			if (obj === null) return '(null)';
+
+			// Check what type the value is
+			var type = typeof obj === 'undefined' ? 'undefined' : _typeof(obj);
+			switch (type) {
+
+				case 'number':
+				case 'string':
+					return type + ':' + obj;
+
+				case 'boolean':
+					return obj ? '(true)' : '(false)';
+
+			}
+
+			// Is it a standard object?
+			if (obj === Object) return '(Object)';
+			if (obj === Array) return '(Array)';
+
+			// Store the id on the obj
+			var uid = Utils.uid();
+			obj[UniqueIdKey] = uid;
+			return uid;
+		},
+
+		uid: function uid() {
+			return '*' + ++_uid + '*';
+		}
+	};
+
+	_ClassMap2.default.register('Utils', Utils);
+
+	module.exports = Utils;
+
+/***/ },
+/* 59 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13171,6 +10694,2572 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Pivot;
 
 /***/ },
+/* 60 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _App = __webpack_require__(52);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Dom
+	 */
+	var ComponentDefinition = function ComponentDefinition(name, source, initCallback) {
+		var renderer = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+
+		_classCallCheck(this, ComponentDefinition);
+
+		/**
+	  * The name of the component. This is also the name you use
+	  * in your templates, to insert the component.
+	  * 
+	  * @property name
+	  * @type {string}
+	  */
+		this.name = name;
+
+		/**
+	  * The template source
+	  *
+	  * @property source
+	  * @type {string}
+	  */
+		this.source = source;
+
+		/**
+	  * The method that is called when the Dom.Component instance is created.
+	  * 
+	  * @property initCallback
+	  * @type {[type]}
+	  */
+		this.initCallback = initCallback;
+
+		/**
+	  * The Dom.Renderer instance that is used to render the component. This is also the
+	  * renderer in which this component will be automatically registered as a helper.
+	  *
+	  * @property renderer
+	  * @type {Dom.Renderer}
+	  */
+		this.renderer = renderer ? renderer : (0, _App2.default)() ? (0, _App2.default)().config('renderer') : null;
+	};
+
+	module.exports = ComponentDefinition;
+
+/***/ },
+/* 61 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint no-console: ["error", { allow: ["log"] }] */
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _queryString = __webpack_require__(7);
+
+	var _queryString2 = _interopRequireDefault(_queryString);
+
+	var _inflection = __webpack_require__(4);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _moment = __webpack_require__(6);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	var _filesize = __webpack_require__(62);
+
+	var _filesize2 = _interopRequireDefault(_filesize);
+
+	var _ActionBinding = __webpack_require__(48);
+
+	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
+
+	var _Utils = __webpack_require__(58);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
+	var _App = __webpack_require__(52);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	var _Observable = __webpack_require__(35);
+
+	var _Observable2 = _interopRequireDefault(_Observable);
+
+	var _ObservableArray = __webpack_require__(46);
+
+	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Dom
+	 */
+	var Helpers = function () {
+
+		/**
+	  * @class Dom.Helpers
+	  *
+	  * @constructor 
+	  * @param  {Dom.Renderer} renderer
+	  */
+		function Helpers(renderer) {
+			_classCallCheck(this, Helpers);
+
+			this.renderer = renderer;
+		}
+
+		/////////////
+		// Actions //
+		/////////////
+
+		_createClass(Helpers, [{
+			key: 'action',
+			value: function action(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+
+				// There should be an ActionBinding for this element
+				var element = blocks.element;
+				if (element && element.getAttribute('data-chicken-action')) {
+
+					// Get the action
+					var binding = _ActionBinding2.default.get(element.getAttribute('data-chicken-action'));
+					binding.apply();
+				} else {
+					throw new Error('The "action" keyword was not correctly configured in your Renderer... Or you are trying to add an action to a Component.');
+				}
+			}
+
+			/////////////
+			// Routing //
+			/////////////
+
+		}, {
+			key: 'link',
+			value: function link(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+				var _this = this;
+
+				// Add listener
+				if (blocks.element) {
+
+					// Add click listener
+					var $el = (0, _jquery2.default)(blocks.element);
+					$el.each(function (index, el) {
+
+						// Set href for easy debuggin' and statusbar info
+						(0, _jquery2.default)(el).attr('href', _this._getValue(params[0]));
+					}).on('click', function (e) {
+						e.preventDefault();
+
+						// Get uri value
+						var uri = _this._getValue(params[0]);
+
+						// Go there.
+						(0, _App2.default)().goto(uri);
+					});
+				}
+			}
+
+			////////////////////////
+			// Control statements //
+			////////////////////////
+
+
+			/**
+	   * @method each
+	   */
+
+		}, {
+			key: 'each',
+			value: function each(params, attributeHash, blocks, morph /*, renderer, scope, visitor*/) {
+
+				// Check uid for this each-block
+				var eachUid = _Utils2.default.uidFor(morph);
+
+				// Get the value
+				var list = this._getValue(params[0]);
+				_Utils2.default.each(list, function (item, i) {
+
+					// Get a unique id for the item.
+					var uid = _Utils2.default.uidFor(item);
+					var itemKey = 'each:' + eachUid + ':' + i + ':' + uid;
+
+					// Render item
+					blocks.template.yieldItem(itemKey, [item, i]);
+				});
+			}
+
+			/**
+	   * @method if	 
+	   */
+
+		}, {
+			key: 'if',
+			value: function _if(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+
+				// Get the value
+				var value = this._getValue(params[0]);
+				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(value));
+			}
+
+			/**
+	   * @method unless
+	   */
+
+		}, {
+			key: 'unless',
+			value: function unless(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+
+				// Get the value
+				var value = this._getValue(params[0]);
+				return this._ifUnless(params, blocks, !_Utils2.default.isTruthlike(value));
+			}
+		}, {
+			key: '_ifUnless',
+			value: function _ifUnless(params, blocks, show) {
+
+				// Is the param truth-like?
+				if (show) {
+
+					// Is it a yielding-if?
+					if (blocks.template && blocks.template.yield) {
+						blocks.template.yield();
+
+						// Or parameter-if?
+					} else {
+
+						return this._getValue(params[1]);
+					}
+				} else {
+
+					// Render the inverse yield
+					if (blocks.inverse && blocks.inverse.yield) {
+						blocks.inverse.yield();
+
+						// Or the inverse param
+					} else {
+						return this._getValue(params[2]);
+					}
+				}
+			}
+
+			////////////
+			// Values //
+			////////////
+
+		}, {
+			key: 'concat',
+			value: function concat(params, attributeHash /*, blocks, morph, renderer, scope, visitor*/) {
+
+				attributeHash = _underscore2.default.defaults(attributeHash, {
+					separator: ''
+				});
+				return this._getValues(params).join(attributeHash.separator);
+			}
+		}, {
+			key: 'get',
+			value: function get(params) {
+
+				// Get params
+				var obj = this._getValue(params[0]);
+				var key = this._getValue(params[1]);
+
+				// Is it an observable?
+				if (obj instanceof _Observable2.default || obj instanceof _ObservableArray2.default) {
+					return obj.get(key);
+				} else {
+					return obj[key];
+				}
+			}
+		}, {
+			key: 'firstIn',
+			value: function firstIn(params) {
+
+				var arr = this._getValue(params[0]);
+				if (arr instanceof _ObservableArray2.default) {
+					return arr.first();
+				} else {
+					return _underscore2.default.first(arr);
+				}
+			}
+		}, {
+			key: 'equal',
+			value: function equal(params) {
+
+				// Get params
+				var value1 = this._getValue(params[0]);
+				var value2 = this._getValue(params[1]);
+
+				return value1 == value2;
+			}
+		}, {
+			key: 'notEqual',
+			value: function notEqual(params) {
+				return !this.equal(params);
+			}
+		}, {
+			key: 'gt',
+			value: function gt(params) {
+
+				// Get params
+				var value1 = this._getValue(params[0]);
+				var value2 = this._getValue(params[1]);
+				return value1 > value2;
+			}
+		}, {
+			key: 'gte',
+			value: function gte(params) {
+
+				// Get params
+				var value1 = this._getValue(params[0]);
+				var value2 = this._getValue(params[1]);
+				return value1 >= value2;
+			}
+		}, {
+			key: 'lt',
+			value: function lt(params) {
+
+				// Get params
+				var value1 = this._getValue(params[0]);
+				var value2 = this._getValue(params[1]);
+				return value1 < value2;
+			}
+		}, {
+			key: 'lte',
+			value: function lte(params) {
+
+				// Get params
+				var value1 = this._getValue(params[0]);
+				var value2 = this._getValue(params[1]);
+				return value1 <= value2;
+			}
+		}, {
+			key: 'isObject',
+			value: function isObject(params) {
+				// Get param
+				var value = this._getValue(params[0]);
+				return value instanceof Object;
+			}
+
+			//////////////////
+			// HTML Helpers //
+			//////////////////
+
+		}, {
+			key: 'attributesFrom',
+			value: function attributesFrom(params, attributeHash, blocks, morph) {
+
+				console.log(params, attributeHash, blocks, morph);
+			}
+
+			/////////////
+			// Strings //
+			/////////////
+
+		}, {
+			key: 'camelize',
+			value: function camelize(params) {
+
+				var string = this._getValue(params[0]);
+				var capitalFirstLetter = !!this._getValue(params[1]);
+
+				return _inflection2.default.camelize(string, !capitalFirstLetter);
+			}
+
+			/////////////////////
+			// Dates and times //
+			/////////////////////
+
+		}, {
+			key: 'momentFormat',
+			value: function momentFormat(params) {
+				var value = this._getValue(params[0]);
+				var format = this._getValue(params[1]);
+				if (_moment2.default.isMoment(value)) {
+					return value.format(format);
+				} else {
+					return value;
+				}
+			}
+		}, {
+			key: 'fileSize',
+			value: function fileSize(params) {
+				var value = this._getValue(params[0]);
+				return (0, _filesize2.default)(value);
+			}
+
+			///////////
+			// Debug //
+			///////////
+
+		}, {
+			key: 'log',
+			value: function log(params /*, attributeHash, blocks, morph, renderer, scope, visitor*/) {
+				console.log.apply(console, this._getValues(params));
+			}
+		}, {
+			key: 'query-params',
+			value: function queryParams(params, attributeHash /*, blocks, morph, renderer, scope, visitor*/) {
+				return _queryString2.default.stringify(this._getHashValues(attributeHash));
+			}
+
+			//////////////////
+			// Localization //
+			//////////////////
+
+		}, {
+			key: 't',
+			value: function t(params, attributeHash) {
+
+				// Get the key
+				var key = this._getValue(params[0]);
+
+				// Get from app
+				return (0, _App2.default)().i18n.translate(key, attributeHash);
+			}
+
+			//////////////
+			// Internal //
+			//////////////
+
+		}, {
+			key: '_getValue',
+			value: function _getValue(param) {
+				return this.renderer.hooks.getValue(param);
+			}
+		}, {
+			key: '_getValues',
+			value: function _getValues(params) {
+				var _this2 = this;
+
+				return params.map(function (value) {
+					return _this2._getValue(value);
+				});
+			}
+		}, {
+			key: '_getHashValues',
+			value: function _getHashValues(attributeHash) {
+				var _this3 = this;
+
+				var result = {};
+				_underscore2.default.each(attributeHash, function (value, key) {
+					result[key] = _this3._getValue(value);
+				});
+				return result;
+			}
+		}]);
+
+		return Helpers;
+	}();
+
+	Helpers.User = {};
+
+	module.exports = Helpers;
+
+/***/ },
+/* 62 */
+/***/ function(module, exports) {
+
+	!function(i,e){"object"==typeof module&&module.exports?module.exports=e():i.filesize=e()}("undefined"!=typeof window?window:this,function(){var i={iec:"_Ki_Mi_Gi_Ti_Pi_Ei_Zi_Yi",si:"_K_M_G_T_P_E_Z_Y"};return function(e,_,o){e=Math.abs(e),_||0===_||(_=1);var t="si"==o?1e3:1024,n=0;for(i[o]||(o="si");e>=t;)e/=t,++n;return e.toFixed(_)+" "+i[o].split("_")[n]+"b"}});
+
+/***/ },
+/* 63 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Obj2 = __webpack_require__(36);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	var _SettingsObject = __webpack_require__(40);
+
+	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
+
+	var _Route = __webpack_require__(64);
+
+	var _Route2 = _interopRequireDefault(_Route);
+
+	var _Request = __webpack_require__(69);
+
+	var _Request2 = _interopRequireDefault(_Request);
+
+	var _Middleware = __webpack_require__(70);
+
+	var _Middleware2 = _interopRequireDefault(_Middleware);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint no-console: ["error", { allow: ["table"] }] */
+
+	/**
+	 * @module Routing
+	 */
+	var Router = function (_Obj) {
+		_inherits(Router, _Obj);
+
+		/**
+	  * 
+	  * 
+	  * @class Routing.Router
+	  * @extends Core.Object
+	  */
+		function Router(application) {
+			_classCallCheck(this, Router);
+
+			////////////////
+			// Properties //
+			////////////////
+
+			/**
+	   * @property routes
+	   * @type {Array}
+	   */
+			var _this = _possibleConstructorReturn(this, (Router.__proto__ || Object.getPrototypeOf(Router)).call(this));
+
+			_this.routes = [];
+
+			/**
+	   * @property application
+	   * @type {Application}
+	   */
+			_this.application = application;
+
+			/**
+	   * @property namedRoutes
+	   * @type {Map}
+	   */
+			_this.namedRoutes = new Map();
+
+			///////////////////////////////////////////
+			// Grouped configuration state variables //
+			///////////////////////////////////////////
+
+			_this._currentConfig = _SettingsObject2.default.create({
+
+				parentRoute: null,
+				viewContainer: 'main',
+				middleware: []
+
+			}, ['parentRoute', 'viewContainer', 'middleware']);
+
+			return _this;
+		}
+
+		////////////////////////
+		// Definition methods //
+		////////////////////////
+
+		/**
+	  * Create a Route and add it to the Router.
+	  *
+	  * @method route
+	  * @param  {string} 			pattern 	The uri pattern
+	  * @param  {Object|String} 		actions     
+	  * @param  {Object} 			[options] 
+	  * @return {Routing.Route}        
+	  */
+
+
+		_createClass(Router, [{
+			key: 'route',
+			value: function route(pattern, actions) {
+				var options = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+
+				// Merge options
+				options = _underscore2.default.defaults({}, options, _underscore2.default.omit(this._currentConfig.toObject(), 'parentRoute'));
+
+				// Create the route
+				var route = new _Route2.default(this, this._currentConfig.get('parentRoute'), pattern, actions, options);
+
+				// Add route
+				this.routes.push(route);
+
+				// Return route
+				return route;
+			}
+
+			/**
+	   * Configure the Router to add the given options to
+	   * the Routes you define within the callback.
+	   *
+	   * @method group
+	   * @param  {object}   options  
+	   * @param  {Function} callback 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'group',
+			value: function group(options, callback) {
+
+				// Store options
+				var oldConfig = this._currentConfig.clone();
+				this._currentConfig.apply(options);
+
+				// Do the callback
+				callback.apply(this);
+
+				// Restore options
+				this._currentConfig = oldConfig;
+
+				return this;
+			}
+
+			//////////////////////
+			// Router in action //
+			//////////////////////
+
+			/**
+	   * Handle given Request, by finding a matching Route
+	   * and executing it.
+	   * 
+	   * @method handle
+	   * @param  {Routing.Request} request 
+	   * @return {Routing.RouteMatch}
+	   */
+
+		}, {
+			key: 'handle',
+			value: function handle(request) {
+				var _this2 = this;
+
+				/////////////////
+				// Match route //
+				/////////////////
+
+				// Is it just a URL passed along?
+				if (!(request instanceof _Request2.default)) {
+					request = new _Request2.default(request);
+				}
+
+				// Loop through routes until we found something.
+				var routeMatch = false;
+				_underscore2.default.find(this.routes, function (route) {
+					routeMatch = route.match(request);
+					return routeMatch;
+				});
+
+				// Found something?
+				if (routeMatch === false) {
+
+					// There is no route matching the request
+					throw new Error('[Routing.Router] Could not find matching route. 404 handling is not implemented yet.');
+				}
+
+				// Make the execution callback
+				var executeActions = function executeActions() {
+
+					/////////////////////////////
+					// Start executing actions //
+					/////////////////////////////
+
+					var numberOfActionsStarted = 0;
+					var actionPromises = [];
+					routeMatch.actions.forEach(function (action, vcName) {
+
+						// Get depends on promises
+						var dependsOnPromises = _underscore2.default.map(action.dependsOn, function (dependsOnAction) {
+							return dependsOnAction.getPromise('complete');
+						});
+
+						// Wait?
+						if (dependsOnPromises.length > 0) {
+
+							// Wait for it
+							Promise.all(dependsOnPromises).then(function () {
+
+								// Now we're ready!
+								action.execute(_this2.application);
+							}, function (error) {
+								throw new Error('[Routing.Router] Action for "' + vcName + '" was not started, due to error in dependancy route: ' + error);
+							});
+						} else {
+
+							// Start now
+							numberOfActionsStarted++;
+							action.execute(_this2.application);
+						}
+
+						// Add complete promise
+						actionPromises.push(action.getPromise('complete'));
+					});
+
+					////////////////////////////
+					// Keep track of progress //
+					////////////////////////////
+
+					// Any action started?
+					if (numberOfActionsStarted === 0) {
+
+						throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.matchedRoute.getFullPattern() + '. Check your configuration.');
+					}
+
+					// Listen to the result
+					Promise.all(actionPromises).then(function () /*...results*/{
+
+						//@TODO What to do?
+
+					});
+				};
+
+				//////////////////////
+				// Setup middleware //
+				//////////////////////
+
+				// Loop and add middleware
+				var callbacksToExecute = [];
+				_underscore2.default.each(routeMatch.route.getMiddlewareNames(), function (mwName) {
+
+					// Get the middleware
+					var middleware = _Middleware2.default.registry.get(mwName);
+					if (!middleware) throw new Error('There is no middleware registered with the name "' + mwName + '"');
+
+					// Add the callback
+					callbacksToExecute.push(middleware.callback);
+				});
+
+				// Lastly we will execute the actions
+				callbacksToExecute.push(executeActions);
+
+				////////////////////////////////////////////////////////////////
+				// Now call the first callback, to start the middleware chain //
+				////////////////////////////////////////////////////////////////
+
+				var nextCallback = function nextCallback() {
+
+					// Get the callback to call
+					var cb = callbacksToExecute.shift();
+
+					// Get the next in line
+					var result = cb.apply(_this2, [nextCallback, request, routeMatch]);
+
+					// Is there a result?
+					if (result !== undefined) {
+						// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'
+					}
+				};
+				nextCallback();
+
+				return routeMatch;
+			}
+
+			/**
+	   * Output a table to the console containing an overview
+	   * of all defined routes.
+	   *
+	   * Note: This is not supported in all browsers!
+	   * https://developer.mozilla.org/en-US/docs/Web/API/Console/table
+	   *  
+	   * @method outputToConsole
+	   * @chainable
+	   */
+
+		}, {
+			key: 'outputToConsole',
+			value: function outputToConsole() {
+
+				// Loop and log
+				console.table(_underscore2.default.map(this.routes, function (route) {
+					return {
+						'Pattern': route.getFullPattern(),
+						'Actions': route.isAbstract() ? '(abstract)' : _underscore2.default.map(route.getFullActions(), function (action, targetViewContainer) {
+							return targetViewContainer + ': ' + (typeof action === 'function' ? '(Callback)' : action);
+						}).join(', '),
+						'Regular expression': route.getRegExp()
+					};
+				}));
+
+				return this;
+			}
+		}]);
+
+		return Router;
+	}(_Obj3.default);
+
+	module.exports = Router;
+
+/***/ },
+/* 64 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _xregexp = __webpack_require__(3);
+
+	var _xregexp2 = _interopRequireDefault(_xregexp);
+
+	var _Obj2 = __webpack_require__(36);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	var _RouteMatch = __webpack_require__(65);
+
+	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Routing
+	 */
+	var Route = function (_Obj) {
+		_inherits(Route, _Obj);
+
+		/**
+	  * A Route configures a uri and its actions, parameters,
+	  * and models.
+	  * 
+	  * @class Routing.Route
+	  * @extends Core.Object
+	  * 
+	  * @constructor
+	  * @param {Routing.Router} 	router 				The application's Router instance
+	  * @param {Routing.Route} 	parent 				The route that the route you are creating is to be child of. Use `null` when there is no parent.
+	  * @param {string} 			pattern 			The route's pattern, not including the parent's pattern
+	  * @param {object|string}	[actions=null]		An action string o object containing one or more actions, keyed by the target ViewContainer. 
+	  *                                        		If you don't define actions this route will be made abstract.
+	  * @param {object}			[options={}]		An object containing one or more configuration options
+	  */
+		function Route(router, parent, pattern) {
+			var actions = arguments.length <= 3 || arguments[3] === undefined ? null : arguments[3];
+			var options = arguments.length <= 4 || arguments[4] === undefined ? {} : arguments[4];
+
+			_classCallCheck(this, Route);
+
+			// Private vars
+			var _this = _possibleConstructorReturn(this, (Route.__proto__ || Object.getPrototypeOf(Route)).call(this));
+
+			// Basics
+
+
+			_this._parameterConstraints = new Map();
+			_this._actions = actions;
+
+			////////////////
+			// Properties //
+			////////////////
+
+			/**
+	   * The Route that this Route is nested in
+	   * 
+	   * @property parentRoute
+	   * @type {Routing.Route}
+	   */
+			_this.parentRoute = parent;
+
+			/**
+	   * The Router that this Route is a part of
+	   * 
+	   * @property router
+	   * @type {Routing.Router}
+	   */
+			_this.router = router;
+
+			/**
+	   * The defined pattern, not including any parent patterns
+	   * 
+	   * @property pattern
+	   * @type {string}
+	   */
+			_this.pattern = pattern.replace(/(.)\/$/, '$1'); // Remove trailing slash
+
+
+			/**
+	   * The parameter names used in this route
+	   * 
+	   * @property parameters
+	   * @type {array}
+	   */
+			_this.parameters = [];
+
+			/**
+	   * The options used when defining this Route
+	   * 
+	   * @property options
+	   * @type {object}
+	   */
+			_this.options = _underscore2.default.defaults(options, {
+				abstract: actions === null,
+				as: null,
+				viewContainer: 'main',
+				middleware: []
+			});
+
+			/**
+	   * The name of the route you can use to link to. This is only 
+	   * set if you used the 'as' option.
+	   * 
+	   * @property name
+	   * @type {string}
+	   */
+			_this.name = null;
+
+			return _this;
+		}
+
+		////////////////////
+		// Public methods //
+		////////////////////
+
+		/**
+	  * Call this when you want to define routes nested under the current one. The provided callback
+	  * will be called with the Router as context, allowing you to use this.route to define the nested
+	  * routes.
+	  *
+	  * @example
+	  * 	Chicken.createApplication($('#application'), {
+	  * 		baseUrl: '/'
+	  * 	}).routes(function() {
+	  *  
+	  *  	this.route('/animals', 'Animal@index')                            // /animals
+	  *  		.nest(function() {
+	  *  			this.route('/dog', 'Animal@dog')                          // /animals/dog
+	  *  				.nest({ viewContainer: 'dogs'}, function() {
+	  *      				this.route('/:dogName', 'Animal@dogDetails');     // /animals/dog/:dogName
+	  *      				this.route('/about-dogs', 'Animal@aboutDogs');    // /animals/dog/about-dogs
+	  *  				});  				
+	  *      		this.route('/cat', 'Animal@cat');                         // /animals/cat
+	  *  		 });
+	  *  	
+	  *   
+	  * 	});
+	  * 	
+	  *
+	  * @method nest
+	  * @param {object} 		[options]   An optional options hash, to apply to all nested routes
+	  * @param {function} 	callback 	Your callback
+	  * @chainable
+	  */
+
+
+		_createClass(Route, [{
+			key: 'nest',
+			value: function nest() {
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
+				}
+
+				// Check if options were given
+				var callback = args.pop();
+				var options = args.length > 0 ? args.pop() : {};
+
+				// Make me the parent route
+				this.router.group(_underscore2.default.defaults({
+					parentRoute: this
+				}, options), callback);
+
+				return this;
+			}
+		}, {
+			key: 'abstract',
+			value: function abstract() {
+				this.options.abstract = true;
+				return this;
+			}
+
+			/**
+	   * Check whether this Route matches the given Request. If so, the method
+	   * will return a complete RouteMatch. If not, the method will return `false`.
+	   * 
+	   * @method match
+	   * @param  {Routing.Request} request     
+	   * @return {Routing.RouteMatch|boolean}  
+	   */
+
+		}, {
+			key: 'match',
+			value: function match(request) {
+
+				// Am I an abstract route?
+				if (this.isAbstract()) return;
+
+				// Does it match?
+				var match = _xregexp2.default.exec(request.uri, this.getRegExp());
+
+				// No match?
+				if (!match) return false;
+
+				// We matched! Let's create a match object.
+				return new _RouteMatch2.default(this, match, request);
+			}
+
+			/**
+	   * Get the action definitions for the Route. An action definition can either
+	   * be a Controller action (e.g.: `Product@index`), or a callback. The result
+	   * is keyed by the target ViewContainer name.
+	   *
+	   * @method getActions
+	   * @return {object} 
+	   */
+
+		}, {
+			key: 'getActions',
+			value: function getActions() {
+
+				// Is it still a string (Controller@action) or callback?
+				if (typeof this._actions === 'string' || typeof this._actions === 'function') {
+
+					// Wrap in object using default view container
+					var actions = {};
+					actions[this.options.viewContainer] = this._actions;
+					this._actions = actions;
+				}
+
+				return this._actions;
+			}
+
+			/**
+	   * Get the action definitions for this Route, and any parent routes that it may have.
+	   *
+	   * @method getFullActions
+	   * @return {object} [description]
+	   */
+
+		}, {
+			key: 'getFullActions',
+			value: function getFullActions() {
+
+				// Start with mine
+				var actions = this.getActions();
+
+				// Add parent
+				if (this.parentRoute) {
+					return _underscore2.default.defaults(actions, this.parentRoute.actions);
+				}
+				return actions;
+			}
+
+			/**
+	   * Get the full Route pattern within the application for this route,
+	   * including any parent Routes.
+	   *
+	   * @method getFullPattern
+	   * @return {string}
+	   */
+
+		}, {
+			key: 'getFullPattern',
+			value: function getFullPattern() {
+
+				// My pattern as base
+				var p = this.pattern;
+
+				// Get parent's full pattern
+				if (this.parentRoute) {
+					var parentPart = this.parentRoute.getFullPattern();
+					if (parentPart !== '/') {
+						p = parentPart + p;
+					}
+				}
+
+				return p;
+			}
+
+			/**
+	   * Get all parameter constraints for this Route, combining constraints
+	   * defined by parent routes.
+	   *
+	   * @method getAllParameterConstraints
+	   * @return {Map} Map with a regular expression constraint for each constrained parameter
+	   */
+
+		}, {
+			key: 'getAllParameterConstraints',
+			value: function getAllParameterConstraints() {
+
+				// My constraints (don't overwrite)
+				var c = new Map(this._parameterConstraints);
+
+				// Get parent's constraints
+				if (this.parentRoute) {
+
+					// Prefix the pattern
+					this.parentRoute.getAllParameterConstraints().forEach(function (regex, key) {
+						if (!c.has(key)) c.set(key, regex);
+					});
+				}
+
+				return c;
+			}
+		}, {
+			key: 'getMiddlewareNames',
+			value: function getMiddlewareNames() {
+
+				return this.options.middleware;
+			}
+
+			/**
+	   * Get the Route's complete Regular Expression, including
+	   * parameters
+	   * 
+	   * @method getRegExp
+	   * @return {XRegExp}
+	   */
+
+		}, {
+			key: 'getRegExp',
+			value: function getRegExp() {
+				var _this2 = this;
+
+				// Not yet set?
+				if (this._regExp === undefined) {
+					(function () {
+
+						// Collect buildingBlocks (a regular expression pattern for each parameter)
+						var buildingBlocks = {};
+
+						// Convert :params into regex with building blocks 
+						// (see XRegExp.build documentation)
+						var constraints = _this2.getAllParameterConstraints();
+						var exp = _xregexp2.default.replace(_this2.getFullPattern(), /(([\:\*])([a-zA-Z\-\_]+))/, function (match, complete, paramType, paramName) {
+
+							// Wildcard?
+							var paramRegex = void 0;
+							if (paramType === '*') {
+
+								// Use wildcard
+								paramRegex = Route.ParameterType.Wildcard;
+							} else {
+
+								// Check if there is a constraint
+								paramRegex = constraints.has(paramName) ? constraints.get(paramName) : Route.ParameterType.Standard;
+							}
+
+							// Store as building block for regex
+							buildingBlocks[paramName] = paramRegex;
+
+							// Store parameter
+							_this2.parameters.push(paramName);
+
+							// Replace with a building block using named parameter
+							return '({{' + paramName + '}})';
+						}, 'all');
+
+						// Create it
+						_this2._regExp = _xregexp2.default.build('^' + exp + '$', buildingBlocks);
+					})();
+				}
+
+				// Return it
+				return this._regExp;
+			}
+
+			/**
+	   * Add a constraint to a parameter, by supplying a regular expression.
+	   * 
+	   * @method constrain
+	   * @param  {string} parameterName The name of the parameter to add constrains to
+	   * @param  {RegExp} regExp        A regular expression to use when matching the parameter
+	   * @chainable
+	   */
+
+		}, {
+			key: 'constrain',
+			value: function constrain(parameterName, regExp) {
+
+				// Store it
+				this._parameterConstraints.set(parameterName, regExp);
+
+				return this;
+			}
+
+			/**
+	   * Set the name of this Route
+	   *
+	   * @method as
+	   * @param  {string} name 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'as',
+			value: function as(name) {
+
+				// Store name
+				this.name = name;
+
+				// Store in router
+				this.router.namedRoutes.set(name, this);
+
+				return this;
+			}
+		}, {
+			key: 'middleware',
+			value: function middleware() {
+				for (var _len2 = arguments.length, keys = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+					keys[_key2] = arguments[_key2];
+				}
+
+				this.options.middleware = _underscore2.default.unique(_underscore2.default.flatten([this.options.middleware, keys]));
+				return this;
+			}
+
+			/**
+	   * An abstract Route can never be matched. This is useful when you have a Route
+	   * that only has subroutes, but no actions itself. If you define a Route without
+	   * actions, this will automatically be set to true.
+	   * 
+	   * @method isAbstract
+	   * @return {Boolean}
+	   */
+
+		}, {
+			key: 'isAbstract',
+			value: function isAbstract() {
+				return !!this.options.abstract;
+			}
+		}]);
+
+		return Route;
+	}(_Obj3.default);
+
+	Route.ParameterType = {
+
+		/**
+	  * Regular expression for a standard parameter 
+	  *
+	  * Default: `/[^\/]+/`
+	  * 
+	  * @property ParameterType.Standard
+	  * @static
+	  * @type {RegExp}
+	  */
+		Standard: /[^\/]+/,
+
+		/**
+	  * Regular expression for a wildcard parameter
+	  *
+	  * Default: `/.+/`
+	  * 
+	  * @property ParameterType.Wildcard
+	  * @static
+	  * @type {RegExp}
+	  */
+		Wildcard: /.+/
+
+	};
+
+	module.exports = Route;
+
+/***/ },
+/* 65 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Action = __webpack_require__(66);
+
+	var _Action2 = _interopRequireDefault(_Action);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Routing
+	 */
+	var RouteMatch = function () {
+
+		/**
+	  * When a Request is matched by a Route, a RouteMatch is created,
+	  * containing all the information necessary to process the request. 
+	  * The Router will use the RouteMatch to execute all the actions defined
+	  * in the route(s).
+	  * 
+	  * @class Routing.RouteMatch
+	  *
+	  * @constructor
+	  * @param {Routing.Route} 		route 			The route that matched
+	  * @param {array}  				regExpMatch 	The result from the XRegExp.exec call
+	  * @param {Routing.Request}		request 		The request that made this RouteMatch possible
+	  */
+		function RouteMatch(route, regExpMatch, request) {
+			var _this = this;
+
+			_classCallCheck(this, RouteMatch);
+
+			/**
+	   * The Route that matched
+	   *
+	   * @property route
+	   * @type {Routing.Route}
+	   */
+			this.route = route;
+
+			/**
+	   * The result from the XRegExp.exec call when the Route was matched
+	   * 
+	   * @property regExpMatch
+	   * @type {array}
+	   */
+			this.regExpMatch = regExpMatch;
+
+			/**
+	   * The request that made this RouteMatch possible
+	   *
+	   * @property request
+	   * @type {Routing.Request}
+	   */
+			this.request = request;
+
+			/**
+	   * The actions that are part of this match,
+	   * keyed by the target ViewContainer
+	   * 
+	   * @property actions
+	   * @type {Map}	
+	   */
+			this.actions = new Map();
+
+			/**
+	   * The parameters from the Request and matched route
+	   *
+	   * @property parameters
+	   * @type {Map}
+	   */
+			this.parameters = new Map();
+
+			////////////////////
+			// Create actions //
+			////////////////////
+
+			// Read parameters from match
+			_underscore2.default.each(route.parameters, function (paramName) {
+				_this.parameters.set(paramName, regExpMatch[paramName]);
+			});
+
+			// Start with the matched route
+			this._readActionsFromRoute(route);
+		}
+
+		_createClass(RouteMatch, [{
+			key: '_readActionsFromRoute',
+			value: function _readActionsFromRoute(route) {
+				var _this2 = this;
+
+				// Collect parameters from route
+				var params = new Map();
+				var paramArray = [];
+				_underscore2.default.each(route.parameters, function (paramName) {
+					paramArray.push(_this2.parameters.get(paramName));
+					params.set(paramName, _this2.parameters.get(paramName));
+				});
+
+				// Get actions
+				var myActions = {};
+				_underscore2.default.each(route.getActions(), function (routeAction, targetViewContainer) {
+
+					// Is there already an action defined for this target
+					if (_this2.actions.has(targetViewContainer)) return;
+
+					// Make it.
+					var action = new _Action2.default(targetViewContainer, routeAction, _this2.request);
+
+					// Set routes
+					action.route = route;
+					action.matchedRoute = _this2.route;
+					action.routeMatch = _this2;
+
+					// Set parameters
+					action.parameters = params;
+					action.parameterArray = paramArray;
+
+					// Add it.
+					myActions[targetViewContainer] = action;
+				});
+
+				// Make any actions that are already there dependent on the new ones, 
+				// because these actions are the parent(s) of the existing actions.
+				this.actions.forEach(function (previousAction) {
+					_underscore2.default.each(myActions, function (myAction) {
+						previousAction.dependsOn.push(myAction);
+					});
+				});
+
+				// Add these actions
+				var actionsToMakeDependentOn = [];
+				_underscore2.default.each(myActions, function (myAction, targetViewContainer) {
+
+					// My this action dependent on previous actions defined in this route
+					_underscore2.default.each(actionsToMakeDependentOn, function (depAction) {
+						myAction.dependsOn.push(depAction);
+					});
+
+					// Add the action to my actions
+					_this2.actions.set(targetViewContainer, myAction);
+					actionsToMakeDependentOn.push(myAction);
+				});
+
+				// Now look into the parent
+				if (route.parentRoute) {
+					this._readActionsFromRoute(route.parentRoute);
+				}
+
+				// We're done!
+				return this.actions;
+			}
+		}]);
+
+		return RouteMatch;
+	}();
+
+	module.exports = RouteMatch;
+
+/***/ },
+/* 66 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _xregexp = __webpack_require__(3);
+
+	var _xregexp2 = _interopRequireDefault(_xregexp);
+
+	var _App = __webpack_require__(52);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	var _Obj2 = __webpack_require__(36);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	var _Redirect = __webpack_require__(67);
+
+	var _Redirect2 = _interopRequireDefault(_Redirect);
+
+	var _Controller = __webpack_require__(68);
+
+	var _Controller2 = _interopRequireDefault(_Controller);
+
+	var _View = __webpack_require__(51);
+
+	var _View2 = _interopRequireDefault(_View);
+
+	var _Utils = __webpack_require__(58);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Routing
+	 */
+	var Action = function (_Obj) {
+		_inherits(Action, _Obj);
+
+		/**
+	  * @class Routing.Action
+	  * @extends Core.Obj
+	  */
+		function Action(targetViewContainer, controllerActionOrCallback, request) {
+			_classCallCheck(this, Action);
+
+			////////////////
+			// Attributes //
+			////////////////
+
+			/**
+	   * The name of the ViewContainer that this action is targeting.
+	   * 
+	   * @property targetViewContainer
+	   * @type {string}
+	   */
+			var _this = _possibleConstructorReturn(this, (Action.__proto__ || Object.getPrototypeOf(Action)).call(this));
+
+			_this.targetViewContainer = targetViewContainer;
+
+			/**
+	   * The Request instance that was used to create this action
+	   * 
+	   * @property request
+	   * @type {Routing.Request}
+	   */
+			_this.request = request;
+
+			/**
+	   * The Route that defined this action
+	   *
+	   * @property route
+	   * @type {Routing.Route}
+	   */
+			_this.route = null;
+
+			/**
+	   * The Route that matched the Request
+	   *
+	   * @property matchedRoute
+	   * @type {Routing.Route}
+	   */
+			_this.matchedRoute = null;
+
+			/**
+	   * The RouteMatch that this Action is a part
+	   *
+	   * @property routeMatch
+	   * @type {Routing.RouteMatch}
+	   */
+			_this.routeMatch = null;
+
+			/**
+	   * The instance of the Controller that has been created by 
+	   * this action.
+	   * 
+	   * @property controller
+	   * @type {Routing.Controller}
+	   */
+			_this.controller = null;
+
+			/**
+	   * The name of the Controller class used by this action
+	   * 
+	   * @property controllerClass
+	   * @type {string}
+	   */
+			_this.controllerClass = null;
+
+			/**
+	   * The name of the Controller method used by this action
+	   * 
+	   * @property controllerMethod
+	   * @type {string}
+	   */
+			_this.controllerMethod = null;
+
+			/**
+	   * A callback function, when the route did not configure
+	   * a Controller to be used, but an inline callback instead.
+	   * 
+	   * @property callback
+	   * @type {function}
+	   */
+			_this.callback = false;
+
+			/**
+	   * A map of request parameters that are supplied to this action.
+	   * 
+	   * @property parameters
+	   * @type {Map}
+	   */
+			_this.parameters = new Map();
+
+			/**
+	   * An array of request parameters, in the order of the route's
+	   * pattern definition
+	   *
+	   * @property parameterArray
+	   * @type {Array}
+	   */
+			_this.parameterArray = [];
+
+			/**
+	   * An array of other Actions that this Action depends on, 
+	   * meaning it will wait for them to finish, before executing.
+	   *
+	   * This is useful when you have a route where the second action
+	   * renders into a ViewContainer that is created by the first action.
+	   * Child routes will automatically wait for the parent route to finish
+	   * before running it's own actions.
+	   * 
+	   * @property dependsOn
+	   * @type {Array}
+	   */
+			_this.dependsOn = [];
+
+			///////////////////////////
+			// Check passed argument //
+			///////////////////////////
+
+			if (typeof controllerActionOrCallback === 'string') {
+
+				// A view uri?
+				if (controllerActionOrCallback.match(/^[a-z\-\d\.]+$/)) {
+
+					// Create a simple view callback
+					_this.callback = function () {
+						return new _View2.default(controllerActionOrCallback);
+					};
+				} else {
+
+					// Parse controller name
+					var match = _xregexp2.default.exec(controllerActionOrCallback, Action.getControllerActionRegExp());
+					if (!match) throw new TypeError('Invalid action string: ' + controllerActionOrCallback + '. Use controller@method format.');
+
+					// Store this
+					_this.controllerClass = match.class;
+					_this.controllerAction = match.action;
+				}
+			} else if (typeof controllerActionOrCallback === 'function') {
+
+				// Store it
+				_this.callback = controllerActionOrCallback;
+			} else {
+
+				throw new TypeError('[Routing.Action] Did not understand action: ' + controllerActionOrCallback);
+			}
+
+			return _this;
+		}
+
+		_createClass(Action, [{
+			key: 'execute',
+			value: function execute(application) {
+				var _this2 = this;
+
+				// Make the promise
+				return this.promise('complete', function (resolve, reject) {
+
+					// Get the view container
+					_this2.viewContainer = application.getViewContainer(_this2.targetViewContainer);
+					if (_this2.viewContainer === undefined) {
+						reject('There is no ViewContainer available with the name "' + _this2.targetViewContainer + '"');
+						return;
+					}
+
+					// Is there currently an action in this vc?
+					if (_this2.viewContainer.currentAction) {
+
+						// Was it triggered by the same route?
+						if (_Utils2.default.uidFor(_this2.viewContainer.currentAction.route) === _Utils2.default.uidFor(_this2.route)) {
+
+							// That means, we've just navigated within nested routes of that page, and this action can be skipped.
+							resolve();
+							return;
+						}
+					}
+
+					// The VC is busy now.
+					_this2.viewContainer.setLoading(true);
+
+					////////////////
+					// Controller //
+					////////////////
+
+					if (_this2.controllerClass) {
+
+						// Make controller
+						var ChickenController = _Controller2.default.registry.get(_this2.controllerClass);
+						if (ChickenController === undefined) {
+							reject('No controller defined with name "' + _this2.controllerClass + '"');
+							return;
+						}
+						_this2.controller = new ChickenController(_this2);
+
+						// Call action
+						var controllerAction = _this2.controller[_this2.controllerAction];
+						if (controllerAction === 'undefined' || typeof controllerAction !== 'function') {
+							reject('There is no action on the "' + _this2.controllerClass + '" controller with the name "' + _this2.controllerAction + '"');
+							return;
+						}
+
+						// Make the call
+						_this2._processResult(controllerAction.apply(_this2.controller, _this2.parameterArray), resolve, reject);
+					}
+
+					//////////////
+					// Callback //
+					//////////////
+					else if (_this2.callback) {
+
+							// Do the callback
+							_this2._processResult(_this2.callback.apply(_this2.controller, _this2.parameterArray), resolve, reject);
+						} else {
+							reject('There is no controller or callback defined... This shouldn\'t happen.');
+							return;
+						}
+				}).then(function () /* result */{}, function () /* error */{
+
+					// No longer loading
+					if (_this2.viewContainer) _this2.viewContainer.setLoading(false);
+				});
+			}
+		}, {
+			key: '_processResult',
+			value: function _processResult(result, resolve, reject) {
+				var _this3 = this;
+
+				// A redirect?
+				if (result instanceof _Redirect2.default) {
+
+					//@TODO Cancel the running request?
+
+					(0, _App2.default)().goto(result.uri);
+				}
+
+				///////////////////////////
+				// Is the result a view? //
+				///////////////////////////
+
+				else if (result instanceof _View2.default) {
+						(function () {
+
+							// Render the view
+							var view = result;
+							view.render().then(function () {
+
+								// Add it
+								_this3.viewContainer.setAction(_this3);
+								view.addToContainer(_this3.viewContainer);
+								resolve();
+							}, function (error) {
+								reject(error);
+							});
+						})();
+					}
+
+					//////////////////////////////
+					// Is the result a promise? //
+					//////////////////////////////
+
+					else if (result instanceof Promise) {
+
+							// Wait for it to finish
+							result.then(function (promiseResult) {
+
+								// Process result again!
+								_this3._processResult(promiseResult, resolve, reject);
+							}, function (error) {
+								reject(error);
+							});
+						}
+
+						/////////////////////////////////
+						// Is it rendarable by itself? //
+						/////////////////////////////////
+
+						else {
+
+								// A string
+								if (typeof result === 'string' || result instanceof DocumentFragment) {
+
+									// Set content
+									this.viewContainer.setAction(this);
+									this.viewContainer.setContent(result);
+									resolve();
+								} else {
+
+									// Don't know how to render this...
+									reject('I don\'t know how to render the result for "' + this.targetViewContainer + '"');
+									return;
+								}
+							}
+			}
+		}]);
+
+		return Action;
+	}(_Obj3.default);
+
+	var _controllerActionRegExp;
+	Action.getControllerActionRegExp = function () {
+		if (_controllerActionRegExp === undefined) {
+			_controllerActionRegExp = (0, _xregexp2.default)('^(?<class>[A-Z][a-zA-Z0-9\-\.]+)@(?<action>[a-z][a-zA-Z0-9\_]+)$');
+		}
+		return _controllerActionRegExp;
+	};
+
+	module.exports = Action;
+
+/***/ },
+/* 67 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Redirect = function Redirect(uri) {
+		_classCallCheck(this, Redirect);
+
+		this.uri = uri;
+	};
+
+	module.exports = Redirect;
+
+/***/ },
+/* 68 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Routing
+	 */
+	var Controller = function () {
+
+		/**
+	  * @class Routing.Controller
+	  * 
+	  * @constructor
+	  * @param {Routing.Action} action  The routing action that leads to the creation of this controller
+	  */
+		function Controller(action, application) {
+			_classCallCheck(this, Controller);
+
+			/**
+	   * @property action
+	   * @type {Routing.Action}
+	   */
+			this.action = action;
+
+			/**
+	   * @property application
+	   * @type {Application}
+	   */
+			this.application = application;
+		}
+
+		////////////////
+		// Properties //
+		////////////////
+
+
+		/**
+	  * Request parameters
+	  * 
+	  * @property parameters
+	  * @type {Map}
+	  */
+
+
+		_createClass(Controller, [{
+			key: "parameters",
+			get: function get() {
+				return this.action.parameters;
+			}
+
+			/**
+	   * The ViewContainer into which this controller action will render
+	   * 
+	   * @property viewContainer
+	   * @type {Dom.ViewContainer}
+	   */
+
+		}, {
+			key: "viewContainer",
+			get: function get() {
+				return this.action.viewContainer;
+			}
+
+			/**
+	   * @property request
+	   * @type {Routing.Request}
+	   */
+
+		}, {
+			key: "request",
+			get: function get() {
+				return this.action.request;
+			}
+
+			/**
+	   * @property route
+	   * @type {Routing.Route} 
+	   */
+
+		}, {
+			key: "route",
+			get: function get() {
+				return this.action.route;
+			}
+		}]);
+
+		return Controller;
+	}();
+
+	Controller.registry = new Map();
+
+	module.exports = Controller;
+
+/***/ },
+/* 69 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _ClassMap = __webpack_require__(38);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Routing
+	 */
+	var Request =
+
+	/**
+	 * @class Routing.Request
+	 *
+	 * @constructor
+	 * @param {object} 			location 		The location received from the History library
+	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
+	 */
+	function Request(location) {
+		var application = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+		_classCallCheck(this, Request);
+
+		// Guess application if not given
+		if (!application) application = _ClassMap2.default.get('Application').getInstance();
+
+		// Parse the uri 
+		var uri = Request.cleanUri(location.pathname);
+
+		// Strip of base part
+		var baseUrl = Request.cleanUri(application.settings.get('baseUrl'));
+		if (uri.length >= baseUrl.length && uri.substr(0, baseUrl.length)) {
+			uri = uri.substr(baseUrl.length);
+		}
+
+		// Add the / back again
+		uri = '/' + uri;
+
+		/**
+	  * @property uri
+	  * @type {string}
+	  */
+		this.uri = uri;
+	};
+
+	Request.cleanUri = function (uri) {
+
+		if (/^\//.test(uri)) uri = uri.substr(1);
+		if (/\/$/.test(uri)) uri = uri.substr(0, uri.length - 1);
+		return uri;
+	};
+
+	module.exports = Request;
+
+/***/ },
+/* 70 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Middleware = function Middleware(name, callback) {
+		_classCallCheck(this, Middleware);
+
+		this.name = name;
+
+		this.callback = callback;
+	};
+
+	Middleware.registry = new Map();
+	Middleware.register = function (middleware) {
+		var name = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+		// Check arguments
+		if (!(middleware instanceof Middleware)) {
+			middleware = new Middleware(name, middleware);
+		} else if (name === null) {
+			name = middleware.name;
+		}
+
+		// Store it.
+		Middleware.registry.set(name, middleware);
+	};
+
+	module.exports = Middleware;
+
+/***/ },
+/* 71 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Obj2 = __webpack_require__(36);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Localization
+	 */
+	var I18n = function (_Obj) {
+		_inherits(I18n, _Obj);
+
+		function I18n() {
+			_classCallCheck(this, I18n);
+
+			/**
+	   * @property data
+	   * @type {Object}
+	   */
+			var _this = _possibleConstructorReturn(this, (I18n.__proto__ || Object.getPrototypeOf(I18n)).call(this));
+
+			_this.data = {};
+
+			/**
+	   * @property bundlesToLoad
+	   * @type {Array}
+	   */
+			_this.bundlesToLoad = [];
+
+			return _this;
+		}
+
+		/**
+	  * Add a bundle that will be loaded when the application starts
+	  *
+	  * @method addBundle
+	  * @param  {string} url 
+	  * @param  {string} [key=null]  Optional key to add loaded data under.
+	  * @chainable
+	  */
+
+
+		_createClass(I18n, [{
+			key: 'addBundle',
+			value: function addBundle(url) {
+				var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+				this.bundlesToLoad.push({
+					url: url,
+					key: key
+				});
+
+				return this;
+			}
+
+			/**
+	   * Manually load a bundle into I18n
+	   *
+	   * @method loadBundle
+	   * @param  {string} url 
+	   * @param  {string} [key=null]  Optional key to add loaded data under.
+	   * @return {Promise}     
+	   */
+
+		}, {
+			key: 'loadBundle',
+			value: function loadBundle(url) {
+				var _this2 = this;
+
+				var key = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+
+
+				return new Promise(function (resolve, reject) {
+
+					// Do we have it in cache?
+					if (I18n.Cache[url]) {
+
+						resolve(I18n.Cache[url]);
+						return;
+					}
+
+					// Load it.
+					_jquery2.default.ajax(url).then(function (result) {
+						resolve(result);
+					}).fail(function (error) {
+						reject(error);
+					});
+				}).then(function (result) {
+
+					// Is there a key?
+					if (key) {
+						var r = {};
+						r[key] = result;
+						result = r;
+					}
+
+					// Extend
+					_jquery2.default.extend(_this2.data, result);
+				});
+			}
+
+			/**
+	   * Load all added bundles
+	   *
+	   * @method load
+	   * @return {Promise}
+	   */
+
+		}, {
+			key: 'load',
+			value: function load() {
+				var _this3 = this;
+
+				// Main prmomise for loading
+				return this.promise('loaded', function (resolve) {
+
+					// Nothing to load?
+					if (_this3.bundlesToLoad.length === 0) {
+						resolve();
+						return;
+					}
+
+					// Collect promises
+					var promises = [];
+					_underscore2.default.each(_this3.bundlesToLoad, function (bundle) {
+
+						promises.push(_this3.loadBundle(bundle.url, bundle.key));
+					});
+
+					// When all is done.
+					Promise.all(promises).then(function () {
+						resolve();
+					});
+				});
+			}
+
+			/**
+	   * Get the translation for given key
+	   * 
+	   * @method translate
+	   * @param  {string} key        			Dot-notation key to get value of
+	   * @param  {Object} [attributes={}] 	Optional object containing attributes to pass to the template in the translated value
+	   * @param  {mixed} [fallback=null]		Optional fallback value when the key is nout found
+	   * @return {mixed}
+	   */
+
+		}, {
+			key: 'translate',
+			value: function translate(key) {
+				var attributes = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var fallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+
+				// Dot notation
+				var obj = this.data;
+				var parts = key.split(/\./);
+				while (parts.length > 0) {
+
+					// Get firs tpart
+					var part = parts.shift();
+
+					// Not existing?
+					if (!obj[part]) return fallback ? fallback : '[' + key + ']';
+
+					// Dive in.
+					obj = obj[part];
+				}
+
+				// String?
+				if (typeof obj === 'string') {
+
+					/////////////////
+					// Templating? //
+					/////////////////
+
+					if (obj.match(/<%/)) {
+
+						// Convert attributes into real values
+						var attr = _underscore2.default.mapObject(attributes, function (value) {
+
+							// Get value?
+							if (typeof value.getValue === 'function') {
+								value = value.getValue();
+							}
+							return value;
+						});
+
+						// Make a template and run it
+						var template = _underscore2.default.template(obj);
+						obj = template(attr);
+					}
+				}
+
+				return obj;
+			}
+
+			/**
+	   * Alias of translate
+	   * 
+	   * @method get
+	   * @param  {string} key        
+	   * @param  {Object} [attributes={}] 
+	   * @param  {mixed} [fallback=null]
+	   * @return {mixed}
+	   */
+
+		}, {
+			key: 'get',
+			value: function get(key) {
+				var attributes = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var fallback = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
+
+				return this.translate(key, attributes, fallback);
+			}
+		}]);
+
+		return I18n;
+	}(_Obj3.default);
+
+	I18n.Cache = {};
+
+	module.exports = I18n;
+
+/***/ },
+/* 72 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Model = __webpack_require__(55);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
+	var _ApiCall = __webpack_require__(53);
+
+	var _ApiCall2 = _interopRequireDefault(_ApiCall);
+
+	var _App = __webpack_require__(52);
+
+	var _App2 = _interopRequireDefault(_App);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Api
+	 */
+	var Api = function () {
+
+		/**
+	  * @class Api.Api
+	  *
+	  * @constructor
+	  * @param  {Object} options 	 
+	  */
+		function Api(options) {
+			_classCallCheck(this, Api);
+
+			this.settings = _jquery2.default.extend({
+				baseUrl: '/api',
+
+				auth: false
+
+			}, options);
+		}
+
+		/**
+	  * @method deserialize
+	  * @return {Data.Model|Data.Collection}
+	  */
+
+
+		_createClass(Api, [{
+			key: 'deserialize',
+			value: function deserialize() /* data, apiCall = null */{
+				throw new Error('The Api implementation should have a deserialize method.');
+			}
+
+			/**
+	   * @method getAuth
+	   * @return {Auth.Auth} 
+	   */
+
+		}, {
+			key: 'getAuth',
+			value: function getAuth() {
+
+				// Set already?
+				if (this.auth) return this.auth;
+				if (this.settings.auth === false) return false;
+
+				// Look it up.
+				this.auth = (0, _App2.default)().auth(this.settings.auth);
+				return this.auth;
+			}
+
+			//////////////////
+			// HTTP methods //
+			//////////////////
+
+			/**
+	   * @method call
+	   * @param  {string} method      
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'call',
+			value: function call(method, uri) {
+				var data = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+				var ajaxOptions = arguments.length <= 3 || arguments[3] === undefined ? {} : arguments[3];
+
+
+				// Create api call
+				return new _ApiCall2.default(this, method, uri, data, ajaxOptions);
+			}
+
+			/**
+	   * @method get
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'get',
+			value: function get(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('get', uri, data, ajaxOptions);
+			}
+
+			/**
+	   * @method post
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'post',
+			value: function post(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('post', uri, data, ajaxOptions);
+			}
+
+			/**
+	   * @method put
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'put',
+			value: function put(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('put', uri, data, ajaxOptions);
+			}
+
+			/**
+	   * @method path
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'patch',
+			value: function patch(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('patch', uri, data, ajaxOptions);
+			}
+
+			/**
+	   * @method delete
+	   * @param  {string} uri         
+	   * @param  {Object} [data={}]
+	   * @param  {Object} [ajaxOptions={}]
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'delete',
+			value: function _delete(uri) {
+				var data = arguments.length <= 1 || arguments[1] === undefined ? {} : arguments[1];
+				var ajaxOptions = arguments.length <= 2 || arguments[2] === undefined ? {} : arguments[2];
+
+				return this.call('delete', uri, data, ajaxOptions);
+			}
+
+			////////////////////
+			// Helper methods //
+			////////////////////
+
+			/**
+	   * @method makeUrl
+	   * @param  {string} uri 	Relative url within the API
+	   * @return {string} Fully formed url
+	   */
+
+		}, {
+			key: 'makeUrl',
+			value: function makeUrl(uri) {
+				return this.settings.baseUrl + uri;
+			}
+
+			/**
+	   * Make an ajax call using jQuery
+	   * 
+	   * @method ajax
+	   * @param  {Object} options 
+	   * @return {jQuery Ajax call}         
+	   */
+
+		}, {
+			key: 'ajax',
+			value: function ajax(options) {
+				options.dataType = 'json';
+				return _jquery2.default.ajax(options);
+			}
+
+			///////////////////
+			// Model methods //
+			///////////////////
+
+			/**
+	   * Get a single Model record from the Api
+	   * 
+	   * @method one
+	   * @param  {string} modelName 
+	   * @param  {string} id        
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'one',
+			value: function one(modelName, id) {
+
+				// Get uri from model
+				var ModelClass = _Model2.default.registry.get(modelName);
+				if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
+				var uri = ModelClass.definition.getApiUri(id);
+
+				// Make the call
+				var call = this.get(uri);
+				call.modelClass = ModelClass;
+				return call;
+			}
+
+			/**
+	   * Get all Model records from the Api
+	   * 
+	   * @method all
+	   * @param  {string} modelName
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'all',
+			value: function all(modelName) {
+
+				// Get uri from model
+				var ModelClass = _Model2.default.registry.get(modelName);
+				if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
+				var uri = ModelClass.definition.getApiUri();
+
+				// Make the call
+				var call = this.get(uri);
+				call.modelClass = ModelClass;
+				return call;
+			}
+
+			/**
+	   * Save given model to the Api
+	   *
+	   * @method saveModel
+	   * @param 	{string}	uri
+	   * @param 	{Data.Model} model
+	   * @return {Api.ApiCall}
+	   */
+
+		}, {
+			key: 'saveModel',
+			value: function saveModel() /* uri, model */{
+				throw new Error('The Api implementation should have a saveModel method.');
+			}
+		}]);
+
+		return Api;
+	}();
+
+	module.exports = Api;
+
+/***/ },
 /* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
@@ -13192,7 +13281,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _Api2 = __webpack_require__(68);
+	var _Api2 = __webpack_require__(72);
 
 	var _Api3 = _interopRequireDefault(_Api2);
 
@@ -13200,11 +13289,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _Model = __webpack_require__(69);
+	var _Model = __webpack_require__(55);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(71);
+	var _Collection = __webpack_require__(57);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
@@ -13413,7 +13502,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						_this3.deserializeModel(recordData, apiCall, false);
 					});
 					_underscore2.default.each(result.included, function (recordData) {
-						_this3._deserializeRelationships(recordData);
+						_this3._deserializeRelationships(recordData, apiCall);
 					});
 				}
 
@@ -13434,7 +13523,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'deserializeModel',
 			value: function deserializeModel(data, apiCall) {
-				var _deserializeRelationships = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+				var deserializeRelationships = arguments.length <= 2 || arguments[2] === undefined ? true : arguments[2];
+
 
 				// Look for the type of model
 				var resourceType = data.type;
@@ -13454,55 +13544,48 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 
 				// Check if the model is already in the store
-				var store = _Model2.default.getStore(modelName);
-				var model = void 0;
-				if (!store.has(data.id)) {
+				var model = apiCall.getResponseModel(modelName, data.id);
+				if (!model) {
 
 					// Create a new model.
 					attributes.id = data.id;
 					model = new modelClass(attributes);
-					store.set(data.id, model);
+					apiCall.storeReponseModel(model);
 				} else {
-
-					// Get and use the model
-					model = store.get(data.id);
 
 					// Set the attributes (not overwriting dirty ones)
 					model.setAttributesFromApi(attributes);
 				}
 
 				// Also deserialize relationships?
-				if (_deserializeRelationships) {
+				if (deserializeRelationships) {
 
-					this._deserializeRelationships(data, model);
+					this._deserializeRelationships(data, apiCall, model);
 				}
 
 				return model;
 			}
 		}, {
 			key: 'deserializeCollection',
-			value: function deserializeCollection(data) {
+			value: function deserializeCollection(data, apiCall) {
 				var _this4 = this;
 
-				var apiCall = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
-
-
 				// Make a collection
-				var collection = new _Collection2.default(apiCall ? apiCall.modelClass : null);
+				var collection = new _Collection2.default(apiCall.modelClass);
 
 				// Add records
 				_underscore2.default.each(data, function (recordData) {
-					collection.addFromApi(_this4.deserializeModel(recordData), true);
+					collection.addFromApi(_this4.deserializeModel(recordData, apiCall), true);
 				});
 
 				return collection;
 			}
 		}, {
 			key: '_deserializeRelationships',
-			value: function _deserializeRelationships(data) {
+			value: function _deserializeRelationships(data, apiCall) {
 				var _this5 = this;
 
-				var model = arguments.length <= 1 || arguments[1] === undefined ? null : arguments[1];
+				var model = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
 
 				// Model given?
@@ -13510,7 +13593,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Look it up in the store			
 					var modelType = _inflection2.default.singularize(_inflection2.default.camelize(data.type));
-					model = _Model2.default.getFromStore(modelType, data.id);
+					model = apiCall.getResponseModel(modelType, data.id);
 
 					// Not known?
 					if (!model) throw new Error('Could not deserialize relationships for unknown model: ' + modelType + ' with id ' + data.id);
@@ -13535,8 +13618,7 @@ return /******/ (function(modules) { // webpackBootstrap
 									_underscore2.default.each(rel.data, function (relData) {
 
 										// Get the model
-										var relatedModel = _this5._getRelatedModel(relData);
-
+										var relatedModel = _this5._getRelatedModel(relData, apiCall);
 										if (relatedModel) {
 											(function () {
 
@@ -13560,7 +13642,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							} else if (rel.data instanceof Object) {
 
 								// Get the one
-								var relatedModel = _this5._getRelatedModel(rel.data);
+								var relatedModel = _this5._getRelatedModel(rel.data, apiCall);
 								if (relatedModel) {
 
 									// Set it
@@ -13576,7 +13658,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: '_getRelatedModel',
-			value: function _getRelatedModel(relationshipData) {
+			value: function _getRelatedModel(relationshipData, apiCall) {
 
 				// Check data integrity
 				var relType = relationshipData.type;
@@ -13586,7 +13668,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Find model in store
 				relType = _inflection2.default.singularize(_inflection2.default.camelize(relType));
-				var relModel = _Model2.default.getFromStore(relType, relId);
+				var relModel = apiCall.getResponseModel(relType, relId);
 				return relModel;
 			}
 		}]);
@@ -13694,7 +13776,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _Middleware = __webpack_require__(66);
+	var _Middleware = __webpack_require__(70);
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
 
@@ -14917,11 +14999,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _Model = __webpack_require__(69);
+	var _Model = __webpack_require__(55);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(71);
+	var _Collection = __webpack_require__(57);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
@@ -15175,7 +15257,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Collection2 = __webpack_require__(71);
+	var _Collection2 = __webpack_require__(57);
 
 	var _Collection3 = _interopRequireDefault(_Collection2);
 
