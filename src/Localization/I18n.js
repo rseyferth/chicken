@@ -106,6 +106,8 @@ class I18n extends Obj {
 		if (extension === 'yaml') {
 
 			// Parse yaml
+			if (window.YAML === undefined) throw new Error('The YAML library was not loaded, so the language file cannot be read. Add the bower component yamljs to your application.');
+			result = window.YAML.parse(result);
 
 		}
 
