@@ -1,3 +1,4 @@
+import _ from 'underscore';
 import inflection from 'inflection';
 
 import Model from '~/Data/Model';

@@ -7,7 +7,7 @@ import Obj from '~/Core/Obj';
  */
 class I18n extends Obj {
 
-	constructor() {
+	constructor(language) {
 
 		super();
 
@@ -22,6 +22,12 @@ class I18n extends Obj {
 		 * @type {Array}
 		 */
 		this.bundlesToLoad = [];
+
+		/**
+		 * @property language
+		 * @type {string}
+		 */
+		this.language = language;
 
 	}
 
@@ -54,6 +60,9 @@ class I18n extends Obj {
 	 */
 	loadBundle(url, key = null) {
 
+		// Convert language placeholders
+		url = url.replace(/:language/, this.language);
+
 		return new Promise((resolve, reject) => {
 
 			// Do we have it in cache?
@@ -72,6 +81,9 @@ class I18n extends Obj {
 
 		}).then((result) => {
 
+			// Parse result
+			result = this.parseResult(result, url);
+
 			// Is there a key?
 			if (key) {
 				let r = {};
@@ -83,6 +95,21 @@ class I18n extends Obj {
 			$.extend(this.data, result);
 
 		});
+
+	}
+
+
+	parseResult(result, url) {
+
+		// Check extension
+		let extension = _.last(url.split(/\./));
+		if (extension === 'yaml') {
+
+			// Parse yaml
+
+		}
+
+		return result;
 
 	}
 

@@ -23,7 +23,7 @@ Pivot.createFor = (model, pivotAttributes) => {
 	// Make it
 	let proxy = new Proxy(model, {
 
-		get: function(target, property, receiver){
+		get: function(target, property/*, receiver*/){
 
 			// Get pivot?
 			if (property === 'getPivot') {

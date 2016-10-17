@@ -338,8 +338,6 @@ class Application extends Observable {
 
 	refresh(viewContainerKeys = null) {
 
-		let viewContainers;
-
 		viewContainerKeys = viewContainerKeys || _.keys(this.viewContainers);
 			
 		//clear the currentAction of all viewContainer

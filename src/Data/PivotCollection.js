@@ -1,5 +1,3 @@
-import _ from 'underscore';
-
 import Collection from '~/Data/Collection';
 import Pivot from '~/Data/Pivot';
 

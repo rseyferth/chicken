@@ -44,7 +44,6 @@ class Collection extends ObservableArray
 
 		// Is value a model?
 		if (!ClassMap.isA(value, 'Model')) {
-			console.log(value);
 			throw new TypeError('You cannot add non-Model values to a Collection');
 		}
 
