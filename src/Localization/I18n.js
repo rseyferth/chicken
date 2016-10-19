@@ -27,7 +27,8 @@ class I18n extends Obj {
 		 * @property language
 		 * @type {string}
 		 */
-		this.language = language;
+		this.language = null;
+		this.setLanguage(language);
 
 	}
 
@@ -93,7 +94,7 @@ class I18n extends Obj {
 			}
 
 			// Extend
-			$.extend(this.data[this.language], result);
+			$.extend(this.data[language], result);
 
 		});
 
