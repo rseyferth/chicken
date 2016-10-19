@@ -201,9 +201,16 @@ class Action extends Obj
 				// Was it triggered by the same route?
 				if (Utils.uidFor(this.viewContainer.currentAction.route) === Utils.uidFor(this.route)) {
 
-					// That means, we've just navigated within nested routes of that page, and this action can be skipped.
-					resolve();
-					return;
+					// Are the arguments the same as well?
+					let currentParams = JSON.stringify(this.viewContainer.currentAction.parameterArray);
+					let newParams = JSON.stringify(this.parameterArray);
+					if (currentParams === newParams) {
+
+						// That means, we've just navigated within nested routes of that page, and this action can be skipped.
+						resolve();
+						return;
+
+					}
 
 				}
 				

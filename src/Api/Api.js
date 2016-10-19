@@ -175,6 +175,7 @@ class Api {
 		// Make the call
 		let call = this.get(uri);
 		call.modelClass = ModelClass;
+		call.expectModel = true;
 		return call;
 
 	}
@@ -196,6 +197,7 @@ class Api {
 		// Make the call
 		let call = this.get(uri);
 		call.modelClass = ModelClass;
+		call.expectCollection = true;
 		return call;
 
 	}

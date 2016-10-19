@@ -6622,7 +6622,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					value = this.items[currentPart];
 				} else {
 
-					throw new TypeError('Invalid key');
+					throw new TypeError('Invalid key: ' + key);
 				}
 
 				// Value found?
@@ -7725,6 +7725,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
 	var _jquery = __webpack_require__(1);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
@@ -8072,6 +8074,28 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				var value = this.attributes[key];
 				if (value === undefined) value = defaultValue;
+				return value;
+			}
+		}, {
+			key: 'get',
+			value: function get(key) {
+
+				// Do basics first
+				var value = _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key);
+
+				// Nothing?
+				if (value === undefined) {
+
+					// Bubble up.
+					if (this.parentComponent) {
+
+						return this.parentComponent.get(key);
+					} else if (this.view) {
+
+						return this.view.get(key);
+					}
+				}
+
 				return value;
 			}
 		}]);
@@ -8704,6 +8728,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Add to DOM
 				viewContainer.setContent($view);
 
+				// Set element
+				this.$element = $view;
+
 				// Done.
 				this.resolvePromise('ready', [this]);
 			}
@@ -8783,6 +8810,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Model = __webpack_require__(52);
 
 	var _Model2 = _interopRequireDefault(_Model);
+
+	var _Collection = __webpack_require__(54);
+
+	var _Collection2 = _interopRequireDefault(_Collection);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -8886,6 +8917,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.store = {};
 
+			/**
+	   * @property expectModel
+	   * @type {Boolean}
+	   */
+			_this.expectModel = false;
+
+			/**
+	   * @property expectCollection
+	   * @type {Boolean}
+	   */
+			_this.expectCollection = false;
+
 			return _this;
 		}
 
@@ -8923,7 +8966,24 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Make the call
 					_this2.api.ajax(options).then(function (result) {
 
-						resolve(_this2.api.deserialize(result, _this2));
+						// Deserialize it
+						var response = _this2.api.deserialize(result, _this2);
+
+						// Do we expect a single model?
+						if (_this2.expectModel && response instanceof _Collection2.default) {
+							response = response.first();
+
+							// Or a collection
+						} else if (_this2.expectCollection && response instanceof _Model2.default) {
+
+							// Make a collection of it
+							var coll = new _Collection2.default();
+							coll.add(response);
+							response = coll;
+						}
+
+						// Done!
+						resolve(response);
 					}).fail(function (error) {
 
 						// Make error
@@ -11195,6 +11255,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					throw new Error('[Routing.Router] Could not find matching route. 404 handling is not implemented yet.');
 				}
 
+				// Store it on app
+				this.application.currentRoute = routeMatch;
+
 				// Make the execution callback
 				var executeActions = function executeActions() {
 
@@ -11433,6 +11496,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.parameters = [];
 
 			/**
+	   * @property nested
+	   * @type {Array}
+	   */
+			_this.nested = {};
+
+			/**
 	   * The options used when defining this Route
 	   * 
 	   * @property options
@@ -11453,6 +11522,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {string}
 	   */
 			_this.name = null;
+
+			// Add me to parent route
+			if (parent) {
+				parent.nested[_this.pattern] = _this;
+			}
 
 			return _this;
 		}
@@ -11538,6 +11612,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// No match?
 				if (!match) return false;
+
+				// Do I have a nested / route?
+				if (this.nested['/']) {
+
+					// Use that route instead of me...
+					request.uri = request.uri + '/';
+					return this.nested['/'].match(request);
+				}
 
 				// We matched! Let's create a match object.
 				return new _RouteMatch2.default(this, match, request);
@@ -12195,9 +12277,15 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Was it triggered by the same route?
 						if (_Utils2.default.uidFor(_this2.viewContainer.currentAction.route) === _Utils2.default.uidFor(_this2.route)) {
 
-							// That means, we've just navigated within nested routes of that page, and this action can be skipped.
-							resolve();
-							return;
+							// Are the arguments the same as well?
+							var currentParams = JSON.stringify(_this2.viewContainer.currentAction.parameterArray);
+							var newParams = JSON.stringify(_this2.parameterArray);
+							if (currentParams === newParams) {
+
+								// That means, we've just navigated within nested routes of that page, and this action can be skipped.
+								resolve();
+								return;
+							}
 						}
 					}
 
@@ -12642,9 +12730,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				var _this2 = this;
 
 				var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var language = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
 
 				// Convert language placeholders
+				if (!language) language = this.language;
 				url = url.replace(/:language/, this.language);
 
 				return new Promise(function (resolve, reject) {
@@ -12675,8 +12765,17 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 
 					// Extend
-					_jquery2.default.extend(_this2.data, result);
+					_jquery2.default.extend(_this2.data[_this2.language], result);
 				});
+			}
+		}, {
+			key: 'setLanguage',
+			value: function setLanguage(language) {
+				this.language = language;
+				if (!this.data[language]) {
+					this.data[language] = {};
+				}
+				return this;
 			}
 		}, {
 			key: 'parseResult',
@@ -12692,6 +12791,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				return result;
+			}
+		}, {
+			key: 'getData',
+			value: function getData() {
+				var language = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+				if (!language) language = this.language;
+				return this.data[language];
 			}
 
 			/**
@@ -12744,10 +12851,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function translate(key) {
 				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 				var fallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+				var language = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
 
 				// Dot notation
-				var obj = this.data;
+				var obj = this.getData(language);
 				var parts = key.split(/\./);
 				while (parts.length > 0) {
 
@@ -12804,8 +12912,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function get(key) {
 				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
 				var fallback = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+				var language = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
-				return this.translate(key, attributes, fallback);
+				return this.translate(key, attributes, fallback, language);
 			}
 		}]);
 
@@ -13061,6 +13170,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Make the call
 				var call = this.get(uri);
 				call.modelClass = ModelClass;
+				call.expectModel = true;
 				return call;
 			}
 
@@ -13084,6 +13194,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Make the call
 				var call = this.get(uri);
 				call.modelClass = ModelClass;
+				call.expectCollection = true;
 				return call;
 			}
 
@@ -14323,6 +14434,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.includeInRequests = true;
 
 			this.size = null;
+
+			this.enumOptions = null;
 		}
 
 		_createClass(ModelAttribute, [{
@@ -14753,6 +14866,13 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'boolean',
 			value: function boolean(name) {
 				var attr = this.attribute(name, _ModelAttribute2.default.Boolean);
+				return attr;
+			}
+		}, {
+			key: 'enum',
+			value: function _enum(name, options) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Enum);
+				attr.enumOptions = options;
 				return attr;
 			}
 

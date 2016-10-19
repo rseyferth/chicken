@@ -332,6 +332,33 @@ class Component extends View
 	}
 
 
+	get(key) {
+
+		// Do basics first
+		let value = super.get(key);
+
+		// Nothing?
+		if (value === undefined) {
+
+			// Bubble up.
+			if (this.parentComponent) {
+				
+				return this.parentComponent.get(key);
+
+			} else if (this.view) {
+
+				return this.view.get(key);
+				
+			}
+
+		}
+
+		return value;
+
+	}
+
+
+
 
 }
 

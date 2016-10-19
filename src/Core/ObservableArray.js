@@ -121,7 +121,7 @@ class ObservableArray extends Obj
 
 		} else {
 
-			throw new TypeError('Invalid key');
+			throw new TypeError('Invalid key: ' + key);
 
 		}
 

@@ -163,6 +163,10 @@ class Router extends Obj
 
 		}
 
+		// Store it on app
+		this.application.currentRoute = routeMatch;
+
+
 		// Make the execution callback
 		let executeActions = () => {
 

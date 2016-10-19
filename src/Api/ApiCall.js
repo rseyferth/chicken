@@ -4,6 +4,7 @@ import QueryString from 'query-string';
 import ApiError from '~/Api/ApiError';
 import Obj from '~/Core/Obj';
 import Model from '~/Data/Model';
+import Collection from '~/Data/Collection';
 
 /**
  * @module Api
@@ -95,6 +96,18 @@ class ApiCall extends Obj {
 		 */
 		this.store = {};
 
+		/**
+		 * @property expectModel
+		 * @type {Boolean}
+		 */
+		this.expectModel = false;
+
+		/**
+		 * @property expectCollection
+		 * @type {Boolean}
+		 */
+		this.expectCollection = false;
+
 	}
 
 	/**
@@ -127,7 +140,26 @@ class ApiCall extends Obj {
 			this.api.ajax(options)
 				.then((result) => {
 
-					resolve(this.api.deserialize(result, this));
+					// Deserialize it
+					let response = this.api.deserialize(result, this);
+
+					// Do we expect a single model?
+					if (this.expectModel && response instanceof Collection) {
+						response = response.first();
+					
+					// Or a collection
+					} else if (this.expectCollection && response instanceof Model) {
+
+						// Make a collection of it
+						let coll = new Collection();
+						coll.add(response);
+						response = coll;
+
+					}
+
+					// Done!
+					resolve(response);
+
 					
 				}).fail((error) => {
 

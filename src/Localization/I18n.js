@@ -58,9 +58,10 @@ class I18n extends Obj {
 	 * @param  {string} [key=null]  Optional key to add loaded data under.
 	 * @return {Promise}     
 	 */
-	loadBundle(url, key = null) {
+	loadBundle(url, key = null, language = null) {
 
 		// Convert language placeholders
+		if (!language) language = this.language;
 		url = url.replace(/:language/, this.language);
 
 		return new Promise((resolve, reject) => {
@@ -92,10 +93,18 @@ class I18n extends Obj {
 			}
 
 			// Extend
-			$.extend(this.data, result);
+			$.extend(this.data[this.language], result);
 
 		});
 
+	}
+
+	setLanguage(language) {
+		this.language = language;
+		if (!this.data[language]) {
+			this.data[language] = {};
+		}
+		return this;
 	}
 
 
@@ -113,6 +122,11 @@ class I18n extends Obj {
 
 		return result;
 
+	}
+
+	getData(language = null) {
+		if (!language) language = this.language;
+		return this.data[language];
 	}
 
 	/**
@@ -158,10 +172,10 @@ class I18n extends Obj {
 	 * @param  {mixed} [fallback=null]		Optional fallback value when the key is nout found
 	 * @return {mixed}
 	 */
-	translate(key, attributes = {}, fallback = null) {
+	translate(key, attributes = {}, fallback = null, language = null) {
 
 		// Dot notation
-		let obj = this.data;
+		let obj = this.getData(language);
 		let parts = key.split(/\./);
 		while (parts.length > 0) {
 			
@@ -217,8 +231,8 @@ class I18n extends Obj {
 	 * @param  {mixed} [fallback=null]
 	 * @return {mixed}
 	 */
-	get(key, attributes = {}, fallback = null) {
-		return this.translate(key, attributes, fallback);
+	get(key, attributes = {}, fallback = null, language = null) {
+		return this.translate(key, attributes, fallback, language);
 	}
 
 

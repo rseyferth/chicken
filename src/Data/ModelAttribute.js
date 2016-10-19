@@ -15,6 +15,8 @@ class ModelAttribute {
 
 		this.size = null;
 
+		this.enumOptions = null;
+
 	}
 
 	default(value) {

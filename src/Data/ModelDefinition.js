@@ -195,6 +195,12 @@ class ModelDefinition
 		return attr;		
 	}
 
+	enum(name, options) {
+		let attr = this.attribute(name, ModelAttribute.Enum);
+		attr.enumOptions = options;
+		return attr;
+	}
+
 
 	///////////
 	// Model //

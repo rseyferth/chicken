@@ -46,6 +46,7 @@ class Route extends Obj
 		 * @type {Routing.Route}
 		 */
 		this.parentRoute = parent;
+		
 
 		/**
 		 * The Router that this Route is a part of
@@ -75,6 +76,11 @@ class Route extends Obj
 		this.parameters = [];
 
 
+		/**
+		 * @property nested
+		 * @type {Array}
+		 */
+		this.nested = {};
 
 		/**
 		 * The options used when defining this Route
@@ -100,6 +106,12 @@ class Route extends Obj
 		 */
 		this.name = null;
 
+
+
+		// Add me to parent route
+		if (parent) {
+			parent.nested[this.pattern] = this;
+		}
 
 	}	
 
@@ -178,6 +190,15 @@ class Route extends Obj
 
 		// No match?
 		if (!match) return false;
+
+		// Do I have a nested / route?
+		if (this.nested['/']) {
+
+			// Use that route instead of me...
+			request.uri = request.uri + '/';
+			return this.nested['/'].match(request);
+
+		}
 
 		// We matched! Let's create a match object.
 		return new RouteMatch(this, match, request);
