@@ -7098,6 +7098,13 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				});
 			}
+
+			/**
+	   * find object with empty attribute 
+	   * @param  attribute 	the attribute checked for definition
+	   * @return 				the object containing the empty property or `undefined`
+	   */
+
 		}, {
 			key: 'findEmpty',
 			value: function findEmpty(attribute) {
@@ -7105,11 +7112,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				return _underscore2.default.find(this.items, function (item) {
 
 					if (_ClassMap2.default.isA(item, 'Observable') || item instanceof ObservableArray) {
-						return typeof item.get(attribute) === "undefined";
+						return !item.get(attribute);
 					} else if (item instanceof Object) {
-						return typeof item[attribute] === "undefined";
+						return !item[attribute];
 					} else {
-						return typeof item === "undefined";
+						return false;
 					}
 				});
 			}
@@ -9502,9 +9509,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Is the value computed?
 						if (value instanceof _ComputedProperty2.default) return false;
-
-						// Is the value the 'is' observable
-						if (value instanceof _Observable3.default && key == 'is') return false;
 
 						// OK.
 						return true;
