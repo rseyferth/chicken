@@ -589,8 +589,10 @@ class ObservableArray extends Obj
 
 	/**
 	 * find object with empty attribute 
-	 * @param  attribute 	the attribute checked for definition
-	 * @return 				the object containing the empty property or `undefined`
+	 *
+	 * @method findEmpty
+	 * @param  {string}	attribute 	the attribute checked for definition
+	 * @return {mixed}				the object containing the empty property or `undefined`
 	 */
 	findEmpty(attribute) {
 
