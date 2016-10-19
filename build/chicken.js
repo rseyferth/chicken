@@ -12710,7 +12710,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property language
 	   * @type {string}
 	   */
-			_this.language = language;
+			_this.language = null;
+			_this.setLanguage(language);
 
 			return _this;
 		}
@@ -12789,7 +12790,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 
 					// Extend
-					_jquery2.default.extend(_this2.data[_this2.language], result);
+					_jquery2.default.extend(_this2.data[language], result);
 				});
 			}
 		}, {
