@@ -316,10 +316,6 @@ class Model extends Observable
 
 				// Is the value computed?
 				if (value instanceof ComputedProperty) return false;
-				
-				// Is the value the 'is' observable
-				if (value instanceof Observable && key == 'is') return false;
-
 
 				// OK.
 				return true;
