@@ -587,6 +587,29 @@ class ObservableArray extends Obj
 
 	}
 
+	/**
+	 * find object with empty attribute 
+	 *
+	 * @method findEmpty
+	 * @param  {string}	attribute 	the attribute checked for definition
+	 * @return {mixed}				the object containing the empty property or `undefined`
+	 */
+	findEmpty(attribute) {
+
+		return _.find(this.items, (item) => {
+
+			if (ClassMap.isA(item, 'Observable') || item instanceof ObservableArray) {
+				return !item.get(attribute);
+			} else if (item instanceof Object) {
+				return !item[attribute];
+			} else {
+				return false;
+			}
+
+		});
+
+	}
+
 
 	map(callback) {
 

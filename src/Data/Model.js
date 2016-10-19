@@ -317,7 +317,6 @@ class Model extends Observable
 				// Is the value computed?
 				if (value instanceof ComputedProperty) return false;
 
-
 				// OK.
 				return true;
 

@@ -7098,6 +7098,30 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				});
 			}
+
+			/**
+	   * find object with empty attribute 
+	   *
+	   * @method findEmpty
+	   * @param  {string}	attribute 	the attribute checked for definition
+	   * @return {mixed}				the object containing the empty property or `undefined`
+	   */
+
+		}, {
+			key: 'findEmpty',
+			value: function findEmpty(attribute) {
+
+				return _underscore2.default.find(this.items, function (item) {
+
+					if (_ClassMap2.default.isA(item, 'Observable') || item instanceof ObservableArray) {
+						return !item.get(attribute);
+					} else if (item instanceof Object) {
+						return !item[attribute];
+					} else {
+						return false;
+					}
+				});
+			}
 		}, {
 			key: 'map',
 			value: function map(callback) {
