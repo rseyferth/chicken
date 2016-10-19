@@ -587,6 +587,22 @@ class ObservableArray extends Obj
 
 	}
 
+	findEmpty(attribute) {
+
+		return _.find(this.items, (item) => {
+
+			if (ClassMap.isA(item, 'Observable') || item instanceof ObservableArray) {
+				return typeof item.get(attribute) === "undefined";
+			} else if (item instanceof Object) {
+				return typeof item[attribute] === "undefined";
+			} else {
+				return typeof item === "undefined";
+			}
+
+		});
+
+	}
+
 
 	map(callback) {
 

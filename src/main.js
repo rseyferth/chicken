@@ -18,7 +18,6 @@ if ($ === undefined || typeof $ !== 'function') throw new Error('Error while ini
 if (_ === undefined || typeof _ !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore (_). Was Underscore not loaded?');
 if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
 
-
 /////////////////////
 // Chicken Classes //
 /////////////////////

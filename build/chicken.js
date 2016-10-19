@@ -7099,6 +7099,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 			}
 		}, {
+			key: 'findEmpty',
+			value: function findEmpty(attribute) {
+
+				return _underscore2.default.find(this.items, function (item) {
+
+					if (_ClassMap2.default.isA(item, 'Observable') || item instanceof ObservableArray) {
+						return typeof item.get(attribute) === "undefined";
+					} else if (item instanceof Object) {
+						return typeof item[attribute] === "undefined";
+					} else {
+						return typeof item === "undefined";
+					}
+				});
+			}
+		}, {
 			key: 'map',
 			value: function map(callback) {
 
@@ -9487,6 +9502,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Is the value computed?
 						if (value instanceof _ComputedProperty2.default) return false;
+
+						// Is the value the 'is' observable
+						if (value instanceof _Observable3.default && key == 'is') return false;
 
 						// OK.
 						return true;
