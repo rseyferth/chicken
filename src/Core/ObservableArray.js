@@ -258,7 +258,7 @@ class ObservableArray extends Obj
 
 		// Studying?
 		if (this.isStudyingChildren) {
-			value.study(this.childStudyCallback);
+			try{ value.study(this.childStudyCallback); } catch (err) {  };
 		}
 
 		// Is it observable?
@@ -384,7 +384,11 @@ class ObservableArray extends Obj
 
 			// Watch all current children
 			_.each(this.items, (item) => {
-				item.study(this.childStudyCallback);
+				try {
+					item.study(this.childStudyCallback);
+				} catch(err) {
+					// nothing
+				}
 			});
 
 		}

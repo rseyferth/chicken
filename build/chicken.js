@@ -6755,7 +6755,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Studying?
 				if (this.isStudyingChildren) {
-					value.study(this.childStudyCallback);
+					try {
+						value.study(this.childStudyCallback);
+					} catch (err) {};
 				}
 
 				// Is it observable?
@@ -6891,7 +6893,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Watch all current children
 					_underscore2.default.each(this.items, function (item) {
-						item.study(_this8.childStudyCallback);
+						try {
+							item.study(_this8.childStudyCallback);
+						} catch (err) {
+							// nothing
+						}
 					});
 				}
 
