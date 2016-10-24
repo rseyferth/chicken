@@ -6755,9 +6755,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Studying?
 				if (this.isStudyingChildren) {
-					try {
-						value.study(this.childStudyCallback);
-					} catch (err) {};
+					if (ObservableArray.isObservable(value)) value.study(this.childStudyCallback);
 				}
 
 				// Is it observable?
@@ -6792,7 +6790,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Studying?
 				if (this.isStudyingChildren) {
 					_underscore2.default.each(values, function (item) {
-						item.neglect(_this6.childStudyCallback);
+
+						if (ObservableArray.isObservable(item)) item.neglect(_this6.childStudyCallback);
 					});
 				}
 
@@ -6893,11 +6892,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Watch all current children
 					_underscore2.default.each(this.items, function (item) {
-						try {
-							item.study(_this8.childStudyCallback);
-						} catch (err) {
-							// nothing
-						}
+
+						if (ObservableArray.isObservable(item)) item.study(_this8.childStudyCallback);
 					});
 				}
 
@@ -6992,6 +6988,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Now sort!
 				this.items = _underscore2.default.sortBy(this.items, callback);
+				return this;
+			}
+		}, {
+			key: 'reverse',
+			value: function reverse() {
+				this.items.reverse();
 				return this;
 			}
 
@@ -7133,6 +7135,17 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function map(callback) {
 
 				return _underscore2.default.map(this.items, callback);
+			}
+		}, {
+			key: 'extend',
+			value: function extend(observableArray) {
+
+				return _underscore2.default.extend(this.items, observableArray.items);
+			}
+		}, {
+			key: 'filter',
+			value: function filter(callback) {
+				return _underscore2.default.filter(this.items, callback);
 			}
 
 			/**
