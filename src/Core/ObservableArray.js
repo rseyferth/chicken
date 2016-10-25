@@ -258,7 +258,7 @@ class ObservableArray extends Obj
 
 		// Studying?
 		if (this.isStudyingChildren) {
-			value.study(this.childStudyCallback);
+			if (ObservableArray.isObservable(value)) value.study(this.childStudyCallback); 			
 		}
 
 		// Is it observable?
@@ -287,7 +287,9 @@ class ObservableArray extends Obj
 		// Studying?
 		if (this.isStudyingChildren) {
 			_.each(values, (item) => {
-				item.neglect(this.childStudyCallback);
+
+				if (ObservableArray.isObservable(item)) item.neglect(this.childStudyCallback);
+				
 			});
 				
 		}
@@ -384,7 +386,8 @@ class ObservableArray extends Obj
 
 			// Watch all current children
 			_.each(this.items, (item) => {
-				item.study(this.childStudyCallback);
+				
+				if (ObservableArray.isObservable(item)) item.study(this.childStudyCallback);				
 			});
 
 		}
@@ -482,6 +485,11 @@ class ObservableArray extends Obj
 		this.items = _.sortBy(this.items, callback);
 		return this;
 
+	}
+
+	reverse() {
+		this.items.reverse();
+		return this;
 	}
 
 
@@ -615,6 +623,16 @@ class ObservableArray extends Obj
 
 		return _.map(this.items, callback);
 
+	}
+
+	extend(observableArray) {
+
+		return _.extend(this.items, observableArray.items);
+
+	}
+
+	filter(callback) {
+		return _.filter(this.items, callback);
 	}
 
 
