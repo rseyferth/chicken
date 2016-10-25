@@ -2110,6 +2110,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				}
 
+				// External?		
+				if (uri.match(/^(http(s)?\:)?\/\//)) {
+					window.location = uri + (query ? '?' + query : '');
+					return this;
+				}
+
 				// Change the history state
 				this.history.push({
 					pathname: uri,
@@ -14609,7 +14615,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					///////////
 					// Model //
 					///////////
+
 					case ModelAttribute.Model:
+					case ModelAttribute.Translations:
 						return {};
 
 					default:
@@ -14633,6 +14641,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	ModelAttribute.Array = 'Array';
 	ModelAttribute.Object = 'Object';
+	ModelAttribute.Translations = 'Translations';
 	ModelAttribute.Model = 'Model';
 
 	module.exports = ModelAttribute;
@@ -14900,6 +14909,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'object',
 			value: function object(name) {
+				var attr = this.attribute(name, _ModelAttribute2.default.Object);
+				return attr;
+			}
+		}, {
+			key: 'translations',
+			value: function translations(name) {
 				var attr = this.attribute(name, _ModelAttribute2.default.Object);
 				return attr;
 			}

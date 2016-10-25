@@ -326,6 +326,12 @@ class Application extends Observable {
 
 		}
 
+		// External?		
+		if (uri.match(/^(http(s)?\:)?\/\//)) {
+			window.location = uri + (query ? '?' + query : '');
+			return this;
+		}
+
 		// Change the history state
 		this.history.push({
 			pathname: uri,

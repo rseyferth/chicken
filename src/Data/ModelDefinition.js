@@ -225,6 +225,10 @@ class ModelDefinition
 		let attr = this.attribute(name, ModelAttribute.Object);
 		return attr;	
 	}
+	translations(name) {
+		let attr = this.attribute(name, ModelAttribute.Object);
+		return attr;
+	}
 
 
 	//////////////////////
