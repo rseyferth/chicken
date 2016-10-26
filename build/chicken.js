@@ -76,7 +76,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Application2 = _interopRequireDefault(_Application);
 
-	var _Api = __webpack_require__(68);
+	var _Api = __webpack_require__(69);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
@@ -84,19 +84,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ApiCall2 = _interopRequireDefault(_ApiCall);
 
-	var _JsonApi = __webpack_require__(69);
+	var _JsonApi = __webpack_require__(70);
 
 	var _JsonApi2 = _interopRequireDefault(_JsonApi);
 
-	var _JsonApiCall = __webpack_require__(70);
+	var _JsonApiCall = __webpack_require__(71);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _Auth = __webpack_require__(71);
+	var _Auth = __webpack_require__(72);
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
-	var _JWTAuth = __webpack_require__(72);
+	var _JWTAuth = __webpack_require__(73);
 
 	var _JWTAuth2 = _interopRequireDefault(_JWTAuth);
 
@@ -132,11 +132,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelAttribute = __webpack_require__(74);
+	var _ModelAttribute = __webpack_require__(75);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _ModelDefinition = __webpack_require__(75);
+	var _ModelDefinition = __webpack_require__(76);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
 
@@ -144,15 +144,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
-	var _Pivot = __webpack_require__(78);
+	var _Pivot = __webpack_require__(79);
 
 	var _Pivot2 = _interopRequireDefault(_Pivot);
 
-	var _Relationship = __webpack_require__(76);
+	var _Relationship = __webpack_require__(77);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
-	var _Service2 = __webpack_require__(79);
+	var _Service2 = __webpack_require__(67);
 
 	var _Service3 = _interopRequireDefault(_Service2);
 
@@ -208,7 +208,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
-	var _I18n = __webpack_require__(67);
+	var _I18n = __webpack_require__(68);
 
 	var _I18n2 = _interopRequireDefault(_I18n);
 
@@ -1792,7 +1792,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Element2 = _interopRequireDefault(_Element);
 
-	var _I18n = __webpack_require__(67);
+	var _I18n = __webpack_require__(68);
 
 	var _I18n2 = _interopRequireDefault(_I18n);
 
@@ -11097,6 +11097,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
 
+	var _Service = __webpack_require__(67);
+
+	var _Service2 = _interopRequireDefault(_Service);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11152,9 +11156,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				parentRoute: null,
 				viewContainer: 'main',
+				services: [],
 				middleware: []
 
-			}, ['parentRoute', 'viewContainer', 'middleware']);
+			}, ['parentRoute', 'viewContainer', 'middleware', 'services']);
 
 			return _this;
 		}
@@ -11280,6 +11285,19 @@ return /******/ (function(modules) { // webpackBootstrap
 							return dependsOnAction.getPromise('complete');
 						});
 
+						// And any services that should be loaded
+						_underscore2.default.each(routeMatch.route.options.services, function (service) {
+
+							// Find service
+							var serviceInstance = _Service2.default.get(service);
+							if (!serviceInstance) throw new Error('[Routing.Router] There is no service "' + service + '" registered');
+
+							// Load it
+							var promise = serviceInstance.load();
+							if (!promise || !promise instanceof Promise) throw new Error('[Routing.Router] The "' + service + '" service\'s load() method should return a Promise');
+							dependsOnPromises.push(promise);
+						});
+
 						// Wait?
 						if (dependsOnPromises.length > 0) {
 
@@ -11307,9 +11325,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					////////////////////////////
 
 					// Any action started?
-					if (numberOfActionsStarted === 0) {
+					if (numberOfActionsStarted === 0 && routeMatch.route.options.services.length === 0) {
 
-						throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.matchedRoute.getFullPattern() + '. Check your configuration.');
+						throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.route.getFullPattern() + '. Check your configuration.');
 					}
 
 					// Listen to the result
@@ -12645,6 +12663,81 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _Observable2 = __webpack_require__(32);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	var Service = function (_Observable) {
+		_inherits(Service, _Observable);
+
+		function Service(name) {
+			_classCallCheck(this, Service);
+
+			var _this = _possibleConstructorReturn(this, (Service.__proto__ || Object.getPrototypeOf(Service)).call(this));
+
+			_this.name = name;
+			_this.initialize.apply(_this);
+
+			return _this;
+		}
+
+		_createClass(Service, [{
+			key: 'initialize',
+			value: function initialize() {
+				throw new Error('The ' + this.name + ' service has not implemented the "initialize" method');
+			}
+		}, {
+			key: 'load',
+			value: function load() {
+				throw new Error('The ' + this.name + ' service has not implemented the "load" method');
+			}
+		}]);
+
+		return Service;
+	}(_Observable3.default);
+
+	Service.registry = new Map();
+	Service.services = new Map();
+
+	Service.get = function (name) {
+
+		// Created?
+		if (!Service.services.has(name)) {
+
+			// Do we know it?
+			if (!Service.registry.has(name)) {
+				throw new Error('There is no service registed with the name "' + name + '"');
+			}
+
+			// Instantiate
+			var ServiceClass = Service.registry.get(name);
+			var service = new ServiceClass(name);
+
+			// Store
+			Service.services.set(name, service);
+		}
+
+		return Service.services.get(name);
+	};
+
+	module.exports = Service;
+
+/***/ },
+/* 68 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _jquery = __webpack_require__(1);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
@@ -12932,7 +13025,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = I18n;
 
 /***/ },
-/* 68 */
+/* 69 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13226,7 +13319,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Api;
 
 /***/ },
-/* 69 */
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13247,11 +13340,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _Api2 = __webpack_require__(68);
+	var _Api2 = __webpack_require__(69);
 
 	var _Api3 = _interopRequireDefault(_Api2);
 
-	var _JsonApiCall = __webpack_require__(70);
+	var _JsonApiCall = __webpack_require__(71);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
@@ -13651,7 +13744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApi;
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13729,7 +13822,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApiCall;
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13965,7 +14058,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Auth;
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13980,11 +14073,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _Auth2 = __webpack_require__(71);
+	var _Auth2 = __webpack_require__(72);
 
 	var _Auth3 = _interopRequireDefault(_Auth2);
 
-	var _AuthError = __webpack_require__(73);
+	var _AuthError = __webpack_require__(74);
 
 	var _AuthError2 = _interopRequireDefault(_AuthError);
 
@@ -14358,7 +14451,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JWTAuth;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -14411,7 +14504,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = AuthError;
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14647,7 +14740,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelAttribute;
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14662,11 +14755,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _ModelAttribute = __webpack_require__(74);
+	var _ModelAttribute = __webpack_require__(75);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _Relationship = __webpack_require__(76);
+	var _Relationship = __webpack_require__(77);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
@@ -14978,7 +15071,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelDefinition;
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15001,7 +15094,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _PivotCollection = __webpack_require__(77);
+	var _PivotCollection = __webpack_require__(78);
 
 	var _PivotCollection2 = _interopRequireDefault(_PivotCollection);
 
@@ -15238,7 +15331,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Relationship;
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15251,7 +15344,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Collection3 = _interopRequireDefault(_Collection2);
 
-	var _Pivot = __webpack_require__(78);
+	var _Pivot = __webpack_require__(79);
 
 	var _Pivot2 = _interopRequireDefault(_Pivot);
 
@@ -15306,7 +15399,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PivotCollection;
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15406,76 +15499,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = Pivot;
-
-/***/ },
-/* 79 */
-/***/ function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _Observable2 = __webpack_require__(32);
-
-	var _Observable3 = _interopRequireDefault(_Observable2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	var Service = function (_Observable) {
-		_inherits(Service, _Observable);
-
-		function Service(name) {
-			_classCallCheck(this, Service);
-
-			var _this = _possibleConstructorReturn(this, (Service.__proto__ || Object.getPrototypeOf(Service)).call(this));
-
-			_this.name = name;
-			_this.initialize.apply(_this);
-
-			return _this;
-		}
-
-		_createClass(Service, [{
-			key: 'initialize',
-			value: function initialize() {
-				throw new Error('The ' + this.name + ' service has not implemented the "initialize" method');
-			}
-		}]);
-
-		return Service;
-	}(_Observable3.default);
-
-	Service.registry = new Map();
-	Service.services = new Map();
-
-	Service.get = function (name) {
-
-		// Created?
-		if (!Service.services.has(name)) {
-
-			// Do we know it?
-			if (!Service.registry.has(name)) {
-				throw new Error('There is no service registed with the name "' + name + '"');
-			}
-
-			// Instantiate
-			var ServiceClass = Service.registry.get(name);
-			var service = new ServiceClass(name);
-
-			// Store
-			Service.services.set(name, service);
-		}
-
-		return Service.services.get(name);
-	};
-
-	module.exports = Service;
 
 /***/ }
 /******/ ])

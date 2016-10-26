@@ -16,7 +16,9 @@ class Service extends Observable
 	initialize() {
 		throw new Error('The ' + this.name + ' service has not implemented the "initialize" method');		
 	}
-
+	load() {
+		throw new Error('The ' + this.name + ' service has not implemented the "load" method');				
+	}
 
 
 }
