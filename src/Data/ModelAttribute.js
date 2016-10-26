@@ -182,7 +182,9 @@ class ModelAttribute {
 			///////////
 			// Model //
 			///////////
+			
 			case ModelAttribute.Model:
+			case ModelAttribute.Translations:
 				return {};
 
 			default:
@@ -214,6 +216,7 @@ ModelAttribute.Time = 'Time';
 
 ModelAttribute.Array = 'Array';
 ModelAttribute.Object = 'Object';
+ModelAttribute.Translations = 'Translations';
 ModelAttribute.Model = 'Model';
 
 

@@ -7,7 +7,7 @@ import SettingsObject from '~/Core/SettingsObject';
 import Route from '~/Routing/Route';
 import Request from '~/Routing/Request';
 import Middleware from '~/Routing/Middleware';
-
+import Service from '~/Data/Service';
 
 /**
  * @module Routing
@@ -56,9 +56,10 @@ class Router extends Obj
 
 			parentRoute: null,
 			viewContainer: 'main',
+			services: [],
 			middleware: []
 
-		}, ['parentRoute', 'viewContainer', 'middleware']);
+		}, ['parentRoute', 'viewContainer', 'middleware', 'services']);
 
 
 
@@ -175,13 +176,27 @@ class Router extends Obj
 			// Start executing actions //
 			/////////////////////////////
 
-			var numberOfActionsStarted = 0;
-			var actionPromises = [];
+			let numberOfActionsStarted = 0;
+			let actionPromises = [];
 			routeMatch.actions.forEach((action, vcName) => {
 
 				// Get depends on promises
-				var dependsOnPromises = _.map(action.dependsOn, (dependsOnAction) => {
+				let dependsOnPromises = _.map(action.dependsOn, (dependsOnAction) => {
 					return dependsOnAction.getPromise('complete');
+				});
+
+				// And any services that should be loaded
+				_.each(routeMatch.route.options.services, (service) => {
+					
+					// Find service
+					let serviceInstance = Service.get(service);
+					if (!serviceInstance) throw new Error('[Routing.Router] There is no service "' + service + '" registered');
+
+					// Load it
+					let promise = serviceInstance.load();
+					if (!promise || !promise instanceof Promise) throw new Error('[Routing.Router] The "' + service + '" service\'s load() method should return a Promise');
+					dependsOnPromises.push(promise);
+
 				});
 
 				// Wait?
@@ -216,9 +231,9 @@ class Router extends Obj
 			////////////////////////////
 
 			// Any action started?
-			if (numberOfActionsStarted === 0) {
+			if (numberOfActionsStarted === 0 && routeMatch.route.options.services.length === 0) {
 
-				throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.matchedRoute.getFullPattern() + '. Check your configuration.'); 
+				throw new Error('[Routing.Router] No actions for started for route ' + routeMatch.route.getFullPattern() + '. Check your configuration.'); 
 
 			}
 
