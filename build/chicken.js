@@ -12696,6 +12696,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return _inflection2.default.camelize(string, !capitalFirstLetter);
 			}
+		}, {
+			key: 'string',
+			value: function string(params) {
+
+				// First is method, second is str
+				var args = this._getValues(params);
+				var method = args.shift();
+				var str = args.shift();
+
+				return str[method].apply(str, args);
+			}
 
 			/////////////////////
 			// Dates and times //

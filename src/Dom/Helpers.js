@@ -257,6 +257,8 @@ class Helpers
 	}
 
 
+
+
 	//////////////////
 	// HTML Helpers //
 	//////////////////
@@ -281,6 +283,16 @@ class Helpers
 
 	}
 
+	string(params) {
+
+		// First is method, second is str
+		let args = this._getValues(params);
+		let method = args.shift();
+		let str = args.shift();
+
+		return str[method].apply(str, args);
+
+	}
 
 	/////////////////////
 	// Dates and times //
