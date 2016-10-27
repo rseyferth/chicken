@@ -363,6 +363,8 @@ class JsonApi extends Api
 
 		}
 
+		// Trigger the event
+		model.trigger('deserialized', [this]);
 
 	}
 

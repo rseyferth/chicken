@@ -648,6 +648,14 @@ class ObservableArray extends Obj
 		return this.items.length;
 	}
 
+	count() {
+		return this.length;
+	}
+	size() {
+		return this.length;
+	}
+
+
 
 	isObservable() {
 		return true;

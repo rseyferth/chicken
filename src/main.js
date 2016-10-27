@@ -6,6 +6,7 @@
 
 import $ from 'jquery';
 import _ from 'underscore';
+import s from 'underscore.string';
 import XRegExp from 'xregexp';
 import inflection from 'inflection';
 
@@ -17,6 +18,10 @@ import inflection from 'inflection';
 if ($ === undefined || typeof $ !== 'function') throw new Error('Error while initializing Chicken: could not find global jQuery ($). Was jQuery not loaded?');
 if (_ === undefined || typeof _ !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore (_). Was Underscore not loaded?');
 if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
+if (s === undefined || typeof s !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore.string (s). Was Underscore.string not loaded?');
+
+// Mixin underscore string
+_.mixin(s.exports());
 
 /////////////////////
 // Chicken Classes //
@@ -258,8 +263,8 @@ var Chicken = {
 
 		// Create class
 		var ChickenModel = class extends Model {
-			constructor(initValues = null) {
-				super(initValues);
+			constructor(initValues = null, convertToObservables = false) {
+				super(initValues, convertToObservables);
 			}
 		};
 
@@ -272,9 +277,9 @@ var Chicken = {
 		ChickenModel.definition = new ModelDefinition(name, configCallback);
 		ChickenModel.modelName = name;
 
-		ChickenModel.create = (initValues = {}) => {
+		ChickenModel.create = (initValues = {}, convertToObservables = false) => {
 
-			return new ChickenModel(initValues);
+			return new ChickenModel(initValues, convertToObservables);
 
 		};
 

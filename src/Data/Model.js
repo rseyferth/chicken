@@ -28,7 +28,7 @@ class Model extends Observable
 	 * @param  {Object}  initValues           
 	 * @param  {Boolean} convertToObservables 
 	 */
-	constructor(initValues = {}, convertToObservables = false) {	
+	constructor(initValues = {}, convertToObservables = false) {
 
 		super(initValues, convertToObservables);
 
@@ -715,6 +715,10 @@ class Model extends Observable
 		});
 		this.related[relationshipName] = relatedModel;
 		
+		// Trigger
+		this._scheduleAttributeChanged(relationshipName);
+
+
 		return this;
 
 	}
@@ -764,6 +768,9 @@ class Model extends Observable
 		} else {
 			coll.add(relatedModel);			
 		}
+
+		// Trigger
+		this._scheduleAttributeChanged(relationshipName);
 
 		return this;
 
@@ -848,6 +855,21 @@ class Model extends Observable
 	isPivot() {
 		return false;
 	}
+
+
+	/**
+	 * Check whether this instance is the same instance as given parameter.
+	 *
+	 * @method is
+	 * @param  {Chicken.Data.Model}  obj
+	 * @return {Boolean}     
+	 */
+	is(obj) {
+
+		return Utils.uidFor(this) === Utils.uidFor(obj);
+
+	}
+
 
 
 
