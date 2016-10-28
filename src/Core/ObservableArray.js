@@ -344,6 +344,16 @@ class ObservableArray extends Obj
 		return _.first(this.items);
 	}
 
+	/**
+	 * Get the last item in the collection
+	 *
+	 * @method last
+	 * @return {mixed} 
+	 */
+	last() {
+		return _.last(this.items);
+	}
+
 
 
 	/**

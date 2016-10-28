@@ -249,7 +249,7 @@ class JsonApi extends Api
 		if (!model) {
 
 			// Create a new model.
-			attributes.id = data.id;
+			attributes.id = parseInt(data.id);
 			model = new modelClass(attributes);
 			apiCall.storeReponseModel(model);
 

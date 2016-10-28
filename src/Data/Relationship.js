@@ -26,6 +26,7 @@ class Relationship {
 
 		this.pivotAttributes = [];
 
+		this.inverseRelationshipName = null;
 
 	}
 
@@ -44,6 +45,9 @@ class Relationship {
 		if (remoteKey || !this.remoteKey) {
 			this.remoteKey = remoteKey || inflection.camelize(inflection.singularize(this.localModel), true) + 'Id';
 		}
+
+		// Guess the inverse relationship name
+		this.inverseRelationshipName = inflection.camelize(inflection.singularize(this.localModel), true);
 
 		return this;
 
@@ -147,6 +151,13 @@ class Relationship {
 	/////////////
 	// Methods //
 	/////////////
+
+	inverse(relationshipName) {
+		
+		this.inverseRelationshipName = relationshipName;
+		return this;
+
+	}
 
 	isStoredOnLocalModel() {
 

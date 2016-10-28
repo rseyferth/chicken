@@ -769,6 +769,14 @@ class Model extends Observable
 			coll.add(relatedModel);			
 		}
 
+		// Set the inverse?
+		if (relationship && relationship.inverseRelationshipName && relatedModel.hasRelationship(relationship.inverseRelationshipName)) {
+
+			// Set it
+			relatedModel.set(relationship.inverseRelationshipName, this);
+			
+		}
+
 		// Trigger
 		this._scheduleAttributeChanged(relationshipName);
 
@@ -836,6 +844,12 @@ class Model extends Observable
 		// Get the relationship
 		let relationship = def.relationships[key];
 		return relationship;
+
+	}
+
+	hasRelationship(key) {
+
+		return !!this.getRelationship(key);
 
 	}
 
