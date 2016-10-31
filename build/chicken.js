@@ -9327,7 +9327,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.state = new _Observable3.default({
 				busy: false,
 				saving: false,
-				dirty: false
+				dirty: false,
+				deleting: false,
+				deleted: false
 			});
 			_this.state.study(function () {
 				_this._scheduleAttributeChanged('is');
@@ -9568,7 +9570,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				var _this3 = this;
 
 				var onlyDirty = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-				var modelIsDynamic = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
 
 				// Which attributes to use?
@@ -9576,13 +9577,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Check model definition
 				var modelDefinition = this.getDefinition();
+
 				if (modelDefinition) {
 
 					// Use only attributes in the model definition
 					var modelAttr = _underscore2.default.pick(attr, function (value, key) {
 
 						// Dynamic?
-						if (modelIsDynamic || modelDefinition.isDynamic) {
+						if (!modelDefinition.isDynamic) {
 
 							// Has property?
 							if (!(modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined)) return false;
@@ -9728,7 +9730,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Make settings
 				var settings = _jquery2.default.extend({
 					uri: null,
-					modelIsDynamic: false,
 					includeRelated: true,
 					includeRelatedData: false // False, true or an array of relationship-names to save
 				}, options);
@@ -9768,6 +9769,74 @@ return /******/ (function(modules) { // webpackBootstrap
 					_this4.state.set('saving', false);
 
 					_this4.trigger('error', apiCall);
+				});
+
+				// Done.
+				return apiCall.execute();
+			}
+
+			/**
+	   * Delete the model from the Api. 
+	   *
+	   * Possible options are:
+	   * 
+	   * **uri** (string)
+	   * A custom uri to use instead of the model's default uri
+	   *
+	   * @method delete
+	   * @param  {Object} [options={}]	Optional options hash
+	   * @return {Promise} The promise returned by the ApiCall.execute method
+	   */
+
+		}, {
+			key: 'delete',
+			value: function _delete() {
+				var _this5 = this;
+
+				var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+
+				// Make settings
+				var settings = _jquery2.default.extend({
+					uri: null,
+					modelIsDynamic: false
+				}, options);
+
+				// Busy?
+				if (this.isBusy()) throw new Error('Model has not completed its last action');
+				this.state.set('busy', true);
+				this.state.set('deleting', true);
+
+				// Create the call
+				if (!settings.uri) settings.uri = this.getApiUri();
+				var apiCall = this.getApi().deleteModel(this, settings);
+
+				// Handle it.
+				apiCall.getPromise('complete').then(function (result) {
+
+					// Check result
+					if (result instanceof Model) {
+
+						// Use id for me.
+						if (!_this5.get('id')) _this5.set('id', result.get('id'));
+					}
+
+					// No longer dirty!
+					_this5.state.set('dirty', false);
+
+					// No longer busy
+					_this5.state.set('busy', false);
+					_this5.state.set('saving', false);
+
+					// Trigger.
+					_this5.trigger('save', apiCall);
+				}, function () {
+
+					// No longer busy
+					_this5.state.set('busy', false);
+					_this5.state.set('saving', false);
+
+					_this5.trigger('error', apiCall);
 				});
 
 				// Done.
@@ -9839,14 +9908,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getDirty',
 			value: function getDirty() {
-				var _this5 = this;
+				var _this6 = this;
 
 				// Get dirty values
 				var dirty = {};
 				_underscore2.default.each(this.attributes, function (value, key) {
 
 					// Not in original or changed?
-					if (_this5.isDirty(key)) {
+					if (_this6.isDirty(key)) {
 
 						// Then it's dirty
 						dirty[key] = value;
@@ -9910,7 +9979,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'resetDirty',
 			value: function resetDirty() {
-				var _this6 = this;
+				var _this7 = this;
 
 				var keys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -9922,7 +9991,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Specific key?
 				_underscore2.default.each(keys, function (key) {
 
-					_this6.originalValues[key] = _this6.uncastValue(key, _this6.attributes[key]);
+					_this7.originalValues[key] = _this7.uncastValue(key, _this7.attributes[key]);
 				});
 				return this;
 			}
@@ -9948,15 +10017,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_scheduleUpdateDirty',
 			value: function _scheduleUpdateDirty() {
-				var _this7 = this;
+				var _this8 = this;
 
 				// Already going?
 				if (this._scheduleUpdateDirtyTimeout) return;
 
 				// Wait a bit
 				this._scheduleUpdateDirtyTimeout = setTimeout(function () {
-					_this7.updateDirty();
-					_this7._scheduleUpdateDirtyTimeout = null;
+					_this8.updateDirty();
+					_this8._scheduleUpdateDirtyTimeout = null;
 				}, Model.UpdateDirtyDelay);
 			}
 
@@ -9976,7 +10045,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'setRelatedModel',
 			value: function setRelatedModel(relationshipName, relatedModel) {
-				var _this8 = this;
+				var _this9 = this;
 
 				// Get the relationship itself
 				var relationship = this.getRelationship(relationshipName);
@@ -9993,7 +10062,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Set it and watch it
 				relatedModel.study(function () {
-					_this8._scheduleAttributeChanged(relationshipName);
+					_this9._scheduleAttributeChanged(relationshipName);
 				});
 				this.related[relationshipName] = relatedModel;
 
@@ -13348,7 +13417,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Make settings
 				var settings = _jquery2.default.extend({
-					modelIsDynamic: false,
 					includeRelated: true,
 					includeRelatedData: false // False, true, or array of relationship names
 				}, options);
@@ -13356,7 +13424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Make the data
 				var data = {
-					data: this.serialize(model, settings.includeRelated, settings.includeRelatedData, settings.modelIsDynamic)
+					data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
 				};
 
 				// Check method
@@ -13382,15 +13450,45 @@ return /******/ (function(modules) { // webpackBootstrap
 				return apiCall;
 			}
 		}, {
+			key: 'deleteModel',
+			value: function deleteModel(model, options) {
+
+				// Make settings
+				var settings = _jquery2.default.extend({}, options);
+				if (!settings.uri) settings.uri = model.getApiUri();
+
+				// Make the data
+				var data = {
+					data: this.serialize(model)
+				};
+
+				// Do the call
+				var cache = [];
+				var apiCall = this.call('delete', settings.uri, JSON.stringify(data, function (key, value) {
+					if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value !== null) {
+						if (cache.indexOf(value) !== -1) {
+							// Circular reference found, discard key
+							return;
+						}
+						// Store value in our collection
+						cache.push(value);
+					}
+					return value;
+				}), settings.ajax);
+				cache = null; // Enable garbage collection
+
+				// Return it
+				return apiCall;
+			}
+		}, {
 			key: 'serialize',
 			value: function serialize(model) {
 				var includeRelated = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-				var includeRelatedData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
 				var _this2 = this;
 
-				var modelIsDynamic = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-				var includedModelGuids = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : [];
+				var includeRelatedData = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+				var includedModelGuids = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : [];
 
 
 				// Check related data
@@ -13427,7 +13525,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!_underscore2.default.contains(includedModelGuids, _Utils2.default.uidFor(model))) {
 
 					// Attributes?
-					var attr = model.getAttributesForApi(!model.isNew(), modelIsDynamic);
+					var attr = model.getAttributesForApi(!model.isNew());
 					if (_underscore2.default.size(attr) > 0) {
 						data.attributes = {};
 						_underscore2.default.each(attr, function (value, key) {
@@ -13465,7 +13563,7 @@ return /******/ (function(modules) { // webpackBootstrap
 												}
 
 												// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-												return _this2.serialize(item, true, includeRelatedData, false, includedModelGuids);
+												return _this2.serialize(item, true, includeRelatedData, includedModelGuids);
 											}) };
 									}
 								} else if (relatedData instanceof _Model2.default) {
@@ -13479,7 +13577,7 @@ return /******/ (function(modules) { // webpackBootstrap
 									if (relatedData.isDirty()) {
 
 										// We always add the related model data
-										relationships[key] = { data: _this2.serialize(relatedData, true, includeRelatedData, false, includedModelGuids) };
+										relationships[key] = { data: _this2.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
 									}
 								} else if (relatedData) {
 

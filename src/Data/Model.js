@@ -296,20 +296,22 @@ class Model extends Observable
 	 * @param  {Boolean} [modelIsDynamic=false]	 When true, attributes that are not in the model definition are also passed along. This overrides the model definition's 'dynamic' value
 	 * @return {Object}      A hash containing attribute key/values
 	 */
-	getAttributesForApi(onlyDirty = true, modelIsDynamic = false) {
+	getAttributesForApi(onlyDirty = true) {
 
 		// Which attributes to use?
 		let attr = onlyDirty ? this.getDirty() : _.defaults({}, this.attributes);
 
 		// Check model definition
 		let modelDefinition = this.getDefinition();
+
 		if (modelDefinition) {
 
 			// Use only attributes in the model definition
 			let modelAttr = _.pick(attr, (value, key) => {
 
+
 				// Dynamic?
-				if (modelIsDynamic || modelDefinition.isDynamic) {
+				if (!modelDefinition.isDynamic) {
 
 					// Has property?
 					if (!(modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined)) return false;
@@ -455,7 +457,6 @@ class Model extends Observable
 		// Make settings
 		let settings = $.extend({
 			uri: null,
-			modelIsDynamic: false,
 			includeRelated: true,
 			includeRelatedData: false	// False, true or an array of relationship-names to save
 		}, options);
@@ -536,6 +537,8 @@ class Model extends Observable
 
 		// Handle it.
 		apiCall.getPromise('complete').then((result) => {
+
+			
 
 			// Check result
 			if (result instanceof Model) {
