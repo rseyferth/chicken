@@ -69,7 +69,9 @@ class Model extends Observable
 		this.state = new Observable({
 			busy: false,
 			saving: false,
-			dirty: false
+			dirty: false,
+			deleting:false,
+			deleted: false
 		});
 		this.state.study(() => {
 			this._scheduleAttributeChanged('is');
@@ -466,6 +468,71 @@ class Model extends Observable
 		// Create the call
 		if (!settings.uri) settings.uri = this.getApiUri();
 		let apiCall = this.getApi().saveModel(this, settings);
+
+		// Handle it.
+		apiCall.getPromise('complete').then((result) => {
+
+			// Check result
+			if (result instanceof Model) {
+
+				// Use id for me.
+				if (!this.get('id')) this.set('id', result.get('id'));
+
+			}
+
+			// No longer dirty!
+			this.state.set('dirty', false);
+			
+			// No longer busy
+			this.state.set('busy', false);
+			this.state.set('saving', false);
+
+			// Trigger.
+			this.trigger('save', apiCall);
+
+		}, () => {
+			
+			// No longer busy
+			this.state.set('busy', false);
+			this.state.set('saving', false);
+
+			this.trigger('error', apiCall);
+
+		});
+
+		// Done.
+		return apiCall.execute();
+		
+	}
+
+	/**
+	 * Delete the model from the Api. 
+	 *
+	 * Possible options are:
+	 * 
+	 * **uri** (string)
+	 * A custom uri to use instead of the model's default uri
+	 *
+	 * @method delete
+	 * @param  {Object} [options={}]	Optional options hash
+	 * @return {Promise} The promise returned by the ApiCall.execute method
+	 */
+	delete(options = {}) {
+
+		// Make settings
+		let settings = $.extend({
+			uri: null,
+			modelIsDynamic: false			
+		}, options);
+
+		// Busy?
+		if (this.isBusy()) throw new Error('Model has not completed its last action');
+		this.state.set('busy', true);
+		this.state.set('deleting', true);
+
+		// Create the call
+		if (!settings.uri) settings.uri = this.getApiUri();
+		let apiCall = this.getApi().deleteModel(this, settings);
 
 		// Handle it.
 		apiCall.getPromise('complete').then((result) => {

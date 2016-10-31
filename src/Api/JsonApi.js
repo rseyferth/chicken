@@ -74,6 +74,39 @@ class JsonApi extends Api
 
 	}
 
+	deleteModel(model, options) {
+
+		// Make settings
+		let settings = $.extend({
+			modelIsDynamic: false
+		}, options);
+		if (!settings.uri) settings.uri = model.getApiUri();		
+
+		// Make the data
+		let data = {
+			data: this.serialize(model, settings.modelIsDynamic)
+		};
+
+		// Do the call
+		var cache = [];
+		let apiCall = this.call('delete', settings.uri, JSON.stringify(data, function(key, value){
+			if (typeof value === 'object' && value !== null) {
+				if (cache.indexOf(value) !== -1) {
+					// Circular reference found, discard key
+					return;
+				}
+				// Store value in our collection
+				cache.push(value);
+			}
+			return value;		
+		}), settings.ajax);
+		cache = null; // Enable garbage collection
+		
+		// Return it
+		return apiCall;
+
+	}
+
 	serialize(model, includeRelated = true, includeRelatedData = false, modelIsDynamic = false, includedModelGuids = []) {
 
 		// Check related data
