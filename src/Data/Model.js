@@ -536,27 +536,15 @@ class Model extends Observable
 		let apiCall = this.getApi().deleteModel(this, settings);
 
 		// Handle it.
-		apiCall.getPromise('complete').then((result) => {
+		apiCall.getPromise('complete').then(() => {
 
-			
-
-			// Check result
-			if (result instanceof Model) {
-
-				// Use id for me.
-				if (!this.get('id')) this.set('id', result.get('id'));
-
-			}
-
-			// No longer dirty!
-			this.state.set('dirty', false);
-			
 			// No longer busy
 			this.state.set('busy', false);
 			this.state.set('saving', false);
+			this.state.set('deleted', true);
 
-			// Trigger.
-			this.trigger('save', apiCall);
+			//remove model from the store
+			Model.deleteFromStore(this.getModelName(), this.get('id'));
 
 		}, () => {
 			
@@ -970,6 +958,16 @@ Model.getFromStore = (modelName, id) => {
 	return store.get(id);
 
 };
+
+Model.deleteFromStore = (modelName, id) => {
+
+	//Is there a store
+	if (!Model.stores.has(modelName)) throw new Error('Cannot delete `' + modelName + '` with id `' + id + '` from store. The store cannot be found.');
+	let store = Model.getStore(modelName);
+	return store.forget(id);
+
+};
+
 
 /**
  * Create a new model instance

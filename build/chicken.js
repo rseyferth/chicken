@@ -9009,6 +9009,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Make the call
 					_this2.api.ajax(options).then(function (result) {
 
+						//if delete then expect 204 (no-content)
+						if (options.method === 'delete') {
+							resolve(null);
+							return;
+						}
+
 						// Deserialize it
 						var response = _this2.api.deserialize(result, _this2);
 
@@ -9812,24 +9818,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				var apiCall = this.getApi().deleteModel(this, settings);
 
 				// Handle it.
-				apiCall.getPromise('complete').then(function (result) {
-
-					// Check result
-					if (result instanceof Model) {
-
-						// Use id for me.
-						if (!_this5.get('id')) _this5.set('id', result.get('id'));
-					}
-
-					// No longer dirty!
-					_this5.state.set('dirty', false);
+				apiCall.getPromise('complete').then(function () {
 
 					// No longer busy
 					_this5.state.set('busy', false);
 					_this5.state.set('saving', false);
+					_this5.state.set('deleted', true);
 
-					// Trigger.
-					_this5.trigger('save', apiCall);
+					//remove model from the store
+					Model.deleteFromStore(_this5.getModelName(), _this5.get('id'));
 				}, function () {
 
 					// No longer busy
@@ -10256,6 +10253,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		if (!Model.stores.has(modelName)) return null;
 		var store = Model.getStore(modelName);
 		return store.get(id);
+	};
+
+	Model.deleteFromStore = function (modelName, id) {
+
+		//Is there a store
+		if (!Model.stores.has(modelName)) throw new Error('Cannot delete `' + modelName + '` with id `' + id + '` from store. The store cannot be found.');
+		var store = Model.getStore(modelName);
+		return store.forget(id);
 	};
 
 	/**
