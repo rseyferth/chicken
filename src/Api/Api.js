@@ -1,4 +1,5 @@
 import $ from 'jquery';
+import _ from 'underscore';
 
 import Model from '~/Data/Model';
 import ApiCall from '~/Api/ApiCall';
@@ -148,9 +149,53 @@ class Api {
 	 * @return {jQuery Ajax call}         
 	 */
 	ajax(options) {
-		options.dataType = 'json';
-		return $.ajax(options);
+		return $.ajax(this.getAjaxOptions(options));
 	}
+
+	/**
+	 * Get jQuery ajax call options for this api
+	 *
+	 * @method getAjaxOptions
+	 * @param {Object = {}} options   Optional options to merge
+	 * @return {Function}
+	 */
+	getAjaxOptions(options = {}) {
+
+		// Start with given options
+		let beforeSends = [];		
+		if (options.beforeSend) {
+			beforeSends.push(options.beforeSend);
+			delete options.beforeSend;
+		}
+		let ajaxOptions = $.extend({
+			dataType: 'json'
+		}, options);
+
+		// Get auth options
+		let auth = this.getAuth();
+		if (auth) {
+			let authOptions = auth.getAjaxOptions();
+			if (authOptions.beforeSend) {
+				beforeSends.push(authOptions.beforeSend);
+				delete authOptions.beforeSend;
+			}
+			$.extend(ajaxOptions, authOptions);
+		}
+
+		// Make callback
+		ajaxOptions.beforeSend = (jqXhr, jqOptions) => {
+		
+			// Loop through before sends
+			_.each(beforeSends, (cb) => {
+				cb(jqXhr, jqOptions);
+			});
+			
+		};
+
+		return ajaxOptions;
+
+	}
+
 
 
 	///////////////////

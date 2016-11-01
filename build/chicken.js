@@ -13164,6 +13164,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
 	var _Model = __webpack_require__(53);
 
 	var _Model2 = _interopRequireDefault(_Model);
@@ -13368,8 +13372,54 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'ajax',
 			value: function ajax(options) {
-				options.dataType = 'json';
-				return _jquery2.default.ajax(options);
+				return _jquery2.default.ajax(this.getAjaxOptions(options));
+			}
+
+			/**
+	   * Get jQuery ajax call options for this api
+	   *
+	   * @method getAjaxOptions
+	   * @param {Object = {}} options   Optional options to merge
+	   * @return {Function}
+	   */
+
+		}, {
+			key: 'getAjaxOptions',
+			value: function getAjaxOptions() {
+				var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+
+				// Start with given options
+				var beforeSends = [];
+				if (options.beforeSend) {
+					beforeSends.push(options.beforeSend);
+					delete options.beforeSend;
+				}
+				var ajaxOptions = _jquery2.default.extend({
+					dataType: 'json'
+				}, options);
+
+				// Get auth options
+				var auth = this.getAuth();
+				if (auth) {
+					var authOptions = auth.getAjaxOptions();
+					if (authOptions.beforeSend) {
+						beforeSends.push(authOptions.beforeSend);
+						delete authOptions.beforeSend;
+					}
+					_jquery2.default.extend(ajaxOptions, authOptions);
+				}
+
+				// Make callback
+				ajaxOptions.beforeSend = function (jqXhr, jqOptions) {
+
+					// Loop through before sends
+					_underscore2.default.each(beforeSends, function (cb) {
+						cb(jqXhr, jqOptions);
+					});
+				};
+
+				return ajaxOptions;
 			}
 
 			///////////////////
@@ -13687,6 +13737,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				var apiCall = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
 
+				// Call given?
+				if (!apiCall) {
+					apiCall = new _JsonApiCall2.default(this, 'get', '/foo/bar');
+				}
+
 				// Check included data
 				if (result.included) {
 
@@ -13741,7 +13796,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!model) {
 
 					// Create a new model.
-					attributes.id = parseInt(data.id);
+					attributes.id = isNaN(parseInt(data.id)) ? data.id : parseInt(data.id);
 					model = new modelClass(attributes);
 					apiCall.storeReponseModel(model);
 				} else {

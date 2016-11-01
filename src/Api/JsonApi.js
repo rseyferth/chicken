@@ -194,6 +194,11 @@ class JsonApi extends Api
 
 	deserialize(result, apiCall = null) {
 
+		// Call given?
+		if (!apiCall) {
+			apiCall = new JsonApiCall(this, 'get', '/foo/bar');
+		}
+
 		// Check included data
 		if (result.included) {
 
@@ -249,7 +254,7 @@ class JsonApi extends Api
 		if (!model) {
 
 			// Create a new model.
-			attributes.id = parseInt(data.id);
+			attributes.id = isNaN(parseInt(data.id)) ? data.id : parseInt(data.id);
 			model = new modelClass(attributes);
 			apiCall.storeReponseModel(model);
 
