@@ -140,6 +140,12 @@ class ApiCall extends Obj {
 			this.api.ajax(options)
 				.then((result) => {
 
+					//if delete then expect 204 (no-content)
+					if (options.method === 'delete') {
+						resolve(null);
+						return;						
+					}
+
 					// Deserialize it
 					let response = this.api.deserialize(result, this);
 
