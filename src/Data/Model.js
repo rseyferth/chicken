@@ -69,7 +69,9 @@ class Model extends Observable
 		this.state = new Observable({
 			busy: false,
 			saving: false,
-			dirty: false
+			dirty: false,
+			deleting:false,
+			deleted: false
 		});
 		this.state.study(() => {
 			this._scheduleAttributeChanged('is');
@@ -294,20 +296,22 @@ class Model extends Observable
 	 * @param  {Boolean} [modelIsDynamic=false]	 When true, attributes that are not in the model definition are also passed along. This overrides the model definition's 'dynamic' value
 	 * @return {Object}      A hash containing attribute key/values
 	 */
-	getAttributesForApi(onlyDirty = true, modelIsDynamic = false) {
+	getAttributesForApi(onlyDirty = true) {
 
 		// Which attributes to use?
 		let attr = onlyDirty ? this.getDirty() : _.defaults({}, this.attributes);
 
 		// Check model definition
 		let modelDefinition = this.getDefinition();
+
 		if (modelDefinition) {
 
 			// Use only attributes in the model definition
 			let modelAttr = _.pick(attr, (value, key) => {
 
+
 				// Dynamic?
-				if (modelIsDynamic || modelDefinition.isDynamic) {
+				if (!modelDefinition.isDynamic) {
 
 					// Has property?
 					if (!(modelDefinition.hasAttribute(key) || modelDefinition.getRelationshipByLocalKey(key) !== undefined)) return false;
@@ -453,7 +457,6 @@ class Model extends Observable
 		// Make settings
 		let settings = $.extend({
 			uri: null,
-			modelIsDynamic: false,
 			includeRelated: true,
 			includeRelatedData: false	// False, true or an array of relationship-names to save
 		}, options);
@@ -487,6 +490,61 @@ class Model extends Observable
 
 			// Trigger.
 			this.trigger('save', apiCall);
+
+		}, () => {
+			
+			// No longer busy
+			this.state.set('busy', false);
+			this.state.set('saving', false);
+
+			this.trigger('error', apiCall);
+
+		});
+
+		// Done.
+		return apiCall.execute();
+		
+	}
+
+	/**
+	 * Delete the model from the Api. 
+	 *
+	 * Possible options are:
+	 * 
+	 * **uri** (string)
+	 * A custom uri to use instead of the model's default uri
+	 *
+	 * @method delete
+	 * @param  {Object} [options={}]	Optional options hash
+	 * @return {Promise} The promise returned by the ApiCall.execute method
+	 */
+	delete(options = {}) {
+
+		// Make settings
+		let settings = $.extend({
+			uri: null,
+			modelIsDynamic: false			
+		}, options);
+
+		// Busy?
+		if (this.isBusy()) throw new Error('Model has not completed its last action');
+		this.state.set('busy', true);
+		this.state.set('deleting', true);
+
+		// Create the call
+		if (!settings.uri) settings.uri = this.getApiUri();
+		let apiCall = this.getApi().deleteModel(this, settings);
+
+		// Handle it.
+		apiCall.getPromise('complete').then(() => {
+
+			// No longer busy
+			this.state.set('busy', false);
+			this.state.set('saving', false);
+			this.state.set('deleted', true);
+
+			//remove model from the store
+			Model.deleteFromStore(this.getModelName(), this.get('id'));
 
 		}, () => {
 			
@@ -936,6 +994,16 @@ Model.getFromStore = (modelName, id) => {
 	return store.get(id);
 
 };
+
+Model.deleteFromStore = (modelName, id) => {
+
+	//Is there a store
+	if (!Model.stores.has(modelName)) throw new Error('Cannot delete `' + modelName + '` with id `' + id + '` from store. The store cannot be found.');
+	let store = Model.getStore(modelName);
+	return store.forget(id);
+
+};
+
 
 /**
  * Create a new model instance

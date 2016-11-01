@@ -38,16 +38,17 @@ class JsonApi extends Api
 
 		// Make settings
 		let settings = $.extend({
-			modelIsDynamic: false,
 			includeRelated: true,
 			includeRelatedData: false		// False, true, or array of relationship names
 		}, options);
 		if (!settings.uri) settings.uri = model.getApiUri();		
 
+
 		// Make the data
 		let data = {
-			data: this.serialize(model, settings.includeRelated, settings.includeRelatedData, settings.modelIsDynamic)
+			data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
 		};
+
 
 		// Check method
 		let method = model.isNew() ? 'post' : 'patch';
@@ -74,7 +75,39 @@ class JsonApi extends Api
 
 	}
 
-	serialize(model, includeRelated = true, includeRelatedData = false, modelIsDynamic = false, includedModelGuids = []) {
+	deleteModel(model, options) {
+
+		// Make settings
+		let settings = $.extend({			
+		}, options);
+		if (!settings.uri) settings.uri = model.getApiUri();		
+
+		// Make the data
+		let data = {
+			data: this.serialize(model)
+		};
+
+		// Do the call
+		var cache = [];
+		let apiCall = this.call('delete', settings.uri, JSON.stringify(data, function(key, value){
+			if (typeof value === 'object' && value !== null) {
+				if (cache.indexOf(value) !== -1) {
+					// Circular reference found, discard key
+					return;
+				}
+				// Store value in our collection
+				cache.push(value);
+			}
+			return value;		
+		}), settings.ajax);
+		cache = null; // Enable garbage collection
+		
+		// Return it
+		return apiCall;
+
+	}
+
+	serialize(model, includeRelated = true, includeRelatedData = false, includedModelGuids = []) {
 
 		// Check related data
 		if (typeof includeRelatedData === 'string') includeRelatedData = [includeRelatedData];
@@ -112,7 +145,7 @@ class JsonApi extends Api
 		if (!_.contains(includedModelGuids, Utils.uidFor(model))) {
 
 			// Attributes?
-			let attr = model.getAttributesForApi(!model.isNew(), modelIsDynamic);
+			let attr = model.getAttributesForApi(!model.isNew());
 			if (_.size(attr) > 0) {
 				data.attributes = {};
 				_.each(attr, (value, key) => {
@@ -151,7 +184,7 @@ class JsonApi extends Api
 								}
 
 								// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-								return this.serialize(item, true, includeRelatedData, false, includedModelGuids);
+								return this.serialize(item, true, includeRelatedData, includedModelGuids);
 
 							}) };
 
@@ -168,7 +201,7 @@ class JsonApi extends Api
 						if (relatedData.isDirty()) {
 
 							// We always add the related model data
-							relationships[key] = { data: this.serialize(relatedData, true, includeRelatedData, false, includedModelGuids) };
+							relationships[key] = { data: this.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
 
 						}
 
