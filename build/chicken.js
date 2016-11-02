@@ -10998,16 +10998,22 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function ifOne(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
 				var _this2 = this;
 
-				var values = this._getValue(params);
-				var checkValue = false;
-
-				_underscore2.default.each(values, function (value) {
-					if (_this2._getValue(value)) {
-						checkValue = true;
-					}
+				var trueConditions = _underscore2.default.filter(this._getValue(params), function (value) {
+					return !!_this2._getValue(value);
 				});
 
-				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(checkValue));;
+				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length > 0));;
+			}
+		}, {
+			key: 'ifAll',
+			value: function ifAll(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+				var _this3 = this;
+
+				var trueConditions = _underscore2.default.filter(this._getValue(params), function (value) {
+					return !!_this3._getValue(value);
+				});
+
+				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length === params.length));;
 			}
 
 			/**
@@ -11249,20 +11255,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_getValues',
 			value: function _getValues(params) {
-				var _this3 = this;
+				var _this4 = this;
 
 				return params.map(function (value) {
-					return _this3._getValue(value);
+					return _this4._getValue(value);
 				});
 			}
 		}, {
 			key: '_getHashValues',
 			value: function _getHashValues(attributeHash) {
-				var _this4 = this;
+				var _this5 = this;
 
 				var result = {};
 				_underscore2.default.each(attributeHash, function (value, key) {
-					result[key] = _this4._getValue(value);
+					result[key] = _this5._getValue(value);
 				});
 				return result;
 			}
