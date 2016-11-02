@@ -122,6 +122,19 @@ class Helpers
 
 	}
 
+	ifOne(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+		let values = this._getValue(params);
+		let checkValue = false;
+
+		_.each(values, (value) => {			
+			if (this._getValue(value)) {				
+				checkValue = true;
+			}
+		});
+
+		return this._ifUnless(params, blocks, Utils.isTruthlike(checkValue));;
+	}
+
 	/**
 	 * @method unless
 	 */

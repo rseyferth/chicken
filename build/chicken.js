@@ -263,7 +263,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	///////////////////////////////////////
 	// Make sure dependencies are loaded //
 	///////////////////////////////////////
-
 	if (_jquery2.default === undefined || typeof _jquery2.default !== 'function') throw new Error('Error while initializing Chicken: could not find global jQuery ($). Was jQuery not loaded?');
 	if (_underscore2.default === undefined || typeof _underscore2.default !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore (_). Was Underscore not loaded?');
 	if (_xregexp2.default === undefined || typeof _xregexp2.default !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
@@ -8572,8 +8571,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Use key/value
-					var key = args[0];
-					var value = args[1];
+					var key = args[0],
+					    value = args[1];
 
 					// Is the key a string?
 
@@ -10994,6 +10993,22 @@ return /******/ (function(modules) { // webpackBootstrap
 				var value = this._getValue(params[0]);
 				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(value));
 			}
+		}, {
+			key: 'ifOne',
+			value: function ifOne(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+				var _this2 = this;
+
+				var values = this._getValue(params);
+				var checkValue = false;
+
+				_underscore2.default.each(values, function (value) {
+					if (_this2._getValue(value)) {
+						checkValue = true;
+					}
+				});
+
+				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(checkValue));;
+			}
 
 			/**
 	   * @method unless
@@ -11234,20 +11249,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_getValues',
 			value: function _getValues(params) {
-				var _this2 = this;
+				var _this3 = this;
 
 				return params.map(function (value) {
-					return _this2._getValue(value);
+					return _this3._getValue(value);
 				});
 			}
 		}, {
 			key: '_getHashValues',
 			value: function _getHashValues(attributeHash) {
-				var _this3 = this;
+				var _this4 = this;
 
 				var result = {};
 				_underscore2.default.each(attributeHash, function (value, key) {
-					result[key] = _this3._getValue(value);
+					result[key] = _this4._getValue(value);
 				});
 				return result;
 			}
