@@ -81,7 +81,15 @@ class Collection extends ObservableArray
 		// Are any of the id's different?
 		return newIds.length > 0 || removedIds.length > 0;
 
+	}
 
+	hasDirtyChildren() {
+		//check children for dirty
+		let dirtyChildren = _.filter(this.items, (item) => {
+			return item.isDirty();
+		});
+
+		return dirtyChildren.length > 0;
 	}
 
 

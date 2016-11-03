@@ -194,7 +194,7 @@ class Router extends Obj
 
 					// Load it
 					let promise = serviceInstance.load();
-					if (!promise || !promise instanceof Promise) throw new Error('[Routing.Router] The "' + service + '" service\'s load() method should return a Promise');
+					if (!promise || !(promise instanceof Promise)) throw new Error('[Routing.Router] The "' + service + '" service\'s load() method should return a Promise');
 					dependsOnPromises.push(promise);
 
 				});

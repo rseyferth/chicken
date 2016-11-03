@@ -806,7 +806,7 @@ class Model extends Observable
 		} 
 		
 		// Is it a valid collection?
-		else if ((!this.related instanceof Collection)) {
+		else if (!(this.related[relationshipName] instanceof Collection)) {
 			throw new TypeError('Tried to add a related model to an existing object that is not a Collection');
 		}
 

@@ -10143,7 +10143,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				// Is it a valid collection?
-				else if (!this.related instanceof _Collection2.default) {
+				else if (!(this.related[relationshipName] instanceof _Collection2.default)) {
 						throw new TypeError('Tried to add a related model to an existing object that is not a Collection');
 					}
 
@@ -10544,6 +10544,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Are any of the id's different?
 				return newIds.length > 0 || removedIds.length > 0;
+			}
+		}, {
+			key: 'hasDirtyChildren',
+			value: function hasDirtyChildren() {
+				//check children for dirty
+				var dirtyChildren = _underscore2.default.filter(this.items, function (item) {
+					return item.isDirty();
+				});
+
+				return dirtyChildren.length > 0;
 			}
 		}]);
 
@@ -11002,7 +11012,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					return !!_this2._getValue(value);
 				});
 
-				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length > 0));;
+				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length > 0));
 			}
 		}, {
 			key: 'ifAll',
@@ -11013,7 +11023,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					return !!_this3._getValue(value);
 				});
 
-				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length === params.length));;
+				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length === params.length));
 			}
 
 			/**
@@ -11516,7 +11526,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 							// Load it
 							var promise = serviceInstance.load();
-							if (!promise || !promise instanceof Promise) throw new Error('[Routing.Router] The "' + service + '" service\'s load() method should return a Promise');
+							if (!promise || !(promise instanceof Promise)) throw new Error('[Routing.Router] The "' + service + '" service\'s load() method should return a Promise');
 							dependsOnPromises.push(promise);
 						});
 
@@ -13810,8 +13820,8 @@ return /******/ (function(modules) { // webpackBootstrap
 								// Is it a collection?
 								if (relatedData instanceof _Collection2.default) {
 
-									// Is dirty?
-									if (relatedData.isDirty()) {
+									// Is dirty? or had dirty children
+									if (relatedData.isDirty() || relatedData.hasDirtyChildren()) {
 
 										// Add them all
 										relationships[key] = { data: _underscore2.default.map(relatedData.items, function (item) {

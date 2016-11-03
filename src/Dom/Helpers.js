@@ -128,16 +128,16 @@ class Helpers
 			return !!this._getValue(value);
 		});
 
-		return this._ifUnless(params, blocks, Utils.isTruthlike(trueConditions.length > 0));;
+		return this._ifUnless(params, blocks, Utils.isTruthlike(trueConditions.length > 0));
 	}
 
 	ifAll(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
 		
 		let trueConditions = _.filter(this._getValue(params), (value) => {
 			return !!this._getValue(value);
-		})
+		});
 
-		return this._ifUnless(params, blocks, Utils.isTruthlike(trueConditions.length === params.length));;
+		return this._ifUnless(params, blocks, Utils.isTruthlike(trueConditions.length === params.length));
 	}
 
 	/**
