@@ -247,6 +247,23 @@ class Api {
 
 	}
 
+	store(modelName) {
+
+		// Get uri from model
+		let ModelClass = Model.registry.get(modelName);
+		if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
+		let uri = ModelClass.definition.getApiUri();
+
+		// Make the call
+		let call = this.post(uri);
+		call.modelClass = ModelClass;
+		call.expectModel = true;
+		return call;
+
+	}
+
+
+
 
 	/**
 	 * Save given model to the Api

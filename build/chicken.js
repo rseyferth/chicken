@@ -517,6 +517,25 @@ return /******/ (function(modules) { // webpackBootstrap
 			return ChickenModel;
 		},
 
+		extendModel: function extendModel(name, configCallback) {
+			var methods = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+
+			// Get the class
+			var ChickenModel = _Model3.default.registry.get(name);
+			if (!ChickenModel) throw new Error('Cannot extend unknown model ' + name);
+
+			// Add given methods to prototype
+			if (methods) {
+				_jquery2.default.extend(ChickenModel.prototype, methods);
+			}
+
+			// Apply config callback
+			configCallback.apply(ChickenModel.definition, [ChickenModel.definition]);
+
+			return ChickenModel;
+		},
+
 		service: function service(name) {
 			var methods = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
@@ -2121,13 +2140,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Is it a hash?
 					if (typeof query !== 'string') {
-						query = _queryString2.default.stringify(query);
+						query = '?' + _queryString2.default.stringify(query);
 					}
 				}
 
 				// External?		
 				if (uri.match(/^(http(s)?\:)?\/\//)) {
-					window.location = uri + (query ? '?' + query : '');
+					window.location = uri + (query ? query : '');
 					return this;
 				}
 
@@ -5064,6 +5083,24 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 
 			/**
+	   * Apply given callback for each attribute defined in this observable
+	   *
+	   * @method each
+	   * @param  {Function} callback
+	   * @chainable
+	   */
+
+		}, {
+			key: 'each',
+			value: function each(callback) {
+				var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				_underscore2.default.each(this.attributes, callback, context);
+				return this;
+			}
+
+			/**
 	   * Execute given callback without triggering change notifications.
 	   * 
 	   * @method withoutNotifications
@@ -6161,7 +6198,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					keys.shift();
 					path = keys.join('.');
 				}
-
 				// Is data an observable?
 				if (appliedScope instanceof _Observable2.default && path.length > 0 || appliedScope instanceof _ObservableArray2.default) {
 
@@ -6232,6 +6268,27 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 			},
 
+			willRenderNode: function willRenderNode(morph /*, renderer, scope*/) {
+
+				// Store morph so we can bind it when we get subexpressions, etc
+				_this.currentMorph = morph;
+			},
+
+			subexpr: function subexpr(renderer, scope, helperName, params, hash) {
+
+				// Loop through parameters to find Bindings
+				_underscore2.default.each(params, function (param) {
+					if (param instanceof _Binding2.default) {
+
+						// Add morph
+						if (renderer.currentMorph) param.addMorph(renderer.currentMorph);
+					}
+				});
+
+				// Original behavior
+				return _htmlbarsStandalone2.default.Runtime.Hooks.Default.subexpr(renderer, scope, helperName, params, hash);
+			},
+
 			createFreshScope: function createFreshScope() {
 				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
 			},
@@ -6290,7 +6347,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Call the helper with its own context
 				return {
-					value: helper.apply(_this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor])
+					value: helper.apply(_this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor]),
+					link: true
 				};
 			},
 
@@ -7038,6 +7096,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @method groupBy
 	   * @param  {string} key  The attribute key. You can also use dot-notation in this key.
 	   * @param  {string} [defaultGroup=default] The key under which to put items that have no value for given key
+	   * @param  {boolean} [makeObservable=false] 
 	   * @return {Object}
 	   */
 
@@ -7045,10 +7104,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'groupBy',
 			value: function groupBy(key) {
 				var defaultGroup = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
+				var makeObservable = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 
 
 				// Loop it
-				var result = {};
+				var result = makeObservable ? _ClassMap2.default.create('Observable', []) : {};
 				_underscore2.default.each(this.items, function (item) {
 
 					// Get value
@@ -7057,9 +7117,22 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Nothing?
 					if (!keyValue) keyValue = defaultGroup;
 
-					// Group known?
-					if (!result[keyValue]) result[keyValue] = new ObservableArray();
-					result[keyValue].add(item);
+					// Map?
+					if (makeObservable) {
+
+						// Group known?
+						if (!result.get(keyValue)) result.set(keyValue, new ObservableArray());
+
+						// Add it
+						result.get(keyValue).add(item);
+					} else {
+
+						// Group known?
+						if (!result[keyValue]) result[keyValue] = new ObservableArray();
+
+						// Add it
+						result[keyValue].add(item);
+					}
 				});
 
 				return result;
@@ -7118,15 +7191,20 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: 'find',
-			value: function find(idOrAttribute) {
+			value: function find(idOrAttributeOrCallback) {
 				var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
 
 
+				// Callback?
+				if (typeof idOrAttributeOrCallback === 'function') {
+					return _underscore2.default.find(this.items, idOrAttributeOrCallback);
+				}
+
 				var attribute = 'id';
 				if (value === undefined) {
-					value = idOrAttribute;
+					value = idOrAttributeOrCallback;
 				} else {
-					attribute = idOrAttribute;
+					attribute = idOrAttributeOrCallback;
 				}
 
 				return _underscore2.default.find(this.items, function (item) {
@@ -7179,7 +7257,37 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'filter',
 			value: function filter(callback) {
-				return _underscore2.default.filter(this.items, callback);
+				var returnObservableArray = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+				var result = _underscore2.default.filter(this.items, callback);
+				return returnObservableArray ? new ObservableArray(result, false) : result;
+			}
+		}, {
+			key: 'chunk',
+			value: function chunk() {
+				var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 20;
+
+
+				// Loop and add
+				var cls = this.constructor;
+				var chunks = new ObservableArray();
+				var chunk = new cls();
+				for (var i = 0; i < this.items.length; i++) {
+
+					// New chunk?
+					if (i > 0 && i % size === 0) {
+
+						// New chunk
+						chunks.add(chunk);
+						chunk = new cls();
+					}
+
+					// Add it
+					chunk.add(this.items[i]);
+				}
+				chunks.add(chunk);
+
+				return chunks;
 			}
 
 			/**
@@ -8789,6 +8897,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'revalidate',
 			value: function revalidate() {
 				if (this.renderResult) this.renderResult.revalidate();
+				this.trigger('revalidate');
 				this.revalidateTimeout = false;
 				return this;
 			}
@@ -9180,7 +9289,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			/**
 	   * Add given pagesize to the queryParams
-	   *``
+	   *
 	   * @method query
 	   * @param  pageSize
 	   * @chainable
@@ -9190,6 +9299,21 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'pageSize',
 			value: function pageSize(_pageSize) {
 				return this.query('page[size]', _pageSize);
+			}
+
+			/**
+	   * Set the request data
+	   * 
+	   * @method setData
+	   * @param {mixed} data
+	   * @chainable
+	   */
+
+		}, {
+			key: 'setData',
+			value: function setData(data) {
+				this.data = data;
+				return this;
 			}
 		}]);
 
@@ -10735,7 +10859,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param  {Object}   context  
 	  */
 		each: function each(obj, callback, context) {
-			if (obj instanceof _Observable2.default) {
+
+			// Map?
+			if (obj instanceof Map) {
+				obj.forEach(function (value, key) {
+					callback.apply(context, [value, key]);
+				});
+				return;
+			} else if (obj instanceof _Observable2.default) {
 				obj = obj.attributes;
 			} else if (obj instanceof _ObservableArray2.default) {
 				obj = obj.items;
@@ -11250,6 +11381,23 @@ return /******/ (function(modules) { // webpackBootstrap
 				return value instanceof Object;
 			}
 
+			/////////////
+			// Methods //
+			/////////////
+
+		}, {
+			key: 'method',
+			value: function method(params) {
+
+				// Get params
+				params = this._getValues(params);
+				var obj = params.shift(params);
+				var key = params.shift(params);
+
+				// Do it.
+				return obj[key].apply(obj, params);
+			}
+
 			//////////////////
 			// HTML Helpers //
 			//////////////////
@@ -11284,6 +11432,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				var str = args.shift();
 
 				return str[method].apply(str, args);
+			}
+
+			////////////
+			// Arrays //
+			////////////
+
+		}, {
+			key: 'count',
+			value: function count(params) {
+
+				var value = this._getValue(params[0]);
+				if (value instanceof _Observable2.default) {
+					return _underscore2.default.size(value.attributes);
+				}
+				return value.length;
 			}
 
 			/////////////////////
@@ -12882,6 +13045,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _queryString = __webpack_require__(8);
+
+	var _queryString2 = _interopRequireDefault(_queryString);
+
 	var _ClassMap = __webpack_require__(36);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
@@ -12927,6 +13094,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @type {string}
 	  */
 		this.uri = uri;
+
+		/**
+	  * @property query
+	  * @type {object}
+	  */
+		this.query = _queryString2.default.parse(location.search);
 	};
 
 	Request.cleanUri = function (uri) {
@@ -13280,7 +13453,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					var part = parts.shift();
 
 					// Not existing?
-					if (!obj[part]) return fallback ? fallback : '[' + key + ']';
+					if (!obj[part]) return fallback !== null ? fallback : '[' + key + ']';
 
 					// Dive in.
 					obj = obj[part];
@@ -13662,6 +13835,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				var call = this.get(uri);
 				call.modelClass = ModelClass;
 				call.expectCollection = true;
+				return call;
+			}
+		}, {
+			key: 'store',
+			value: function store(modelName) {
+
+				// Get uri from model
+				var ModelClass = _Model2.default.registry.get(modelName);
+				if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
+				var uri = ModelClass.definition.getApiUri();
+
+				// Make the call
+				var call = this.post(uri);
+				call.modelClass = ModelClass;
+				call.expectModel = true;
 				return call;
 			}
 

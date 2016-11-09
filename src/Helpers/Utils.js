@@ -42,7 +42,15 @@ let Utils = {
 	 * @param  {Object}   context  
 	 */
 	each: (obj, callback, context) => {
-		if (obj instanceof Observable) {
+		
+		// Map?
+		if (obj instanceof Map) {
+			obj.forEach((value, key) => {
+				callback.apply(context, [value, key]);
+			});
+			return;
+
+		} else if (obj instanceof Observable) {
 			obj = obj.attributes;
 		} else if (obj instanceof ObservableArray) {
 			obj = obj.items;

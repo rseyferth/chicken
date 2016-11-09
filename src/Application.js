@@ -321,14 +321,14 @@ class Application extends Observable {
 
 			// Is it a hash?
 			if (typeof query !== 'string') {
-				query = QueryString.stringify(query);
+				query = '?' + QueryString.stringify(query);
 			}
 
 		}
 
 		// External?		
 		if (uri.match(/^(http(s)?\:)?\/\//)) {
-			window.location = uri + (query ? '?' + query : '');
+			window.location = uri + (query ? query : '');
 			return this;
 		}
 

@@ -1,3 +1,5 @@
+import QueryString from 'query-string';
+
 import ClassMap from '~/Helpers/ClassMap';
 
 /**
@@ -35,6 +37,12 @@ class Request
 		 * @type {string}
 		 */
 		this.uri = uri;
+
+		/**
+		 * @property query
+		 * @type {object}
+		 */
+		this.query = QueryString.parse(location.search);
 
 	}
 

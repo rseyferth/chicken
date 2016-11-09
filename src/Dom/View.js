@@ -558,6 +558,7 @@ class View extends Observable
 	 */
 	revalidate() {
 		if (this.renderResult) this.renderResult.revalidate();
+		this.trigger('revalidate');
 		this.revalidateTimeout = false;
 		return this;
 	}

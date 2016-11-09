@@ -561,6 +561,21 @@ class Observable extends Obj {
 
 	}
 
+	/**
+	 * Apply given callback for each attribute defined in this observable
+	 *
+	 * @method each
+	 * @param  {Function} callback
+	 * @chainable
+	 */
+	each(callback, context = null) {
+
+		_.each(this.attributes, callback, context);
+		return this;
+
+	}
+
+
 
 	/**
 	 * Execute given callback without triggering change notifications.

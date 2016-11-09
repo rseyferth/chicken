@@ -184,7 +184,7 @@ class I18n extends Obj {
 			let part = parts.shift();
 
 			// Not existing?
-			if (!obj[part]) return fallback ? fallback : '[' + key + ']';
+			if (!obj[part]) return fallback !== null ? fallback : '[' + key + ']';
 			
 			// Dive in.
 			obj = obj[part];
