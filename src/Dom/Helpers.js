@@ -192,6 +192,8 @@ class Helpers
 
 	}
 
+
+
 	firstIn(params) {
 
 		let arr = this._getValue(params[0]);
@@ -258,6 +260,23 @@ class Helpers
 
 
 
+	/////////////
+	// Methods //
+	/////////////
+
+	method(params) {
+
+		// Get params
+		params = this._getValues(params);
+		let obj = params.shift(params);
+		let key = params.shift(params);
+
+		// Do it.
+		return obj[key].apply(obj, params);
+
+
+	}
+
 
 	//////////////////
 	// HTML Helpers //
@@ -291,6 +310,20 @@ class Helpers
 		let str = args.shift();
 
 		return str[method].apply(str, args);
+
+	}
+
+	////////////
+	// Arrays //
+	////////////
+	
+	count(params) {
+
+		let value = this._getValue(params[0]);
+		if (value instanceof Observable) {
+			return _.size(value.attributes);
+		}
+		return value.length;
 
 	}
 

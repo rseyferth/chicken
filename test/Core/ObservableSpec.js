@@ -104,6 +104,7 @@ describe('Core.Observable', () => {
 
 		it('should call the callback when the attribute itself is updated', (done) => {
 
+			obj.set('foo', 'bee');
 			var callback = () => {
 				done();
 				obj.disregard('foo', callback);

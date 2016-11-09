@@ -267,7 +267,7 @@ class ApiCall extends Obj {
 
 	/**
 	 * Add given pagesize to the queryParams
-	 *``
+	 *
 	 * @method query
 	 * @param  pageSize
 	 * @chainable
@@ -275,6 +275,19 @@ class ApiCall extends Obj {
 	pageSize(pageSize) {
 		return this.query('page[size]', pageSize);
 	}
+
+	/**
+	 * Set the request data
+	 * 
+	 * @method setData
+	 * @param {mixed} data
+	 * @chainable
+	 */
+	setData(data) {
+		this.data = data;
+		return this;
+	}
+
 
 }
 module.exports = ApiCall;

@@ -62,7 +62,6 @@ class Renderer
 					keys.shift();
 					path = keys.join('.');
 				}
-
 				// Is data an observable?
 				if ((appliedScope instanceof Observable && path.length > 0) || appliedScope instanceof ObservableArray) {
 
@@ -126,7 +125,7 @@ class Renderer
 			 * @return {[type]}          [description]
 			 */
 			linkRenderNode: (morph, renderer, scope, type, values) => {
-			
+				
 				// Add this morph to all involved bindings
 				_.each(values, (binding) => {
 
@@ -136,8 +135,34 @@ class Renderer
 					}
 
 				});
-							
+					
 			},
+
+
+			willRenderNode: (morph/*, renderer, scope*/) => {
+
+				// Store morph so we can bind it when we get subexpressions, etc
+				this.currentMorph = morph;
+
+			},
+
+			subexpr: (renderer, scope, helperName, params, hash) => {
+
+				// Loop through parameters to find Bindings
+				_.each(params, (param) => {
+					if (param instanceof Binding) {
+						
+						// Add morph
+						if (renderer.currentMorph) param.addMorph(renderer.currentMorph);
+
+					}
+				});
+									
+				// Original behavior
+				return HTMLBars.Runtime.Hooks.Default.subexpr(renderer, scope, helperName, params, hash);
+
+			},
+
 
 			createFreshScope: () => {
 				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
@@ -190,7 +215,7 @@ class Renderer
 			},
 
 			invokeHelper: (morph, renderer, scope, visitor, params, attributeHash, helper, options) => {
-				
+
 				// Is it a component?
 				if (helper instanceof ComponentDefinition) {
 
@@ -203,7 +228,8 @@ class Renderer
 
 				// Call the helper with its own context
 				return { 
-					value: helper.apply(this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor])
+					value: helper.apply(this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor]),
+					link: true
 				};
 
 			},
@@ -372,6 +398,7 @@ class Renderer
 			},
 
 
+
 			keywords: _.defaults({
 
 				/**
@@ -402,12 +429,19 @@ class Renderer
 					let binding = new ActionBinding(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
 					morph.actionBindings = binding;					
 
-				}
+				},
+
+
+				
+
+
+
 
 
 			}, HTMLBars.Runtime.Hooks.Default.keywords)
 
 		}, HTMLBars.Runtime.Hooks.Default);
+
 
 		/**
 		 * @property helpers
