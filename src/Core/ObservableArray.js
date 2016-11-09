@@ -666,9 +666,7 @@ class ObservableArray extends Obj
 		let result = _.filter(this.items, callback);
 		return returnObservableArray ? new ObservableArray(result, false) : result;
 	}
-<<<<<<< HEAD
-  
-=======
+
 
 	chunk(size = 20) {
 
@@ -697,7 +695,6 @@ class ObservableArray extends Obj
 		return chunks;
 
 	}
->>>>>>> master
 
 
 	/**
