@@ -31,9 +31,6 @@ class ModelDefinition
 
 		this.isDynamic = false;
 
-		//these attributes are dynamic but need a definition for eg. filtering
-		this.dynamicAttributes = {};
-
 		callback.apply(this, [this]);
 
 	}
@@ -140,11 +137,6 @@ class ModelDefinition
 		return attr;
 	}
 
-	dynamicAttribute(name, type) {
-		let attr = new ModelAttribute(name, type);
-		this.dynamicAttribute[name] = attr;
-		return attr;
-	}
 
 	computed(name, dependencies, callback) {
 
