@@ -6199,7 +6199,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					keys.shift();
 					path = keys.join('.');
 				}
-
 				// Is data an observable?
 				if (appliedScope instanceof _Observable2.default && path.length > 0 || appliedScope instanceof _ObservableArray2.default) {
 
@@ -6270,6 +6269,27 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 			},
 
+			willRenderNode: function willRenderNode(morph /*, renderer, scope*/) {
+
+				// Store morph so we can bind it when we get subexpressions, etc
+				_this.currentMorph = morph;
+			},
+
+			subexpr: function subexpr(renderer, scope, helperName, params, hash) {
+
+				// Loop through parameters to find Bindings
+				_underscore2.default.each(params, function (param) {
+					if (param instanceof _Binding2.default) {
+
+						// Add morph
+						if (renderer.currentMorph) param.addMorph(renderer.currentMorph);
+					}
+				});
+
+				// Original behavior
+				return _htmlbarsStandalone2.default.Runtime.Hooks.Default.subexpr(renderer, scope, helperName, params, hash);
+			},
+
 			createFreshScope: function createFreshScope() {
 				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
 			},
@@ -6328,7 +6348,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Call the helper with its own context
 				return {
-					value: helper.apply(_this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor])
+					value: helper.apply(_this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor]),
+					link: true
 				};
 			},
 
@@ -11250,7 +11271,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		}, {
 			key: 'method',
-			value: function method(params, attributeHash) {
+			value: function method(params) {
 
 				// Get params
 				params = this._getValues(params);

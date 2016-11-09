@@ -44,7 +44,6 @@ class Binding
 		 */
 		this.path = typeof path === 'string' && path.length > 0 ? path : false;
 
-
 		/**
 		 * The list of 'morph' objects that are bound by this Binding. A
 		 * morph refers to a specific part of the DocumentFragment that can be
@@ -66,7 +65,7 @@ class Binding
 
 		// What to do when value changes
 		let callback = () => {
-
+			
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
 				morph.isDirty = true;

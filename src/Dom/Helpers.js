@@ -264,7 +264,7 @@ class Helpers
 	// Methods //
 	/////////////
 
-	method(params, attributeHash) {
+	method(params) {
 
 		// Get params
 		params = this._getValues(params);
