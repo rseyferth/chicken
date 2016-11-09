@@ -72,7 +72,7 @@ class ObservableArray extends Obj
 				} else {
 
 					// Put a new observable in there
-					this.items.push(ClassMap.create('Observable', [value]));					
+					this.items.push(ClassMap.create('Observable', [value]));
 
 				}
 
@@ -510,12 +510,13 @@ class ObservableArray extends Obj
 	 * @method groupBy
 	 * @param  {string} key  The attribute key. You can also use dot-notation in this key.
 	 * @param  {string} [defaultGroup=default] The key under which to put items that have no value for given key
+	 * @param  {boolean} [makeObservable=false] 
 	 * @return {Object}
 	 */
-	groupBy(key, defaultGroup = 'default') {
+	groupBy(key, defaultGroup = 'default', makeObservable = false) {
 
 		// Loop it
-		let result = {};
+		let result = makeObservable ? ClassMap.create('Observable', []) : {};
 		_.each(this.items, (item) => {
 
 			// Get value
@@ -524,9 +525,24 @@ class ObservableArray extends Obj
 			// Nothing?
 			if (!keyValue) keyValue = defaultGroup;
 
-			// Group known?
-			if (!result[keyValue]) result[keyValue] = new ObservableArray;
-			result[keyValue].add(item);
+			// Map?
+			if (makeObservable) {
+
+				// Group known?
+				if (!result.get(keyValue)) result.set(keyValue, new ObservableArray);
+
+				// Add it
+				result.get(keyValue).add(item);
+
+			} else {
+
+				// Group known?
+				if (!result[keyValue]) result[keyValue] = new ObservableArray;
+
+				// Add it
+				result[keyValue].add(item);
+
+			}
 
 		});
 
@@ -582,13 +598,18 @@ class ObservableArray extends Obj
 	}
 
 
-	find(idOrAttribute, value = undefined) {
+	find(idOrAttributeOrCallback, value = undefined) {
+
+		// Callback?
+		if (typeof idOrAttributeOrCallback === 'function') {
+			return _.find(this.items, idOrAttributeOrCallback);
+		}
 
 		let attribute = 'id';
 		if (value === undefined) {
-			value = idOrAttribute;
+			value = idOrAttributeOrCallback;
 		} else {
-			attribute = idOrAttribute;
+			attribute = idOrAttributeOrCallback;
 		}
 
 		return _.find(this.items, (item) => {
@@ -641,11 +662,38 @@ class ObservableArray extends Obj
 
 	}
 
-	filter(callback) {
-		return _.filter(this.items, callback);
+	filter(callback, returnObservableArray = false) {
+		let result = _.filter(this.items, callback);
+		return returnObservableArray ? new ObservableArray(result, false) : result;
 	}
 
+	chunk(size = 20) {
 
+		// Loop and add
+		let cls = this.constructor;
+		let chunks = new ObservableArray();
+		let chunk = new cls();
+		for (var i = 0; i < this.items.length; i++) {
+
+			// New chunk?
+			if (i > 0 && i % size === 0) {
+
+				// New chunk
+				chunks.add(chunk);
+				chunk = new cls();
+
+			}
+
+			// Add it
+			chunk.add(this.items[i]);
+
+
+		}
+		chunks.add(chunk);
+
+		return chunks;
+
+	}
 
 
 	/**

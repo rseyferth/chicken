@@ -289,6 +289,25 @@ var Chicken = {
 
 	},
 
+
+	extendModel: (name, configCallback, methods = null) => {
+
+		// Get the class
+		let ChickenModel = Model.registry.get(name);
+		if (!ChickenModel) throw new Error('Cannot extend unknown model ' + name);
+
+		// Add given methods to prototype
+		if (methods) {
+			$.extend(ChickenModel.prototype, methods);
+		}
+
+		// Apply config callback
+		configCallback.apply(ChickenModel.definition, [ChickenModel.definition]);
+
+		return ChickenModel;
+
+	},
+
 	service: (name, methods = null) => {
 
 		// Getter?
