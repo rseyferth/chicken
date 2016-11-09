@@ -93,6 +93,35 @@ class Collection extends ObservableArray
 	}
 
 
+	/**
+	 * Create copy of collection and its items
+	 *
+	 * @method clone
+	 * @return {Collection}
+	 */
+	clone(cacheMap) {
+		
+		//create cacheMap?
+		if (!cacheMap) cacheMap = new Map();
+		
+		//known in cache map? return it
+		if (cacheMap.has(this)) return this;
+
+		//create copy
+		let c = this.constructor;
+		let copy = new c(this.modelClass);
+
+		//store in cacheMap1
+		cacheMap.set(this, copy);
+
+		//copy items
+		_.each(this.items, (item) => {
+			copy.items.push(item.clone(cacheMap));
+		});
+
+		return copy;
+	}
+
 
 }
 

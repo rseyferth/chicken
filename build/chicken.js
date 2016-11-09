@@ -10126,6 +10126,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'addRelatedModel',
 			value: function addRelatedModel(relationshipName, relatedModel) {
+				var _this10 = this;
+
 				var fromApi = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 				var pivotAttributes = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
@@ -10140,6 +10142,11 @@ return /******/ (function(modules) { // webpackBootstrap
 					} else {
 						this.related[relationshipName] = new _Collection2.default(relatedModel.constructor);
 					}
+
+					//Study relation
+					this.related[relationshipName].study(function () {
+						_this10._scheduleAttributeChanged(relationshipName);
+					});
 				}
 
 				// Is it a valid collection?
@@ -10279,6 +10286,52 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function is(obj) {
 
 				return _Utils2.default.uidFor(this) === _Utils2.default.uidFor(obj);
+			}
+
+			/**
+	   * Create copy of model and its attributes and relations
+	   *
+	   * @method clone
+	   * @param  {Chicken.Data.Model}  obj
+	   * @return {Boolean}     
+	   */
+
+		}, {
+			key: 'clone',
+			value: function clone(cacheMap) {
+				var _this11 = this;
+
+				//create cacheMap?
+				if (!cacheMap) cacheMap = new Map();
+
+				//known in cache map? return it
+				if (cacheMap.has(this)) return cacheMap.get(this);
+
+				//create copy
+				var c = this.constructor;
+				var copy = new c();
+
+				//store in cacheMap
+				cacheMap.set(this, copy);
+
+				//get all attributes
+				var attr = {};
+				_underscore2.default.each(this.attributes, function (value, key) {
+					attr[key] = _this11.get(key);
+					if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
+						attr[key] = attr[key].clone(cacheMap);
+					}
+				});
+
+				//store attributes
+				copy.attributes = attr;
+
+				//copy relationships
+				_underscore2.default.each(this.related, function (value, key) {
+					copy.related[key] = value.clone(cacheMap);
+				});
+
+				return copy;
 			}
 		}]);
 
@@ -10554,6 +10607,38 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 
 				return dirtyChildren.length > 0;
+			}
+
+			/**
+	   * Create copy of collection and its items
+	   *
+	   * @method clone
+	   * @return {Collection}
+	   */
+
+		}, {
+			key: 'clone',
+			value: function clone(cacheMap) {
+
+				//create cacheMap?
+				if (!cacheMap) cacheMap = new Map();
+
+				//known in cache map? return it
+				if (cacheMap.has(this)) return this;
+
+				//create copy
+				var c = this.constructor;
+				var copy = new c(this.modelClass);
+
+				//store in cacheMap1
+				cacheMap.set(this, copy);
+
+				//copy items
+				_underscore2.default.each(this.items, function (item) {
+					copy.items.push(item.clone(cacheMap));
+				});
+
+				return copy;
 			}
 		}]);
 
@@ -15116,6 +15201,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			this.isDynamic = false;
 
+			//these attributes are dynamic but need a definition for eg. filtering
+			this.dynamicAttributes = {};
+
 			callback.apply(this, [this]);
 		}
 
@@ -15224,6 +15312,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				var attr = new _ModelAttribute2.default(name, type);
 				this.attributeNames.push(name);
 				this.attributes[name] = attr;
+				return attr;
+			}
+		}, {
+			key: 'dynamicAttribute',
+			value: function dynamicAttribute(name, type) {
+				var attr = new _ModelAttribute2.default(name, type);
+				this.dynamicAttribute[name] = attr;
 				return attr;
 			}
 		}, {

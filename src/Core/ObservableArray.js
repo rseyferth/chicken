@@ -644,8 +644,7 @@ class ObservableArray extends Obj
 	filter(callback) {
 		return _.filter(this.items, callback);
 	}
-
-
+  
 
 
 	/**
@@ -697,9 +696,9 @@ class ObservableArray extends Obj
 		this.trigger(ObservableArray.Events.Change);
 	}
 
-
-
 }
+
+
 
 ////////////
 // Events //
