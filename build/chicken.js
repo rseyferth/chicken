@@ -439,12 +439,14 @@ return /******/ (function(modules) { // webpackBootstrap
 			return ChickenController;
 		},
 
-		component: function component(name, source, initCallback, renderer) {
-			var overwrite = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : false;
+		component: function component(name, source, initCallback) {
+			var methods = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+			var renderer = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+			var overwrite = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
 
 
 			// Create definition
-			var def = new _ComponentDefinition2.default(name, source, initCallback, renderer);
+			var def = new _ComponentDefinition2.default(name, source, initCallback, methods, renderer);
 
 			// Register it.
 			if (_Component2.default.registry.has(name) && !overwrite) throw new Error('A component with the name ' + name + ' was already defined. If you want to overwrite this, use the "overwrite" parameter.');
@@ -6418,7 +6420,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				// Create it
-				var component = new _Component2.default(definition.name, definition.source, morph, newScope, params, attributeHash, visitor, options, definition.initCallback, _this);
+				var component = new _Component2.default(definition.name, definition.source, morph, newScope, params, attributeHash, visitor, options, definition.initCallback, definition.methods, _this);
 				newScope.self = component;
 
 				// Now render it.
@@ -7479,14 +7481,23 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			this.morphs = new Set();
 
+			/**
+	   * The view that this Binding belongs to
+	   *
+	   * @property View
+	   * @type {Dom.View}
+	   */
 			this.view = view;
+			if (this.view) {
+				this.view.addBinding(this);
+			}
 
 			////////////////
 			// Now watch! //
 			////////////////
 
 			// What to do when value changes
-			var callback = function callback() {
+			this.changeCallback = function () {
 
 				// Trigger updates for all morphs
 				_this.morphs.forEach(function (morph) {
@@ -7497,9 +7508,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			// Now listen to the object
 			if (this.path) {
-				this.observable.observe(path, callback);
+				this.observable.observe(path, this.changeCallback);
 			} else {
-				this.observable.study(callback);
+				this.observable.study(this.changeCallback);
 			}
 		}
 
@@ -7544,6 +7555,17 @@ return /******/ (function(modules) { // webpackBootstrap
 					this.reference = new _Reference2.default(this.observable, this.path);
 				}
 				return this.reference;
+			}
+		}, {
+			key: 'destroy',
+			value: function destroy() {
+
+				// Unlisten the object
+				if (this.path) {
+					this.observable.disregard(this.path, this.changeCallback);
+				} else {
+					this.observable.neglect(this.changeCallback);
+				}
 			}
 
 			/**
@@ -7967,7 +7989,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  */
 		function Component(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates) {
 			var initCallback = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : null;
-			var renderer = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : null;
+			var methods = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : {};
+			var renderer = arguments.length > 10 && arguments[10] !== undefined ? arguments[10] : null;
 
 			_classCallCheck(this, Component);
 
@@ -8088,8 +8111,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.dom = new _Obj2.default();
 
+			/**
+	   * @property isDestroyed
+	   * @type {Boolean}
+	   */
+			_this.isDestroyed = false;
+
 			// Make attributes available
 			_this.with(_this.attributes);
+
+			// Add methods
+			_jquery2.default.extend(_this, methods);
+
+			// Before destroy
+			_this.hooks.beforeDestroy = [];
 
 			// Definition callback?
 			if (initCallback) {
@@ -8294,6 +8329,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return value;
 			}
+		}, {
+			key: 'beforeDestroy',
+			value: function beforeDestroy(callback) {
+				this.hooks.beforeDestroy.push(callback);
+				return this;
+			}
+		}, {
+			key: 'destroy',
+			value: function destroy() {
+				var _this5 = this;
+
+				// I am destroyed
+				this.isDestroyed = true;
+
+				// Call the hooks
+				_underscore2.default.each(this.hooks.beforeDestroy, function (cb) {
+					cb.apply(_this5);
+				});
+			}
 		}]);
 
 		return Component;
@@ -8495,6 +8549,21 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.components = {};
 
 			/**
+	   * When active this view will render and update when
+	   * the data changes.
+	   * 
+	   * @property isActive
+	   * @type {Boolean}
+	   */
+			_this.isActive = true;
+
+			/**
+	   * @property bindings
+	   * @type {Set}
+	   */
+			_this.bindings = new Set();
+
+			/**
 	   * @property renderer
 	   * @type {Dom.Renderer}
 	   */
@@ -8532,7 +8601,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.apiCalls = [];
 
 			_this.hooks = {
-				beforeRender: []
+				beforeRender: [],
+				beforeLeave: []
 			};
 
 			//////////////////////////
@@ -8586,6 +8656,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'beforeRender',
 			value: function beforeRender(callback) {
 				this.hooks.beforeRender.push(callback);
+				return this;
+			}
+		}, {
+			key: 'beforeLeave',
+			value: function beforeLeave(callback) {
+				this.hooks.beforeLeave.push(callback);
 				return this;
 			}
 		}, {
@@ -8867,6 +8943,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function scheduleRevalidate() {
 				var _this7 = this;
 
+				// Still active?
+				if (!this.isActive) {
+					return this;
+				}
+
 				// Not already pending?
 				if (!this.revalidateTimeout) {
 
@@ -8930,6 +9011,57 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Done.
 				this.resolvePromise('ready', [this]);
+			}
+
+			/**
+	   * Handle the leaving of the page this View is on, e.g. destroying
+	   * components.
+	   * 
+	   * @return {Promise}
+	   */
+
+		}, {
+			key: 'leave',
+			value: function leave() {
+				var _this8 = this;
+
+				return new Promise(function (resolve, reject) {
+
+					// Before ,leave hook
+					var allowLeave = true;
+					_underscore2.default.each(_this8.hooks.beforeLeave, function (cb) {
+						if (allowLeave) {
+							var result = cb.apply(_this8);
+							if (result === false) allowLeave = false;
+						}
+					});
+
+					// Can't leave?
+					if (!allowLeave) return reject();
+
+					// I am destroyed
+					_this8.isActive = false;
+
+					// Destroy components
+					_underscore2.default.each(_this8.components, function (component) {
+						component.destroy();
+						component.isActive = false;
+					});
+
+					// Kill bindings
+					_this8.bindings.forEach(function (binding) {
+						binding.destroy();
+					});
+
+					// Done.
+					resolve();
+				});
+			}
+		}, {
+			key: 'addBinding',
+			value: function addBinding(binding) {
+				this.bindings.add(binding);
+				return this;
 			}
 		}]);
 
@@ -10211,7 +10343,6 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'setRelatedModel',
 			value: function setRelatedModel(relationshipName, relatedModel) {
-				var _this9 = this;
 
 				// Get the relationship itself
 				var relationship = this.getRelationship(relationshipName);
@@ -10227,9 +10358,19 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				// Set it and watch it
-				relatedModel.study(function () {
-					_this9._scheduleAttributeChanged(relationshipName);
-				});
+				/*	relatedModel.study((changedAttributes) => {
+	   			// Not triggered by me?
+	   		if (changedAttributes.length === 1 && relatedModel.related[changedAttributes[0]] === this) {
+	   			
+	   			// Yes, triggered by us... Don't recurse
+	   			console.log(relatedModel.related[changedAttributes[0]] === this);
+	   			return;
+	   		}
+	   			// Is it not triggered by the inverse relationship?
+	   		console.log(relationshipName, changedAttributes);
+	   			//console.log('STUDY', args);
+	   			//this._scheduleAttributeChanged(relationshipName);
+	   	});*/
 				this.related[relationshipName] = relatedModel;
 
 				// Trigger
@@ -10251,6 +10392,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'addRelatedModel',
 			value: function addRelatedModel(relationshipName, relatedModel) {
+				var _this9 = this;
+
 				var fromApi = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 				var pivotAttributes = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
@@ -10292,7 +10435,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (relationship && relationship.inverseRelationshipName && relatedModel.hasRelationship(relationship.inverseRelationshipName)) {
 
 					// Set it
-					relatedModel.set(relationship.inverseRelationshipName, this);
+					relatedModel.withoutNotifications(function () {
+						relatedModel.setRelatedModel(relationship.inverseRelationshipName, _this9);
+					});
 				}
 
 				// Trigger
@@ -10920,7 +11065,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @module Dom
 	 */
 	var ComponentDefinition = function ComponentDefinition(name, source, initCallback) {
-		var renderer = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+		var methods = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+		var renderer = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
 
 		_classCallCheck(this, ComponentDefinition);
 
@@ -10957,6 +11103,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @type {Dom.Renderer}
 	  */
 		this.renderer = renderer ? renderer : (0, _App2.default)() ? (0, _App2.default)().config('renderer') : null;
+
+		/**
+	  * Methods to add to the component prototype.
+	  * 
+	  * @property methods
+	  * @type {object}
+	  */
+		this.methods = methods;
 	};
 
 	module.exports = ComponentDefinition;
@@ -11314,6 +11468,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var args = this._getValues(params);
 				var method = args.shift();
 				var str = args.shift();
+				if (!str) return null;
 
 				return str[method].apply(str, args);
 			}
@@ -11353,6 +11508,19 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function fileSize(params) {
 				var value = this._getValue(params[0]);
 				return (0, _filesize2.default)(value);
+			}
+
+			/////////////
+			// Numbers //
+			/////////////
+
+		}, {
+			key: 'add',
+			value: function add(params) {
+				var values = this._getValues(params);
+				return values.reduce(function (item, total) {
+					return item + total;
+				}, 0);
 			}
 
 			///////////
@@ -11628,6 +11796,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// There is no route matching the request
 					throw new Error('[Routing.Router] Could not find matching route. 404 handling is not implemented yet.');
+				}
+
+				// First leave current route
+				if (this.application.currentRoute) {
+
+					// Leave
+					this.application.currentRoute.leave(routeMatch).then(function () {
+
+						_this2.application.currentRoute = false;
+						_this2.handle(request);
+					});
+					return;
 				}
 
 				// Store it on app
@@ -12287,6 +12467,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Action2 = _interopRequireDefault(_Action);
 
+	var _Utils = __webpack_require__(56);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -12368,17 +12552,74 @@ return /******/ (function(modules) { // webpackBootstrap
 			this._readActionsFromRoute(route);
 		}
 
+		/**
+	  * Handle leaving this RouteMatch
+	  *
+	  * @method leave
+	  * @param  {Routing.RouteMatch} toRoute The RouteMatch we're going to after leaving this
+	  * @return {Promise}
+	  */
+
+
 		_createClass(RouteMatch, [{
+			key: 'leave',
+			value: function leave(toRoute) {
+				var _this2 = this;
+
+				return new Promise(function (resolve, reject) {
+
+					// Loop through action results
+					var leavePromises = [];
+					_this2.actions.forEach(function (action, name) {
+
+						// Get replacing action
+						var replacingAction = toRoute.actions.get(name);
+						if (replacingAction) {
+
+							// Was it triggered by the same route?
+							if (_Utils2.default.uidFor(action.viewContainer.currentAction.route) === _Utils2.default.uidFor(replacingAction.route)) {
+
+								// Are the arguments the same as well?
+								var currentParams = JSON.stringify(action.parameterArray);
+								var replacingParams = JSON.stringify(replacingAction.parameterArray);
+
+								if (currentParams === replacingParams) {
+
+									// That means, we've just navigated within nested routes of that page, and this action will stay the same
+									return;
+								}
+							}
+						}
+
+						// Leave this action				
+						leavePromises.push(action.leave());
+					});
+
+					// Anything?
+					if (leavePromises.length === 0) {
+						resolve();
+						return;
+					}
+
+					// When all is done
+					Promise.all(leavePromises).then(function () {
+						resolve();
+					}, function (error) {
+						reject(error);
+					});
+				});
+			}
+		}, {
 			key: '_readActionsFromRoute',
 			value: function _readActionsFromRoute(route) {
-				var _this2 = this;
+				var _this3 = this;
 
 				// Collect parameters from route
 				var params = new Map();
 				var paramArray = [];
 				_underscore2.default.each(route.parameters, function (paramName) {
-					paramArray.push(_this2.parameters.get(paramName));
-					params.set(paramName, _this2.parameters.get(paramName));
+					paramArray.push(_this3.parameters.get(paramName));
+					params.set(paramName, _this3.parameters.get(paramName));
 				});
 
 				// Get actions
@@ -12386,15 +12627,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				_underscore2.default.each(route.getActions(), function (routeAction, targetViewContainer) {
 
 					// Is there already an action defined for this target
-					if (_this2.actions.has(targetViewContainer)) return;
+					if (_this3.actions.has(targetViewContainer)) return;
 
 					// Make it.
-					var action = new _Action2.default(targetViewContainer, routeAction, _this2.request);
+					var action = new _Action2.default(targetViewContainer, routeAction, _this3.request);
 
 					// Set routes
 					action.route = route;
-					action.matchedRoute = _this2.route;
-					action.routeMatch = _this2;
+					action.matchedRoute = _this3.route;
+					action.routeMatch = _this3;
 
 					// Set parameters
 					action.parameters = params;
@@ -12422,7 +12663,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 
 					// Add the action to my actions
-					_this2.actions.set(targetViewContainer, myAction);
+					_this3.actions.set(targetViewContainer, myAction);
 					actionsToMakeDependentOn.push(myAction);
 				});
 
@@ -12609,6 +12850,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.dependsOn = [];
 
+			/**
+	   * The result of the Action once it has been executed
+	   *
+	   * @property result
+	   * @type {mixed}
+	   */
+			_this.result = false;
+
 			///////////////////////////
 			// Check passed argument //
 			///////////////////////////
@@ -12716,10 +12965,28 @@ return /******/ (function(modules) { // webpackBootstrap
 							reject('There is no controller or callback defined... This shouldn\'t happen.');
 							return;
 						}
-				}).then(function () /* result */{}, function () /* error */{
+				}).then(function (result) {
+
+					// Store result
+					_this2.result = result;
+				}, function () /* error */{
 
 					// No longer loading
 					if (_this2.viewContainer) _this2.viewContainer.setLoading(false);
+				});
+			}
+		}, {
+			key: 'leave',
+			value: function leave() {
+
+				// View?
+				if (this.result instanceof _View2.default) {
+					return this.result.leave();
+				}
+
+				// Leaving is fine.
+				return new Promise(function (resolve) {
+					resolve();
 				});
 			}
 		}, {
@@ -12749,7 +13016,7 @@ return /******/ (function(modules) { // webpackBootstrap
 								// Add it
 								_this3.viewContainer.setAction(_this3);
 								view.addToContainer(_this3.viewContainer);
-								resolve();
+								resolve(view);
 							}, function (error) {
 								reject(error);
 							});
@@ -12784,7 +13051,7 @@ return /******/ (function(modules) { // webpackBootstrap
 									// Set content
 									this.viewContainer.setAction(this);
 									this.viewContainer.setContent(result);
-									resolve();
+									resolve(result);
 								} else {
 
 									// Don't know how to render this...
@@ -14062,6 +14329,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'deserializeModel',
 			value: function deserializeModel(data, apiCall) {
+				var _this4 = this;
+
 				var deserializeRelationships = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
 
 
@@ -14093,13 +14362,17 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Set the attributes (not overwriting dirty ones)
-					model.setAttributesFromApi(attributes);
+					model.withoutNotifications(function () {
+						model.setAttributesFromApi(attributes);
+					});
 				}
 
 				// Also deserialize relationships?
 				if (deserializeRelationships) {
 
-					this._deserializeRelationships(data, apiCall, model);
+					model.withoutNotifications(function () {
+						_this4._deserializeRelationships(data, apiCall, model);
+					});
 				}
 
 				return model;
@@ -14107,14 +14380,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'deserializeCollection',
 			value: function deserializeCollection(data, apiCall) {
-				var _this4 = this;
+				var _this5 = this;
 
 				// Make a collection
 				var collection = new _Collection2.default(apiCall.modelClass);
 
 				// Add records
 				_underscore2.default.each(data, function (recordData) {
-					collection.addFromApi(_this4.deserializeModel(recordData, apiCall), true);
+					collection.addFromApi(_this5.deserializeModel(recordData, apiCall), true);
 				});
 
 				return collection;
@@ -14122,7 +14395,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_deserializeRelationships',
 			value: function _deserializeRelationships(data, apiCall) {
-				var _this5 = this;
+				var _this6 = this;
 
 				var model = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 
@@ -14157,7 +14430,7 @@ return /******/ (function(modules) { // webpackBootstrap
 									_underscore2.default.each(rel.data, function (relData) {
 
 										// Get the model
-										var relatedModel = _this5._getRelatedModel(relData, apiCall);
+										var relatedModel = _this6._getRelatedModel(relData, apiCall);
 										if (relatedModel) {
 											(function () {
 
@@ -14181,7 +14454,7 @@ return /******/ (function(modules) { // webpackBootstrap
 							} else if (rel.data instanceof Object) {
 
 								// Get the one
-								var relatedModel = _this5._getRelatedModel(rel.data, apiCall);
+								var relatedModel = _this6._getRelatedModel(rel.data, apiCall);
 								if (relatedModel) {
 
 									// Set it

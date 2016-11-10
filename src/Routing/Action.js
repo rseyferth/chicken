@@ -141,6 +141,14 @@ class Action extends Obj
 		this.dependsOn = [];
 
 
+		/**
+		 * The result of the Action once it has been executed
+		 *
+		 * @property result
+		 * @type {mixed}
+		 */
+		this.result = false;
+
 
 
 		///////////////////////////
@@ -259,7 +267,10 @@ class Action extends Obj
 				return;
 			}
 
-		}).then((/* result */) => {
+		}).then((result) => {
+
+			// Store result
+			this.result = result;
 
 		}, (/* error */) => {
 
@@ -269,6 +280,22 @@ class Action extends Obj
 		});
 
 	}
+
+
+	leave() {
+
+		// View?
+		if (this.result instanceof View) {
+			return this.result.leave();
+		}
+
+		// Leaving is fine.
+		return new Promise((resolve) => {
+			resolve();
+		});
+		
+	}
+
 
 	_processResult(result, resolve, reject) {
 
@@ -294,7 +321,7 @@ class Action extends Obj
 				// Add it
 				this.viewContainer.setAction(this);
 				view.addToContainer(this.viewContainer);
-				resolve();
+				resolve(view);
 
 			}, (error) => {
 				reject(error);
@@ -332,7 +359,7 @@ class Action extends Obj
 				// Set content
 				this.viewContainer.setAction(this);
 				this.viewContainer.setContent(result);
-				resolve();
+				resolve(result);
 
 			} else {
 

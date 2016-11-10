@@ -168,7 +168,7 @@ class Obj {
 		// Get the callbacks
 		var callbacks = this._listeners.get(eventName);
 		if (callbacks === undefined) return this;
-
+		
 		// Loop and call
 		callbacks.forEach((cb) => {
 			cb.apply(this, args);			

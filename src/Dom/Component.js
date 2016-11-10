@@ -16,7 +16,7 @@ class Component extends View
 	 * @class Dom.Component
 	 * @extends Dom.View
 	 */
-	constructor(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates, initCallback = null, renderer = null) {
+	constructor(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates, initCallback = null, methods = {}, renderer = null) {
 
 		super(source, null, renderer);
 
@@ -141,10 +141,23 @@ class Component extends View
 		this.dom = new Obj();
 
 
+		/**
+		 * @property isDestroyed
+		 * @type {Boolean}
+		 */
+		this.isDestroyed = false;
+
+
 		// Make attributes available
 		this.with(this.attributes);
 
 
+		// Add methods
+		$.extend(this, methods);
+		
+
+		// Before destroy
+		this.hooks.beforeDestroy = [];
 
 		// Definition callback?
 		if (initCallback) {
@@ -153,6 +166,7 @@ class Component extends View
 
 
 	}
+
 
 	getId() {
 
@@ -355,6 +369,25 @@ class Component extends View
 
 		return value;
 
+	}
+
+
+	beforeDestroy(callback) {
+		this.hooks.beforeDestroy.push(callback);
+		return this;
+	}
+
+
+	destroy() {
+
+		// I am destroyed
+		this.isDestroyed = true;
+
+		// Call the hooks
+		_.each(this.hooks.beforeDestroy, (cb) => {
+			cb.apply(this);
+		});
+		
 	}
 
 

@@ -768,11 +768,25 @@ class Model extends Observable
 		}
 		
 		// Set it and watch it
-		relatedModel.study(() => {
-			this._scheduleAttributeChanged(relationshipName);
-		});
+	/*	relatedModel.study((changedAttributes) => {
+
+			// Not triggered by me?
+			if (changedAttributes.length === 1 && relatedModel.related[changedAttributes[0]] === this) {
+				
+				// Yes, triggered by us... Don't recurse
+				console.log(relatedModel.related[changedAttributes[0]] === this);
+				return;
+			}
+
+			// Is it not triggered by the inverse relationship?
+			console.log(relationshipName, changedAttributes);
+
+			//console.log('STUDY', args);
+
+			//this._scheduleAttributeChanged(relationshipName);
+		});*/
 		this.related[relationshipName] = relatedModel;
-		
+	
 		// Trigger
 		this._scheduleAttributeChanged(relationshipName);
 
@@ -831,7 +845,9 @@ class Model extends Observable
 		if (relationship && relationship.inverseRelationshipName && relatedModel.hasRelationship(relationship.inverseRelationshipName)) {
 
 			// Set it
-			relatedModel.set(relationship.inverseRelationshipName, this);
+			relatedModel.withoutNotifications(() => {
+				relatedModel.setRelatedModel(relationship.inverseRelationshipName, this);
+			});
 			
 		}
 
