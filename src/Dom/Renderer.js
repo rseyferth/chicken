@@ -304,6 +304,7 @@ class Renderer
 					visitor,
 					options,
 					definition.initCallback, 
+					definition.methods,
 					this);
 				newScope.self = component;
 

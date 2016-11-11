@@ -6,7 +6,7 @@ import App from '~/Helpers/App';
 class ComponentDefinition
 {
 
-	constructor(name, source, initCallback, renderer = null) {
+	constructor(name, source, initCallback, methods = {}, renderer = null) {
 
 		/**
 		 * The name of the component. This is also the name you use
@@ -43,6 +43,14 @@ class ComponentDefinition
 		 */
 		this.renderer = renderer ? renderer : (App() ? App().config('renderer') : null);
 
+
+		/**
+		 * Methods to add to the component prototype.
+		 * 
+		 * @property methods
+		 * @type {object}
+		 */
+		this.methods = methods;
 
 	}
 

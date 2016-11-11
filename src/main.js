@@ -225,10 +225,10 @@ var Chicken = {
 
 	},
 
-	component: (name, source, initCallback, renderer, overwrite = false) => {
+	component: (name, source, initCallback, methods = {}, renderer = null, overwrite = false) => {
 
 		// Create definition
-		var def = new ComponentDefinition(name, source, initCallback, renderer);
+		var def = new ComponentDefinition(name, source, initCallback, methods, renderer);
 
 		// Register it.
 		if (Component.registry.has(name) && !overwrite) throw new Error('A component with the name ' + name + ' was already defined. If you want to overwrite this, use the "overwrite" parameter.');
