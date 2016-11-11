@@ -667,6 +667,8 @@ class ObservableArray extends Obj
 		return returnObservableArray ? new ObservableArray(result, false) : result;
 	}
 
+	
+
 
 	chunk(size = 20) {
 

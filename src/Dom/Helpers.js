@@ -326,6 +326,7 @@ class Helpers
 		let args = this._getValues(params);
 		let method = args.shift();
 		let str = args.shift();
+		if (!str) return null;
 
 		return str[method].apply(str, args);
 
@@ -363,6 +364,18 @@ class Helpers
 	fileSize(params) {
 		let value = this._getValue(params[0]);
 		return filesize(value);
+	}
+
+
+	/////////////
+	// Numbers //
+	/////////////
+
+	add(params) {
+		let values = this._getValues(params);
+		return values.reduce((item, total) => { 
+			return item + total;
+		}, 0);
 	}
 
 

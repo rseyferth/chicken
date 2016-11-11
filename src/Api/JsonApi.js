@@ -289,18 +289,22 @@ class JsonApi extends Api
 			attributes.id = isNaN(parseInt(data.id)) ? data.id : parseInt(data.id);
 			model = new modelClass(attributes);
 			apiCall.storeReponseModel(model);
-
+			
 		} else {
 
 			// Set the attributes (not overwriting dirty ones)
-			model.setAttributesFromApi(attributes);
+			model.withoutNotifications(() => {
+				model.setAttributesFromApi(attributes);
+			});
 
 		}
 
 		// Also deserialize relationships?
 		if (deserializeRelationships) {
 
-			this._deserializeRelationships(data, apiCall, model);
+			model.withoutNotifications(() => {
+				this._deserializeRelationships(data, apiCall, model);				
+			});
 
 		}
 

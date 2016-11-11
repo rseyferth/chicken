@@ -139,6 +139,23 @@ class View extends Observable
 
 
 		/**
+		 * When active this view will render and update when
+		 * the data changes.
+		 * 
+		 * @property isActive
+		 * @type {Boolean}
+		 */
+		this.isActive = true;
+
+
+		/**
+		 * @property bindings
+		 * @type {Set}
+		 */
+		this.bindings = new Set();
+
+
+		/**
 		 * @property renderer
 		 * @type {Dom.Renderer}
 		 */
@@ -181,7 +198,8 @@ class View extends Observable
 
 
 		this.hooks = {
-			beforeRender: []
+			beforeRender: [],
+			beforeLeave: []
 		};
 
 
@@ -247,6 +265,12 @@ class View extends Observable
 
 	beforeRender(callback) {
 		this.hooks.beforeRender.push(callback);
+		return this;
+	}
+
+
+	beforeLeave(callback) {
+		this.hooks.beforeLeave.push(callback);
 		return this;
 	}
 
@@ -526,6 +550,11 @@ class View extends Observable
 	 */
 	scheduleRevalidate() {
 
+		// Still active?
+		if (!this.isActive) {
+			return this;
+		}
+
 		// Not already pending?
 		if (!this.revalidateTimeout)  {
 
@@ -589,6 +618,55 @@ class View extends Observable
 		// Done.
 		this.resolvePromise('ready', [this]);
 
+	}
+
+
+	/**
+	 * Handle the leaving of the page this View is on, e.g. destroying
+	 * components.
+	 * 
+	 * @return {Promise}
+	 */
+	leave() {
+
+		return new Promise((resolve, reject) => {
+
+			// Before ,leave hook
+			let allowLeave = true;
+			_.each(this.hooks.beforeLeave, (cb) => {
+				if (allowLeave) {
+					let result = cb.apply(this);
+					if (result === false) allowLeave = false;
+				}
+			});
+
+			// Can't leave?
+			if (!allowLeave) return reject();
+
+			// I am destroyed
+			this.isActive = false;
+
+			// Destroy components
+			_.each(this.components, (component) => {
+				component.destroy();
+				component.isActive = false;
+			});
+
+			// Kill bindings
+			this.bindings.forEach((binding) => {
+				binding.destroy();
+			});
+
+			// Done.
+			resolve();
+
+		});
+
+	}
+
+	addBinding(binding) {
+		this.bindings.add(binding);
+		return this;
 	}
 
 

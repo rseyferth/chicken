@@ -1,6 +1,7 @@
 import _ from 'underscore';
 
 import Action from '~/Routing/Action';
+import Utils from '~/Helpers/Utils';
 
 /**
  * @module Routing
@@ -81,6 +82,69 @@ class RouteMatch
 		this._readActionsFromRoute(route);
 
 	}
+
+
+	/**
+	 * Handle leaving this RouteMatch
+	 *
+	 * @method leave
+	 * @param  {Routing.RouteMatch} toRoute The RouteMatch we're going to after leaving this
+	 * @return {Promise}
+	 */
+	leave(toRoute) {
+
+		return new Promise((resolve, reject) => {
+
+			// Loop through action results
+			let leavePromises = [];
+			this.actions.forEach((action, name) => {
+				
+				// Get replacing action
+				let replacingAction = toRoute.actions.get(name);
+				if (replacingAction) {
+
+					// Was it triggered by the same route?
+					if (Utils.uidFor(action.viewContainer.currentAction.route) === Utils.uidFor(replacingAction.route)) {
+
+						// Are the arguments the same as well?
+						let currentParams = JSON.stringify(action.parameterArray);
+						let replacingParams = JSON.stringify(replacingAction.parameterArray);
+
+						if (currentParams === replacingParams) {
+
+							// That means, we've just navigated within nested routes of that page, and this action will stay the same
+							return;
+
+						}
+
+					}
+
+				}
+				
+				// Leave this action				
+				leavePromises.push(action.leave());
+				
+			});
+
+			// Anything?
+			if (leavePromises.length === 0) {
+				resolve();
+				return;
+			}
+
+			// When all is done
+			Promise.all(leavePromises).then(() =>{
+				resolve();
+			}, (error) => {
+				reject(error);
+			});
+
+		});
+
+	}
+
+
+
 
 	_readActionsFromRoute(route) {
 

@@ -55,16 +55,23 @@ class Binding
 		this.morphs = new Set();
 
 
-
+		/**
+		 * The view that this Binding belongs to
+		 *
+		 * @property View
+		 * @type {Dom.View}
+		 */
 		this.view = view;
-
+		if (this.view) {
+			this.view.addBinding(this);
+		}
 
 		////////////////
 		// Now watch! //
 		////////////////
 
 		// What to do when value changes
-		let callback = () => {
+		this.changeCallback = () => {
 			
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
@@ -76,9 +83,9 @@ class Binding
 
 		// Now listen to the object
 		if (this.path) {
-			this.observable.observe(path, callback);
+			this.observable.observe(path, this.changeCallback);
 		} else {
-			this.observable.study(callback);
+			this.observable.study(this.changeCallback);
 		}
 
 	}
@@ -121,6 +128,19 @@ class Binding
 			this.reference = new Reference(this.observable, this.path);
 		}
 		return this.reference;
+	}
+
+
+	destroy() {
+
+		// Unlisten the object
+		if (this.path) {
+			this.observable.disregard(this.path, this.changeCallback);
+		} else {
+			this.observable.neglect(this.changeCallback);
+		}
+
+
 	}
 
 

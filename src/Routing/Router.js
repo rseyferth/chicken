@@ -164,6 +164,21 @@ class Router extends Obj
 
 		}
 
+
+		// First leave current route
+		if (this.application.currentRoute) {
+
+			// Leave
+			this.application.currentRoute.leave(routeMatch).then(() => {
+
+				this.application.currentRoute = false;
+				this.handle(request);
+
+			});
+			return;
+
+		}
+
 		// Store it on app
 		this.application.currentRoute = routeMatch;
 
