@@ -206,6 +206,7 @@ class ModelAttribute {
 
 
 ModelAttribute.Number = 'Number';
+ModelAttribute.Boolean = 'Boolean';
 ModelAttribute.Integer = 'Integer';
 ModelAttribute.String = 'String';
 ModelAttribute.Enum = 'Enum';

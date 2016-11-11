@@ -15317,6 +15317,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 	ModelAttribute.Number = 'Number';
+	ModelAttribute.Boolean = 'Boolean';
 	ModelAttribute.Integer = 'Integer';
 	ModelAttribute.String = 'String';
 	ModelAttribute.Enum = 'Enum';
@@ -15388,9 +15389,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.validationRules = {};
 
 			this.isDynamic = false;
-
-			//these attributes are dynamic but need a definition for eg. filtering
-			this.dynamicAttributes = {};
 
 			callback.apply(this, [this]);
 		}
@@ -15500,13 +15498,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				var attr = new _ModelAttribute2.default(name, type);
 				this.attributeNames.push(name);
 				this.attributes[name] = attr;
-				return attr;
-			}
-		}, {
-			key: 'dynamicAttribute',
-			value: function dynamicAttribute(name, type) {
-				var attr = new _ModelAttribute2.default(name, type);
-				this.dynamicAttribute[name] = attr;
 				return attr;
 			}
 		}, {

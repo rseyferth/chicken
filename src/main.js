@@ -167,7 +167,7 @@ var Chicken = {
 		Route: Route,
 		RouteMatch: RouteMatch,
 		Router: Router
-	},
+	}, 
 
 	inflection: inflection,
 
