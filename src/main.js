@@ -14,7 +14,6 @@ import inflection from 'inflection';
 ///////////////////////////////////////
 // Make sure dependencies are loaded //
 ///////////////////////////////////////
-
 if ($ === undefined || typeof $ !== 'function') throw new Error('Error while initializing Chicken: could not find global jQuery ($). Was jQuery not loaded?');
 if (_ === undefined || typeof _ !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore (_). Was Underscore not loaded?');
 if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
@@ -168,7 +167,7 @@ var Chicken = {
 		Route: Route,
 		RouteMatch: RouteMatch,
 		Router: Router
-	},
+	}, 
 
 	inflection: inflection,
 

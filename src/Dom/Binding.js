@@ -15,9 +15,8 @@ class Binding
 	 * @param  {Dom.Renderer} 							renderer   
 	 * @param  {Core.Observable|Core.ObservableArray} 	observable 
 	 * @param  {string} 								path       	
-	 * @param  {Dom.View}								view
 	 */
-	constructor(renderer, observable, path, view) {
+	constructor(renderer, observable, path) {
 
 		/**
 		 * The Renderer this Binding has been created by. This is 
@@ -55,17 +54,6 @@ class Binding
 		this.morphs = new Set();
 
 
-		/**
-		 * The view that this Binding belongs to
-		 *
-		 * @property View
-		 * @type {Dom.View}
-		 */
-		this.view = view;
-		if (this.view) {
-			this.view.addBinding(this);
-		}
-
 		////////////////
 		// Now watch! //
 		////////////////
@@ -76,7 +64,8 @@ class Binding
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
 				morph.isDirty = true;
-				this.view.scheduleRevalidate();
+				if (morph.view) morph.view.scheduleRevalidate();
+				if (morph.component) morph.component.scheduleRevalidate();
 			});
 
 		};
@@ -151,8 +140,9 @@ class Binding
 	 *
 	 * @method addMorph
 	 * @param {HTMLBarsMorph} morph 
+	 * @param {object} scope
 	 */
-	addMorph(morph) {
+	addMorph(morph, scope) {
 
 		// Is this an already bound morph?
 		if (this.morphs.has(morph)) return;
@@ -162,6 +152,10 @@ class Binding
 		//////////////////////////////////////////
 
 		this.morphs.add(morph);
+
+		// Save the component and view
+		morph.view = scope.view || scope.self;
+		if (scope.component) morph.component = scope.component;
 
 
 		///////////////////////////////////////////

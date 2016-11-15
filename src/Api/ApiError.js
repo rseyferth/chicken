@@ -21,6 +21,12 @@ class ApiError {
 	}
 
 
+	getStatusCode() {
+
+		return this.xhrError.status;
+
+	}
+
 	getMessage() {
 
 		// JSON body with message?
@@ -35,6 +41,12 @@ class ApiError {
 
 		// Don't know
 		return 'Unknown error';
+
+	}
+
+	getStatus() {
+
+		return this.xhrError.status;
 
 	}
 

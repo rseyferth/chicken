@@ -1,5 +1,6 @@
 import _ from 'underscore';
 import moment from 'moment';
+import Querystring from 'query-string';
 
 import Observable from '~/Core/Observable';
 import ObservableArray from '~/Core/ObservableArray';
@@ -183,6 +184,14 @@ let Utils = {
 
 	uid() {
 		return '*' + (++uid) + '*';
+	},
+
+
+	encodeQueryString(obj) {
+		return Querystring.stringify(obj);
+	},
+	decodeQueryString(str) {
+		return Querystring.parse(str);
 	}
 
 
