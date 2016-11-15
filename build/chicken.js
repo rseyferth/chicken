@@ -9257,6 +9257,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.expectCollection = false;
 
+			/**
+	   * when true, the call will resolve with a null value on error. This can be set
+	   * by using the allowFailure method
+	   * 
+	   * @property allowFailure
+	   * @type {Boolean}
+	   */
+			_this.resolvesOnError = false;
+
 			return _this;
 		}
 
@@ -9300,6 +9309,12 @@ return /******/ (function(modules) { // webpackBootstrap
 							return;
 						}
 
+						//non Resource response type
+						if (result.responseType == 'nonResource') {
+							resolve(result);
+							return;
+						}
+
 						// Deserialize it
 						var response = _this2.api.deserialize(result, _this2);
 
@@ -9320,12 +9335,19 @@ return /******/ (function(modules) { // webpackBootstrap
 						resolve(response);
 					}).fail(function (error) {
 
-						// Make error
-						var errorObj = new _ApiError2.default(_this2, error);
-						if (auth) {
-							errorObj = auth.processApiError(errorObj);
+						if (_this2.resolvesOnError) {
+
+							//resolve with null
+							resolve(null);
+						} else {
+
+							// Make error
+							var errorObj = new _ApiError2.default(_this2, error);
+							if (auth) {
+								errorObj = auth.processApiError(errorObj);
+							}
+							reject(errorObj);
 						}
-						reject(errorObj);
 					});
 				});
 			}
@@ -9340,6 +9362,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
 				this.useGlobalStore = !value;
+				return this;
+			}
+		}, {
+			key: 'allowFailure',
+			value: function allowFailure() {
+				var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+				this.resolvesOnError = value;
 				return this;
 			}
 		}, {
@@ -9499,6 +9529,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Don't know
 				return 'Unknown error';
+			}
+		}, {
+			key: 'getStatus',
+			value: function getStatus() {
+
+				return this.xhrError.status;
 			}
 		}]);
 
