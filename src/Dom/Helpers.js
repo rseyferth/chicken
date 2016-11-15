@@ -332,6 +332,15 @@ class Helpers
 
 	}
 
+	underscore(params) {
+
+		// First is method, second is str
+		let args = this._getValues(params);
+		let method = args.shift();		
+		return _[method].apply(this, args);
+
+	}
+
 	////////////
 	// Arrays //
 	////////////

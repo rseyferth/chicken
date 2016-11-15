@@ -459,7 +459,7 @@ class View extends Observable
 		this.loadTemplate();
 
 		// We make the 'render' promise.
-		return this.promise('render', () => {
+		return this.promise('render', (resolve, reject) => {
 
 			// Start api calls.
 			_.invoke(this.apiCalls, 'execute');
@@ -471,6 +471,12 @@ class View extends Observable
 			Promise.all(this.loadPromises).then(() => {
 
 				this.renderSync();
+				resolve();
+
+			}, (error) => {
+
+				reject(error);
+				
 
 			});
 

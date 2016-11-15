@@ -21,6 +21,12 @@ class ApiError {
 	}
 
 
+	getStatusCode() {
+
+		return this.xhrError.status;
+
+	}
+
 	getMessage() {
 
 		// JSON body with message?

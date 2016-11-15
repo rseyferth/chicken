@@ -104,7 +104,7 @@ class RouteMatch
 				if (replacingAction) {
 
 					// Was it triggered by the same route?
-					if (Utils.uidFor(action.viewContainer.currentAction.route) === Utils.uidFor(replacingAction.route)) {
+					if (action.viewContainer.currentAction && Utils.uidFor(action.viewContainer.currentAction.route) === Utils.uidFor(replacingAction.route)) {
 
 						// Are the arguments the same as well?
 						let currentParams = JSON.stringify(action.parameterArray);

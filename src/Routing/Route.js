@@ -65,6 +65,14 @@ class Route extends Obj
 		this.pattern = pattern.replace(/(.)\/$/, '$1'); // Remove trailing slash
 
 
+		/**
+		 * Route-specific error handlers
+		 *
+		 * @property errorHandlers
+		 * @type {Object}
+		 */
+		this.errorHandlers = {};
+
 
 
 		/**
@@ -105,6 +113,14 @@ class Route extends Obj
 		 * @type {string}
 		 */
 		this.name = null;
+
+		/**
+		 * When true, the route's action(s) will refresh when the query string changes
+		 * 
+		 * @property acceptsQuery
+		 * @type {Boolean}
+		 */
+		this.acceptsQuery = false;
 
 
 
@@ -202,6 +218,15 @@ class Route extends Obj
 
 		// We matched! Let's create a match object.
 		return new RouteMatch(this, match, request);
+
+	}
+
+
+	error(key, callback) {
+
+		if (this.errorHandlers[key] === undefined) this.errorHandlers[key] = [];
+		this.errorHandlers[key].push(callback);
+		return this;
 
 	}
 
@@ -380,6 +405,13 @@ class Route extends Obj
 		// Store it
 		this._parameterConstraints.set(parameterName, regExp);
 
+		return this;
+
+	}
+
+	acceptQuery(accept = true) {
+
+		this.acceptsQuery = accept;
 		return this;
 
 	}

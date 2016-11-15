@@ -2,12 +2,15 @@
 
 import _ from 'underscore';
 
+import ApiError from '~/Api/ApiError';
 import Obj from '~/Core/Obj';
 import SettingsObject from '~/Core/SettingsObject';
 import Route from '~/Routing/Route';
 import Request from '~/Routing/Request';
 import Middleware from '~/Routing/Middleware';
 import Service from '~/Data/Service';
+import RoutingError from '~/Routing/RoutingError';
+import Redirect from '~/Routing/Redirect';
 
 /**
  * @module Routing
@@ -21,7 +24,7 @@ class Router extends Obj
 	 * @class Routing.Router
 	 * @extends Core.Object
 	 */
-	constructor(application) {
+	constructor(application, parentRouter = null) {
 		super();
 		
 		////////////////
@@ -33,6 +36,8 @@ class Router extends Obj
 		 * @type {Array}
 		 */
 		this.routes = [];
+
+
 
 		/**
 		 * @property application
@@ -46,6 +51,18 @@ class Router extends Obj
 		 * @type {Map}
 		 */
 		this.namedRoutes = new Map();
+
+
+		this.errorHandlers = {
+			'all': [],
+			'js': [],
+			'api': [],
+			'api.400': [],
+			'api.404': [],
+			'api.500': [],
+			'router': [],
+			'router.404': []
+		};
 
 
 		///////////////////////////////////////////
@@ -97,6 +114,13 @@ class Router extends Obj
 		return route;
 
 	}
+
+	catchAll(actions, options = {}) {
+
+		return this.route('/:url', actions, options).constrain('url', /.*/);
+
+	}
+
 
 	/**
 	 * Configure the Router to add the given options to
@@ -159,9 +183,10 @@ class Router extends Obj
 		// Found something?
 		if (routeMatch === false) {
 
-			// There is no route matching the request
-			throw new Error('[Routing.Router] Could not find matching route. 404 handling is not implemented yet.');
-
+			// Create error
+			let error = new RoutingError(404, 'Page not found', request);
+			return this.getErrorRouteMatch(error);
+			
 		}
 
 
@@ -310,6 +335,107 @@ class Router extends Obj
 
 
 
+	handleErrors(errorType, callback) {
+
+		// Known code?
+		if (this.errorHandlers[errorType] === undefined) {
+			throw new Error('It is not possible to catch "' + errorType + '" errors; available error statuses are: ' + _.keys(this.errorHandlers).join(', '));
+		}
+
+		// Add it
+		this.errorHandlers[errorType].push(callback);
+
+	}
+	getErrorHandlers(error, obj = null) {
+
+		// Error object?
+		if (typeof error === 'string') {
+			error = new Error(error);
+		}
+
+		// No obj? Use me.
+		if (!obj) obj = this;
+
+		// Routing error?
+		let handlers = [];
+		if (error instanceof RoutingError) {
+
+			// Add handlers for the status code
+			if (obj.errorHandlers['router.' + error.code]) {
+				handlers = _.union(handlers, obj.errorHandlers['router.' + error.code]);
+			}
+
+			// Add router-handlers
+			if (obj.errorHandlers.router) handlers = _.union(handlers, obj.errorHandlers.router);			
+
+
+		// Api error?
+		} else if (error instanceof ApiError) {
+
+			// Add handlers for the status code
+			let statusCode = error.getStatusCode();
+			if (obj.errorHandlers['api.' + statusCode]) {
+				handlers = _.union(handlers, obj.errorHandlers['api.' + statusCode]);
+			}
+
+			// Add api-handlers
+			if (obj.errorHandlers.api)	handlers = _.union(handlers, obj.errorHandlers.api);			
+
+		} else {
+
+			// Javascript error
+			if (obj.errorHandlers.js) handlers = _.union(handlers, obj.errorHandlers.js);
+
+		}
+
+		// Always add the 'all' handlers
+		if (obj.errorHandlers.all) handlers = _.union(handlers, obj.errorHandlers.all);
+
+
+		// Were we called for a specific object?
+		if (obj !== this) {
+
+			// Then append default router callbacks
+			handlers = _.union(handlers, this.getErrorHandlers(error));
+
+		}
+
+
+		return handlers;
+
+	}
+
+
+	getErrorRouteMatch(error) {
+
+		// Get the handlers
+		let handlers = this.getErrorHandlers(error);
+		let handlerResult = false;
+		while (handlers.length > 0) {
+
+			// Get handler and call it
+			let handler = handlers.shift();
+			let result = handler(error, error.request, this);
+
+			// Anything?
+			if (result) {
+				handlerResult = result;
+				break;
+			}
+
+		}
+
+		// No result?
+		if (!handlerResult) throw error;
+
+		// A generic redirect?
+		if (handlerResult instanceof Redirect) {
+			return this.application.goto(handlerResult.uri);
+		}
+
+	}
+
+
 	/**
 	 * Output a table to the console containing an overview
 	 * of all defined routes.
@@ -336,6 +462,10 @@ class Router extends Obj
 		return this;
 
 	}
+
+
+
+
 
 
 }
