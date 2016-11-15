@@ -817,10 +817,16 @@ class Model extends Observable
 				this.related[relationshipName] = new Collection(relatedModel.constructor);
 			}
 
+			//Study relation
+			this.related[relationshipName].study(() => {
+				this._scheduleAttributeChanged(relationshipName);
+			});
+
 		} 
-		
+
+
 		// Is it a valid collection?
-		else if ((!this.related instanceof Collection)) {
+		else if (!(this.related[relationshipName] instanceof Collection)) {
 			throw new TypeError('Tried to add a related model to an existing object that is not a Collection');
 		}
 
@@ -958,6 +964,52 @@ class Model extends Observable
 
 	}
 
+
+	/**
+	 * Create copy of model and its attributes and relations
+	 *
+	 * @method clone
+	 * @param  {Chicken.Data.Model}  obj
+	 * @return {Boolean}     
+	 */
+	clone(cacheMap) {
+
+		//create cacheMap?
+		if (!cacheMap) cacheMap = new Map();
+		
+		//known in cache map? return it
+		if (cacheMap.has(this)) return cacheMap.get(this);
+
+		//create copy
+		let c = this.constructor;
+		let copy = new c();
+
+		//store in cacheMap
+		cacheMap.set(this, copy);
+
+		//get all attributes
+		let attr = {};
+		_.each(this.attributes, (value, key) => {
+			attr[key] = this.get(key);
+			if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
+				attr[key] = attr[key].clone(cacheMap);
+			}
+			
+		});
+		
+		//store attributes
+		copy.attributes = attr;		
+		
+		//copy relationships
+		_.each(this.related, (value, key) => {			
+			if (value) copy.related[key] = value.clone(cacheMap);
+		});
+
+		
+
+		return copy;
+	}
+  
 
 
 

@@ -122,6 +122,24 @@ class Helpers
 
 	}
 
+	ifOne(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+		
+		let trueConditions = _.filter(this._getValue(params), (value) => {
+			return !!this._getValue(value);
+		});
+
+		return this._ifUnless(params, blocks, Utils.isTruthlike(trueConditions.length > 0));
+	}
+
+	ifAll(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+		
+		let trueConditions = _.filter(this._getValue(params), (value) => {
+			return !!this._getValue(value);
+		});
+
+		return this._ifUnless(params, blocks, Utils.isTruthlike(trueConditions.length === params.length));
+	}
+
 	/**
 	 * @method unless
 	 */
@@ -207,7 +225,7 @@ class Helpers
 
 	equal(params) {
 
-				// Get params
+		// Get params
 		let value1 = this._getValue(params[0]);
 		let value2 = this._getValue(params[1]);
 

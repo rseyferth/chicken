@@ -168,12 +168,11 @@ class JsonApi extends Api
 				let relationships = {};
 				_.each(model.related, (relatedData, key) => {
 
-
 					// Is it a collection?
 					if (relatedData instanceof Collection) {
 
-						// Is dirty?
-						if (relatedData.isDirty()) {
+						// Is dirty? or had dirty children
+						if (relatedData.isDirty() || relatedData.hasDirtyChildren()) {
 
 							// Add them all
 							relationships[key] = { data: _.map(relatedData.items, (item) => {

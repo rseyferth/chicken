@@ -31,7 +31,6 @@ class ModelDefinition
 
 		this.isDynamic = false;
 
-
 		callback.apply(this, [this]);
 
 	}
@@ -137,6 +136,7 @@ class ModelDefinition
 		this.attributes[name] = attr;
 		return attr;
 	}
+
 
 	computed(name, dependencies, callback) {
 
