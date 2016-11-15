@@ -39,15 +39,16 @@ class Relationship {
 		// Basics
 		this.type = Relationship.HasMany;
 		this.remoteModel = remoteModel;
+		let cleanModel = _.last(this.localModel.split('.'));
 
 		// Guess/store the keys
 		if (!this.localKey) this.localKey = localKey;
 		if (remoteKey || !this.remoteKey) {
-			this.remoteKey = remoteKey || inflection.camelize(inflection.singularize(this.localModel), true) + 'Id';
+			this.remoteKey = remoteKey || inflection.camelize(inflection.singularize(cleanModel), true) + 'Id';
 		}
 
 		// Guess the inverse relationship name
-		this.inverseRelationshipName = inflection.camelize(inflection.singularize(this.localModel), true);
+		this.inverseRelationshipName = inflection.camelize(inflection.singularize(cleanModel), true);
 
 		return this;
 

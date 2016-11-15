@@ -2138,18 +2138,36 @@ return /******/ (function(modules) { // webpackBootstrap
 				var query = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
 
+				// Query in the uri?
+				var search = _queryString2.default.extract(uri);
+				var params = {};
+				if (search.length > 0) {
+
+					// Parse objects
+					params = _queryString2.default.parse(search);
+
+					// Remove from uri
+					uri = uri.substr(0, uri.length - search.length - 1);
+				}
+
 				// Check the query
 				if (query) {
 
-					// Is it a hash?
-					if (typeof query !== 'string') {
-						query = '?' + _queryString2.default.stringify(query);
+					// Combine into params
+					if (typeof query === 'string') {
+						params = _jquery2.default.extend(params, _queryString2.default.parse(query));
+					} else {
+						params = _jquery2.default.extend(params, query);
 					}
 				}
 
+				// Stringify query
+				query = _queryString2.default.stringify(params);
+				if (query) query = '?' + query;
+
 				// External?		
 				if (uri.match(/^(http(s)?\:)?\/\//)) {
-					window.location = uri + (query ? query : '');
+					window.location = uri + (query || '');
 					return this;
 				}
 
@@ -6213,7 +6231,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 
 					// Create a binding
-					var binding = new _Binding2.default(_this, appliedScope, path, scope.view ? scope.view : scope.self);
+					var binding = new _Binding2.default(_this, appliedScope, path);
 
 					// Store it
 					appliedScope._bindings[path] = binding;
@@ -6266,7 +6284,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Is it a binding?
 					if (binding instanceof _Binding2.default) {
-						binding.addMorph(morph);
+						binding.addMorph(morph, scope);
 					}
 				});
 			},
@@ -6284,7 +6302,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (param instanceof _Binding2.default) {
 
 						// Add morph
-						if (renderer.currentMorph) param.addMorph(renderer.currentMorph);
+						if (renderer.currentMorph) param.addMorph(renderer.currentMorph, scope);
 					}
 				});
 
@@ -7439,9 +7457,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @param  {Dom.Renderer} 							renderer   
 	  * @param  {Core.Observable|Core.ObservableArray} 	observable 
 	  * @param  {string} 								path       	
-	  * @param  {Dom.View}								view
 	  */
-		function Binding(renderer, observable, path, view) {
+		function Binding(renderer, observable, path) {
 			var _this = this;
 
 			_classCallCheck(this, Binding);
@@ -7481,17 +7498,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			this.morphs = new Set();
 
-			/**
-	   * The view that this Binding belongs to
-	   *
-	   * @property View
-	   * @type {Dom.View}
-	   */
-			this.view = view;
-			if (this.view) {
-				this.view.addBinding(this);
-			}
-
 			////////////////
 			// Now watch! //
 			////////////////
@@ -7502,7 +7508,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Trigger updates for all morphs
 				_this.morphs.forEach(function (morph) {
 					morph.isDirty = true;
-					_this.view.scheduleRevalidate();
+					if (morph.view) morph.view.scheduleRevalidate();
+					if (morph.component) morph.component.scheduleRevalidate();
 				});
 			};
 
@@ -7575,11 +7582,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   *
 	   * @method addMorph
 	   * @param {HTMLBarsMorph} morph 
+	   * @param {object} scope
 	   */
 
 		}, {
 			key: 'addMorph',
-			value: function addMorph(morph) {
+			value: function addMorph(morph, scope) {
 
 				// Is this an already bound morph?
 				if (this.morphs.has(morph)) return;
@@ -7589,6 +7597,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				//////////////////////////////////////////
 
 				this.morphs.add(morph);
+
+				// Save the component and view
+				morph.view = scope.view || scope.self;
+				if (scope.component) morph.component = scope.component;
 
 				///////////////////////////////////////////
 				// Check node type for dom->data binding //
@@ -8854,7 +8866,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.loadTemplate();
 
 				// We make the 'render' promise.
-				return this.promise('render', function () {
+				return this.promise('render', function (resolve, reject) {
 
 					// Start api calls.
 					_underscore2.default.invoke(_this5.apiCalls, 'execute');
@@ -8866,6 +8878,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					Promise.all(_this5.loadPromises).then(function () {
 
 						_this5.renderSync();
+						resolve();
+					}, function (error) {
+
+						reject(error);
 					});
 				});
 			}
@@ -9486,6 +9502,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		_createClass(ApiError, [{
+			key: 'getStatusCode',
+			value: function getStatusCode() {
+
+				return this.xhrError.status;
+			}
+		}, {
 			key: 'getMessage',
 			value: function getMessage() {
 
@@ -10346,7 +10368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Get the relationship itself
 				var relationship = this.getRelationship(relationshipName);
-				if (!relationship) throw new Error('There is no relationship defined on "' + this.getModelName() + '" by the name "' + relationshipName + '"');
+				if (!relationship) throw new Error('Error trying to set related model; there is no relationship defined on "' + this.getModelName() + '" by the name "' + relationshipName + '"');
 				if (relationship.isStoredOnLocalModel()) {
 
 					// Get the remote key's value and set it on the local key
@@ -10855,6 +10877,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _moment2 = _interopRequireDefault(_moment);
 
+	var _queryString = __webpack_require__(8);
+
+	var _queryString2 = _interopRequireDefault(_queryString);
+
 	var _Observable = __webpack_require__(33);
 
 	var _Observable2 = _interopRequireDefault(_Observable);
@@ -11040,6 +11066,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		uid: function uid() {
 			return '*' + ++_uid + '*';
+		},
+		encodeQueryString: function encodeQueryString(obj) {
+			return _queryString2.default.stringify(obj);
+		},
+		decodeQueryString: function decodeQueryString(str) {
+			return _queryString2.default.parse(str);
 		}
 	};
 
@@ -11472,6 +11504,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return str[method].apply(str, args);
 			}
+		}, {
+			key: 'underscore',
+			value: function underscore(params) {
+
+				// First is method, second is str
+				var args = this._getValues(params);
+				var method = args.shift();
+				return _underscore2.default[method].apply(this, args);
+			}
 
 			////////////
 			// Arrays //
@@ -11609,6 +11650,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
+	var _ApiError = __webpack_require__(52);
+
+	var _ApiError2 = _interopRequireDefault(_ApiError);
+
 	var _Obj2 = __webpack_require__(34);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
@@ -11679,6 +11724,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Map}
 	   */
 			_this.namedRoutes = new Map();
+
+			_this.errorHandlers = {
+				'all': [],
+				'js': [],
+				'api': [],
+				400: [],
+				500: []
+			};
 
 			///////////////////////////////////////////
 			// Grouped configuration state variables //
@@ -11922,6 +11975,62 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return routeMatch;
 			}
+		}, {
+			key: 'handleErrors',
+			value: function handleErrors(errorType, callback) {
+
+				// Known code?
+				if (this.errorHandlers[errorType] === undefined) {
+					throw new Error('It is not possible to catch "' + errorType + '" errors; available error statuses are: ' + _underscore2.default.keys(this.errorHandlers).join(', '));
+				}
+
+				// Add it
+				this.errorHandlers[errorType].push(callback);
+			}
+		}, {
+			key: 'getErrorHandlers',
+			value: function getErrorHandlers(error) {
+				var obj = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				// Error object?
+				if (typeof error === 'string') {
+					error = new Error(error);
+				}
+
+				// No obj? Use me.
+				if (!obj) obj = this;
+
+				// Api error?
+				var handlers = [];
+				if (error instanceof _ApiError2.default) {
+
+					// Add handlers for the status code
+					var statusCode = error.getStatusCode();
+					if (obj.errorHandlers[statusCode]) {
+						handlers = _underscore2.default.union(handlers, obj.errorHandlers[statusCode]);
+					}
+
+					// Add api-handlers
+					if (obj.errorHandlers.api) handlers = _underscore2.default.union(handlers, obj.errorHandlers.api);
+				} else {
+
+					// Javascript error
+					if (obj.errorHandlers.js) handlers = _underscore2.default.union(handlers, obj.errorHandlers.js);
+				}
+
+				// Always add the 'all' handlers
+				if (obj.errorHandlers.all) handlers = _underscore2.default.union(handlers, obj.errorHandlers.all);
+
+				// Were we called for a specific object?
+				if (obj !== this) {
+
+					// Then append default router callbacks
+					handlers = _underscore2.default.union(handlers, this.getErrorHandlers(error));
+				}
+
+				return handlers;
+			}
 
 			/**
 	   * Output a table to the console containing an overview
@@ -12056,6 +12165,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 			/**
+	   * Route-specific error handlers
+	   *
+	   * @property errorHandlers
+	   * @type {Object}
+	   */
+			_this.errorHandlers = {};
+
+			/**
 	   * The parameter names used in this route
 	   * 
 	   * @property parameters
@@ -12090,6 +12207,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {string}
 	   */
 			_this.name = null;
+
+			/**
+	   * When true, the route's action(s) will refresh when the query string changes
+	   * 
+	   * @property acceptsQuery
+	   * @type {Boolean}
+	   */
+			_this.acceptsQuery = false;
 
 			// Add me to parent route
 			if (parent) {
@@ -12191,6 +12316,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// We matched! Let's create a match object.
 				return new _RouteMatch2.default(this, match, request);
+			}
+		}, {
+			key: 'error',
+			value: function error(key, callback) {
+
+				if (this.errorHandlers[key] === undefined) this.errorHandlers[key] = [];
+				this.errorHandlers[key].push(callback);
+				return this;
 			}
 
 			/**
@@ -12370,6 +12503,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Store it
 				this._parameterConstraints.set(parameterName, regExp);
 
+				return this;
+			}
+		}, {
+			key: 'acceptQuery',
+			value: function acceptQuery() {
+				var accept = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+
+				this.acceptsQuery = accept;
 				return this;
 			}
 
@@ -12577,7 +12719,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						if (replacingAction) {
 
 							// Was it triggered by the same route?
-							if (_Utils2.default.uidFor(action.viewContainer.currentAction.route) === _Utils2.default.uidFor(replacingAction.route)) {
+							if (action.viewContainer.currentAction && _Utils2.default.uidFor(action.viewContainer.currentAction.route) === _Utils2.default.uidFor(replacingAction.route)) {
 
 								// Are the arguments the same as well?
 								var currentParams = JSON.stringify(action.parameterArray);
@@ -12687,6 +12829,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
+
+	var _slicedToArray = function () { function sliceIterator(arr, i) { var _arr = []; var _n = true; var _d = false; var _e = undefined; try { for (var _i = arr[Symbol.iterator](), _s; !(_n = (_s = _i.next()).done); _n = true) { _arr.push(_s.value); if (i && _arr.length === i) break; } } catch (err) { _d = true; _e = err; } finally { try { if (!_n && _i["return"]) _i["return"](); } finally { if (_d) throw _e; } } return _arr; } return function (arr, i) { if (Array.isArray(arr)) { return arr; } else if (Symbol.iterator in Object(arr)) { return sliceIterator(arr, i); } else { throw new TypeError("Invalid attempt to destructure non-iterable instance"); } }; }();
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
@@ -12919,9 +13063,17 @@ return /******/ (function(modules) { // webpackBootstrap
 							var newParams = JSON.stringify(_this2.parameterArray);
 							if (currentParams === newParams) {
 
-								// That means, we've just navigated within nested routes of that page, and this action can be skipped.
-								resolve();
-								return;
+								// Does the route depend on queryString, and did that change?
+								if (_this2.viewContainer.currentAction.route.acceptsQuery) {
+
+									// Then we assume this action has changed.
+
+								} else {
+
+									// That means, we've just navigated within nested routes of that page, and this action can be skipped.
+									resolve();
+									return;
+								}
 							}
 						}
 					}
@@ -13018,7 +13170,8 @@ return /******/ (function(modules) { // webpackBootstrap
 								view.addToContainer(_this3.viewContainer);
 								resolve(view);
 							}, function (error) {
-								reject(error);
+
+								_this3._handleError(error, resolve, reject);
 							});
 						})();
 					}
@@ -13035,7 +13188,7 @@ return /******/ (function(modules) { // webpackBootstrap
 								// Process result again!
 								_this3._processResult(promiseResult, resolve, reject);
 							}, function (error) {
-								reject(error);
+								_this3._handleError(error, resolve, reject);
 							});
 						}
 
@@ -13059,6 +13212,72 @@ return /******/ (function(modules) { // webpackBootstrap
 									return;
 								}
 							}
+			}
+		}, {
+			key: '_handleError',
+			value: function _handleError(error, resolve, reject) {
+
+				// Error object?
+				if (typeof error === 'string') {
+					error = new Error(error);
+				}
+
+				// Check router error handling, given priority to action, then route
+				var route = this.routeMatch.route;
+				var errorHandlers = route.router.getErrorHandlers(error, route);
+
+				// Try to get one
+				var handlerResult = false;
+				while (errorHandlers.length > 0) {
+
+					// Get next
+					var callback = errorHandlers.shift();
+
+					// Is the callback actually a string (controller action)?
+					if (typeof callback === 'string') {
+
+						// Get the controller action callback
+						var _callback$split = callback.split(/@/);
+
+						var _callback$split2 = _slicedToArray(_callback$split, 2);
+
+						var controllerName = _callback$split2[0];
+						var action = _callback$split2[1];
+
+						if (controllerName && action) {
+
+							// Same as me?
+							var ctrl = void 0;
+							if (this.controllerClass === controllerName && false) {
+								ctrl = this.controller;
+							} else {
+								var ChickenController = _Controller2.default.registry.get(controllerName);
+								if (!ChickenController) throw new Error('No controller defined with name "' + controllerName + '"');
+								ctrl = new ChickenController(this);
+							}
+
+							// Get action
+							callback = ctrl[action];
+							if (callback === 'undefined' || typeof callback !== 'function') {
+								throw new Error('There is no action on the "' + controllerName + '" controller with the name "' + action + '"');
+							}
+						}
+					}
+
+					// Call it.
+					handlerResult = callback.apply(this, [this, error]);
+
+					// Something?
+					if (handlerResult) break;
+				}
+
+				// No result?
+				if (!handlerResult) {
+					throw error;
+				}
+
+				// Treat the result as my action-result!
+				this._processResult(handlerResult, resolve, reject);
 			}
 		}]);
 
@@ -14340,7 +14559,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!resourceType) {
 					throw new TypeError('Api result did not specity the record type');
 				}
-				var modelName = _inflection2.default.singularize(_inflection2.default.camelize(resourceType));
+				var modelName = this._getModelName(resourceType);
+
 				if (_Model2.default.registry.has(modelName)) {
 					modelClass = _Model2.default.registry.get(modelName);
 				}
@@ -14356,7 +14576,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!model) {
 
 					// Create a new model.
-					attributes.id = isNaN(parseInt(data.id)) ? data.id : parseInt(data.id);
+					attributes.id = /^\d+$/.test(data.id) ? parseInt(data.id) : data.id;
 					model = new modelClass(attributes);
 					apiCall.storeReponseModel(model);
 				} else {
@@ -14404,11 +14624,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (model === null) {
 
 					// Look it up in the store			
-					var modelType = _inflection2.default.singularize(_inflection2.default.camelize(data.type));
-					model = apiCall.getResponseModel(modelType, data.id);
+					model = apiCall.getResponseModel(this._getModelName(data.type), data.id);
 
 					// Not known?
-					if (!model) throw new Error('Could not deserialize relationships for unknown model: ' + modelType + ' with id ' + data.id);
+					if (!model) throw new Error('Could not deserialize relationships for unknown model: ' + this._getModelName(data.type) + ' with id ' + data.id);
 				}
 
 				// Check relationships records.
@@ -14418,52 +14637,57 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Is there data?
 						if (rel.data) {
+							(function () {
 
-							// Is it one record?
-							if (rel.data instanceof Array) {
-								(function () {
+								// Camelize
+								var modelRelName = _inflection2.default.camelize(relationshipName, true);
 
-									// Find relationship
-									var relationship = model.getRelationship(relationshipName);
+								// Is it one record?
+								if (rel.data instanceof Array) {
+									(function () {
 
-									// Loop and add
-									_underscore2.default.each(rel.data, function (relData) {
+										// Find relationship
+										var relationship = model.getRelationship(modelRelName);
 
-										// Get the model
-										var relatedModel = _this6._getRelatedModel(relData, apiCall);
-										if (relatedModel) {
-											(function () {
+										// Loop and add
+										_underscore2.default.each(rel.data, function (relData) {
 
-												// Pivot data defined?
-												var pivotAttributes = null;
-												if (relData.meta && relationship.isPivot() && relationship.pivotModel) {
+											// Get the model
+											var relatedModel = _this6._getRelatedModel(relData, apiCall);
+											if (relatedModel) {
+												(function () {
 
-													// Collect pivot attributes
-													pivotAttributes = {};
-													_underscore2.default.each(relData.meta, function (value, key) {
-														pivotAttributes[_inflection2.default.camelize(key, true)] = value;
-													});
-												}
+													// Pivot data defined?
+													var pivotAttributes = null;
+													if (relData.meta && relationship.isPivot() && relationship.pivotModel) {
 
-												// Add to collection
-												model.addRelatedModel(relationshipName, relatedModel, true, pivotAttributes);
-											})();
-										}
-									});
-								})();
-							} else if (rel.data instanceof Object) {
+														// Collect pivot attributes
+														pivotAttributes = {};
+														_underscore2.default.each(relData.meta, function (value, key) {
+															pivotAttributes[_inflection2.default.camelize(key, true)] = value;
+														});
+													}
 
-								// Get the one
-								var relatedModel = _this6._getRelatedModel(rel.data, apiCall);
-								if (relatedModel) {
+													// Add to collection
+													model.addRelatedModel(modelRelName, relatedModel, true, pivotAttributes);
+												})();
+											}
+										});
+									})();
+								} else if (rel.data instanceof Object) {
 
-									// Set it
-									model.setRelatedModel(relationshipName, relatedModel);
+									// Get the one
+									var relatedModel = _this6._getRelatedModel(rel.data, apiCall);
+									if (relatedModel) {
+
+										// Set it
+										model.setRelatedModel(modelRelName, relatedModel);
+									}
+								} else {
+
+									throw new TypeError('Unrecognized relationship data received from Api');
 								}
-							} else {
-
-								throw new TypeError('Unrecognized relationship data received from Api');
-							}
+							})();
 						}
 					});
 				}
@@ -14482,9 +14706,24 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!relId) throw new TypeError('Api result did not specify the relationship record id');
 
 				// Find model in store
-				relType = _inflection2.default.singularize(_inflection2.default.camelize(relType));
+				relType = this._getModelName(relType);
 				var relModel = apiCall.getResponseModel(relType, relId);
 				return relModel;
+			}
+		}, {
+			key: '_getModelName',
+			value: function _getModelName(resourceType) {
+
+				// directions.locations => Directions.Location
+				// times => Time
+
+				var parts = resourceType.split('.');
+				var modelType = _underscore2.default.map(parts, function (part, index) {
+					part = _inflection2.default.camelize(part);
+					return index === parts.length - 1 ? _inflection2.default.singularize(part) : part;
+				}).join('.');
+
+				return modelType;
 			}
 		}]);
 
@@ -15530,7 +15769,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			this.name = name;
 
-			this.apiUri = '/' + _inflection2.default.underscore(_inflection2.default.pluralize(name));
+			// Guess api uri from model name
+			var parts = name.split('.');
+			this.apiUri = '/' + _underscore2.default.map(parts, function (part, index) {
+				return _inflection2.default.underscore(index === parts.length - 1 ? _inflection2.default.pluralize(part) : part);
+			}).join('/');
+
 			this.api = 'default';
 
 			this.attributes = {};
@@ -15890,15 +16134,16 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Basics
 				this.type = Relationship.HasMany;
 				this.remoteModel = remoteModel;
+				var cleanModel = _underscore2.default.last(this.localModel.split('.'));
 
 				// Guess/store the keys
 				if (!this.localKey) this.localKey = localKey;
 				if (remoteKey || !this.remoteKey) {
-					this.remoteKey = remoteKey || _inflection2.default.camelize(_inflection2.default.singularize(this.localModel), true) + 'Id';
+					this.remoteKey = remoteKey || _inflection2.default.camelize(_inflection2.default.singularize(cleanModel), true) + 'Id';
 				}
 
 				// Guess the inverse relationship name
-				this.inverseRelationshipName = _inflection2.default.camelize(_inflection2.default.singularize(this.localModel), true);
+				this.inverseRelationshipName = _inflection2.default.camelize(_inflection2.default.singularize(cleanModel), true);
 
 				return this;
 			}

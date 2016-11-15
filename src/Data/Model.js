@@ -754,7 +754,7 @@ class Model extends Observable
 
 		// Get the relationship itself
 		let relationship = this.getRelationship(relationshipName);
-		if (!relationship) throw new Error('There is no relationship defined on "' + this.getModelName() + '" by the name "' + relationshipName + '"');
+		if (!relationship) throw new Error('Error trying to set related model; there is no relationship defined on "' + this.getModelName() + '" by the name "' + relationshipName + '"');
 		if (relationship.isStoredOnLocalModel()) {
 			
 			// Get the remote key's value and set it on the local key

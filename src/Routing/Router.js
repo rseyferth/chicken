@@ -2,6 +2,7 @@
 
 import _ from 'underscore';
 
+import ApiError from '~/Api/ApiError';
 import Obj from '~/Core/Obj';
 import SettingsObject from '~/Core/SettingsObject';
 import Route from '~/Routing/Route';
@@ -46,6 +47,15 @@ class Router extends Obj
 		 * @type {Map}
 		 */
 		this.namedRoutes = new Map();
+
+
+		this.errorHandlers = {
+			'all': [],
+			'js': [],
+			'api': [],
+			400: [],
+			500: []
+		};
 
 
 		///////////////////////////////////////////
@@ -310,6 +320,67 @@ class Router extends Obj
 
 
 
+	handleErrors(errorType, callback) {
+
+		// Known code?
+		if (this.errorHandlers[errorType] === undefined) {
+			throw new Error('It is not possible to catch "' + errorType + '" errors; available error statuses are: ' + _.keys(this.errorHandlers).join(', '));
+		}
+
+		// Add it
+		this.errorHandlers[errorType].push(callback);
+
+	}
+	getErrorHandlers(error, obj = null) {
+
+		// Error object?
+		if (typeof error === 'string') {
+			error = new Error(error);
+		}
+
+		// No obj? Use me.
+		if (!obj) obj = this;
+
+		// Api error?
+		let handlers = [];
+		if (error instanceof ApiError) {
+
+			// Add handlers for the status code
+			let statusCode = error.getStatusCode();
+			if (obj.errorHandlers[statusCode]) {
+				handlers = _.union(handlers, obj.errorHandlers[statusCode]);							
+			}
+
+			// Add api-handlers
+			if (obj.errorHandlers.api)	handlers = _.union(handlers, obj.errorHandlers.api);			
+
+		} else {
+
+			// Javascript error
+			if (obj.errorHandlers.js) handlers = _.union(handlers, obj.errorHandlers.js);
+
+		}
+
+		// Always add the 'all' handlers
+		if (obj.errorHandlers.all) handlers = _.union(handlers, obj.errorHandlers.all);
+
+
+		// Were we called for a specific object?
+		if (obj !== this) {
+
+			// Then append default router callbacks
+			handlers = _.union(handlers, this.getErrorHandlers(error));
+
+		}
+
+
+		return handlers;
+
+	}
+
+
+
+
 	/**
 	 * Output a table to the console containing an overview
 	 * of all defined routes.
@@ -336,6 +407,10 @@ class Router extends Obj
 		return this;
 
 	}
+
+
+
+
 
 
 }

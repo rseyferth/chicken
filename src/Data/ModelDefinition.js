@@ -15,7 +15,13 @@ class ModelDefinition
 
 		this.name = name;
 
-		this.apiUri = '/' + inflection.underscore(inflection.pluralize(name));
+		// Guess api uri from model name
+		let parts = name.split('.');
+		this.apiUri = '/' + _.map(parts, (part, index) => {
+			return inflection.underscore(index === parts.length - 1 ? inflection.pluralize(part) : part);
+		}).join('/');
+
+	
 		this.api = 'default';
 
 		this.attributes = {};

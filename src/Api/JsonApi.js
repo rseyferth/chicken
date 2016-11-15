@@ -271,7 +271,8 @@ class JsonApi extends Api
 		if (!resourceType) {
 			throw new TypeError('Api result did not specity the record type');
 		}
-		let modelName = inflection.singularize(inflection.camelize(resourceType));
+		let modelName = this._getModelName(resourceType);
+
 		if (Model.registry.has(modelName)) {
 			modelClass = Model.registry.get(modelName);
 		}
@@ -287,10 +288,10 @@ class JsonApi extends Api
 		if (!model) {
 
 			// Create a new model.
-			attributes.id = isNaN(parseInt(data.id)) ? data.id : parseInt(data.id);
+			attributes.id = /^\d+$/.test(data.id) ? parseInt(data.id) : data.id;
 			model = new modelClass(attributes);
 			apiCall.storeReponseModel(model);
-			
+
 		} else {
 
 			// Set the attributes (not overwriting dirty ones)
@@ -333,11 +334,10 @@ class JsonApi extends Api
 		if (model === null) {
 
 			// Look it up in the store			
-			let modelType = inflection.singularize(inflection.camelize(data.type));
-			model = apiCall.getResponseModel(modelType, data.id);
-
+			model = apiCall.getResponseModel(this._getModelName(data.type), data.id);
+			
 			// Not known?
-			if (!model) throw new Error('Could not deserialize relationships for unknown model: ' + modelType + ' with id ' + data.id);
+			if (!model) throw new Error('Could not deserialize relationships for unknown model: ' + this._getModelName(data.type) + ' with id ' + data.id);
 
 		}
 
@@ -350,11 +350,14 @@ class JsonApi extends Api
 				// Is there data?
 				if (rel.data) {
 
+					// Camelize
+					let modelRelName = inflection.camelize(relationshipName, true);
+					
 					// Is it one record?
 					if (rel.data instanceof Array) {
 
 						// Find relationship
-						let relationship = model.getRelationship(relationshipName);
+						let relationship = model.getRelationship(modelRelName);
 
 						// Loop and add
 						_.each(rel.data, (relData) => {
@@ -376,7 +379,7 @@ class JsonApi extends Api
 								}
 
 								// Add to collection
-								model.addRelatedModel(relationshipName, relatedModel, true, pivotAttributes);
+								model.addRelatedModel(modelRelName, relatedModel, true, pivotAttributes);
 
 							}
 						});
@@ -386,9 +389,9 @@ class JsonApi extends Api
 						// Get the one
 						let relatedModel = this._getRelatedModel(rel.data, apiCall);
 						if (relatedModel) {
-
+							
 							// Set it
-							model.setRelatedModel(relationshipName, relatedModel);
+							model.setRelatedModel(modelRelName, relatedModel);
 
 						}
 
@@ -420,12 +423,30 @@ class JsonApi extends Api
 		if (!relId) throw new TypeError('Api result did not specify the relationship record id'); 
 
 		// Find model in store
-		relType = inflection.singularize(inflection.camelize(relType));
+		relType = this._getModelName(relType);
 		let relModel = apiCall.getResponseModel(relType, relId);
 		return relModel;
 
 
 	}
+
+
+	_getModelName(resourceType) {
+
+		// directions.locations => Directions.Location
+		// times => Time
+
+		let parts = resourceType.split('.'); 
+		let modelType = _.map(parts, (part, index) => {
+			part = inflection.camelize(part);
+			return index === parts.length - 1 ? inflection.singularize(part) : part;
+		}).join('.');
+
+		return modelType;
+
+	}
+
+
 
 
 

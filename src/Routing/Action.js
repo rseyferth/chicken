@@ -214,9 +214,18 @@ class Action extends Obj
 					let newParams = JSON.stringify(this.parameterArray);
 					if (currentParams === newParams) {
 
-						// That means, we've just navigated within nested routes of that page, and this action can be skipped.
-						resolve();
-						return;
+						// Does the route depend on queryString, and did that change?
+						if (this.viewContainer.currentAction.route.acceptsQuery) {
+
+							// Then we assume this action has changed.
+
+						} else {
+
+							// That means, we've just navigated within nested routes of that page, and this action can be skipped.
+							resolve();
+							return;
+
+						}
 
 					}
 
@@ -324,7 +333,9 @@ class Action extends Obj
 				resolve(view);
 
 			}, (error) => {
-				reject(error);
+
+				this._handleError(error, resolve, reject);
+				
 			});
 
 		}
@@ -342,7 +353,7 @@ class Action extends Obj
 				this._processResult(promiseResult, resolve, reject);
 
 			}, (error) => {
-				reject(error);
+				this._handleError(error, resolve, reject);
 			});
 
 		}
@@ -370,6 +381,73 @@ class Action extends Obj
 			}
 
 		}		
+
+	}
+
+
+	_handleError(error, resolve, reject) {
+
+		// Error object?
+		if (typeof error === 'string') {
+			error = new Error(error);
+		}
+
+		// Check router error handling, given priority to action, then route
+		let route = this.routeMatch.route;
+		let errorHandlers = route.router.getErrorHandlers(error, route);
+		
+		// Try to get one
+		let handlerResult = false;
+		while (errorHandlers.length > 0) {
+
+			// Get next
+			let callback = errorHandlers.shift();
+
+			// Is the callback actually a string (controller action)?
+			if (typeof callback === 'string') {
+				
+				// Get the controller action callback
+				let [controllerName, action] = callback.split(/@/);
+				if (controllerName && action) {
+
+					// Same as me?
+					let ctrl;
+					if (this.controllerClass === controllerName && false) {
+						ctrl = this.controller;
+					} else {
+						let ChickenController = Controller.registry.get(controllerName);
+						if (!ChickenController) throw new Error('No controller defined with name "' + controllerName + '"');
+						ctrl = new ChickenController(this);
+					}
+
+					// Get action
+					callback = ctrl[action];
+					if (callback === 'undefined' || typeof callback !== 'function') {
+						throw new Error('There is no action on the "' + controllerName + '" controller with the name "' + action + '"');
+					}
+
+
+				}
+	
+
+
+			}
+
+			// Call it.
+			handlerResult = callback.apply(this, [this, error]);
+
+			// Something?
+			if (handlerResult) break;
+
+		}
+
+		// No result?
+		if (!handlerResult) {
+			throw error;
+		}
+
+		// Treat the result as my action-result!
+		this._processResult(handlerResult, resolve, reject);
 
 	}
 

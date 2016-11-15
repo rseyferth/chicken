@@ -71,10 +71,11 @@ class Renderer
 						
 						// Return existing binding
 						return appliedScope._bindings[path];
+
 					}
 
 					// Create a binding
-					var binding = new Binding(this, appliedScope, path, scope.view ? scope.view : scope.self);
+					var binding = new Binding(this, appliedScope, path);
 
 					// Store it
 					appliedScope._bindings[path] = binding;
@@ -130,8 +131,8 @@ class Renderer
 				_.each(values, (binding) => {
 
 					// Is it a binding?
-					if (binding instanceof Binding) {	
-						binding.addMorph(morph);
+					if (binding instanceof Binding) {
+						binding.addMorph(morph, scope);
 					}
 
 				});
@@ -153,7 +154,7 @@ class Renderer
 					if (param instanceof Binding) {
 						
 						// Add morph
-						if (renderer.currentMorph) param.addMorph(renderer.currentMorph);
+						if (renderer.currentMorph) param.addMorph(renderer.currentMorph, scope);
 
 					}
 				});

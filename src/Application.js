@@ -316,19 +316,38 @@ class Application extends Observable {
 
 	goto(uri, query = null) {
 
+		// Query in the uri?
+		let search = QueryString.extract(uri);
+		let params = {};
+		if (search.length > 0) {
+			
+			// Parse objects
+			params = QueryString.parse(search);
+			
+			// Remove from uri
+			uri = uri.substr(0, uri.length - search.length - 1);
+
+		}
+
 		// Check the query
 		if (query) {
 
-			// Is it a hash?
-			if (typeof query !== 'string') {
-				query = '?' + QueryString.stringify(query);
+			// Combine into params
+			if (typeof query === 'string') {
+				params = $.extend(params, QueryString.parse(query));
+			} else {
+				params = $.extend(params, query);
 			}
 
 		}
 
+		// Stringify query
+		query = QueryString.stringify(params);
+		if (query) query = '?' + query;
+		
 		// External?		
 		if (uri.match(/^(http(s)?\:)?\/\//)) {
-			window.location = uri + (query ? query : '');
+			window.location = uri + (query || '');
 			return this;
 		}
 
