@@ -80,7 +80,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Application2 = _interopRequireDefault(_Application);
 
-	var _Api = __webpack_require__(70);
+	var _Api = __webpack_require__(71);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
@@ -88,19 +88,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ApiCall2 = _interopRequireDefault(_ApiCall);
 
-	var _JsonApi = __webpack_require__(71);
+	var _JsonApi = __webpack_require__(72);
 
 	var _JsonApi2 = _interopRequireDefault(_JsonApi);
 
-	var _JsonApiCall = __webpack_require__(72);
+	var _JsonApiCall = __webpack_require__(73);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _Auth = __webpack_require__(73);
+	var _Auth = __webpack_require__(74);
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
-	var _JWTAuth = __webpack_require__(74);
+	var _JWTAuth = __webpack_require__(75);
 
 	var _JWTAuth2 = _interopRequireDefault(_JWTAuth);
 
@@ -136,11 +136,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelAttribute = __webpack_require__(76);
+	var _ModelAttribute = __webpack_require__(77);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _ModelDefinition = __webpack_require__(77);
+	var _ModelDefinition = __webpack_require__(78);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
 
@@ -148,11 +148,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
-	var _Pivot = __webpack_require__(80);
+	var _Pivot = __webpack_require__(81);
 
 	var _Pivot2 = _interopRequireDefault(_Pivot);
 
-	var _Relationship = __webpack_require__(78);
+	var _Relationship = __webpack_require__(79);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
@@ -212,7 +212,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
-	var _I18n = __webpack_require__(69);
+	var _I18n = __webpack_require__(70);
 
 	var _I18n2 = _interopRequireDefault(_I18n);
 
@@ -1829,7 +1829,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Element2 = _interopRequireDefault(_Element);
 
-	var _I18n = __webpack_require__(69);
+	var _I18n = __webpack_require__(70);
 
 	var _I18n2 = _interopRequireDefault(_I18n);
 
@@ -11678,6 +11678,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Service2 = _interopRequireDefault(_Service);
 
+	var _RoutingError = __webpack_require__(69);
+
+	var _RoutingError2 = _interopRequireDefault(_RoutingError);
+
+	var _Redirect = __webpack_require__(64);
+
+	var _Redirect2 = _interopRequireDefault(_Redirect);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -11699,6 +11707,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @extends Core.Object
 	  */
 		function Router(application) {
+			var parentRouter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
 			_classCallCheck(this, Router);
 
 			////////////////
@@ -11729,8 +11739,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				'all': [],
 				'js': [],
 				'api': [],
-				400: [],
-				500: []
+				'api.400': [],
+				'api.404': [],
+				'api.500': [],
+				'router': [],
+				'router.404': []
 			};
 
 			///////////////////////////////////////////
@@ -11781,6 +11794,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Return route
 				return route;
+			}
+		}, {
+			key: 'catchAll',
+			value: function catchAll(actions) {
+				var options = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+
+
+				return this.route('/:url', actions, options).constrain('url', /.*/);
 			}
 
 			/**
@@ -11847,8 +11868,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Found something?
 				if (routeMatch === false) {
 
-					// There is no route matching the request
-					throw new Error('[Routing.Router] Could not find matching route. 404 handling is not implemented yet.');
+					// Create error
+					var error = new _RoutingError2.default(404, 'Page not found', request);
+					return this.getErrorRouteMatch(error);
 				}
 
 				// First leave current route
@@ -12001,14 +12023,25 @@ return /******/ (function(modules) { // webpackBootstrap
 				// No obj? Use me.
 				if (!obj) obj = this;
 
-				// Api error?
+				// Routing error?
 				var handlers = [];
-				if (error instanceof _ApiError2.default) {
+				if (error instanceof _RoutingError2.default) {
+
+					// Add handlers for the status code
+					if (obj.errorHandlers['router.' + error.code]) {
+						handlers = _underscore2.default.union(handlers, obj.errorHandlers['router.' + error.code]);
+					}
+
+					// Add router-handlers
+					if (obj.errorHandlers.router) handlers = _underscore2.default.union(handlers, obj.errorHandlers.router);
+
+					// Api error?
+				} else if (error instanceof _ApiError2.default) {
 
 					// Add handlers for the status code
 					var statusCode = error.getStatusCode();
-					if (obj.errorHandlers[statusCode]) {
-						handlers = _underscore2.default.union(handlers, obj.errorHandlers[statusCode]);
+					if (obj.errorHandlers['api.' + statusCode]) {
+						handlers = _underscore2.default.union(handlers, obj.errorHandlers['api.' + statusCode]);
 					}
 
 					// Add api-handlers
@@ -12030,6 +12063,34 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				return handlers;
+			}
+		}, {
+			key: 'getErrorRouteMatch',
+			value: function getErrorRouteMatch(error) {
+
+				// Get the handlers
+				var handlers = this.getErrorHandlers(error);
+				var handlerResult = false;
+				while (handlers.length > 0) {
+
+					// Get handler and call it
+					var handler = handlers.shift();
+					var result = handler(error, error.request, this);
+
+					// Anything?
+					if (result) {
+						handlerResult = result;
+						break;
+					}
+				}
+
+				// No result?
+				if (!handlerResult) throw error;
+
+				// A generic redirect?
+				if (handlerResult instanceof _Redirect2.default) {
+					return this.application.goto(handlerResult.uri);
+				}
 			}
 
 			/**
@@ -13592,6 +13653,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 69 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Routing
+	 */
+	var RoutingError = function RoutingError(code) {
+		var message = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+		var request = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+		_classCallCheck(this, RoutingError);
+
+		this.code = code;
+		this.message = message;
+		this.request = request;
+	};
+
+	module.exports = RoutingError;
+
+/***/ },
+/* 70 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13886,7 +13971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = I18n;
 
 /***/ },
-/* 70 */
+/* 71 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14245,7 +14330,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Api;
 
 /***/ },
-/* 71 */
+/* 72 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14266,11 +14351,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _Api2 = __webpack_require__(70);
+	var _Api2 = __webpack_require__(71);
 
 	var _Api3 = _interopRequireDefault(_Api2);
 
-	var _JsonApiCall = __webpack_require__(72);
+	var _JsonApiCall = __webpack_require__(73);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
@@ -14733,7 +14818,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApi;
 
 /***/ },
-/* 72 */
+/* 73 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -14811,7 +14896,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApiCall;
 
 /***/ },
-/* 73 */
+/* 74 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15047,7 +15132,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Auth;
 
 /***/ },
-/* 74 */
+/* 75 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15062,11 +15147,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _Auth2 = __webpack_require__(73);
+	var _Auth2 = __webpack_require__(74);
 
 	var _Auth3 = _interopRequireDefault(_Auth2);
 
-	var _AuthError = __webpack_require__(75);
+	var _AuthError = __webpack_require__(76);
 
 	var _AuthError2 = _interopRequireDefault(_AuthError);
 
@@ -15440,7 +15525,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JWTAuth;
 
 /***/ },
-/* 75 */
+/* 76 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -15493,7 +15578,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = AuthError;
 
 /***/ },
-/* 76 */
+/* 77 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15729,7 +15814,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelAttribute;
 
 /***/ },
-/* 77 */
+/* 78 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15744,11 +15829,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _ModelAttribute = __webpack_require__(76);
+	var _ModelAttribute = __webpack_require__(77);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _Relationship = __webpack_require__(78);
+	var _Relationship = __webpack_require__(79);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
@@ -16065,7 +16150,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelDefinition;
 
 /***/ },
-/* 78 */
+/* 79 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16088,7 +16173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _PivotCollection = __webpack_require__(79);
+	var _PivotCollection = __webpack_require__(80);
 
 	var _PivotCollection2 = _interopRequireDefault(_PivotCollection);
 
@@ -16338,7 +16423,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Relationship;
 
 /***/ },
-/* 79 */
+/* 80 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16351,7 +16436,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Collection3 = _interopRequireDefault(_Collection2);
 
-	var _Pivot = __webpack_require__(80);
+	var _Pivot = __webpack_require__(81);
 
 	var _Pivot2 = _interopRequireDefault(_Pivot);
 
@@ -16406,7 +16491,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PivotCollection;
 
 /***/ },
-/* 80 */
+/* 81 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';

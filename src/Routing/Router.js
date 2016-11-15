@@ -9,6 +9,8 @@ import Route from '~/Routing/Route';
 import Request from '~/Routing/Request';
 import Middleware from '~/Routing/Middleware';
 import Service from '~/Data/Service';
+import RoutingError from '~/Routing/RoutingError';
+import Redirect from '~/Routing/Redirect';
 
 /**
  * @module Routing
@@ -22,7 +24,7 @@ class Router extends Obj
 	 * @class Routing.Router
 	 * @extends Core.Object
 	 */
-	constructor(application) {
+	constructor(application, parentRouter = null) {
 		super();
 		
 		////////////////
@@ -34,6 +36,8 @@ class Router extends Obj
 		 * @type {Array}
 		 */
 		this.routes = [];
+
+
 
 		/**
 		 * @property application
@@ -53,8 +57,11 @@ class Router extends Obj
 			'all': [],
 			'js': [],
 			'api': [],
-			400: [],
-			500: []
+			'api.400': [],
+			'api.404': [],
+			'api.500': [],
+			'router': [],
+			'router.404': []
 		};
 
 
@@ -107,6 +114,13 @@ class Router extends Obj
 		return route;
 
 	}
+
+	catchAll(actions, options = {}) {
+
+		return this.route('/:url', actions, options).constrain('url', /.*/);
+
+	}
+
 
 	/**
 	 * Configure the Router to add the given options to
@@ -169,9 +183,10 @@ class Router extends Obj
 		// Found something?
 		if (routeMatch === false) {
 
-			// There is no route matching the request
-			throw new Error('[Routing.Router] Could not find matching route. 404 handling is not implemented yet.');
-
+			// Create error
+			let error = new RoutingError(404, 'Page not found', request);
+			return this.getErrorRouteMatch(error);
+			
 		}
 
 
@@ -341,14 +356,26 @@ class Router extends Obj
 		// No obj? Use me.
 		if (!obj) obj = this;
 
-		// Api error?
+		// Routing error?
 		let handlers = [];
-		if (error instanceof ApiError) {
+		if (error instanceof RoutingError) {
+
+			// Add handlers for the status code
+			if (obj.errorHandlers['router.' + error.code]) {
+				handlers = _.union(handlers, obj.errorHandlers['router.' + error.code]);
+			}
+
+			// Add router-handlers
+			if (obj.errorHandlers.router) handlers = _.union(handlers, obj.errorHandlers.router);			
+
+
+		// Api error?
+		} else if (error instanceof ApiError) {
 
 			// Add handlers for the status code
 			let statusCode = error.getStatusCode();
-			if (obj.errorHandlers[statusCode]) {
-				handlers = _.union(handlers, obj.errorHandlers[statusCode]);							
+			if (obj.errorHandlers['api.' + statusCode]) {
+				handlers = _.union(handlers, obj.errorHandlers['api.' + statusCode]);
 			}
 
 			// Add api-handlers
@@ -379,6 +406,34 @@ class Router extends Obj
 	}
 
 
+	getErrorRouteMatch(error) {
+
+		// Get the handlers
+		let handlers = this.getErrorHandlers(error);
+		let handlerResult = false;
+		while (handlers.length > 0) {
+
+			// Get handler and call it
+			let handler = handlers.shift();
+			let result = handler(error, error.request, this);
+
+			// Anything?
+			if (result) {
+				handlerResult = result;
+				break;
+			}
+
+		}
+
+		// No result?
+		if (!handlerResult) throw error;
+
+		// A generic redirect?
+		if (handlerResult instanceof Redirect) {
+			return this.application.goto(handlerResult.uri);
+		}
+
+	}
 
 
 	/**
