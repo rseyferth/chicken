@@ -8756,8 +8756,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Use key/value
-					var key = args[0];
-					var value = args[1];
+					var key = args[0],
+					    value = args[1];
 
 					// Is the key a string?
 
