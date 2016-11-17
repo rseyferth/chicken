@@ -101,6 +101,7 @@ class Component extends View
 		 */
 		this.cssClass = false;
 
+
 		/**
 		 * @property element
 		 * @type {DOMElement}
@@ -370,6 +371,30 @@ class Component extends View
 		return value;
 
 	}
+
+	/**
+	 * Set default values for component attributes. Use this in the initCallback.
+	 *
+	 * @method defaults
+	 * @param  {Object} hash   Key/value pairs
+	 * @chainable
+	 */
+	defaults(hash) {
+
+		this.withoutNotifications(() => {
+			_.each(hash, (value, key) => {
+
+				// Set?
+				if (!this.get(key)) {
+					this.set(key, value);
+				}
+
+			});
+		});
+
+
+	}
+
 
 
 	beforeDestroy(callback) {

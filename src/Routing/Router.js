@@ -164,6 +164,8 @@ class Router extends Obj
 	 */
 	handle(request) {
 
+		this.trigger('navigate', request);
+
 		/////////////////
 		// Match route //
 		/////////////////

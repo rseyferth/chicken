@@ -94,8 +94,8 @@ let Utils = {
 		if (value === null || value === undefined) return false;
 
 		// Bool?
-		if (value === true) return true;
-		if (value === false) return false;
+		if (value === true || value === 'true') return true;
+		if (value === false || value === 'false') return false;
 
 		// 0 and 1?
 		if (value === 1 || value === '1') return true;
