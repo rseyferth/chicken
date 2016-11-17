@@ -24,7 +24,7 @@ class Router extends Obj
 	 * @class Routing.Router
 	 * @extends Core.Object
 	 */
-	constructor(application, parentRouter = null) {
+	constructor(application/*, parentRouter = null*/) {
 		super();
 		
 		////////////////

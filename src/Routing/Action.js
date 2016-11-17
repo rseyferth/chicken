@@ -412,7 +412,7 @@ class Action extends Obj
 
 					// Same as me?
 					let ctrl;
-					if (this.controllerClass === controllerName && false) {
+					if (this.controllerClass === controllerName) {
 						ctrl = this.controller;
 					} else {
 						let ChickenController = Controller.registry.get(controllerName);

@@ -11856,9 +11856,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @class Routing.Router
 	  * @extends Core.Object
 	  */
-		function Router(application) {
-			var parentRouter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
+		function Router(application /*, parentRouter = null*/) {
 			_classCallCheck(this, Router);
 
 			////////////////
@@ -13448,18 +13446,16 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof callback === 'string') {
 
 						// Get the controller action callback
-						var _callback$split = callback.split(/@/);
-
-						var _callback$split2 = _slicedToArray(_callback$split, 2);
-
-						var controllerName = _callback$split2[0];
-						var action = _callback$split2[1];
+						var _callback$split = callback.split(/@/),
+						    _callback$split2 = _slicedToArray(_callback$split, 2),
+						    controllerName = _callback$split2[0],
+						    action = _callback$split2[1];
 
 						if (controllerName && action) {
 
 							// Same as me?
 							var ctrl = void 0;
-							if (this.controllerClass === controllerName && false) {
+							if (this.controllerClass === controllerName) {
 								ctrl = this.controller;
 							} else {
 								var ChickenController = _Controller2.default.registry.get(controllerName);
@@ -15825,6 +15821,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					case ModelAttribute.String:
 						return value instanceof String ? value : '' + value;
 
+					//Array
+					case ModelAttribute.Array:
+						return JSON.parse(value);
+
 					///////////
 					// Dates //
 					///////////
@@ -15872,6 +15872,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					// String
 					case ModelAttribute.String:
 						return value instanceof String ? value : '' + value;
+
+					//Array
+					case ModelAttribute.Array:
+						return value instanceof Array ? JSON.stringify(value) : value;
 
 					///////////
 					// Dates //
