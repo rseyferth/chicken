@@ -145,6 +145,7 @@ class ModelDefinition
 		return attr;
 	}
 
+
 	computed(name, dependencies, callback) {
 
 		this.computedAttributes[name] = {

@@ -70,6 +70,9 @@ class ModelAttribute {
 			case ModelAttribute.String:
 				return value instanceof String ? value : '' + value;
 
+			//Array
+			case ModelAttribute.Array: 
+				return JSON.parse(value);
 
 			///////////
 			// Dates //
@@ -116,6 +119,10 @@ class ModelAttribute {
 			// String
 			case ModelAttribute.String:
 				return value instanceof String ? value : '' + value;
+
+			//Array
+			case ModelAttribute.Array: 
+				return value instanceof Array ? JSON.stringify(value) : value;
 
 
 			///////////
@@ -206,6 +213,7 @@ class ModelAttribute {
 
 
 ModelAttribute.Number = 'Number';
+ModelAttribute.Boolean = 'Boolean';
 ModelAttribute.Integer = 'Integer';
 ModelAttribute.String = 'String';
 ModelAttribute.Enum = 'Enum';
