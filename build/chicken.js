@@ -8340,6 +8340,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return value;
 			}
+
+			/**
+	   * Set default values for component attributes. Use this in the initCallback.
+	   *
+	   * @method defaults
+	   * @param  {Object} hash   Key/value pairs
+	   * @chainable
+	   */
+
+		}, {
+			key: 'defaults',
+			value: function defaults(hash) {
+				var _this5 = this;
+
+				this.withoutNotifications(function () {
+					_underscore2.default.each(hash, function (value, key) {
+
+						// Set?
+						if (!_this5.get(key)) {
+							_this5.set(key, value);
+						}
+					});
+				});
+			}
 		}, {
 			key: 'beforeDestroy',
 			value: function beforeDestroy(callback) {
@@ -8349,14 +8373,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'destroy',
 			value: function destroy() {
-				var _this5 = this;
+				var _this6 = this;
 
 				// I am destroyed
 				this.isDestroyed = true;
 
 				// Call the hooks
 				_underscore2.default.each(this.hooks.beforeDestroy, function (cb) {
-					cb.apply(_this5);
+					cb.apply(_this6);
 				});
 			}
 		}]);
@@ -10924,6 +10948,103 @@ return /******/ (function(modules) { // webpackBootstrap
 				return newIds.length > 0 || removedIds.length > 0;
 			}
 		}, {
+<<<<<<< HEAD
+			key: 'search',
+			value: function search(query) {
+				var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+				var fields = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+
+				// No models in me?
+				if (this.items.length === 0) return new Collection(this.modelClass);
+
+				// No fields defined?
+				if (!fields) {
+
+					// Try to get fields from definition
+					var def = this.modelClass.definition;
+					if (def) {
+
+						// Get fields
+						fields = def.getSearchFields();
+					}
+
+					// Still no field?
+					if (!fields) {
+
+						// Use all but id
+						fields = _underscore2.default.without(_underscore2.default.keys(_underscore2.default.first(this.items).attributes), 'id');
+						console.log(fields);
+					}
+				}
+
+				// Get words
+				var words = query.split(/\s+/);
+				var result = [];
+				_underscore2.default.each(this.items, function (model) {
+
+					// How many words are matched by the fields
+					var wordsMatched = 0;
+					var entireMatch = false;
+					_underscore2.default.each(words, function (word) {
+
+						// Not empty?
+						if (!word) return;
+
+						// Loop through fields
+						_underscore2.default.each(fields, function (field) {
+
+							// Entire match?
+							var value = model.get(field);
+							if (value && value === word) {
+								entireMatch = true;
+								wordsMatched++;
+							} else {
+
+								// Check if it contains me
+								value = ('' + value).toLowerCase();
+								var w = word.toLowerCase();
+								var index = value.indexOf(w);
+								if (index > -1) wordsMatched++;
+							}
+
+							// Match?
+							if (wordsMatched > 0) {
+								result.push({
+									wordsMatched: wordsMatched,
+									entireMatch: entireMatch,
+									model: model
+								});
+							}
+						});
+					});
+				});
+
+				// Now sort it
+				result.sort(function (a, b) {
+
+					// Entire match same?
+					if (a.entireMatch !== b.entireMatch) {
+
+						// Entire match is better.
+						return a.entireMatch ? -1 : 1;
+					}
+
+					// # words matched
+					if (a.wordsMatched === b.wordsMatched) return 0;
+					return a.wordsMatched > b.wordsMatched ? -1 : 1;
+				});
+
+				// Check limit
+				limit = limit ? Math.min(result.length, limit) : result.length;
+
+				// Make collection
+				var collectionResult = new Collection(this.modelClass);
+				for (var q = 0; q < limit; q++) {
+					collectionResult.items.push(result[q].model);
+				}
+				return collectionResult;
+=======
 			key: 'hasDirtyChildren',
 			value: function hasDirtyChildren() {
 				//check children for dirty
@@ -10964,6 +11085,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 
 				return copy;
+>>>>>>> master
 			}
 		}]);
 
@@ -11111,8 +11233,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			if (value === null || value === undefined) return false;
 
 			// Bool?
-			if (value === true) return true;
-			if (value === false) return false;
+			if (value === true || value === 'true') return true;
+			if (value === false || value === 'false') return false;
 
 			// 0 and 1?
 			if (value === 1 || value === '1') return true;
@@ -11856,9 +11978,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @class Routing.Router
 	  * @extends Core.Object
 	  */
-		function Router(application) {
-			var parentRouter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
+		function Router(application /*, parentRouter = null*/) {
 			_classCallCheck(this, Router);
 
 			////////////////
@@ -11998,6 +12118,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'handle',
 			value: function handle(request) {
 				var _this2 = this;
+
+				this.trigger('navigate', request);
 
 				/////////////////
 				// Match route //
@@ -13448,18 +13570,16 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof callback === 'string') {
 
 						// Get the controller action callback
-						var _callback$split = callback.split(/@/);
-
-						var _callback$split2 = _slicedToArray(_callback$split, 2);
-
-						var controllerName = _callback$split2[0];
-						var action = _callback$split2[1];
+						var _callback$split = callback.split(/@/),
+						    _callback$split2 = _slicedToArray(_callback$split, 2),
+						    controllerName = _callback$split2[0],
+						    action = _callback$split2[1];
 
 						if (controllerName && action) {
 
 							// Same as me?
 							var ctrl = void 0;
-							if (this.controllerClass === controllerName && false) {
+							if (this.controllerClass === controllerName) {
 								ctrl = this.controller;
 							} else {
 								var ChickenController = _Controller2.default.registry.get(controllerName);
@@ -15825,6 +15945,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					case ModelAttribute.String:
 						return value instanceof String ? value : '' + value;
 
+					//Array
+					case ModelAttribute.Array:
+						return JSON.parse(value);
+
 					///////////
 					// Dates //
 					///////////
@@ -15872,6 +15996,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					// String
 					case ModelAttribute.String:
 						return value instanceof String ? value : '' + value;
+
+					//Array
+					case ModelAttribute.Array:
+						return value instanceof Array ? JSON.stringify(value) : value;
 
 					///////////
 					// Dates //
@@ -16025,6 +16153,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.validationRules = {};
 
 			this.isDynamic = false;
+
+			this.searchFields = null;
 
 			callback.apply(this, [this]);
 		}
@@ -16278,6 +16408,26 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				this.validationRules[formKey] = rules;
 				return this;
+			}
+
+			///////////////
+			// Searching //
+			///////////////
+
+		}, {
+			key: 'searchable',
+			value: function searchable() {
+				for (var _len = arguments.length, fields = Array(_len), _key = 0; _key < _len; _key++) {
+					fields[_key] = arguments[_key];
+				}
+
+				// Stroe
+				this.searchFields = fields;
+			}
+		}, {
+			key: 'getSearchFields',
+			value: function getSearchFields() {
+				return this.searchFields;
 			}
 
 			/////////

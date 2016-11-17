@@ -24,7 +24,7 @@ class Router extends Obj
 	 * @class Routing.Router
 	 * @extends Core.Object
 	 */
-	constructor(application, parentRouter = null) {
+	constructor(application/*, parentRouter = null*/) {
 		super();
 		
 		////////////////
@@ -163,6 +163,8 @@ class Router extends Obj
 	 * @return {Routing.RouteMatch}
 	 */
 	handle(request) {
+
+		this.trigger('navigate', request);
 
 		/////////////////
 		// Match route //

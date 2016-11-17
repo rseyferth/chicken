@@ -123,6 +123,111 @@ class Collection extends ObservableArray
 	}
 
 
+	search(query, limit = false, fields = null) {
+
+		// No models in me?
+		if (this.items.length === 0) return new Collection(this.modelClass);
+
+		// No fields defined?
+		if (!fields) {
+
+			// Try to get fields from definition
+			let def = this.modelClass.definition;
+			if (def) {
+
+				// Get fields
+				fields = def.getSearchFields();
+
+			}
+
+			// Still no field?
+			if (!fields) {
+
+				// Use all but id
+				fields = _.without(_.keys(_.first(this.items).attributes), 'id');
+				console.log(fields);
+
+			}
+
+		}
+
+		// Get words
+		let words = query.split(/\s+/);
+		let result = [];
+		_.each(this.items, (model) => {
+
+			// How many words are matched by the fields
+			let wordsMatched = 0;
+			let entireMatch = false;
+			_.each(words, (word) => {
+
+				// Not empty?
+				if (!word) return;
+
+				// Loop through fields
+				_.each(fields, (field) => {
+
+					// Entire match?
+					let value = model.get(field);
+					if (value && value === word) {
+						entireMatch = true;
+						wordsMatched++;
+					} else {
+
+						// Check if it contains me
+						value = ('' + value).toLowerCase();
+						let w = word.toLowerCase();
+						let index = value.indexOf(w);
+						if (index > -1) wordsMatched++;
+					}
+
+					// Match?
+					if (wordsMatched > 0) {
+						result.push({
+							wordsMatched: wordsMatched,
+							entireMatch: entireMatch,
+							model: model
+						});
+					}
+
+				});
+
+			});
+
+
+		});
+		
+		// Now sort it
+		result.sort((a, b) => {
+
+			// Entire match same?
+			if (a.entireMatch !== b.entireMatch) {
+
+				// Entire match is better.
+				return a.entireMatch ? -1 : 1;
+
+			}
+
+			// # words matched
+			if (a.wordsMatched === b.wordsMatched) return 0;
+			return a.wordsMatched > b.wordsMatched ? -1 : 1;
+
+		});
+		
+		// Check limit
+		limit = limit ? Math.min(result.length, limit) : result.length;
+		
+		// Make collection
+		let collectionResult = new Collection(this.modelClass);
+		for (let q = 0; q < limit; q++) {
+			collectionResult.items.push(result[q].model);
+		}
+		return collectionResult;
+
+	}
+
+
+
 }
 
 Collection.combine = (...collections) => {

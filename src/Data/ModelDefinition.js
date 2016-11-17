@@ -37,6 +37,8 @@ class ModelDefinition
 
 		this.isDynamic = false;
 
+		this.searchFields = null;
+
 		callback.apply(this, [this]);
 
 	}
@@ -271,6 +273,21 @@ class ModelDefinition
 	}
 		
 
+
+	///////////////
+	// Searching //
+	///////////////
+
+	searchable(...fields) {
+
+		// Stroe
+		this.searchFields = fields;
+
+	}
+
+	getSearchFields() {
+		return this.searchFields;
+	}
 
 
 
