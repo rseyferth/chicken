@@ -10948,7 +10948,48 @@ return /******/ (function(modules) { // webpackBootstrap
 				return newIds.length > 0 || removedIds.length > 0;
 			}
 		}, {
-<<<<<<< HEAD
+			key: 'hasDirtyChildren',
+			value: function hasDirtyChildren() {
+				//check children for dirty
+				var dirtyChildren = _underscore2.default.filter(this.items, function (item) {
+					return item.isDirty();
+				});
+
+				return dirtyChildren.length > 0;
+			}
+
+			/**
+	   * Create copy of collection and its items
+	   *
+	   * @method clone
+	   * @return {Collection}
+	   */
+
+		}, {
+			key: 'clone',
+			value: function clone(cacheMap) {
+
+				//create cacheMap?
+				if (!cacheMap) cacheMap = new Map();
+
+				//known in cache map? return it
+				if (cacheMap.has(this)) return this;
+
+				//create copy
+				var c = this.constructor;
+				var copy = new c(this.modelClass);
+
+				//store in cacheMap1
+				cacheMap.set(this, copy);
+
+				//copy items
+				_underscore2.default.each(this.items, function (item) {
+					copy.items.push(item.clone(cacheMap));
+				});
+
+				return copy;
+			}
+		}, {
 			key: 'search',
 			value: function search(query) {
 				var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -10974,7 +11015,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Use all but id
 						fields = _underscore2.default.without(_underscore2.default.keys(_underscore2.default.first(this.items).attributes), 'id');
-						console.log(fields);
 					}
 				}
 
@@ -11044,48 +11084,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					collectionResult.items.push(result[q].model);
 				}
 				return collectionResult;
-=======
-			key: 'hasDirtyChildren',
-			value: function hasDirtyChildren() {
-				//check children for dirty
-				var dirtyChildren = _underscore2.default.filter(this.items, function (item) {
-					return item.isDirty();
-				});
-
-				return dirtyChildren.length > 0;
-			}
-
-			/**
-	   * Create copy of collection and its items
-	   *
-	   * @method clone
-	   * @return {Collection}
-	   */
-
-		}, {
-			key: 'clone',
-			value: function clone(cacheMap) {
-
-				//create cacheMap?
-				if (!cacheMap) cacheMap = new Map();
-
-				//known in cache map? return it
-				if (cacheMap.has(this)) return this;
-
-				//create copy
-				var c = this.constructor;
-				var copy = new c(this.modelClass);
-
-				//store in cacheMap1
-				cacheMap.set(this, copy);
-
-				//copy items
-				_underscore2.default.each(this.items, function (item) {
-					copy.items.push(item.clone(cacheMap));
-				});
-
-				return copy;
->>>>>>> master
 			}
 		}]);
 
@@ -11318,10 +11316,123 @@ return /******/ (function(modules) { // webpackBootstrap
 			return '*' + ++_uid + '*';
 		},
 		encodeQueryString: function encodeQueryString(obj) {
-			return _queryString2.default.stringify(obj);
+			var _this = this;
+
+			var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+
+			if (deep) {
+				var _ret = function () {
+
+					//init str
+					var propStrings = [],
+					    str = '';
+
+					//convert to simple object
+					if (obj instanceof _Observable2.default) obj = obj.toObject();
+
+					//base url
+					if (obj.baseUrl) str += obj.baseUrl + '?';
+
+					//add props
+					_underscore2.default.each(_underscore2.default.keys(obj), function (key) {
+
+						//skip baseUrl
+						if (key == 'baseUrl') return;
+
+						propStrings = _this.__addPropString(propStrings, key, obj[key]);
+					});
+
+					//add to querystring
+					str += propStrings.join('&');
+
+					return {
+						v: str
+					};
+				}();
+
+				if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+			} else {
+
+				return _queryString2.default.stringify(obj);
+			}
+		},
+		__addPropString: function __addPropString(propStrings, key, value) {
+			var _this2 = this;
+
+			if (value instanceof Array) {
+
+				//array
+				propStrings.push(key + '=' + value.join(','));
+			} else if (value instanceof Object) {
+
+				//object
+				_underscore2.default.each(_underscore2.default.keys(value), function (subKey) {
+					propStrings = _this2.__addPropString(propStrings, key + '[' + subKey + ']', value[subKey]);
+				});
+			} else {
+
+				propStrings.push(key + '=' + value);
+			}
+
+			return propStrings;
 		},
 		decodeQueryString: function decodeQueryString(str) {
-			return _queryString2.default.parse(str);
+			var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+
+			if (deep) {
+				var _ret2 = function () {
+
+					//init object
+					var props = void 0,
+					    resultObject = {};
+
+					//get all properties
+					if (str.indexOf('?') !== -1) {
+						resultObject['baseUrl'] = str.split('?')[0];
+						props = str.split('?')[1].split('&');
+					} else {
+						props = str.split('&');
+					}
+
+					//convert each property to object
+					_underscore2.default.each(props, function (prop) {
+
+						//split value and key
+						prop = prop.split('=');
+						var key = prop[0];
+						var value = prop[1];
+
+						//value				
+						value = value.split(',');
+						value = value.length == 1 ? value[0] : value;
+
+						//key array
+						if (key.indexOf('[') !== -1 && key.indexOf(']') !== -1) {
+							key = key.split('[');
+							var baseKey = key[0];
+							var subKey = key[1].substring(0, key[1].length - 1);
+
+							if (!(resultObject[baseKey] instanceof Object)) {
+								resultObject[baseKey] = {};
+							}
+
+							resultObject[baseKey][subKey] = value;
+						} else {
+							resultObject[key] = value;
+						}
+					});
+
+					return {
+						v: resultObject
+					};
+				}();
+
+				if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+			} else {
+				return _queryString2.default.parse(str);
+			}
 		}
 	};
 

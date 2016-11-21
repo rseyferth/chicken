@@ -145,7 +145,6 @@ class Collection extends ObservableArray
 
 				// Use all but id
 				fields = _.without(_.keys(_.first(this.items).attributes), 'id');
-				console.log(fields);
 
 			}
 
