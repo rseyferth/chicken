@@ -314,7 +314,7 @@ class Application extends Observable {
 
 	}
 
-	goto(uri, query = null) {
+	goto(uri, query = null, flash = {}) {
 
 		// Query in the uri?
 		let search = QueryString.extract(uri);
@@ -354,7 +354,10 @@ class Application extends Observable {
 		// Change the history state
 		this.history.push({
 			pathname: uri,
-			search: query
+			search: query,
+			state: {
+				flash: flash
+			}
 		});
 
 		return this;

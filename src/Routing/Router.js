@@ -208,8 +208,7 @@ class Router extends Obj
 
 		// Store it on app
 		this.application.currentRoute = routeMatch;
-
-
+		
 		// Make the execution callback
 		let executeActions = () => {
 
@@ -283,6 +282,7 @@ class Router extends Obj
 			Promise.all(actionPromises).then((/*...results*/) => {
 				
 				//@TODO What to do?
+				this.trigger('complete', [routeMatch]);
 
 			});
 
@@ -323,7 +323,7 @@ class Router extends Obj
 
 			// Is there a result?
 			if (result !== undefined) {
-				// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'
+				// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'				
 			}
 
 		};

@@ -108,8 +108,7 @@ class Collection extends ObservableArray
 
 				// Use all but id
 				fields = _.without(_.keys(_.first(this.items).attributes), 'id');
-				console.log(fields);
-
+				
 			}
 
 		}
@@ -144,19 +143,19 @@ class Collection extends ObservableArray
 						if (index > -1) wordsMatched++;
 					}
 
-					// Match?
-					if (wordsMatched > 0) {
-						result.push({
-							wordsMatched: wordsMatched,
-							entireMatch: entireMatch,
-							model: model
-						});
-					}
 
 				});
 
 			});
 
+			// Match?
+			if (wordsMatched > 0) {
+				result.push({
+					wordsMatched: wordsMatched,
+					entireMatch: entireMatch,
+					model: model
+				});
+			}
 
 		});
 		

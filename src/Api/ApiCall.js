@@ -136,6 +136,20 @@ class ApiCall extends Obj {
 				
 			}, this.ajaxOptions);
 
+			// Before send
+			let beforeSends = [];
+			if (this.api.settings.beforeSend) beforeSends.push(this.api.settings.beforeSend);
+			if (options.beforeSend) beforeSends.push(options.beforeSend);
+			options.beforeSend = (jqXhr, settings) => {
+
+				// Loop and exexcute
+				_.each(beforeSends, (cb) => {
+					cb(jqXhr, settings);
+				});				
+
+			};
+			
+
 			// Make the call
 			this.api.ajax(options)
 				.then((result) => {

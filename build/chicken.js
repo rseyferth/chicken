@@ -2136,6 +2136,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'goto',
 			value: function goto(uri) {
 				var query = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var flash = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
 
 				// Query in the uri?
@@ -2174,7 +2175,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Change the history state
 				this.history.push({
 					pathname: uri,
-					search: query
+					search: query,
+					state: {
+						flash: flash
+					}
 				});
 
 				return this;
@@ -9332,6 +9336,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					}, _this2.ajaxOptions);
 
+					// Before send
+					var beforeSends = [];
+					if (_this2.api.settings.beforeSend) beforeSends.push(_this2.api.settings.beforeSend);
+					if (options.beforeSend) beforeSends.push(options.beforeSend);
+					options.beforeSend = function (jqXhr, settings) {
+
+						// Loop and exexcute
+						_.each(beforeSends, function (cb) {
+							cb(jqXhr, settings);
+						});
+					};
+
 					// Make the call
 					_this2.api.ajax(options).then(function (result) {
 
@@ -10887,7 +10903,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Use all but id
 						fields = _underscore2.default.without(_underscore2.default.keys(_underscore2.default.first(this.items).attributes), 'id');
-						console.log(fields);
 					}
 				}
 
@@ -10920,17 +10935,17 @@ return /******/ (function(modules) { // webpackBootstrap
 								var index = value.indexOf(w);
 								if (index > -1) wordsMatched++;
 							}
-
-							// Match?
-							if (wordsMatched > 0) {
-								result.push({
-									wordsMatched: wordsMatched,
-									entireMatch: entireMatch,
-									model: model
-								});
-							}
 						});
 					});
+
+					// Match?
+					if (wordsMatched > 0) {
+						result.push({
+							wordsMatched: wordsMatched,
+							entireMatch: entireMatch,
+							model: model
+						});
+					}
 				});
 
 				// Now sort it
@@ -12076,7 +12091,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					Promise.all(actionPromises).then(function () /*...results*/{
 
 						//@TODO What to do?
-
+						_this2.trigger('complete', [routeMatch]);
 					});
 				};
 
@@ -12113,7 +12128,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Is there a result?
 					if (result !== undefined) {
-						// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'
+						// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'				
 					}
 				};
 				nextCallback();
@@ -12399,6 +12414,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Boolean}
 	   */
 			_this.acceptsQuery = false;
+
+			/**
+	   * When true, the route's action(s) will refresh when the Request flash-data changes
+	   * @type {Boolean}
+	   */
+			_this.acceptsFlash = false;
 
 			// Add me to parent route
 			if (parent) {
@@ -12696,6 +12717,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 				this.acceptsQuery = accept;
+				return this;
+			}
+		}, {
+			key: 'acceptFlash',
+			value: function acceptFlash() {
+				var accept = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+
+				this.acceptsFlash = accept;
 				return this;
 			}
 
@@ -13252,6 +13282,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 									// Then we assume this action has changed.
 
+									// Is there a flash message in the request?
+								} else if (_.size(_this2.request.flash) > 0 && _this2.viewContainer.currentAction.route.acceptsFlash) {
+
+									// Then we assume this action has changed.
+
 								} else {
 
 									// That means, we've just navigated within nested routes of that page, and this action can be skipped.
@@ -13335,7 +13370,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					//@TODO Cancel the running request?
 
-					(0, _App2.default)().goto(result.uri);
+					(0, _App2.default)().goto(result.uri, null, result.flash);
 				}
 
 				///////////////////////////
@@ -13482,15 +13517,46 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 64 */
 /***/ function(module, exports) {
 
-	"use strict";
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Redirect = function Redirect(uri) {
-		_classCallCheck(this, Redirect);
+	var Redirect = function () {
+		function Redirect(uri) {
+			_classCallCheck(this, Redirect);
 
-		this.uri = uri;
-	};
+			this.uri = uri;
+			this.flash = {};
+		}
+
+		_createClass(Redirect, [{
+			key: 'with',
+			value: function _with(dataOrKey) {
+				var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				// Value?
+				var data = dataOrKey;
+				if (value) {
+					data = {};
+					data[dataOrKey] = value;
+				}
+
+				$.extend(this.flash, data);
+
+				return this;
+			}
+		}, {
+			key: 'withError',
+			value: function withError(message) {
+				return this.with('error', message);
+			}
+		}]);
+
+		return Redirect;
+	}();
 
 	module.exports = Redirect;
 
@@ -13599,6 +13665,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _queryString = __webpack_require__(8);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
@@ -13614,47 +13682,65 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @module Routing
 	 */
-	var Request =
+	var Request = function () {
 
-	/**
-	 * @class Routing.Request
-	 *
-	 * @constructor
-	 * @param {object} 			location 		The location received from the History library
-	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
-	 */
-	function Request(location) {
-		var application = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+		/**
+	  * @class Routing.Request
+	  *
+	  * @constructor
+	  * @param {object} 			location 		The location received from the History library
+	  * @param {Application} 	[application] 	The Application instance that this Request is a part of
+	  */
+		function Request(location) {
+			var application = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-		_classCallCheck(this, Request);
+			_classCallCheck(this, Request);
 
-		// Guess application if not given
-		if (!application) application = _ClassMap2.default.get('Application').getInstance();
+			// Guess application if not given
+			if (!application) application = _ClassMap2.default.get('Application').getInstance();
 
-		// Parse the uri 
-		var uri = Request.cleanUri(location.pathname);
+			// Parse the uri 
+			var uri = Request.cleanUri(location.pathname);
 
-		// Strip of base part
-		var baseUrl = Request.cleanUri(application.settings.get('baseUrl'));
-		if (uri.length >= baseUrl.length && uri.substr(0, baseUrl.length)) {
-			uri = uri.substr(baseUrl.length);
+			// Strip of base part
+			var baseUrl = Request.cleanUri(application.settings.get('baseUrl'));
+			if (uri.length >= baseUrl.length && uri.substr(0, baseUrl.length)) {
+				uri = uri.substr(baseUrl.length);
+			}
+
+			// Add the / back again
+			uri = '/' + uri;
+
+			/**
+	   * @property uri
+	   * @type {string}
+	   */
+			this.uri = uri;
+
+			/**
+	   * @property query
+	   * @type {object}
+	   */
+			this.query = _queryString2.default.parse(location.search);
+
+			/**
+	   * @property flash
+	   * @type {object|false}
+	   */
+			this.flash = location.state ? location.state.flash : {};
 		}
 
-		// Add the / back again
-		uri = '/' + uri;
+		_createClass(Request, [{
+			key: 'getFlash',
+			value: function getFlash(key) {
 
-		/**
-	  * @property uri
-	  * @type {string}
-	  */
-		this.uri = uri;
+				if (this.flash && this.flash[key]) return this.flash[key];
+				return null;
+			}
+		}]);
 
-		/**
-	  * @property query
-	  * @type {object}
-	  */
-		this.query = _queryString2.default.parse(location.search);
-	};
+		return Request;
+	}();
 
 	Request.cleanUri = function (uri) {
 
@@ -14142,7 +14228,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.settings = _jquery2.default.extend({
 				baseUrl: '/api',
 
-				auth: false
+				auth: false,
+
+				beforeSend: false
 
 			}, options);
 		}
