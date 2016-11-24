@@ -263,7 +263,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	///////////////////////////////////////
 	// Make sure dependencies are loaded //
 	///////////////////////////////////////
-
 	if (_jquery2.default === undefined || typeof _jquery2.default !== 'function') throw new Error('Error while initializing Chicken: could not find global jQuery ($). Was jQuery not loaded?');
 	if (_underscore2.default === undefined || typeof _underscore2.default !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore (_). Was Underscore not loaded?');
 	if (_xregexp2.default === undefined || typeof _xregexp2.default !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
@@ -8796,8 +8795,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Use key/value
-					var key = args[0];
-					var value = args[1];
+					var key = args[0],
+					    value = args[1];
 
 					// Is the key a string?
 
@@ -9302,6 +9301,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.expectCollection = false;
 
+			/**
+	   * when true, the call will resolve with a null value on error. This can be set
+	   * by using the allowFailure method
+	   * 
+	   * @property allowFailure
+	   * @type {Boolean}
+	   */
+			_this.resolvesOnError = false;
+
 			return _this;
 		}
 
@@ -9357,6 +9365,12 @@ return /******/ (function(modules) { // webpackBootstrap
 							return;
 						}
 
+						//non Resource response type
+						if (result.responseType == 'nonResource') {
+							resolve(result);
+							return;
+						}
+
 						// Deserialize it
 						var response = _this2.api.deserialize(result, _this2);
 
@@ -9377,12 +9391,19 @@ return /******/ (function(modules) { // webpackBootstrap
 						resolve(response);
 					}).fail(function (error) {
 
-						// Make error
-						var errorObj = new _ApiError2.default(_this2, error);
-						if (auth) {
-							errorObj = auth.processApiError(errorObj);
+						if (_this2.resolvesOnError) {
+
+							//resolve with null
+							resolve(null);
+						} else {
+
+							// Make error
+							var errorObj = new _ApiError2.default(_this2, error);
+							if (auth) {
+								errorObj = auth.processApiError(errorObj);
+							}
+							reject(errorObj);
 						}
-						reject(errorObj);
 					});
 				});
 			}
@@ -9397,6 +9418,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
 				this.useGlobalStore = !value;
+				return this;
+			}
+		}, {
+			key: 'allowFailure',
+			value: function allowFailure() {
+				var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+				this.resolvesOnError = value;
 				return this;
 			}
 		}, {
@@ -9562,6 +9591,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Don't know
 				return 'Unknown error';
+			}
+		}, {
+			key: 'getStatus',
+			value: function getStatus() {
+
+				return this.xhrError.status;
 			}
 		}]);
 
@@ -10470,10 +10505,15 @@ return /******/ (function(modules) { // webpackBootstrap
 					} else {
 						this.related[relationshipName] = new _Collection2.default(relatedModel.constructor);
 					}
+
+					//Study relation
+					this.related[relationshipName].study(function () {
+						_this9._scheduleAttributeChanged(relationshipName);
+					});
 				}
 
 				// Is it a valid collection?
-				else if (!this.related instanceof _Collection2.default) {
+				else if (!(this.related[relationshipName] instanceof _Collection2.default)) {
 						throw new TypeError('Tried to add a related model to an existing object that is not a Collection');
 					}
 
@@ -10611,6 +10651,52 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function is(obj) {
 
 				return _Utils2.default.uidFor(this) === _Utils2.default.uidFor(obj);
+			}
+
+			/**
+	   * Create copy of model and its attributes and relations
+	   *
+	   * @method clone
+	   * @param  {Chicken.Data.Model}  obj
+	   * @return {Boolean}     
+	   */
+
+		}, {
+			key: 'clone',
+			value: function clone(cacheMap) {
+				var _this10 = this;
+
+				//create cacheMap?
+				if (!cacheMap) cacheMap = new Map();
+
+				//known in cache map? return it
+				if (cacheMap.has(this)) return cacheMap.get(this);
+
+				//create copy
+				var c = this.constructor;
+				var copy = new c();
+
+				//store in cacheMap
+				cacheMap.set(this, copy);
+
+				//get all attributes
+				var attr = {};
+				_underscore2.default.each(this.attributes, function (value, key) {
+					attr[key] = _this10.get(key);
+					if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
+						attr[key] = attr[key].clone(cacheMap);
+					}
+				});
+
+				//store attributes
+				copy.attributes = attr;
+
+				//copy relationships
+				_underscore2.default.each(this.related, function (value, key) {
+					if (value) copy.related[key] = value.clone(cacheMap);
+				});
+
+				return copy;
 			}
 		}]);
 
@@ -10878,6 +10964,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return newIds.length > 0 || removedIds.length > 0;
 			}
 		}, {
+<<<<<<< HEAD
 			key: 'search',
 			value: function search(query) {
 				var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -10972,6 +11059,48 @@ return /******/ (function(modules) { // webpackBootstrap
 					collectionResult.items.push(result[q].model);
 				}
 				return collectionResult;
+=======
+			key: 'hasDirtyChildren',
+			value: function hasDirtyChildren() {
+				//check children for dirty
+				var dirtyChildren = _underscore2.default.filter(this.items, function (item) {
+					return item.isDirty();
+				});
+
+				return dirtyChildren.length > 0;
+			}
+
+			/**
+	   * Create copy of collection and its items
+	   *
+	   * @method clone
+	   * @return {Collection}
+	   */
+
+		}, {
+			key: 'clone',
+			value: function clone(cacheMap) {
+
+				//create cacheMap?
+				if (!cacheMap) cacheMap = new Map();
+
+				//known in cache map? return it
+				if (cacheMap.has(this)) return this;
+
+				//create copy
+				var c = this.constructor;
+				var copy = new c(this.modelClass);
+
+				//store in cacheMap1
+				cacheMap.set(this, copy);
+
+				//copy items
+				_underscore2.default.each(this.items, function (item) {
+					copy.items.push(item.clone(cacheMap));
+				});
+
+				return copy;
+>>>>>>> master
 			}
 		}]);
 
@@ -11447,6 +11576,28 @@ return /******/ (function(modules) { // webpackBootstrap
 				var value = this._getValue(params[0]);
 				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(value));
 			}
+		}, {
+			key: 'ifOne',
+			value: function ifOne(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+				var _this2 = this;
+
+				var trueConditions = _underscore2.default.filter(this._getValue(params), function (value) {
+					return !!_this2._getValue(value);
+				});
+
+				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length > 0));
+			}
+		}, {
+			key: 'ifAll',
+			value: function ifAll(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
+				var _this3 = this;
+
+				var trueConditions = _underscore2.default.filter(this._getValue(params), function (value) {
+					return !!_this3._getValue(value);
+				});
+
+				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length === params.length));
+			}
 
 			/**
 	   * @method unless
@@ -11742,20 +11893,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_getValues',
 			value: function _getValues(params) {
-				var _this2 = this;
+				var _this4 = this;
 
 				return params.map(function (value) {
-					return _this2._getValue(value);
+					return _this4._getValue(value);
 				});
 			}
 		}, {
 			key: '_getHashValues',
 			value: function _getHashValues(attributeHash) {
-				var _this3 = this;
+				var _this5 = this;
 
 				var result = {};
 				_underscore2.default.each(attributeHash, function (value, key) {
-					result[key] = _this3._getValue(value);
+					result[key] = _this5._getValue(value);
 				});
 				return result;
 			}
@@ -11842,9 +11993,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  * @class Routing.Router
 	  * @extends Core.Object
 	  */
-		function Router(application) {
-			var parentRouter = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
+		function Router(application /*, parentRouter = null*/) {
 			_classCallCheck(this, Router);
 
 			////////////////
@@ -12051,7 +12200,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 							// Load it
 							var promise = serviceInstance.load();
-							if (!promise || !promise instanceof Promise) throw new Error('[Routing.Router] The "' + service + '" service\'s load() method should return a Promise');
+							if (!promise || !(promise instanceof Promise)) throw new Error('[Routing.Router] The "' + service + '" service\'s load() method should return a Promise');
 							dependsOnPromises.push(promise);
 						});
 
@@ -13456,12 +13605,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof callback === 'string') {
 
 						// Get the controller action callback
-						var _callback$split = callback.split(/@/);
-
-						var _callback$split2 = _slicedToArray(_callback$split, 2);
-
-						var controllerName = _callback$split2[0];
-						var action = _callback$split2[1];
+						var _callback$split = callback.split(/@/),
+						    _callback$split2 = _slicedToArray(_callback$split, 2),
+						    controllerName = _callback$split2[0],
+						    action = _callback$split2[1];
 
 						if (controllerName && action) {
 
@@ -14759,8 +14906,8 @@ return /******/ (function(modules) { // webpackBootstrap
 								// Is it a collection?
 								if (relatedData instanceof _Collection2.default) {
 
-									// Is dirty?
-									if (relatedData.isDirty()) {
+									// Is dirty? or had dirty children
+									if (relatedData.isDirty() || relatedData.hasDirtyChildren()) {
 
 										// Add them all
 										relationships[key] = { data: _underscore2.default.map(relatedData.items, function (item) {
@@ -15886,6 +16033,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					case ModelAttribute.String:
 						return value instanceof String ? value : '' + value;
 
+					//Array
+					case ModelAttribute.Array:
+						return JSON.parse(value);
+
 					///////////
 					// Dates //
 					///////////
@@ -15933,6 +16084,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					// String
 					case ModelAttribute.String:
 						return value instanceof String ? value : '' + value;
+
+					//Array
+					case ModelAttribute.Array:
+						return value instanceof Array ? JSON.stringify(value) : value;
 
 					///////////
 					// Dates //
@@ -16009,6 +16164,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	}();
 
 	ModelAttribute.Number = 'Number';
+	ModelAttribute.Boolean = 'Boolean';
 	ModelAttribute.Integer = 'Integer';
 	ModelAttribute.String = 'String';
 	ModelAttribute.Enum = 'Enum';

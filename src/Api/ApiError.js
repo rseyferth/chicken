@@ -44,5 +44,11 @@ class ApiError {
 
 	}
 
+	getStatus() {
+
+		return this.xhrError.status;
+
+	}
+
 }
 module.exports = ApiError;

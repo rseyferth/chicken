@@ -108,6 +108,16 @@ class ApiCall extends Obj {
 		 */
 		this.expectCollection = false;
 
+
+		/**
+		 * when true, the call will resolve with a null value on error. This can be set
+		 * by using the allowFailure method
+		 * 
+		 * @property allowFailure
+		 * @type {Boolean}
+		 */
+		this.resolvesOnError = false;
+
 	}
 
 	/**
@@ -160,6 +170,13 @@ class ApiCall extends Obj {
 						return;						
 					}
 
+					//non Resource response type
+					if (result.responseType == 'nonResource') {
+						resolve(result);
+						return;
+					}
+
+
 					// Deserialize it
 					let response = this.api.deserialize(result, this);
 
@@ -183,12 +200,23 @@ class ApiCall extends Obj {
 					
 				}).fail((error) => {
 
-					// Make error
-					let errorObj = new ApiError(this, error);
-					if (auth) {
-						errorObj = auth.processApiError(errorObj);
-					} 
-					reject(errorObj);
+					if (this.resolvesOnError) {
+						
+						//resolve with null
+						resolve(null);
+
+					} else {
+
+						// Make error
+						let errorObj = new ApiError(this, error);
+						if (auth) {
+							errorObj = auth.processApiError(errorObj);
+						} 
+						reject(errorObj);
+						
+					}
+
+					
 
 				});
 
@@ -203,6 +231,11 @@ class ApiCall extends Obj {
 
 	useLocalStore(value = true) {
 		this.useGlobalStore = !value;
+		return this;
+	}
+
+	allowFailure(value = true) {
+		this.resolvesOnError = value;
 		return this;
 	}
 

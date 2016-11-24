@@ -667,6 +667,9 @@ class ObservableArray extends Obj
 		return returnObservableArray ? new ObservableArray(result, false) : result;
 	}
 
+	
+
+
 	chunk(size = 20) {
 
 		// Loop and add
@@ -745,9 +748,9 @@ class ObservableArray extends Obj
 		this.trigger(ObservableArray.Events.Change);
 	}
 
-
-
 }
+
+
 
 ////////////
 // Events //
