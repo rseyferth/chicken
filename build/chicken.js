@@ -8795,8 +8795,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Use key/value
-					var key = args[0],
-					    value = args[1];
+					var key = args[0];
+					var value = args[1];
 
 					// Is the key a string?
 
@@ -9171,6 +9171,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
 	var _ApiError = __webpack_require__(52);
 
 	var _ApiError2 = _interopRequireDefault(_ApiError);
@@ -9351,7 +9355,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					options.beforeSend = function (jqXhr, settings) {
 
 						// Loop and exexcute
-						_.each(beforeSends, function (cb) {
+						_underscore2.default.each(beforeSends, function (cb) {
 							cb(jqXhr, settings);
 						});
 					};
@@ -10964,7 +10968,48 @@ return /******/ (function(modules) { // webpackBootstrap
 				return newIds.length > 0 || removedIds.length > 0;
 			}
 		}, {
-<<<<<<< HEAD
+			key: 'hasDirtyChildren',
+			value: function hasDirtyChildren() {
+				//check children for dirty
+				var dirtyChildren = _underscore2.default.filter(this.items, function (item) {
+					return item.isDirty();
+				});
+
+				return dirtyChildren.length > 0;
+			}
+
+			/**
+	   * Create copy of collection and its items
+	   *
+	   * @method clone
+	   * @return {Collection}
+	   */
+
+		}, {
+			key: 'clone',
+			value: function clone(cacheMap) {
+
+				//create cacheMap?
+				if (!cacheMap) cacheMap = new Map();
+
+				//known in cache map? return it
+				if (cacheMap.has(this)) return this;
+
+				//create copy
+				var c = this.constructor;
+				var copy = new c(this.modelClass);
+
+				//store in cacheMap1
+				cacheMap.set(this, copy);
+
+				//copy items
+				_underscore2.default.each(this.items, function (item) {
+					copy.items.push(item.clone(cacheMap));
+				});
+
+				return copy;
+			}
+		}, {
 			key: 'search',
 			value: function search(query) {
 				var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
@@ -11059,48 +11104,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					collectionResult.items.push(result[q].model);
 				}
 				return collectionResult;
-=======
-			key: 'hasDirtyChildren',
-			value: function hasDirtyChildren() {
-				//check children for dirty
-				var dirtyChildren = _underscore2.default.filter(this.items, function (item) {
-					return item.isDirty();
-				});
-
-				return dirtyChildren.length > 0;
-			}
-
-			/**
-	   * Create copy of collection and its items
-	   *
-	   * @method clone
-	   * @return {Collection}
-	   */
-
-		}, {
-			key: 'clone',
-			value: function clone(cacheMap) {
-
-				//create cacheMap?
-				if (!cacheMap) cacheMap = new Map();
-
-				//known in cache map? return it
-				if (cacheMap.has(this)) return this;
-
-				//create copy
-				var c = this.constructor;
-				var copy = new c(this.modelClass);
-
-				//store in cacheMap1
-				cacheMap.set(this, copy);
-
-				//copy items
-				_underscore2.default.each(this.items, function (item) {
-					copy.items.push(item.clone(cacheMap));
-				});
-
-				return copy;
->>>>>>> master
 			}
 		}]);
 
@@ -13201,6 +13204,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _xregexp2 = _interopRequireDefault(_xregexp);
 
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
 	var _App = __webpack_require__(50);
 
 	var _App2 = _interopRequireDefault(_App);
@@ -13432,7 +13439,7 @@ return /******/ (function(modules) { // webpackBootstrap
 									// Then we assume this action has changed.
 
 									// Is there a flash message in the request?
-								} else if (_.size(_this2.request.flash) > 0 && _this2.viewContainer.currentAction.route.acceptsFlash) {
+								} else if (_underscore2.default.size(_this2.request.flash) > 0 && _this2.viewContainer.currentAction.route.acceptsFlash) {
 
 									// Then we assume this action has changed.
 
@@ -13605,10 +13612,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof callback === 'string') {
 
 						// Get the controller action callback
-						var _callback$split = callback.split(/@/),
-						    _callback$split2 = _slicedToArray(_callback$split, 2),
-						    controllerName = _callback$split2[0],
-						    action = _callback$split2[1];
+						var _callback$split = callback.split(/@/);
+
+						var _callback$split2 = _slicedToArray(_callback$split, 2);
+
+						var controllerName = _callback$split2[0];
+						var action = _callback$split2[1];
 
 						if (controllerName && action) {
 
@@ -13662,11 +13671,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 64 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
@@ -13691,7 +13706,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					data[dataOrKey] = value;
 				}
 
-				$.extend(this.flash, data);
+				_jquery2.default.extend(this.flash, data);
 
 				return this;
 			}

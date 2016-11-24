@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import QueryString from 'query-string';
+import _ from 'underscore';
 
 import ApiError from '~/Api/ApiError';
 import Obj from '~/Core/Obj';

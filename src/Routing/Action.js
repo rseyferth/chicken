@@ -1,4 +1,5 @@
 import XRegExp from 'xregexp';
+import _ from 'underscore';
 
 import App from '~/Helpers/App';
 import Obj from '~/Core/Obj';
