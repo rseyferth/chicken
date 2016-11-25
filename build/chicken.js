@@ -8795,8 +8795,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Use key/value
-					var key = args[0];
-					var value = args[1];
+					var key = args[0],
+					    value = args[1];
 
 					// Is the key a string?
 
@@ -9059,7 +9059,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			/**
 	   * Handle the leaving of the page this View is on, e.g. destroying
 	   * components.
-	   * 
+	   *
+	   * @method leave
 	   * @return {Promise}
 	   */
 
@@ -9743,6 +9744,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				_this._scheduleAttributeChanged('is');
 			});
 
+			/**
+	   * list of studied relationships
+	   * @type {Object}
+	   */
+			_this._relationshipStudies = {};
+
 			// Check computed!
 			if (_this.constructor.definition) {
 
@@ -9867,6 +9874,42 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 
 			/**
+	   * Override Observable.observe
+	   *
+	   * Check if model has HasMany, HasManyTrough or BelongToMany relations it can study
+	   */
+
+		}, {
+			key: 'observe',
+			value: function observe(keyOrKeys, callback) {
+				var _this2 = this;
+
+				//can have multiple keys, call function for each key
+				if (Array.isArray(keyOrKeys)) {
+					_underscore2.default.each(keyOrKeys, function (key) {
+						_this2.observe(key, callback);
+					});
+					return this;
+				}
+				var key = keyOrKeys;
+
+				//Study relation?
+				var rel = this.getRelationship(key);
+				if (rel && rel.usesCollection()) {
+
+					if (this._relationshipStudies[key] === undefined) {
+						this._relationshipStudies[key] = function () {
+							_this2._scheduleAttributeChanged(key);
+						};
+						this.get(key).study(this._relationshipStudies[key]);
+					}
+				}
+
+				//super
+				return _get2(Model.prototype.__proto__ || Object.getPrototypeOf(Model.prototype), 'observe', this).call(this, keyOrKeys, callback);
+			}
+
+			/**
 	   * Get a value for use in the API, meaning it is in
 	   * database format. For example, dates will be converted back
 	   * from Moment instances into strings.
@@ -9948,17 +9991,17 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'setAttributesFromApi',
 			value: function setAttributesFromApi(attributes) {
-				var _this2 = this;
+				var _this3 = this;
 
 				// Loop through them and set values that are not dirty
 				_underscore2.default.each(attributes, function (value, key) {
 
 					// Dirty?
-					if (_this2.isDirty(key)) return;
+					if (_this3.isDirty(key)) return;
 
 					// Set it, and see this as a non-dirty value
-					_this2.setAttribute(key, value);
-					_this2.originalValues[key] = _this2.uncastValue(key, _this2.attributes[key]);
+					_this3.setAttribute(key, value);
+					_this3.originalValues[key] = _this3.uncastValue(key, _this3.attributes[key]);
 				});
 				return this;
 			}
@@ -9975,7 +10018,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getAttributesForApi',
 			value: function getAttributesForApi() {
-				var _this3 = this;
+				var _this4 = this;
 
 				var onlyDirty = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -10012,7 +10055,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						value = _Utils2.default.getValue(value);
 
 						// Uncast it for DB usage
-						var definition = _this3.getAttributeDefinition(key);
+						var definition = _this4.getAttributeDefinition(key);
 						if (definition) value = definition.uncast(value);
 						return value;
 					});
@@ -10023,7 +10066,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Also add defined attributes that were not set in the model (by default value)
 						var missingKeys = _underscore2.default.difference(modelDefinition.getApiAttributeNames(), _underscore2.default.keys(attr));
 						_underscore2.default.each(missingKeys, function (key) {
-							attr[key] = _this3.getAttributeDefinition(key).getDefaultValue();
+							attr[key] = _this4.getAttributeDefinition(key).getDefaultValue();
 						});
 					}
 
@@ -10130,7 +10173,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'save',
 			value: function save() {
-				var _this4 = this;
+				var _this5 = this;
 
 				var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -10158,25 +10201,25 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (result instanceof Model) {
 
 						// Use id for me.
-						if (!_this4.get('id')) _this4.set('id', result.get('id'));
+						if (!_this5.get('id')) _this5.set('id', result.get('id'));
 					}
 
 					// No longer dirty!
-					_this4.state.set('dirty', false);
+					_this5.state.set('dirty', false);
 
 					// No longer busy
-					_this4.state.set('busy', false);
-					_this4.state.set('saving', false);
+					_this5.state.set('busy', false);
+					_this5.state.set('saving', false);
 
 					// Trigger.
-					_this4.trigger('save', apiCall);
+					_this5.trigger('save', apiCall);
 				}, function () {
 
 					// No longer busy
-					_this4.state.set('busy', false);
-					_this4.state.set('saving', false);
+					_this5.state.set('busy', false);
+					_this5.state.set('saving', false);
 
-					_this4.trigger('error', apiCall);
+					_this5.trigger('error', apiCall);
 				});
 
 				// Done.
@@ -10199,7 +10242,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'delete',
 			value: function _delete() {
-				var _this5 = this;
+				var _this6 = this;
 
 				var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -10223,19 +10266,19 @@ return /******/ (function(modules) { // webpackBootstrap
 				apiCall.getPromise('complete').then(function () {
 
 					// No longer busy
-					_this5.state.set('busy', false);
-					_this5.state.set('saving', false);
-					_this5.state.set('deleted', true);
+					_this6.state.set('busy', false);
+					_this6.state.set('saving', false);
+					_this6.state.set('deleted', true);
 
 					//remove model from the store
-					Model.deleteFromStore(_this5.getModelName(), _this5.get('id'));
+					Model.deleteFromStore(_this6.getModelName(), _this6.get('id'));
 				}, function () {
 
 					// No longer busy
-					_this5.state.set('busy', false);
-					_this5.state.set('saving', false);
+					_this6.state.set('busy', false);
+					_this6.state.set('saving', false);
 
-					_this5.trigger('error', apiCall);
+					_this6.trigger('error', apiCall);
 				});
 
 				// Done.
@@ -10307,14 +10350,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getDirty',
 			value: function getDirty() {
-				var _this6 = this;
+				var _this7 = this;
 
 				// Get dirty values
 				var dirty = {};
 				_underscore2.default.each(this.attributes, function (value, key) {
 
 					// Not in original or changed?
-					if (_this6.isDirty(key)) {
+					if (_this7.isDirty(key)) {
 
 						// Then it's dirty
 						dirty[key] = value;
@@ -10378,7 +10421,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'resetDirty',
 			value: function resetDirty() {
-				var _this7 = this;
+				var _this8 = this;
 
 				var keys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -10390,7 +10433,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Specific key?
 				_underscore2.default.each(keys, function (key) {
 
-					_this7.originalValues[key] = _this7.uncastValue(key, _this7.attributes[key]);
+					_this8.originalValues[key] = _this8.uncastValue(key, _this8.attributes[key]);
 				});
 				return this;
 			}
@@ -10416,15 +10459,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_scheduleUpdateDirty',
 			value: function _scheduleUpdateDirty() {
-				var _this8 = this;
+				var _this9 = this;
 
 				// Already going?
 				if (this._scheduleUpdateDirtyTimeout) return;
 
 				// Wait a bit
 				this._scheduleUpdateDirtyTimeout = setTimeout(function () {
-					_this8.updateDirty();
-					_this8._scheduleUpdateDirtyTimeout = null;
+					_this9.updateDirty();
+					_this9._scheduleUpdateDirtyTimeout = null;
 				}, Model.UpdateDirtyDelay);
 			}
 
@@ -10493,7 +10536,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'addRelatedModel',
 			value: function addRelatedModel(relationshipName, relatedModel) {
-				var _this9 = this;
+				var _this10 = this;
 
 				var fromApi = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 				var pivotAttributes = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
@@ -10509,11 +10552,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					} else {
 						this.related[relationshipName] = new _Collection2.default(relatedModel.constructor);
 					}
-
-					//Study relation
-					this.related[relationshipName].study(function () {
-						_this9._scheduleAttributeChanged(relationshipName);
-					});
 				}
 
 				// Is it a valid collection?
@@ -10542,7 +10580,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Set it
 					relatedModel.withoutNotifications(function () {
-						relatedModel.setRelatedModel(relationship.inverseRelationshipName, _this9);
+						relatedModel.setRelatedModel(relationship.inverseRelationshipName, _this10);
 					});
 				}
 
@@ -10668,7 +10706,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'clone',
 			value: function clone(cacheMap) {
-				var _this10 = this;
+				var _this11 = this;
 
 				//create cacheMap?
 				if (!cacheMap) cacheMap = new Map();
@@ -10686,7 +10724,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				//get all attributes
 				var attr = {};
 				_underscore2.default.each(this.attributes, function (value, key) {
-					attr[key] = _this10.get(key);
+					attr[key] = _this11.get(key);
 					if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
 						attr[key] = attr[key].clone(cacheMap);
 					}
@@ -11335,11 +11373,152 @@ return /******/ (function(modules) { // webpackBootstrap
 		uid: function uid() {
 			return '*' + ++_uid + '*';
 		},
+
+
+		/**
+	  * encode an object to a query string
+	  * @param  {Object}  obj  	the object to convert
+	  * @param  {Boolean} deep 	use deep-converion, this adds subkeys and array values
+	  * @return {String}       	the query string
+	  */
 		encodeQueryString: function encodeQueryString(obj) {
-			return _queryString2.default.stringify(obj);
+			var _this = this;
+
+			var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+
+			if (deep) {
+				var _ret = function () {
+
+					//init str
+					var propStrings = [],
+					    str = '';
+
+					//convert to simple object
+					if (obj instanceof _Observable2.default) obj = obj.toObject();
+
+					//base url
+					if (obj.baseUrl) str += obj.baseUrl + '?';
+
+					//add props
+					_underscore2.default.each(_underscore2.default.keys(obj), function (key) {
+
+						//skip baseUrl
+						if (key == 'baseUrl') return;
+
+						propStrings = _this._addPropString(propStrings, key, obj[key]);
+					});
+
+					//add to querystring
+					str += propStrings.join('&');
+
+					return {
+						v: str
+					};
+				}();
+
+				if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
+			} else {
+
+				return _queryString2.default.stringify(obj);
+			}
 		},
+
+
+		/**
+	  * Add an url property from key and value. 
+	  * Arrays are joined with commas,
+	  * Objects properties will be processed again, and the key will be sub-keyed,
+	  * String values will remain unchanged
+	  * 
+	  * @param {Array} propStrings 	The list of strings to add the value to
+	  * @param {String} key         	The variable key
+	  * @param {mixed} value       	The variable value
+	  */
+		_addPropString: function _addPropString(propStrings, key, value) {
+			var _this2 = this;
+
+			if (value instanceof Array) {
+
+				//array
+				propStrings.push(key + '=' + value.join(','));
+			} else if (value instanceof Object) {
+
+				//object
+				_underscore2.default.each(_underscore2.default.keys(value), function (subKey) {
+					propStrings = _this2._addPropString(propStrings, key + '[' + subKey + ']', value[subKey]);
+				});
+			} else {
+
+				propStrings.push(key + '=' + value);
+			}
+
+			return propStrings;
+		},
+
+
+		/**
+	  * decode a query string to an object
+	  * @param  {string}  str  	the query string
+	  * @param  {Boolean} deep 	use deep-conversion, sub-keys and array values will be converted to objects and arrays
+	  * @return {Object}       	the decoded values
+	  */
 		decodeQueryString: function decodeQueryString(str) {
-			return _queryString2.default.parse(str);
+			var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+
+
+			if (deep) {
+				var _ret2 = function () {
+
+					//init object
+					var props = void 0,
+					    resultObject = {};
+
+					//get all properties
+					if (str.indexOf('?') !== -1) {
+						resultObject['baseUrl'] = str.split('?')[0];
+						props = str.split('?')[1].split('&');
+					} else {
+						props = str.split('&');
+					}
+
+					//convert each property to object
+					_underscore2.default.each(props, function (prop) {
+
+						//split value and key
+						prop = prop.split('=');
+						var key = prop[0];
+						var value = prop[1];
+
+						//value				
+						value = value.split(',');
+						value = value.length == 1 ? value[0] : value;
+
+						//key array
+						if (key.indexOf('[') !== -1 && key.indexOf(']') !== -1) {
+							key = key.split('[');
+							var baseKey = key[0];
+							var subKey = key[1].substring(0, key[1].length - 1);
+
+							if (!(resultObject[baseKey] instanceof Object)) {
+								resultObject[baseKey] = {};
+							}
+
+							resultObject[baseKey][subKey] = value;
+						} else {
+							resultObject[key] = value;
+						}
+					});
+
+					return {
+						v: resultObject
+					};
+				}();
+
+				if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
+			} else {
+				return _queryString2.default.parse(str);
+			}
 		}
 	};
 
@@ -11739,6 +11918,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Get param
 				var value = this._getValue(params[0]);
 				return value instanceof Object;
+			}
+		}, {
+			key: 'valueOr',
+			value: function valueOr(params) {
+				var value = this._getValue(params[0]);
+				var defaultValue = this._getValue(params[1]);
+
+				return value ? value : defaultValue;
 			}
 
 			/////////////
@@ -13612,12 +13799,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof callback === 'string') {
 
 						// Get the controller action callback
-						var _callback$split = callback.split(/@/);
-
-						var _callback$split2 = _slicedToArray(_callback$split, 2);
-
-						var controllerName = _callback$split2[0];
-						var action = _callback$split2[1];
+						var _callback$split = callback.split(/@/),
+						    _callback$split2 = _slicedToArray(_callback$split, 2),
+						    controllerName = _callback$split2[0],
+						    action = _callback$split2[1];
 
 						if (controllerName && action) {
 
@@ -16724,6 +16909,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.morphModelKey = morphModelKey;
 
 				return this;
+			}
+		}, {
+			key: 'usesCollection',
+			value: function usesCollection() {
+				return this.type == Relationship.BelongsToMany || this.type == Relationship.HasMany || this.type == Relationship.HasManyThrough;
 			}
 
 			/////////////

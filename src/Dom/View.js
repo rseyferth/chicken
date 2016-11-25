@@ -630,7 +630,8 @@ class View extends Observable
 	/**
 	 * Handle the leaving of the page this View is on, e.g. destroying
 	 * components.
-	 * 
+	 *
+	 * @method leave
 	 * @return {Promise}
 	 */
 	leave() {

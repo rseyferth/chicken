@@ -60,7 +60,7 @@ class Binding
 
 		// What to do when value changes
 		this.changeCallback = () => {
-			
+
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
 				morph.isDirty = true;

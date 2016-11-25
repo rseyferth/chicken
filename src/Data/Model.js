@@ -78,6 +78,13 @@ class Model extends Observable
 		});
 
 
+		/**
+		 * list of studied relationships
+		 * @type {Object}
+		 */
+		this._relationshipStudies = {};
+
+
 		// Check computed!
 		if (this.constructor.definition) {
 
@@ -196,6 +203,41 @@ class Model extends Observable
 
 
 	}
+
+	/**
+	 * Override Observable.observe
+	 *
+	 * Check if model has HasMany, HasManyTrough or BelongToMany relations it can study
+	 */
+	observe(keyOrKeys, callback) {
+
+		//can have multiple keys, call function for each key
+		if (Array.isArray(keyOrKeys)) {
+			_.each(keyOrKeys, (key) => {
+				this.observe(key, callback);
+			});
+			return this;
+		}
+		var key = keyOrKeys;
+
+		//Study relation?
+		let rel = this.getRelationship(key);
+		if (rel && rel.usesCollection()) { 
+		
+			if (this._relationshipStudies[key] === undefined) {
+				this._relationshipStudies[key] = () => {
+					this._scheduleAttributeChanged(key);
+				};
+				this.get(key).study(this._relationshipStudies[key]);
+			}
+		}
+
+		//super
+		return super.observe(keyOrKeys, callback);
+	}
+
+			
+
 
 	/**
 	 * Get a value for use in the API, meaning it is in
@@ -816,11 +858,6 @@ class Model extends Observable
 			} else {
 				this.related[relationshipName] = new Collection(relatedModel.constructor);
 			}
-
-			//Study relation
-			this.related[relationshipName].study(() => {
-				this._scheduleAttributeChanged(relationshipName);
-			});
 
 		} 
 

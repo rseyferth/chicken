@@ -95,7 +95,7 @@ class Helpers
 
 		// Check uid for this each-block
 		var eachUid = Utils.uidFor(morph);
-		
+
 		// Get the value
 		let list = this._getValue(params[0]);
 		Utils.each(list, (item, i) => {
@@ -276,6 +276,12 @@ class Helpers
 
 	}
 
+	valueOr(params) {
+		let value = this._getValue(params[0]);
+		let defaultValue = this._getValue(params[1]);
+
+		return (value) ? value : defaultValue;
+	}
 
 
 	/////////////

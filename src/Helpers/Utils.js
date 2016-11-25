@@ -187,12 +187,151 @@ let Utils = {
 	},
 
 
-	encodeQueryString(obj) {
-		return Querystring.stringify(obj);
+	/**
+	 * encode an object to a query string
+	 * @param  {Object}  obj  	the object to convert
+	 * @param  {Boolean} deep 	use deep-converion, this adds subkeys and array values
+	 * @return {String}       	the query string
+	 */
+	encodeQueryString(obj, deep = false) {
+
+		if (deep) {
+
+			//init str
+			let propStrings = [], str = '';
+
+			//convert to simple object
+			if (obj instanceof Observable) obj = obj.toObject();			
+
+			//base url
+			if (obj.baseUrl) str += obj.baseUrl + '?';
+
+			//add props
+			_.each(_.keys(obj), (key) => {
+
+				//skip baseUrl
+				if (key == 'baseUrl') return;
+
+				propStrings = this._addPropString(propStrings, key, obj[key]);
+
+			});
+			
+
+			//add to querystring
+			str += propStrings.join('&');
+
+			return str;
+
+		} else {
+
+			return Querystring.stringify(obj);
+		}
+
+
 	},
-	decodeQueryString(str) {
-		return Querystring.parse(str);
+
+
+	/**
+	 * Add an url property from key and value. 
+	 * Arrays are joined with commas,
+	 * Objects properties will be processed again, and the key will be sub-keyed,
+	 * String values will remain unchanged
+	 * 
+	 * @param {Array} propStrings 	The list of strings to add the value to
+	 * @param {String} key         	The variable key
+	 * @param {mixed} value       	The variable value
+	 */
+	_addPropString(propStrings, key, value) {
+
+		if (value instanceof Array) {
+			
+			//array
+			propStrings.push(key + '=' + value.join(','));
+
+		} else if (value instanceof Object) {
+			
+			//object
+			_.each(_.keys(value), (subKey) => {
+				propStrings = this._addPropString(propStrings, key + '[' + subKey + ']', value[subKey]);
+			});
+
+		} else {
+
+			propStrings.push(key + '=' + value);
+		}
+
+
+		return propStrings;
+	},
+
+
+	/**
+	 * decode a query string to an object
+	 * @param  {string}  str  	the query string
+	 * @param  {Boolean} deep 	use deep-conversion, sub-keys and array values will be converted to objects and arrays
+	 * @return {Object}       	the decoded values
+	 */
+	decodeQueryString(str, deep = false) {
+
+		if (deep) {
+
+			//init object
+			let props, resultObject = {};
+
+			//get all properties
+			if (str.indexOf('?') !== -1) {
+				resultObject['baseUrl'] = str.split('?')[0];
+				props = str.split('?')[1].split('&');	
+			} else {
+				props = str.split('&');
+			}
+			
+
+			//convert each property to object
+			_.each(props, (prop) => {
+
+				//split value and key
+				prop = prop.split('=');
+				let key = prop[0];
+				let value = prop[1];
+
+				//value				
+				value = value.split(',');
+				value = value.length == 1 ? value[0] : value;
+
+
+				//key array
+				if (key.indexOf('[') !== -1 && key.indexOf(']') !== -1) {
+					key = key.split('[');
+					let baseKey = key[0];
+					let subKey = key[1].substring(0, key[1].length - 1);
+
+					if (!(resultObject[baseKey] instanceof Object)) {
+						resultObject[baseKey] = {};
+					}
+					
+
+					resultObject[baseKey][subKey] = value;
+					
+				} else {
+					resultObject[key] = value;
+				}
+
+			});
+
+
+			return resultObject;
+			
+
+		} else {
+			return Querystring.parse(str);
+		}
 	}
+
+
+
+
+
 
 
 };
