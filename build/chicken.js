@@ -6204,7 +6204,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * The `get` hook is responsible for retrieving Bindings from the data store.
 	   * 
 	   * @method hooks.get
-	   * @param  {Renderer} 	renderer   	Tfhe Renderer instance (this)
+	   * @param  {Renderer} 	renderer   	The Renderer instance (this)
 	   * @param  {Scope} 		scope 		The Scope in which the `get` was called, 
 	   *                           		containing the data that is available in this Scope
 	   * @param  {string} 	path 		The path (key) of the variable to retrieve 		
@@ -11373,6 +11373,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		uid: function uid() {
 			return '*' + ++_uid + '*';
 		},
+
+
+		/**
+	  * encode an object to a query string
+	  * @param  {Object}  obj  	the object to convert
+	  * @param  {Boolean} deep 	use deep-converion, this adds subkeys and array values
+	  * @return {String}       	the query string
+	  */
 		encodeQueryString: function encodeQueryString(obj) {
 			var _this = this;
 
@@ -11398,7 +11406,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						//skip baseUrl
 						if (key == 'baseUrl') return;
 
-						propStrings = _this.__addPropString(propStrings, key, obj[key]);
+						propStrings = _this._addPropString(propStrings, key, obj[key]);
 					});
 
 					//add to querystring
@@ -11415,7 +11423,19 @@ return /******/ (function(modules) { // webpackBootstrap
 				return _queryString2.default.stringify(obj);
 			}
 		},
-		__addPropString: function __addPropString(propStrings, key, value) {
+
+
+		/**
+	  * Add an url property from key and value. 
+	  * Arrays are joined with commas,
+	  * Objects properties will be processed again, and the key will be sub-keyed,
+	  * String values will remain unchanged
+	  * 
+	  * @param {Array} propStrings 	The list of strings to add the value to
+	  * @param {String} key         	The variable key
+	  * @param {mixed} value       	The variable value
+	  */
+		_addPropString: function _addPropString(propStrings, key, value) {
 			var _this2 = this;
 
 			if (value instanceof Array) {
@@ -11426,7 +11446,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				//object
 				_underscore2.default.each(_underscore2.default.keys(value), function (subKey) {
-					propStrings = _this2.__addPropString(propStrings, key + '[' + subKey + ']', value[subKey]);
+					propStrings = _this2._addPropString(propStrings, key + '[' + subKey + ']', value[subKey]);
 				});
 			} else {
 
@@ -11435,6 +11455,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			return propStrings;
 		},
+
+
+		/**
+	  * decode a query string to an object
+	  * @param  {string}  str  	the query string
+	  * @param  {Boolean} deep 	use deep-conversion, sub-keys and array values will be converted to objects and arrays
+	  * @return {Object}       	the decoded values
+	  */
 		decodeQueryString: function decodeQueryString(str) {
 			var deep = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 

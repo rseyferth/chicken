@@ -187,10 +187,15 @@ let Utils = {
 	},
 
 
+	/**
+	 * encode an object to a query string
+	 * @param  {Object}  obj  	the object to convert
+	 * @param  {Boolean} deep 	use deep-converion, this adds subkeys and array values
+	 * @return {String}       	the query string
+	 */
 	encodeQueryString(obj, deep = false) {
 
 		if (deep) {
-
 
 			//init str
 			let propStrings = [], str = '';
@@ -207,7 +212,7 @@ let Utils = {
 				//skip baseUrl
 				if (key == 'baseUrl') return;
 
-				propStrings = this.__addPropString(propStrings, key, obj[key]);
+				propStrings = this._addPropString(propStrings, key, obj[key]);
 
 			});
 			
@@ -225,7 +230,18 @@ let Utils = {
 
 	},
 
-	__addPropString(propStrings, key, value) {
+
+	/**
+	 * Add an url property from key and value. 
+	 * Arrays are joined with commas,
+	 * Objects properties will be processed again, and the key will be sub-keyed,
+	 * String values will remain unchanged
+	 * 
+	 * @param {Array} propStrings 	The list of strings to add the value to
+	 * @param {String} key         	The variable key
+	 * @param {mixed} value       	The variable value
+	 */
+	_addPropString(propStrings, key, value) {
 
 		if (value instanceof Array) {
 			
@@ -236,7 +252,7 @@ let Utils = {
 			
 			//object
 			_.each(_.keys(value), (subKey) => {
-				propStrings = this.__addPropString(propStrings, key + '[' + subKey + ']', value[subKey]);
+				propStrings = this._addPropString(propStrings, key + '[' + subKey + ']', value[subKey]);
 			});
 
 		} else {
@@ -249,6 +265,12 @@ let Utils = {
 	},
 
 
+	/**
+	 * decode a query string to an object
+	 * @param  {string}  str  	the query string
+	 * @param  {Boolean} deep 	use deep-conversion, sub-keys and array values will be converted to objects and arrays
+	 * @return {Object}       	the decoded values
+	 */
 	decodeQueryString(str, deep = false) {
 
 		if (deep) {
