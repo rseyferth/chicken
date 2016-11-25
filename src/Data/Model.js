@@ -77,6 +77,8 @@ class Model extends Observable
 			this._scheduleAttributeChanged('is');
 		});
 
+		this._relationshipStudies = {};
+
 
 		// Check computed!
 		if (this.constructor.definition) {
@@ -196,6 +198,39 @@ class Model extends Observable
 
 
 	}
+
+	/**
+	 * overwrite Observable.observe
+	 *
+	 * Check if 
+	 */
+	observe(keyOrKeys, callback) {
+
+		if (Array.isArray(keyOrKeys)) {
+			_.each(keyOrKeys, (key) => {
+				this.observe(key, callback);
+			});
+			return this;
+		}
+		var key = keyOrKeys;
+
+		//Study relation?
+		let rel = this.getRelationship(key);
+		if (rel && rel.usesCollection()) { 
+		
+			if (this._relationshipStudies[key] === undefined) {
+				this._relationshipStudies[key] = () => {
+					this._scheduleAttributeChanged(key);
+				};
+				this.get(key).study(this._relationshipStudies[key]);
+			}
+		}
+
+		return super.observe(keyOrKeys, callback);
+	}
+
+			
+
 
 	/**
 	 * Get a value for use in the API, meaning it is in
@@ -816,11 +851,6 @@ class Model extends Observable
 			} else {
 				this.related[relationshipName] = new Collection(relatedModel.constructor);
 			}
-
-			//Study relation
-			this.related[relationshipName].study(() => {
-				this._scheduleAttributeChanged(relationshipName);
-			});
 
 		} 
 

@@ -95,8 +95,6 @@ class Helpers
 
 		// Check uid for this each-block
 		var eachUid = Utils.uidFor(morph);
-		
-		//console.log('eaching:', params[0].path);
 
 		// Get the value
 		let list = this._getValue(params[0]);

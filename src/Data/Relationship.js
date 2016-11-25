@@ -132,6 +132,10 @@ class Relationship {
 
 	}
 
+	usesCollection() {
+		return (this.type == Relationship.BelongsToMany || this.type == Relationship.HasMany || this.type == Relationship.HasManyThrough);
+	}
+
 
 
 	/////////////

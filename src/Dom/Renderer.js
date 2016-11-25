@@ -44,7 +44,7 @@ class Renderer
 			 * The `get` hook is responsible for retrieving Bindings from the data store.
 			 * 
 			 * @method hooks.get
-			 * @param  {Renderer} 	renderer   	The Renderer instance (this)
+			 * @param  {Renderer} 	renderer   	Tfhe Renderer instance (this)
 			 * @param  {Scope} 		scope 		The Scope in which the `get` was called, 
 			 *                           		containing the data that is available in this Scope
 			 * @param  {string} 	path 		The path (key) of the variable to retrieve 		
