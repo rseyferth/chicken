@@ -11648,6 +11648,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Check uid for this each-block
 				var eachUid = _Utils2.default.uidFor(morph);
 
+				console.log('eaching:', params[0].path);
+
 				// Get the value
 				var list = this._getValue(params[0]);
 				_Utils2.default.each(list, function (item, i) {
@@ -11833,6 +11835,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Get param
 				var value = this._getValue(params[0]);
 				return value instanceof Object;
+			}
+		}, {
+			key: 'valueOr',
+			value: function valueOr(params) {
+				var value = this._getValue(params[0]);
+				var defaultValue = this._getValue(params[1]);
+
+				return value ? value : defaultValue;
 			}
 
 			/////////////
