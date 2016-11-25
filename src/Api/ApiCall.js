@@ -1,5 +1,6 @@
 import $ from 'jquery';
 import QueryString from 'query-string';
+import _ from 'underscore';
 
 import ApiError from '~/Api/ApiError';
 import Obj from '~/Core/Obj';
@@ -145,6 +146,20 @@ class ApiCall extends Obj {
 				data: this.data
 				
 			}, this.ajaxOptions);
+
+			// Before send
+			let beforeSends = [];
+			if (this.api.settings.beforeSend) beforeSends.push(this.api.settings.beforeSend);
+			if (options.beforeSend) beforeSends.push(options.beforeSend);
+			options.beforeSend = (jqXhr, settings) => {
+
+				// Loop and exexcute
+				_.each(beforeSends, (cb) => {
+					cb(jqXhr, settings);
+				});				
+
+			};
+			
 
 			// Make the call
 			this.api.ajax(options)

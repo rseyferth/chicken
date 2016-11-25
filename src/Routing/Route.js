@@ -123,6 +123,13 @@ class Route extends Obj
 		this.acceptsQuery = false;
 
 
+		/**
+		 * When true, the route's action(s) will refresh when the Request flash-data changes
+		 * @type {Boolean}
+		 */
+		this.acceptsFlash = false;
+
+
 
 		// Add me to parent route
 		if (parent) {
@@ -415,6 +422,14 @@ class Route extends Obj
 		return this;
 
 	}
+	
+	acceptFlash(accept = true) {
+
+		this.acceptsFlash = accept;
+		return this;
+
+	}
+
 
 
 	/**

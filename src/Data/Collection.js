@@ -180,19 +180,19 @@ class Collection extends ObservableArray
 						if (index > -1) wordsMatched++;
 					}
 
-					// Match?
-					if (wordsMatched > 0) {
-						result.push({
-							wordsMatched: wordsMatched,
-							entireMatch: entireMatch,
-							model: model
-						});
-					}
 
 				});
 
 			});
 
+			// Match?
+			if (wordsMatched > 0) {
+				result.push({
+					wordsMatched: wordsMatched,
+					entireMatch: entireMatch,
+					model: model
+				});
+			}
 
 		});
 		

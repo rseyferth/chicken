@@ -23,6 +23,8 @@ class Api {
 			
 			auth: false,
 
+			beforeSend: false
+
 		}, options);
 
 	}
