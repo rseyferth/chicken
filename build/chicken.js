@@ -2135,6 +2135,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'goto',
 			value: function goto(uri) {
 				var query = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var flash = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
 
 
 				// Query in the uri?
@@ -2173,7 +2174,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Change the history state
 				this.history.push({
 					pathname: uri,
-					search: query
+					search: query,
+					state: {
+						flash: flash
+					}
 				});
 
 				return this;
@@ -8791,8 +8795,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Use key/value
-					var key = args[0],
-					    value = args[1];
+					var key = args[0];
+					var value = args[1];
 
 					// Is the key a string?
 
@@ -9167,6 +9171,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
 	var _ApiError = __webpack_require__(52);
 
 	var _ApiError2 = _interopRequireDefault(_ApiError);
@@ -9339,6 +9347,18 @@ return /******/ (function(modules) { // webpackBootstrap
 						data: _this2.data
 
 					}, _this2.ajaxOptions);
+
+					// Before send
+					var beforeSends = [];
+					if (_this2.api.settings.beforeSend) beforeSends.push(_this2.api.settings.beforeSend);
+					if (options.beforeSend) beforeSends.push(options.beforeSend);
+					options.beforeSend = function (jqXhr, settings) {
+
+						// Loop and exexcute
+						_underscore2.default.each(beforeSends, function (cb) {
+							cb(jqXhr, settings);
+						});
+					};
 
 					// Make the call
 					_this2.api.ajax(options).then(function (result) {
@@ -10948,103 +10968,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				return newIds.length > 0 || removedIds.length > 0;
 			}
 		}, {
-<<<<<<< HEAD
-			key: 'search',
-			value: function search(query) {
-				var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
-				var fields = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-
-
-				// No models in me?
-				if (this.items.length === 0) return new Collection(this.modelClass);
-
-				// No fields defined?
-				if (!fields) {
-
-					// Try to get fields from definition
-					var def = this.modelClass.definition;
-					if (def) {
-
-						// Get fields
-						fields = def.getSearchFields();
-					}
-
-					// Still no field?
-					if (!fields) {
-
-						// Use all but id
-						fields = _underscore2.default.without(_underscore2.default.keys(_underscore2.default.first(this.items).attributes), 'id');
-						console.log(fields);
-					}
-				}
-
-				// Get words
-				var words = query.split(/\s+/);
-				var result = [];
-				_underscore2.default.each(this.items, function (model) {
-
-					// How many words are matched by the fields
-					var wordsMatched = 0;
-					var entireMatch = false;
-					_underscore2.default.each(words, function (word) {
-
-						// Not empty?
-						if (!word) return;
-
-						// Loop through fields
-						_underscore2.default.each(fields, function (field) {
-
-							// Entire match?
-							var value = model.get(field);
-							if (value && value === word) {
-								entireMatch = true;
-								wordsMatched++;
-							} else {
-
-								// Check if it contains me
-								value = ('' + value).toLowerCase();
-								var w = word.toLowerCase();
-								var index = value.indexOf(w);
-								if (index > -1) wordsMatched++;
-							}
-
-							// Match?
-							if (wordsMatched > 0) {
-								result.push({
-									wordsMatched: wordsMatched,
-									entireMatch: entireMatch,
-									model: model
-								});
-							}
-						});
-					});
-				});
-
-				// Now sort it
-				result.sort(function (a, b) {
-
-					// Entire match same?
-					if (a.entireMatch !== b.entireMatch) {
-
-						// Entire match is better.
-						return a.entireMatch ? -1 : 1;
-					}
-
-					// # words matched
-					if (a.wordsMatched === b.wordsMatched) return 0;
-					return a.wordsMatched > b.wordsMatched ? -1 : 1;
-				});
-
-				// Check limit
-				limit = limit ? Math.min(result.length, limit) : result.length;
-
-				// Make collection
-				var collectionResult = new Collection(this.modelClass);
-				for (var q = 0; q < limit; q++) {
-					collectionResult.items.push(result[q].model);
-				}
-				return collectionResult;
-=======
 			key: 'hasDirtyChildren',
 			value: function hasDirtyChildren() {
 				//check children for dirty
@@ -11085,7 +11008,102 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 
 				return copy;
->>>>>>> master
+			}
+		}, {
+			key: 'search',
+			value: function search(query) {
+				var limit = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+				var fields = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+
+				// No models in me?
+				if (this.items.length === 0) return new Collection(this.modelClass);
+
+				// No fields defined?
+				if (!fields) {
+
+					// Try to get fields from definition
+					var def = this.modelClass.definition;
+					if (def) {
+
+						// Get fields
+						fields = def.getSearchFields();
+					}
+
+					// Still no field?
+					if (!fields) {
+
+						// Use all but id
+						fields = _underscore2.default.without(_underscore2.default.keys(_underscore2.default.first(this.items).attributes), 'id');
+					}
+				}
+
+				// Get words
+				var words = query.split(/\s+/);
+				var result = [];
+				_underscore2.default.each(this.items, function (model) {
+
+					// How many words are matched by the fields
+					var wordsMatched = 0;
+					var entireMatch = false;
+					_underscore2.default.each(words, function (word) {
+
+						// Not empty?
+						if (!word) return;
+
+						// Loop through fields
+						_underscore2.default.each(fields, function (field) {
+
+							// Entire match?
+							var value = model.get(field);
+							if (value && value === word) {
+								entireMatch = true;
+								wordsMatched++;
+							} else {
+
+								// Check if it contains me
+								value = ('' + value).toLowerCase();
+								var w = word.toLowerCase();
+								var index = value.indexOf(w);
+								if (index > -1) wordsMatched++;
+							}
+						});
+					});
+
+					// Match?
+					if (wordsMatched > 0) {
+						result.push({
+							wordsMatched: wordsMatched,
+							entireMatch: entireMatch,
+							model: model
+						});
+					}
+				});
+
+				// Now sort it
+				result.sort(function (a, b) {
+
+					// Entire match same?
+					if (a.entireMatch !== b.entireMatch) {
+
+						// Entire match is better.
+						return a.entireMatch ? -1 : 1;
+					}
+
+					// # words matched
+					if (a.wordsMatched === b.wordsMatched) return 0;
+					return a.wordsMatched > b.wordsMatched ? -1 : 1;
+				});
+
+				// Check limit
+				limit = limit ? Math.min(result.length, limit) : result.length;
+
+				// Make collection
+				var collectionResult = new Collection(this.modelClass);
+				for (var q = 0; q < limit; q++) {
+					collectionResult.items.push(result[q].model);
+				}
+				return collectionResult;
 			}
 		}]);
 
@@ -12225,7 +12243,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					Promise.all(actionPromises).then(function () /*...results*/{
 
 						//@TODO What to do?
-
+						_this2.trigger('complete', [routeMatch]);
 					});
 				};
 
@@ -12262,7 +12280,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Is there a result?
 					if (result !== undefined) {
-						// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'
+						// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'				
 					}
 				};
 				nextCallback();
@@ -12548,6 +12566,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Boolean}
 	   */
 			_this.acceptsQuery = false;
+
+			/**
+	   * When true, the route's action(s) will refresh when the Request flash-data changes
+	   * @type {Boolean}
+	   */
+			_this.acceptsFlash = false;
 
 			// Add me to parent route
 			if (parent) {
@@ -12845,6 +12869,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 				this.acceptsQuery = accept;
+				return this;
+			}
+		}, {
+			key: 'acceptFlash',
+			value: function acceptFlash() {
+				var accept = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+
+				this.acceptsFlash = accept;
 				return this;
 			}
 
@@ -13171,6 +13204,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _xregexp2 = _interopRequireDefault(_xregexp);
 
+	var _underscore = __webpack_require__(2);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
 	var _App = __webpack_require__(50);
 
 	var _App2 = _interopRequireDefault(_App);
@@ -13401,6 +13438,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 									// Then we assume this action has changed.
 
+									// Is there a flash message in the request?
+								} else if (_underscore2.default.size(_this2.request.flash) > 0 && _this2.viewContainer.currentAction.route.acceptsFlash) {
+
+									// Then we assume this action has changed.
+
 								} else {
 
 									// That means, we've just navigated within nested routes of that page, and this action can be skipped.
@@ -13484,7 +13526,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					//@TODO Cancel the running request?
 
-					(0, _App2.default)().goto(result.uri);
+					(0, _App2.default)().goto(result.uri, null, result.flash);
 				}
 
 				///////////////////////////
@@ -13570,10 +13612,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof callback === 'string') {
 
 						// Get the controller action callback
-						var _callback$split = callback.split(/@/),
-						    _callback$split2 = _slicedToArray(_callback$split, 2),
-						    controllerName = _callback$split2[0],
-						    action = _callback$split2[1];
+						var _callback$split = callback.split(/@/);
+
+						var _callback$split2 = _slicedToArray(_callback$split, 2);
+
+						var controllerName = _callback$split2[0];
+						var action = _callback$split2[1];
 
 						if (controllerName && action) {
 
@@ -13627,17 +13671,54 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 64 */
-/***/ function(module, exports) {
+/***/ function(module, exports, __webpack_require__) {
 
-	"use strict";
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(1);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-	var Redirect = function Redirect(uri) {
-		_classCallCheck(this, Redirect);
+	var Redirect = function () {
+		function Redirect(uri) {
+			_classCallCheck(this, Redirect);
 
-		this.uri = uri;
-	};
+			this.uri = uri;
+			this.flash = {};
+		}
+
+		_createClass(Redirect, [{
+			key: 'with',
+			value: function _with(dataOrKey) {
+				var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				// Value?
+				var data = dataOrKey;
+				if (value) {
+					data = {};
+					data[dataOrKey] = value;
+				}
+
+				_jquery2.default.extend(this.flash, data);
+
+				return this;
+			}
+		}, {
+			key: 'withError',
+			value: function withError(message) {
+				return this.with('error', message);
+			}
+		}]);
+
+		return Redirect;
+	}();
 
 	module.exports = Redirect;
 
@@ -13746,6 +13827,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
 	var _queryString = __webpack_require__(8);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
@@ -13761,47 +13844,65 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @module Routing
 	 */
-	var Request =
+	var Request = function () {
 
-	/**
-	 * @class Routing.Request
-	 *
-	 * @constructor
-	 * @param {object} 			location 		The location received from the History library
-	 * @param {Application} 	[application] 	The Application instance that this Request is a part of
-	 */
-	function Request(location) {
-		var application = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+		/**
+	  * @class Routing.Request
+	  *
+	  * @constructor
+	  * @param {object} 			location 		The location received from the History library
+	  * @param {Application} 	[application] 	The Application instance that this Request is a part of
+	  */
+		function Request(location) {
+			var application = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
-		_classCallCheck(this, Request);
+			_classCallCheck(this, Request);
 
-		// Guess application if not given
-		if (!application) application = _ClassMap2.default.get('Application').getInstance();
+			// Guess application if not given
+			if (!application) application = _ClassMap2.default.get('Application').getInstance();
 
-		// Parse the uri 
-		var uri = Request.cleanUri(location.pathname);
+			// Parse the uri 
+			var uri = Request.cleanUri(location.pathname);
 
-		// Strip of base part
-		var baseUrl = Request.cleanUri(application.settings.get('baseUrl'));
-		if (uri.length >= baseUrl.length && uri.substr(0, baseUrl.length)) {
-			uri = uri.substr(baseUrl.length);
+			// Strip of base part
+			var baseUrl = Request.cleanUri(application.settings.get('baseUrl'));
+			if (uri.length >= baseUrl.length && uri.substr(0, baseUrl.length)) {
+				uri = uri.substr(baseUrl.length);
+			}
+
+			// Add the / back again
+			uri = '/' + uri;
+
+			/**
+	   * @property uri
+	   * @type {string}
+	   */
+			this.uri = uri;
+
+			/**
+	   * @property query
+	   * @type {object}
+	   */
+			this.query = _queryString2.default.parse(location.search);
+
+			/**
+	   * @property flash
+	   * @type {object|false}
+	   */
+			this.flash = location.state ? location.state.flash : {};
 		}
 
-		// Add the / back again
-		uri = '/' + uri;
+		_createClass(Request, [{
+			key: 'getFlash',
+			value: function getFlash(key) {
 
-		/**
-	  * @property uri
-	  * @type {string}
-	  */
-		this.uri = uri;
+				if (this.flash && this.flash[key]) return this.flash[key];
+				return null;
+			}
+		}]);
 
-		/**
-	  * @property query
-	  * @type {object}
-	  */
-		this.query = _queryString2.default.parse(location.search);
-	};
+		return Request;
+	}();
 
 	Request.cleanUri = function (uri) {
 
@@ -14289,7 +14390,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.settings = _jquery2.default.extend({
 				baseUrl: '/api',
 
-				auth: false
+				auth: false,
+
+				beforeSend: false
 
 			}, options);
 		}

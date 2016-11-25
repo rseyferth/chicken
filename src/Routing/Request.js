@@ -44,6 +44,20 @@ class Request
 		 */
 		this.query = QueryString.parse(location.search);
 
+		/**
+		 * @property flash
+		 * @type {object|false}
+		 */
+		this.flash = location.state ? location.state.flash : {};
+
+	}
+
+
+	getFlash(key) {
+
+		if (this.flash && this.flash[key]) return this.flash[key];
+		return null;
+
 	}
 
 

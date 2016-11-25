@@ -1,4 +1,5 @@
 import XRegExp from 'xregexp';
+import _ from 'underscore';
 
 import App from '~/Helpers/App';
 import Obj from '~/Core/Obj';
@@ -219,6 +220,11 @@ class Action extends Obj
 
 							// Then we assume this action has changed.
 
+						// Is there a flash message in the request?
+						} else if (_.size(this.request.flash) > 0 && this.viewContainer.currentAction.route.acceptsFlash) {
+
+							// Then we assume this action has changed.
+
 						} else {
 
 							// That means, we've just navigated within nested routes of that page, and this action can be skipped.
@@ -313,7 +319,7 @@ class Action extends Obj
 
 			//@TODO Cancel the running request?
 			
-			App().goto(result.uri);
+			App().goto(result.uri, null, result.flash);
 
 		}
 
@@ -425,6 +431,7 @@ class Action extends Obj
 					if (callback === 'undefined' || typeof callback !== 'function') {
 						throw new Error('There is no action on the "' + controllerName + '" controller with the name "' + action + '"');
 					}
+
 
 
 				}
