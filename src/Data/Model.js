@@ -77,6 +77,11 @@ class Model extends Observable
 			this._scheduleAttributeChanged('is');
 		});
 
+
+		/**
+		 * list of studied relationships
+		 * @type {Object}
+		 */
 		this._relationshipStudies = {};
 
 
@@ -200,12 +205,13 @@ class Model extends Observable
 	}
 
 	/**
-	 * overwrite Observable.observe
+	 * Override Observable.observe
 	 *
-	 * Check if 
+	 * Check if model has HasMany, HasManyTrough or BelongToMany relations it can study
 	 */
 	observe(keyOrKeys, callback) {
 
+		//can have multiple keys, call function for each key
 		if (Array.isArray(keyOrKeys)) {
 			_.each(keyOrKeys, (key) => {
 				this.observe(key, callback);
@@ -226,6 +232,7 @@ class Model extends Observable
 			}
 		}
 
+		//super
 		return super.observe(keyOrKeys, callback);
 	}
 

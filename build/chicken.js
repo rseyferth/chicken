@@ -9744,6 +9744,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				_this._scheduleAttributeChanged('is');
 			});
 
+			/**
+	   * list of studied relationships
+	   * @type {Object}
+	   */
 			_this._relationshipStudies = {};
 
 			// Check computed!
@@ -9870,9 +9874,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 
 			/**
-	   * overwrite Observable.observe
+	   * Override Observable.observe
 	   *
-	   * Check if 
+	   * Check if model has HasMany, HasManyTrough or BelongToMany relations it can study
 	   */
 
 		}, {
@@ -9880,6 +9884,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function observe(keyOrKeys, callback) {
 				var _this2 = this;
 
+				//can have multiple keys, call function for each key
 				if (Array.isArray(keyOrKeys)) {
 					_underscore2.default.each(keyOrKeys, function (key) {
 						_this2.observe(key, callback);
@@ -9900,6 +9905,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				}
 
+				//super
 				return _get2(Model.prototype.__proto__ || Object.getPrototypeOf(Model.prototype), 'observe', this).call(this, keyOrKeys, callback);
 			}
 
