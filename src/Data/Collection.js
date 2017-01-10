@@ -86,8 +86,12 @@ class Collection extends ObservableArray
 	hasDirtyChildren() {
 		//check children for dirty
 		let dirtyChildren = _.filter(this.items, (item) => {
+			console.log('checking item', item, item.isDirty());
 			return item.isDirty();
 		});
+
+		console.log('all children:', this.items);
+		console.log('dirty children:', dirtyChildren);
 
 		return dirtyChildren.length > 0;
 	}

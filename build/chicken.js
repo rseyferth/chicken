@@ -10379,6 +10379,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'isDirty',
 			value: function isDirty() {
+				var _this8 = this;
+
 				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
 
@@ -10406,7 +10408,16 @@ return /******/ (function(modules) { // webpackBootstrap
 					for (var _key in this.attributes) {
 						if (this.isDirty(_key)) return true;
 					}
-					return false;
+
+					//check relationships with touchLocalOnUpdate
+					var dirtyRelation = _underscore2.default.find(this.related, function (rel, key) {
+						if (_this8.getRelationship(key) && _this8.getRelationship(key).touchLocalOnUpdate) {
+							return rel.isDirty();
+						}
+						return false;
+					});
+
+					return !!dirtyRelation;
 				}
 			}
 
@@ -10421,7 +10432,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'resetDirty',
 			value: function resetDirty() {
-				var _this8 = this;
+				var _this9 = this;
 
 				var keys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -10433,7 +10444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Specific key?
 				_underscore2.default.each(keys, function (key) {
 
-					_this8.originalValues[key] = _this8.uncastValue(key, _this8.attributes[key]);
+					_this9.originalValues[key] = _this9.uncastValue(key, _this9.attributes[key]);
 				});
 				return this;
 			}
@@ -10459,15 +10470,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_scheduleUpdateDirty',
 			value: function _scheduleUpdateDirty() {
-				var _this9 = this;
+				var _this10 = this;
 
 				// Already going?
 				if (this._scheduleUpdateDirtyTimeout) return;
 
 				// Wait a bit
 				this._scheduleUpdateDirtyTimeout = setTimeout(function () {
-					_this9.updateDirty();
-					_this9._scheduleUpdateDirtyTimeout = null;
+					_this10.updateDirty();
+					_this10._scheduleUpdateDirtyTimeout = null;
 				}, Model.UpdateDirtyDelay);
 			}
 
@@ -10520,6 +10531,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Trigger
 				this._scheduleAttributeChanged(relationshipName);
 
+				console.log('setting related model', relationshipName, relationship.touchLocalOnUpdate);
+
 				return this;
 			}
 
@@ -10536,7 +10549,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'addRelatedModel',
 			value: function addRelatedModel(relationshipName, relatedModel) {
-				var _this10 = this;
+				var _this11 = this;
 
 				var fromApi = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 				var pivotAttributes = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
@@ -10580,12 +10593,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Set it
 					relatedModel.withoutNotifications(function () {
-						relatedModel.setRelatedModel(relationship.inverseRelationshipName, _this10);
+						relatedModel.setRelatedModel(relationship.inverseRelationshipName, _this11);
 					});
 				}
 
 				// Trigger
 				this._scheduleAttributeChanged(relationshipName);
+
+				if (relationship) {
+
+					console.log('adding related model', relationshipName, relationship.touchLocalOnUpdate);
+				} else {
+					console.log('adding related model but relationship is missing', relationshipName);
+				}
 
 				return this;
 			}
@@ -10706,7 +10726,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'clone',
 			value: function clone(cacheMap) {
-				var _this11 = this;
+				var _this12 = this;
 
 				//create cacheMap?
 				if (!cacheMap) cacheMap = new Map();
@@ -10724,7 +10744,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				//get all attributes
 				var attr = {};
 				_underscore2.default.each(this.attributes, function (value, key) {
-					attr[key] = _this11.get(key);
+					attr[key] = _this12.get(key);
 					if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
 						attr[key] = attr[key].clone(cacheMap);
 					}
@@ -11010,8 +11030,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function hasDirtyChildren() {
 				//check children for dirty
 				var dirtyChildren = _underscore2.default.filter(this.items, function (item) {
+					console.log('checking item', item, item.isDirty());
 					return item.isDirty();
 				});
+
+				console.log('all children:', this.items);
+				console.log('dirty children:', dirtyChildren);
 
 				return dirtyChildren.length > 0;
 			}
@@ -14977,10 +15001,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				}, options);
 				if (!settings.uri) settings.uri = model.getApiUri();
 
+				console.log(options);
+
 				// Make the data
 				var data = {
 					data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
 				};
+
+				console.log(data);
 
 				// Check method
 				var method = model.isNew() ? 'post' : 'patch';
@@ -15076,6 +15104,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				}
 
+				console.log('will we include attributes and relationships', !_underscore2.default.contains(includedModelGuids, _Utils2.default.uidFor(model)));
+
 				// Was this model already added before? Then we skip attributes and relationships
 				if (!_underscore2.default.contains(includedModelGuids, _Utils2.default.uidFor(model))) {
 
@@ -15095,6 +15125,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					// e.g. In case of author > books > author, the last 'author' should be skipped, even
 					// when the 'book' model has it defined.
 
+					console.log('include related?', includeRelated);
 					// Include related?
 					if (includeRelated) {
 						(function () {
@@ -15103,8 +15134,12 @@ return /******/ (function(modules) { // webpackBootstrap
 							var relationships = {};
 							_underscore2.default.each(model.related, function (relatedData, key) {
 
+								console.log('adding relation', key);
+
 								// Is it a collection?
 								if (relatedData instanceof _Collection2.default) {
+
+									console.log('collection', 'dirty: ', relatedData.isDirty(), 'dirty children: ', relatedData.hasDirtyChildren());
 
 									// Is dirty? or had dirty children
 									if (relatedData.isDirty() || relatedData.hasDirtyChildren()) {
@@ -16417,6 +16452,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var ModelDefinition = function () {
 		function ModelDefinition(name, callback) {
+			var _this = this;
+
 			_classCallCheck(this, ModelDefinition);
 
 			this.name = name;
@@ -16445,6 +16482,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.searchFields = null;
 
 			callback.apply(this, [this]);
+
+			_underscore2.default.each(this.relationships, function (rel) {
+				rel.addLocalKeyToModelDefinitionAttributes(_this);
+			});
 		}
 
 		/**
@@ -16469,7 +16510,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getRelationshipsByLocalKey',
 			value: function getRelationshipsByLocalKey() {
-				var _this = this;
+				var _this2 = this;
 
 				// Initialized?
 				if (!this.relationshipsByLocalKey) {
@@ -16480,7 +16521,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Stored on local model?
 						if (relationship.isStoredOnLocalModel()) {
-							_this.relationshipsByLocalKey[relationship.localKey] = relationship;
+							_this2.relationshipsByLocalKey[relationship.localKey] = relationship;
 						}
 					});
 				}
@@ -16495,12 +16536,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getApiAttributeNames',
 			value: function getApiAttributeNames() {
-				var _this2 = this;
+				var _this3 = this;
 
 				// Initialized?
 				if (!this.apiAttributeNames) {
 					this.apiAttributeNames = _underscore2.default.filter(this.attributeNames, function (name) {
-						return _this2.attributes[name].includeInRequests;
+						return _this3.attributes[name].includeInRequests;
 					});
 				}
 				return this.apiAttributeNames;
@@ -16508,12 +16549,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getHiddenAttributeNames',
 			value: function getHiddenAttributeNames() {
-				var _this3 = this;
+				var _this4 = this;
 
 				// Initialized?
 				if (!this.hiddenAttributeNames) {
 					this.hiddenAttributeNames = _underscore2.default.filter(this.attributeNames, function (name) {
-						return !_this3.attributes[name].includeInRequests;
+						return !_this4.attributes[name].includeInRequests;
 					});
 				}
 				return this.hiddenAttributeNames;
@@ -16526,20 +16567,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'initializeModel',
 			value: function initializeModel(model) {
-				var _this4 = this;
+				var _this5 = this;
 
 				// Don't notify
 				model.withoutNotifications(function () {
 
 					// Default values
-					_underscore2.default.each(_this4.attributes, function (attr) {
+					_underscore2.default.each(_this5.attributes, function (attr) {
 						if (attr.defaultValue && model.attributes[attr.name] === undefined) {
 							model.set(attr.name, attr.defaultValue);
 						}
 					});
 
 					// Add computed
-					_underscore2.default.each(_this4.computedAttributes, function (attr, key) {
+					_underscore2.default.each(_this5.computedAttributes, function (attr, key) {
 						model.set(key, new _ComputedProperty2.default(attr.dependencies, attr.callback));
 					});
 				});
@@ -16792,6 +16833,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.pivotAttributes = [];
 
 			this.inverseRelationshipName = null;
+
+			this.touchLocalOnUpdate = false;
 		}
 
 		////////////////////////
@@ -16937,6 +16980,42 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Methods //
 			/////////////
 
+			/**
+	   * set a flag to update the dirty attribute of local model
+	   * @return {Relationship} Chainable
+	   */
+
+		}, {
+			key: 'touchLocal',
+			value: function touchLocal() {
+				var value = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+				this.touchLocalOnUpdate = value;
+			}
+
+			/**
+	   * Add local key as attribute to the modelDefinition to ensure 
+	   * that it is being serialized in the apiCall.
+	   * Attributes with `Id` will be cast as an integer,
+	   * Attributes with 'Key' will be cast as a string.
+	   * For other keys manually define them in the model.
+	   * 
+	   * @param {ModelDefinition} modelDefinition the definition to at the attribute to
+	   * @return {Relationsship} chainable
+	   */
+
+		}, {
+			key: 'addLocalKeyToModelDefinitionAttributes',
+			value: function addLocalKeyToModelDefinitionAttributes(modelDefinition) {
+
+				//skip if `id` or already exists
+				if (this.localKey == 'id' || modelDefinition.hasAttribute(this.localKey)) return this;
+
+				//add key as integer 		
+				if (this.localKey.indexOf('Id') !== -1) modelDefinition.integer(this.localKey);
+				if (this.localKey.indexOf('Key') !== -1) modelDefinition.string(this.localKey);
+				return this;
+			}
 		}, {
 			key: 'inverse',
 			value: function inverse(relationshipName) {

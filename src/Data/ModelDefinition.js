@@ -41,6 +41,10 @@ class ModelDefinition
 
 		callback.apply(this, [this]);
 
+		_.each(this.relationships, (rel) => {
+		   rel.addLocalKeyToModelDefinitionAttributes(this);
+		}); 
+
 	}
 
 	/**

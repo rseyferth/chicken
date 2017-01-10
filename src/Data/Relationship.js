@@ -28,6 +28,8 @@ class Relationship {
 
 		this.inverseRelationshipName = null;
 
+		this.touchLocalOnUpdate = false;
+
 	}
 
 	////////////////////////
@@ -156,6 +158,36 @@ class Relationship {
 	/////////////
 	// Methods //
 	/////////////
+
+	/**
+	 * set a flag to update the dirty attribute of local model
+	 * @return {Relationship} Chainable
+	 */
+	touchLocal(value = true) {
+		this.touchLocalOnUpdate = value;
+	}
+
+	/**
+	 * Add local key as attribute to the modelDefinition to ensure 
+	 * that it is being serialized in the apiCall.
+	 * Attributes with `Id` will be cast as an integer,
+	 * Attributes with 'Key' will be cast as a string.
+	 * For other keys manually define them in the model.
+	 * 
+	 * @param {ModelDefinition} modelDefinition the definition to at the attribute to
+	 * @return {Relationsship} chainable
+	 */
+	addLocalKeyToModelDefinitionAttributes(modelDefinition) {
+
+		//skip if `id` or already exists
+		if (this.localKey == 'id' || modelDefinition.hasAttribute(this.localKey)) return this;
+		
+		//add key as integer 		
+		if (this.localKey.indexOf('Id') !== -1) modelDefinition.integer(this.localKey);
+		if (this.localKey.indexOf('Key') !== -1) modelDefinition.string(this.localKey);
+		return this;
+
+	}
 
 	inverse(relationshipName) {
 		

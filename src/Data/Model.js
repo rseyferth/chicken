@@ -719,7 +719,16 @@ class Model extends Observable
 			for (let key in this.attributes) {
 				if (this.isDirty(key)) return true;
 			}
-			return false;
+
+			//check relationships with touchLocalOnUpdate
+			let dirtyRelation = _.find(this.related,(rel, key) => {
+				if (this.getRelationship(key) && this.getRelationship(key).touchLocalOnUpdate) {
+					return rel.isDirty();
+				}
+				return false;
+			});
+
+			return !(!dirtyRelation);
 
 		}
 
@@ -833,6 +842,8 @@ class Model extends Observable
 		this._scheduleAttributeChanged(relationshipName);
 
 
+		console.log('setting related model', relationshipName, relationship.touchLocalOnUpdate);
+
 		return this;
 
 	}
@@ -896,6 +907,13 @@ class Model extends Observable
 
 		// Trigger
 		this._scheduleAttributeChanged(relationshipName);
+
+		if (relationship) {
+
+			console.log('adding related model', relationshipName, relationship.touchLocalOnUpdate);
+		} else {
+			console.log('adding related model but relationship is missing', relationshipName);
+		}
 
 		return this;
 
