@@ -163,16 +163,16 @@ class ApiCall extends Obj {
 
 			// Make the call
 			this.api.ajax(options)
-				.then((result) => {
+				.then((result, statusText, jqXhr) => {
 
-					//if delete then expect 204 (no-content)
-					if (options.method === 'delete') {
+					// 204 (No-Content)?
+					if (jqXhr.status === 204 && result === undefined) {
 						resolve(null);
-						return;						
+						return;
 					}
 
 					//non Resource response type
-					if (result.responseType == 'nonResource') {
+					if (result && result.responseType == 'nonResource') {
 						resolve(result);
 						return;
 					}

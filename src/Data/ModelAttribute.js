@@ -72,7 +72,7 @@ class ModelAttribute {
 
 			//Array
 			case ModelAttribute.Array: 
-				return JSON.parse(value);
+				return value instanceof String ? JSON.parse(value) : value;
 
 			///////////
 			// Dates //

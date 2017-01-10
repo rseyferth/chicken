@@ -203,7 +203,7 @@ class Action extends Obj
 				reject('There is no ViewContainer available with the name "' + this.targetViewContainer + '"');
 				return;
 			}
-
+			
 			// Is there currently an action in this vc?
 			if (this.viewContainer.currentAction) {
 

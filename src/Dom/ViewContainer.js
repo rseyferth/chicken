@@ -1,3 +1,4 @@
+import Obj from '~/Core/Obj';
 import Element from '~/Dom/Element';
 
 /**
@@ -78,6 +79,9 @@ class ViewContainer extends Element
 		// Set HTML
 		super.setContent(content);
 
+		// Apply hooks
+		ViewContainer.any.trigger('render', this);
+
 		// No longer loading
 		if (setLoadingFalse) this.setLoading(false);
 
@@ -138,6 +142,7 @@ ViewContainer.getViewName = ($element) => {
 
 };
 
+ViewContainer.any = new Obj();
 
 
 module.exports = ViewContainer;
