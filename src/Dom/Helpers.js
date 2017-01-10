@@ -111,6 +111,20 @@ class Helpers
 		
 	}
 
+	repeat(params, attributeHash, blocks, morph) {
+
+		let repeatUid = Utils.uidFor(morph);
+		let times = this._getValue(params[0]);
+		for (let q = 0; q < times; q++) {
+
+			let itemKey = 'repeat:' + repeatUid + ':' + q;
+			blocks.template.yieldItem(itemKey, [null, q]);
+
+		}
+
+
+	}
+
 	/**
 	 * @method if	 
 	 */
@@ -211,7 +225,6 @@ class Helpers
 	}
 
 
-
 	firstIn(params) {
 
 		let arr = this._getValue(params[0]);
@@ -234,6 +247,10 @@ class Helpers
 	}
 	notEqual(params) {
 		return !this.equal(params);
+	}
+
+	isNull(params) {
+		return this._getValue(params[0]) === null;
 	}
 
 	gt(params) {
@@ -388,9 +405,16 @@ class Helpers
 
 	add(params) {
 		let values = this._getValues(params);
-		return values.reduce((item, total) => { 
+		return values.reduce((total, item) => { 
 			return item + total;
 		}, 0);
+	}
+	subtract(params) {
+		let values = this._getValues(params);
+		let startValue = values.shift();
+		return values.reduce((total, item) => { 
+			return total - item;
+		}, startValue);	
 	}
 
 
@@ -422,7 +446,15 @@ class Helpers
 
 	}
 
+	tText(params, attributeHash) {
 
+		// Get value
+		let v = this.t(params, attributeHash);
+
+		// Plainify
+		return $('<span>' + v + '</span>').text();
+
+	}
 
 	//////////////
 	// Internal //

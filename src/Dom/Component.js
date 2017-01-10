@@ -291,12 +291,15 @@ class Component extends View
 			});
 			Promise.all(promises).then(() => {
 				this.resolvePromise('ready');
+				View.any.trigger('render', this.$element);
 			});
 
 		} else {
 
 			// We are ready now.
 			this.resolvePromise('ready');
+			View.any.trigger('render', this.$element);
+
 		}
 
 	}
@@ -385,7 +388,7 @@ class Component extends View
 			_.each(hash, (value, key) => {
 
 				// Set?
-				if (!this.get(key)) {
+				if (this.get(key) === undefined) {
 					this.set(key, value);
 				}
 

@@ -6,6 +6,7 @@ import App from '~/Helpers/App';
 import Observable from '~/Core/Observable';
 import Binding from '~/Dom/Binding';
 import ApiCall from '~/Api/ApiCall';
+import Obj from '~/Core/Obj';
 
 /**
  * @module Dom
@@ -517,19 +518,6 @@ class View extends Observable
 		this.documentFragment = this.renderResult.fragment;
 		this.resolvePromise('render', this.documentFragment);
 
-		//////////////////
-		// Revalidating //
-		//////////////////
-
-		// Have a look at the data, and revalidate the result whenever a change
-		// occurs. The 'dirtying' of elements (morphs) is handled by the Renderer
-		// and Binding classes.				
-		
-/*		// Study the object
-		this.study(() => {
-			this.scheduleRevalidate();
-		});
-*/
 
 		return this;
 
@@ -622,6 +610,7 @@ class View extends Observable
 		this.$element = $view;
 
 		// Done.
+		View.any.trigger('render', $view);
 		this.resolvePromise('ready', [this]);
 
 	}
@@ -702,5 +691,9 @@ View.TemplateCache = new Map();
  * @type {Number}
  */
 View.RevalidationDelay = 3;
+
+
+View.any = new Obj();
+
 
 module.exports = View;

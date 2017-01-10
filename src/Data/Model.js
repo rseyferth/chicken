@@ -71,8 +71,10 @@ class Model extends Observable
 			saving: false,
 			dirty: false,
 			deleting:false,
-			deleted: false
+			deleted: false,
+			new: !this.get('id')
 		});
+
 		this.state.study(() => {
 			this._scheduleAttributeChanged('is');
 		});
@@ -519,7 +521,10 @@ class Model extends Observable
 			if (result instanceof Model) {
 
 				// Use id for me.
-				if (!this.get('id')) this.set('id', result.get('id'));
+				if (!this.get('id')) {
+					this.set('id', result.get('id'));
+					this.state.set('new', false);
+				}
 
 			}
 

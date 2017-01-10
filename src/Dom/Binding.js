@@ -186,7 +186,7 @@ Binding.TwoWay = {
 		match: (morph) => {
 			return morph.element && /^INPUT$/.test(morph.element.tagName) 
 				&& morph.attrName === 'value'
-				&& /^text|password|number|email$/.test(morph.element.type);
+				&& /^text|date|time|password|number|email$/.test(morph.element.type);
 		},
 		bind: (binding, morph) => {
 

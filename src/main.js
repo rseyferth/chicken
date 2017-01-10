@@ -4,6 +4,7 @@
 // Vendor libraries //
 //////////////////////
 
+import 'babel-polyfill';
 import $ from 'jquery';
 import _ from 'underscore';
 import s from 'underscore.string';
