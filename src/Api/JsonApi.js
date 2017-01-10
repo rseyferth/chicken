@@ -294,10 +294,8 @@ class JsonApi extends Api
 		} else {
 
 			// Set the attributes (not overwriting dirty ones)
-			model.withoutNotifications(() => {
-				model.setAttributesFromApi(attributes);
-			});
-
+			model.setAttributesFromApi(attributes);
+	
 		}
 
 		// Also deserialize relationships?
