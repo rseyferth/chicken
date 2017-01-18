@@ -823,31 +823,11 @@ class Model extends Observable
 
 		}
 		
-		// Set it and watch it
-	/*	relatedModel.study((changedAttributes) => {
-
-			// Not triggered by me?
-			if (changedAttributes.length === 1 && relatedModel.related[changedAttributes[0]] === this) {
-				
-				// Yes, triggered by us... Don't recurse
-				console.log(relatedModel.related[changedAttributes[0]] === this);
-				return;
-			}
-
-			// Is it not triggered by the inverse relationship?
-			console.log(relationshipName, changedAttributes);
-
-			//console.log('STUDY', args);
-
-			//this._scheduleAttributeChanged(relationshipName);
-		});*/
 		this.related[relationshipName] = relatedModel;
 	
 		// Trigger
 		this._scheduleAttributeChanged(relationshipName);
 
-
-		console.log('setting related model', relationshipName, relationship.touchLocalOnUpdate);
 
 		return this;
 
@@ -912,13 +892,6 @@ class Model extends Observable
 
 		// Trigger
 		this._scheduleAttributeChanged(relationshipName);
-
-		if (relationship) {
-
-			console.log('adding related model', relationshipName, relationship.touchLocalOnUpdate);
-		} else {
-			console.log('adding related model but relationship is missing', relationshipName);
-		}
 
 		return this;
 
@@ -1126,7 +1099,8 @@ Model.getFromStore = (modelName, id) => {
 Model.deleteFromStore = (modelName, id) => {
 
 	//Is there a store
-	if (!Model.stores.has(modelName)) throw new Error('Cannot delete `' + modelName + '` with id `' + id + '` from store. The store cannot be found.');
+	if (!Model.stores.has(modelName)) return store;
+	//throw new Error('Cannot delete `' + modelName + '` with id `' + id + '` from store. The store cannot be found.');
 	let store = Model.getStore(modelName);
 	return store.forget(id);
 

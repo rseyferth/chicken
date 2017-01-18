@@ -44,14 +44,10 @@ class JsonApi extends Api
 		if (!settings.uri) settings.uri = model.getApiUri();		
 
 
-		console.log(options);
-
 		// Make the data
 		let data = {
 			data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
 		};
-
-		console.log(data);
 
 		// Check method
 		let method = model.isNew() ? 'post' : 'patch';
@@ -144,7 +140,6 @@ class JsonApi extends Api
 
 		}
 
-		console.log('will we include attributes and relationships', !_.contains(includedModelGuids, Utils.uidFor(model)));
 
 		// Was this model already added before? Then we skip attributes and relationships
 		if (!_.contains(includedModelGuids, Utils.uidFor(model))) {
@@ -166,7 +161,7 @@ class JsonApi extends Api
 			// e.g. In case of author > books > author, the last 'author' should be skipped, even
 			// when the 'book' model has it defined.
 
-			console.log('include related?', includeRelated);
+
 			// Include related?
 			if (includeRelated) {
 
@@ -175,12 +170,8 @@ class JsonApi extends Api
 				let relationships = {};
 				_.each(model.related, (relatedData, key) => {
 
-					console.log('adding relation', key);
-
 					// Is it a collection?
 					if (relatedData instanceof Collection) {
-
-						console.log('collection', 'dirty: ', relatedData.isDirty(), 'dirty children: ', relatedData.hasDirtyChildren());
 
 						// Is dirty? or had dirty children
 						if (relatedData.isDirty() || relatedData.hasDirtyChildren()) {

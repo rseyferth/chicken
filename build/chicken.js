@@ -7913,8 +7913,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	!(function(global) {
 	  "use strict";
 
-	  var Op = Object.prototype;
-	  var hasOwn = Op.hasOwnProperty;
+	  var hasOwn = Object.prototype.hasOwnProperty;
 	  var undefined; // More compressible than void 0.
 	  var $Symbol = typeof Symbol === "function" ? Symbol : {};
 	  var iteratorSymbol = $Symbol.iterator || "@@iterator";
@@ -7938,9 +7937,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
 
 	  function wrap(innerFn, outerFn, self, tryLocsList) {
-	    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
-	    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
-	    var generator = Object.create(protoGenerator.prototype);
+	    // If outerFn provided, then outerFn.prototype instanceof Generator.
+	    var generator = Object.create((outerFn || Generator).prototype);
 	    var context = new Context(tryLocsList || []);
 
 	    // The ._invoke method unifies the implementations of the .next,
@@ -7986,29 +7984,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function GeneratorFunction() {}
 	  function GeneratorFunctionPrototype() {}
 
-	  // This is a polyfill for %IteratorPrototype% for environments that
-	  // don't natively support it.
-	  var IteratorPrototype = {};
-	  IteratorPrototype[iteratorSymbol] = function () {
-	    return this;
-	  };
-
-	  var getProto = Object.getPrototypeOf;
-	  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
-	  if (NativeIteratorPrototype &&
-	      NativeIteratorPrototype !== Op &&
-	      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
-	    // This environment has a native %IteratorPrototype%; use it instead
-	    // of the polyfill.
-	    IteratorPrototype = NativeIteratorPrototype;
-	  }
-
-	  var Gp = GeneratorFunctionPrototype.prototype =
-	    Generator.prototype = Object.create(IteratorPrototype);
+	  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
 	  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
 	  GeneratorFunctionPrototype.constructor = GeneratorFunction;
-	  GeneratorFunctionPrototype[toStringTagSymbol] =
-	    GeneratorFunction.displayName = "GeneratorFunction";
+	  GeneratorFunctionPrototype[toStringTagSymbol] = GeneratorFunction.displayName = "GeneratorFunction";
 
 	  // Helper for defining the .next, .throw, and .return methods of the
 	  // Iterator interface in terms of a single ._invoke method.
@@ -8045,11 +8024,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  // Within the body of any async function, `await x` is transformed to
 	  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-	  // `hasOwn.call(value, "__await")` to determine if the yielded value is
-	  // meant to be awaited.
+	  // `value instanceof AwaitArgument` to determine if the yielded value is
+	  // meant to be awaited. Some may consider the name of this method too
+	  // cutesy, but they are curmudgeons.
 	  runtime.awrap = function(arg) {
-	    return { __await: arg };
+	    return new AwaitArgument(arg);
 	  };
+
+	  function AwaitArgument(arg) {
+	    this.arg = arg;
+	  }
 
 	  function AsyncIterator(generator) {
 	    function invoke(method, arg, resolve, reject) {
@@ -8059,10 +8043,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        var result = record.arg;
 	        var value = result.value;
-	        if (value &&
-	            typeof value === "object" &&
-	            hasOwn.call(value, "__await")) {
-	          return Promise.resolve(value.__await).then(function(value) {
+	        if (value instanceof AwaitArgument) {
+	          return Promise.resolve(value.arg).then(function(value) {
 	            invoke("next", value, resolve, reject);
 	          }, function(err) {
 	            invoke("throw", err, resolve, reject);
@@ -8131,7 +8113,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  defineIteratorMethods(AsyncIterator.prototype);
-	  runtime.AsyncIterator = AsyncIterator;
 
 	  // Note that simple async functions are implemented on top of
 	  // AsyncIterator objects; they just return a Promise for the value of
@@ -8291,6 +8272,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // Define Generator.prototype.{next,throw,return} in terms of the
 	  // unified ._invoke helper method.
 	  defineIteratorMethods(Gp);
+
+	  Gp[iteratorSymbol] = function() {
+	    return this;
+	  };
 
 	  Gp[toStringTagSymbol] = "Generator";
 
@@ -16766,8 +16751,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Use key/value
-					var key = args[0];
-					var value = args[1];
+					var key = args[0],
+					    value = args[1];
 
 					// Is the key a string?
 
@@ -18477,26 +18462,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					relatedModel.set(relationship.remoteKey, this.get(relationship.localKey));
 				}
 
-				// Set it and watch it
-				/*	relatedModel.study((changedAttributes) => {
-	   			// Not triggered by me?
-	   		if (changedAttributes.length === 1 && relatedModel.related[changedAttributes[0]] === this) {
-	   			
-	   			// Yes, triggered by us... Don't recurse
-	   			console.log(relatedModel.related[changedAttributes[0]] === this);
-	   			return;
-	   		}
-	   			// Is it not triggered by the inverse relationship?
-	   		console.log(relationshipName, changedAttributes);
-	   			//console.log('STUDY', args);
-	   			//this._scheduleAttributeChanged(relationshipName);
-	   	});*/
 				this.related[relationshipName] = relatedModel;
 
 				// Trigger
 				this._scheduleAttributeChanged(relationshipName);
-
-				console.log('setting related model', relationshipName, relationship.touchLocalOnUpdate);
 
 				return this;
 			}
@@ -18564,13 +18533,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Trigger
 				this._scheduleAttributeChanged(relationshipName);
-
-				if (relationship) {
-
-					console.log('adding related model', relationshipName, relationship.touchLocalOnUpdate);
-				} else {
-					console.log('adding related model but relationship is missing', relationshipName);
-				}
 
 				return this;
 			}
@@ -18781,7 +18743,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	Model.deleteFromStore = function (modelName, id) {
 
 		//Is there a store
-		if (!Model.stores.has(modelName)) throw new Error('Cannot delete `' + modelName + '` with id `' + id + '` from store. The store cannot be found.');
+		if (!Model.stores.has(modelName)) return store;
+		//throw new Error('Cannot delete `' + modelName + '` with id `' + id + '` from store. The store cannot be found.');
 		var store = Model.getStore(modelName);
 		return store.forget(id);
 	};
@@ -18995,12 +18958,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function hasDirtyChildren() {
 				//check children for dirty
 				var dirtyChildren = _underscore2.default.filter(this.items, function (item) {
-					console.log('checking item', item, item.isDirty());
 					return item.isDirty();
 				});
-
-				console.log('all children:', this.items);
-				console.log('dirty children:', dirtyChildren);
 
 				return dirtyChildren.length > 0;
 			}
@@ -21824,12 +21783,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof callback === 'string') {
 
 						// Get the controller action callback
-						var _callback$split = callback.split(/@/);
-
-						var _callback$split2 = _slicedToArray(_callback$split, 2);
-
-						var controllerName = _callback$split2[0];
-						var action = _callback$split2[1];
+						var _callback$split = callback.split(/@/),
+						    _callback$split2 = _slicedToArray(_callback$split, 2),
+						    controllerName = _callback$split2[0],
+						    action = _callback$split2[1];
 
 						if (controllerName && action) {
 
@@ -23004,14 +22961,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				}, options);
 				if (!settings.uri) settings.uri = model.getApiUri();
 
-				console.log(options);
-
 				// Make the data
 				var data = {
 					data: this.serialize(model, settings.includeRelated, settings.includeRelatedData)
 				};
-
-				console.log(data);
 
 				// Check method
 				var method = model.isNew() ? 'post' : 'patch';
@@ -23107,8 +23060,6 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 				}
 
-				console.log('will we include attributes and relationships', !_underscore2.default.contains(includedModelGuids, _Utils2.default.uidFor(model)));
-
 				// Was this model already added before? Then we skip attributes and relationships
 				if (!_underscore2.default.contains(includedModelGuids, _Utils2.default.uidFor(model))) {
 
@@ -23128,7 +23079,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					// e.g. In case of author > books > author, the last 'author' should be skipped, even
 					// when the 'book' model has it defined.
 
-					console.log('include related?', includeRelated);
+
 					// Include related?
 					if (includeRelated) {
 						(function () {
@@ -23137,12 +23088,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							var relationships = {};
 							_underscore2.default.each(model.related, function (relatedData, key) {
 
-								console.log('adding relation', key);
-
 								// Is it a collection?
 								if (relatedData instanceof _Collection2.default) {
-
-									console.log('collection', 'dirty: ', relatedData.isDirty(), 'dirty children: ', relatedData.hasDirtyChildren());
 
 									// Is dirty? or had dirty children
 									if (relatedData.isDirty() || relatedData.hasDirtyChildren()) {
