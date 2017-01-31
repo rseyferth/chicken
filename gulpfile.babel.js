@@ -12,6 +12,11 @@ import gutil from 'gulp-util';
 import connect from 'gulp-connect';
 import eslint from 'gulp-eslint';
 
+import browserSync from 'browser-sync';
+import historyApiFallback from 'connect-history-api-fallback';
+import wiredep from 'gulp-wiredep';
+import inject from 'gulp-inject';
+
 import webpack from 'webpack-stream';
 import webpackConfig from './webpack.config';
 
@@ -21,7 +26,7 @@ import webpackConfig from './webpack.config';
 ///////////////////
 
 const sourceGlob = './src/**/*.js';
-const testGlob = './test/**/*.js';
+const testGlob = './test/spec/**/*.js';
 const scriptGlobs = [sourceGlob, testGlob];
 
 
@@ -29,14 +34,91 @@ const scriptGlobs = [sourceGlob, testGlob];
 // Test using mocha //
 //////////////////////
 
-gulp.task('mocha', [], () => {
+gulp.task('test', () => {
 
-	return gulp.src(testGlob, { read: false })
+	return gulp.src(['test/spec/**/*.js'], { read: false })
         .pipe(mocha({
         	reporter: 'nyan'
        	}));
 
 });
+
+gulp.task('test:wiredep-app', () => {
+
+	return gulp.src('test/app/*.html')
+		.pipe(wiredep({
+			ignorePath: /^(\.\.\/)*\.\./
+		}))
+		.pipe(gulp.dest('test/app'));
+
+});
+gulp.task('test:inject-app', () => {
+
+	let sources = gulp.src([
+		'test/app/js/Components/**/*.js',
+		'test/app/js/Config/**/*.js',
+		'test/app/js/Controllers/**/*.js',
+		'test/app/js/Helpers/**/*.js',
+		'test/app/js/Middleware/**/*.js',
+		'test/app/js/Models/**/*.js',
+		'test/app/js/Services/**/*.js',
+		'test/app/js/app.js'
+	], { read: false });
+
+	return gulp.src('test/app/*.html')
+		.pipe(inject(sources, {
+			ignorePath: 'test/app/'
+		}))
+		.pipe(gulp.dest('test/app'));
+
+});
+gulp.task('test:serve', ['test:wiredep-app', 'test'], () => {
+
+	// Start server
+	browserSync({
+		notify: false,
+		port: 3001,
+		open: false,
+		https: false,
+		server: {
+			baseDir: ['test/.tmp', 'test/app'],
+			routes: {
+				'/bower_components': 'bower_components',
+				'/build': 'build'
+			},
+			middleware: [ historyApiFallback() ]
+		}
+	});
+
+	gulp.watch(['test/spec/**.js'], ['test']);
+
+	// Watch for changes to reload
+	gulp.watch([
+		'test/app/*.html',
+		'test/app/views/**/*.hbs',
+		'test/app/images/**/*',
+		'build/chicken.js'		
+	]).on('change', browserSync.reload);
+
+
+
+});
+
+
+
+gulp.task('test:inject-runner', [], () => {
+
+	return gulp.src('test/*.html')
+		.pipe(inject(gulp.src(['test/spec/**/*.js']), {
+			
+		}))
+		.pipe(gulp.dest('test'));
+
+});
+
+
+
+
 
 
 ////////////////
@@ -53,7 +135,6 @@ gulp.task('lint', [], () => {
 
 
 });
-
 
 //////////////////////////
 // Yuidoc documentation //

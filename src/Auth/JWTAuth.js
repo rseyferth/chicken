@@ -32,6 +32,8 @@ class JWTAuth extends Auth
 
 			middlewareName: 'auth.jwt',
 
+			beforeSend: false,
+
 			identifierKey: 'email',
 			passwordKey: 'password',
 
@@ -110,7 +112,8 @@ class JWTAuth extends Auth
 			$.ajax({
 				url: this.settings.baseUrl + this.settings.authenticateUri,
 				data: data,
-				method: this.settings.authenticateMethod
+				method: this.settings.authenticateMethod,
+				beforeSend: this.settings.beforeSend
 			}).then((result) => {
 
 				// Check token.

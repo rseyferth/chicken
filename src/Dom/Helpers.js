@@ -417,6 +417,12 @@ class Helpers
 		}, startValue);	
 	}
 
+	numberFormat(params) {
+		let value = this._getValue(params[0]);
+		if (value === undefined) return '';
+		return value.toLocaleString(window.Chicken.app.i18n.language);
+	}
+
 
 	///////////
 	// Debug //

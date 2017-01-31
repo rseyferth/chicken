@@ -190,6 +190,7 @@ class Renderer
 						scope.view = parentScope.self;
 					} else {
 						scope.component = parentScope.self;
+						scope.view = scope.component.view;
 					}
 
 				}
