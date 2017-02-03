@@ -9047,6 +9047,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // 'metal',
 	    'methane',
 	    'milk',
+	    'minus',
 	    'money',
 	    // 'moose',
 	    'mud',
@@ -9203,6 +9204,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      hives     : new RegExp( '(hi|ti)ves$'                    , 'gi' ),
 	      curves    : new RegExp( '(curve)s$'                      , 'gi' ),
 	      lrves     : new RegExp( '([lr])ves$'                     , 'gi' ),
+	      aves      : new RegExp( '([a])ves$'                      , 'gi' ),
 	      foves     : new RegExp( '([^fo])ves$'                    , 'gi' ),
 	      movies    : new RegExp( '(m)ovies$'                      , 'gi' ),
 	      aeiouyies : new RegExp( '([^aeiouy]|qu)ies$'             , 'gi' ),
@@ -9372,6 +9374,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    [ regex.plural.hives    , '$1ve' ],
 	    [ regex.plural.curves   , '$1' ],
 	    [ regex.plural.lrves    , '$1f' ],
+	    [ regex.plural.aves     , '$1ve' ],
 	    [ regex.plural.foves    , '$1fe' ],
 	    [ regex.plural.movies   , '$1ovie' ],
 	    [ regex.plural.aeiouyies, '$1y' ],
@@ -9913,8 +9916,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      for( ;i < j; i++ ){
 	        var method = arr[ i ];
 
-	        if( this.hasOwnProperty( method )){
-	          str = this[ method ]( str );
+	        if( inflector.hasOwnProperty( method )){
+	          str = inflector[ method ]( str );
 	        }
 	      }
 
@@ -9925,7 +9928,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @public
 	 */
-	  inflector.version = '1.10.0';
+	  inflector.version = '1.12.0';
 
 	  return inflector;
 	}));
@@ -10289,6 +10292,22 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this;
 			}
 		}, {
+			key: 'gotoNamed',
+			value: function gotoNamed(name) {
+				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+				var query = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+				var flash = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+
+				// Find route
+				var route = this.router.namedRoutes.get(name);
+				if (!route) throw new Error('There is no route defined with the name "' + name + '"');
+
+				// Make uri
+				var uri = route.makeUrl(attributes);
+				return this.goto(uri, query, flash);
+			}
+		}, {
 			key: 'goto',
 			value: function goto(uri) {
 				var query = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -10428,6 +10447,92 @@ return /******/ (function(modules) { // webpackBootstrap
 	var strictUriEncode = __webpack_require__(306);
 	var objectAssign = __webpack_require__(307);
 
+	function encoderForArrayFormat(opts) {
+		switch (opts.arrayFormat) {
+			case 'index':
+				return function (key, value, index) {
+					return value === null ? [
+						encode(key, opts),
+						'[',
+						index,
+						']'
+					].join('') : [
+						encode(key, opts),
+						'[',
+						encode(index, opts),
+						']=',
+						encode(value, opts)
+					].join('');
+				};
+
+			case 'bracket':
+				return function (key, value) {
+					return value === null ? encode(key, opts) : [
+						encode(key, opts),
+						'[]=',
+						encode(value, opts)
+					].join('');
+				};
+
+			default:
+				return function (key, value) {
+					return value === null ? encode(key, opts) : [
+						encode(key, opts),
+						'=',
+						encode(value, opts)
+					].join('');
+				};
+		}
+	}
+
+	function parserForArrayFormat(opts) {
+		var result;
+
+		switch (opts.arrayFormat) {
+			case 'index':
+				return function (key, value, accumulator) {
+					result = /\[(\d*)]$/.exec(key);
+
+					key = key.replace(/\[\d*]$/, '');
+
+					if (!result) {
+						accumulator[key] = value;
+						return;
+					}
+
+					if (accumulator[key] === undefined) {
+						accumulator[key] = {};
+					}
+
+					accumulator[key][result[1]] = value;
+				};
+
+			case 'bracket':
+				return function (key, value, accumulator) {
+					result = /(\[])$/.exec(key);
+
+					key = key.replace(/\[]$/, '');
+
+					if (!result || accumulator[key] === undefined) {
+						accumulator[key] = value;
+						return;
+					}
+
+					accumulator[key] = [].concat(accumulator[key], value);
+				};
+
+			default:
+				return function (key, value, accumulator) {
+					if (accumulator[key] === undefined) {
+						accumulator[key] = value;
+						return;
+					}
+
+					accumulator[key] = [].concat(accumulator[key], value);
+				};
+		}
+	}
+
 	function encode(value, opts) {
 		if (opts.encode) {
 			return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
@@ -10436,11 +10541,29 @@ return /******/ (function(modules) { // webpackBootstrap
 		return value;
 	}
 
+	function keysSorter(input) {
+		if (Array.isArray(input)) {
+			return input.sort();
+		} else if (typeof input === 'object') {
+			return keysSorter(Object.keys(input)).sort(function (a, b) {
+				return Number(a) - Number(b);
+			}).map(function (key) {
+				return input[key];
+			});
+		}
+
+		return input;
+	}
+
 	exports.extract = function (str) {
 		return str.split('?')[1] || '';
 	};
 
-	exports.parse = function (str) {
+	exports.parse = function (str, opts) {
+		opts = objectAssign({arrayFormat: 'none'}, opts);
+
+		var formatter = parserForArrayFormat(opts);
+
 		// Create an object with no prototype
 		// https://github.com/sindresorhus/query-string/issues/47
 		var ret = Object.create(null);
@@ -10462,31 +10585,36 @@ return /******/ (function(modules) { // webpackBootstrap
 			var key = parts.shift();
 			var val = parts.length > 0 ? parts.join('=') : undefined;
 
-			key = decodeURIComponent(key);
-
 			// missing `=` should be `null`:
 			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
 			val = val === undefined ? null : decodeURIComponent(val);
 
-			if (ret[key] === undefined) {
-				ret[key] = val;
-			} else if (Array.isArray(ret[key])) {
-				ret[key].push(val);
-			} else {
-				ret[key] = [ret[key], val];
-			}
+			formatter(decodeURIComponent(key), val, ret);
 		});
 
-		return ret;
+		return Object.keys(ret).sort().reduce(function (result, key) {
+			var val = ret[key];
+			if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
+				// Sort object keys, not values
+				result[key] = keysSorter(val);
+			} else {
+				result[key] = val;
+			}
+
+			return result;
+		}, Object.create(null));
 	};
 
 	exports.stringify = function (obj, opts) {
 		var defaults = {
 			encode: true,
-			strict: true
+			strict: true,
+			arrayFormat: 'none'
 		};
 
 		opts = objectAssign(defaults, opts);
+
+		var formatter = encoderForArrayFormat(opts);
 
 		return obj ? Object.keys(obj).sort().map(function (key) {
 			var val = obj[key];
@@ -10507,11 +10635,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						return;
 					}
 
-					if (val2 === null) {
-						result.push(encode(key, opts));
-					} else {
-						result.push(encode(key, opts) + '=' + encode(val2, opts));
-					}
+					result.push(formatter(key, val2, result.length));
 				});
 
 				return result.join('&');
@@ -16787,8 +16911,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else {
 
 					// Use key/value
-					var key = args[0];
-					var value = args[1];
+					var key = args[0],
+					    value = args[1];
 
 					// Is the key a string?
 
@@ -19702,6 +19826,25 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 				}
 			}
+		}, {
+			key: 'linkTo',
+			value: function linkTo(params, attributeHash, block) {
+				var _this2 = this;
+
+				// Find named route
+				var name = this._getValue(params[0]);
+				var route = (0, _App2.default)().router.namedRoutes.get(name);
+				if (!route) throw new Error('There is no route with the name "' + name + '"');
+
+				// Make uri
+				var attributes = _underscore2.default.mapObject(attributeHash, function (value, key) {
+					return _this2._getValue(value);
+				});
+				var uri = route.makeUrl(attributes);
+
+				// Make the link
+				return this.link([uri], attributeHash, block);
+			}
 
 			////////////////////////
 			// Control statements //
@@ -19759,10 +19902,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'ifOne',
 			value: function ifOne(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-				var _this2 = this;
+				var _this3 = this;
 
 				var trueConditions = _underscore2.default.filter(this._getValue(params), function (value) {
-					return !!_this2._getValue(value);
+					return !!_this3._getValue(value);
 				});
 
 				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length > 0));
@@ -19770,10 +19913,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'ifAll',
 			value: function ifAll(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-				var _this3 = this;
+				var _this4 = this;
 
 				var trueConditions = _underscore2.default.filter(this._getValue(params), function (value) {
-					return !!_this3._getValue(value);
+					return !!_this4._getValue(value);
 				});
 
 				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length === params.length));
@@ -20112,20 +20255,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_getValues',
 			value: function _getValues(params) {
-				var _this4 = this;
+				var _this5 = this;
 
 				return params.map(function (value) {
-					return _this4._getValue(value);
+					return _this5._getValue(value);
 				});
 			}
 		}, {
 			key: '_getHashValues',
 			value: function _getHashValues(attributeHash) {
-				var _this5 = this;
+				var _this6 = this;
 
 				var result = {};
 				_underscore2.default.each(attributeHash, function (value, key) {
-					result[key] = _this5._getValue(value);
+					result[key] = _this6._getValue(value);
 				});
 				return result;
 			}
@@ -20969,6 +21112,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				return p;
+			}
+		}, {
+			key: 'makeUrl',
+			value: function makeUrl() {
+				var attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+
+				// Get full pattern
+				var pattern = this.getFullPattern();
+				_underscore2.default.each(attributes, function (value, key) {
+
+					pattern = pattern.split(':' + key).join(value);
+				});
+
+				return pattern;
 			}
 
 			/**
@@ -21828,12 +21986,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof callback === 'string') {
 
 						// Get the controller action callback
-						var _callback$split = callback.split(/@/);
-
-						var _callback$split2 = _slicedToArray(_callback$split, 2);
-
-						var controllerName = _callback$split2[0];
-						var action = _callback$split2[1];
+						var _callback$split = callback.split(/@/),
+						    _callback$split2 = _slicedToArray(_callback$split, 2),
+						    controllerName = _callback$split2[0],
+						    action = _callback$split2[1];
 
 						if (controllerName && action) {
 

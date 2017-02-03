@@ -306,6 +306,22 @@ class Route extends Obj
 
 	}
 
+
+	makeUrl(attributes = {}) {
+
+		// Get full pattern
+		let pattern = this.getFullPattern();
+		_.each(attributes, (value, key) => {
+			
+			pattern = pattern.split(':' + key).join(value);			
+
+		});
+
+		return pattern;
+
+	}
+
+
 	/**
 	 * Get all parameter constraints for this Route, combining constraints
 	 * defined by parent routes.
