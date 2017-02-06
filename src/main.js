@@ -90,6 +90,7 @@ import Request from '~/Routing/Request';
 import Route from '~/Routing/Route';
 import RouteMatch from '~/Routing/RouteMatch';
 import Router from '~/Routing/Router';
+import RoutingError from '~/Routing/RoutingError';
 
 
 
@@ -173,7 +174,8 @@ var Chicken = {
 		Request: Request,
 		Route: Route,
 		RouteMatch: RouteMatch,
-		Router: Router
+		Router: Router,
+		RoutingError: RoutingError
 	}, 
 
 	inflection: inflection,

@@ -27,7 +27,7 @@ import webpackConfig from './webpack.config';
 
 const sourceGlob = './src/**/*.js';
 const testGlob = './test/spec/**/*.js';
-const scriptGlobs = [sourceGlob, testGlob];
+const scriptGlobs = [sourceGlob];//, testGlob];
 
 
 //////////////////////

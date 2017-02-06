@@ -5,6 +5,7 @@ import App from '~/Helpers/App';
 import Obj from '~/Core/Obj';
 import Redirect from '~/Routing/Redirect';
 import Controller from '~/Routing/Controller';
+import RoutingError from '~/Routing/RoutingError';
 import View from '~/Dom/View';
 import Utils from '~/Helpers/Utils';
 
@@ -252,7 +253,7 @@ class Action extends Obj
 				// Make controller
 				var ChickenController = Controller.registry.get(this.controllerClass);
 				if (ChickenController === undefined) {
-					reject('No controller defined with name "' + this.controllerClass + '"');
+					this._handleError('No controller defined with name "' + this.controllerClass + '"');
 					return;
 				}
 				this.controller = new ChickenController(this);
@@ -260,12 +261,20 @@ class Action extends Obj
 				// Call action
 				var controllerAction = this.controller[this.controllerAction];
 				if (controllerAction === 'undefined' || typeof controllerAction !== 'function') {
-					reject('There is no action on the "' + this.controllerClass + '" controller with the name "' + this.controllerAction + '"');
+					this._handleError('There is no action on the "' + this.controllerClass + '" controller with the name "' + this.controllerAction + '"');
 					return;
 				}
 
 				// Make the call
-				this._processResult(controllerAction.apply(this.controller, this.parameterArray), resolve, reject);
+				let actionResult;
+				try {
+					actionResult = controllerAction.apply(this.controller, this.parameterArray);
+				} catch (error) {
+					this._handleError(error, resolve, reject);
+					return;
+				}
+
+				this._processResult(actionResult, resolve, reject);
 
 			} 
 
@@ -314,12 +323,36 @@ class Action extends Obj
 
 	_processResult(result, resolve, reject) {
 
-		// A redirect?
+		/////////////////////////////////////
+		// A 404 in the controller action? //
+		/////////////////////////////////////
+
+		if (result === false) {
+
+			result = new RoutingError(404, 'Not found');
+
+		}
+
+		/////////////////
+		// A redirect? //
+		/////////////////
+
 		if (result instanceof Redirect) {
 
 			//@TODO Cancel the running request?
 			
 			App().goto(result.uri, null, result.flash);
+
+		}
+
+		//////////////////////
+		// A routing error? //
+		//////////////////////
+
+		else if (result instanceof RoutingError) {
+
+			// Handle it
+			this._handleError(result, resolve, reject);
 
 		}
 
@@ -432,10 +465,17 @@ class Action extends Obj
 						throw new Error('There is no action on the "' + controllerName + '" controller with the name "' + action + '"');
 					}
 
+				}	
 
+				// Is it a route then
+				if (typeof callback === 'string') {
+
+					let viewUri = callback;
+					callback = () => {
+						return new View(viewUri);
+					};
 
 				}
-	
 
 
 			}

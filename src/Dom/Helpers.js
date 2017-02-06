@@ -91,7 +91,7 @@ class Helpers
 		if (!route) throw new Error('There is no route with the name "' + name + '"');
 
 		// Make uri
-		let attributes = _.mapObject(attributeHash, (value, key) => {
+		let attributes = _.mapObject(attributeHash, (value) => {
 			return this._getValue(value);
 		});
 		let uri = route.makeUrl(attributes);

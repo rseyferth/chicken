@@ -7,6 +7,8 @@ import Observable from '~/Core/Observable';
 import Binding from '~/Dom/Binding';
 import ApiCall from '~/Api/ApiCall';
 import Obj from '~/Core/Obj';
+import Model from '~/Data/Model';
+import Collection from '~/Data/Collection';
 
 /**
  * @module Dom
@@ -90,6 +92,12 @@ class View extends Observable
 		 * @type {Object}
 		 */
 		this.dataPromises = {};
+
+		/**
+		 * @property dataExpectations
+		 * @type {Object}
+		 */
+		this.dataExpectations = {};
 
 		/**
 		 * All promises that need to resolve for the 
@@ -419,6 +427,27 @@ class View extends Observable
 
 	} 
 
+	/**
+	 * Tell the View to expect given data to present in order to render properly. When this data
+	 * is not present, the View will throw an error.
+	 * 
+	 * @method expect
+	 * @param  {string}  key          The data key that is expected in order for the View to render properly
+	 * @param  {Number}  minimumCount (Default = 1) The minimum number of records we expect
+	 * @param  {Number}  maximumCount (Default = false) The maximum number of recorders we expected
+	 * @chainable
+	 */
+	expect(key, minimumCount = 1, maximumCount = false) {
+
+		// Set it
+		this.dataExpectations[key] = {
+			min: minimumCount,
+			max: maximumCount
+		};
+		return this;
+
+	}
+
 	action(key, callback) {
 
 		this.actions[key] = callback;
@@ -471,6 +500,25 @@ class View extends Observable
 
 			Promise.all(this.loadPromises).then(() => {
 
+				// Check present of data
+				_.each(this.dataExpectations, (options, key) => {
+
+					// Get it
+					let data = this.get(key);
+					if (data === undefined) return reject('The View expected ' + key + ' to be present, but it was not.');
+					
+					// Model or Collection?
+					if (!(data instanceof Model || data instanceof Collection)) return reject('The View expected ' + key + ' to be a Model or Collection, but it was a ' + (typeof data)); 
+
+					// Check count
+					if (data instanceof Model && options.min && options.min > 1) return reject('The View expected ' + key + ' to have at least ' + options.min + ' records, only one was present');
+					if (data instanceof Collection) {
+						if (options.min && data.length < options.min) return reject('The View expected ' + key + ' to have at least ' + options.min + ' records, ' + data.length + ' were present');
+						if (options.max && data.length > options.max) return reject('The View expected ' + key + ' to have no more than ' + options.max + ' records, ' + data.length + ' were present');
+					}
+
+				});
+
 				this.renderSync();
 				resolve();
 
@@ -502,9 +550,15 @@ class View extends Observable
 		/////////////////////
 
 		// Before render hook
+		let continueRendering = true;
 		_.each(this.hooks.beforeRender, (cb) => {
-			cb.apply(this);
+			if (!continueRendering) return;
+			let result = cb.apply(this);
+			if (result === false) continueRendering = false;
 		});
+
+		// Before render returned false?
+		if (!continueRendering) return this;
 
 		// Render it
 		try {

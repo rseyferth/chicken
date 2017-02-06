@@ -166,7 +166,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
-	var _Service2 = __webpack_require__(364);
+	var _Service2 = __webpack_require__(365);
 
 	var _Service3 = _interopRequireDefault(_Service2);
 
@@ -238,7 +238,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _FakeHistory2 = _interopRequireDefault(_FakeHistory);
 
-	var _Middleware = __webpack_require__(363);
+	var _Middleware = __webpack_require__(364);
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
 
@@ -246,7 +246,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 
-	var _Request = __webpack_require__(362);
+	var _Request = __webpack_require__(363);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
@@ -261,6 +261,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Router = __webpack_require__(356);
 
 	var _Router2 = _interopRequireDefault(_Router);
+
+	var _RoutingError = __webpack_require__(362);
+
+	var _RoutingError2 = _interopRequireDefault(_RoutingError);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -392,7 +396,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			Request: _Request2.default,
 			Route: _Route2.default,
 			RouteMatch: _RouteMatch2.default,
-			Router: _Router2.default
+			Router: _Router2.default,
+			RoutingError: _RoutingError2.default
 		},
 
 		inflection: _inflection2.default,
@@ -7928,7 +7933,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	!(function(global) {
 	  "use strict";
 
-	  var hasOwn = Object.prototype.hasOwnProperty;
+	  var Op = Object.prototype;
+	  var hasOwn = Op.hasOwnProperty;
 	  var undefined; // More compressible than void 0.
 	  var $Symbol = typeof Symbol === "function" ? Symbol : {};
 	  var iteratorSymbol = $Symbol.iterator || "@@iterator";
@@ -7952,8 +7958,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
 
 	  function wrap(innerFn, outerFn, self, tryLocsList) {
-	    // If outerFn provided, then outerFn.prototype instanceof Generator.
-	    var generator = Object.create((outerFn || Generator).prototype);
+	    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
+	    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
+	    var generator = Object.create(protoGenerator.prototype);
 	    var context = new Context(tryLocsList || []);
 
 	    // The ._invoke method unifies the implementations of the .next,
@@ -7999,10 +8006,29 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function GeneratorFunction() {}
 	  function GeneratorFunctionPrototype() {}
 
-	  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
+	  // This is a polyfill for %IteratorPrototype% for environments that
+	  // don't natively support it.
+	  var IteratorPrototype = {};
+	  IteratorPrototype[iteratorSymbol] = function () {
+	    return this;
+	  };
+
+	  var getProto = Object.getPrototypeOf;
+	  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
+	  if (NativeIteratorPrototype &&
+	      NativeIteratorPrototype !== Op &&
+	      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
+	    // This environment has a native %IteratorPrototype%; use it instead
+	    // of the polyfill.
+	    IteratorPrototype = NativeIteratorPrototype;
+	  }
+
+	  var Gp = GeneratorFunctionPrototype.prototype =
+	    Generator.prototype = Object.create(IteratorPrototype);
 	  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
 	  GeneratorFunctionPrototype.constructor = GeneratorFunction;
-	  GeneratorFunctionPrototype[toStringTagSymbol] = GeneratorFunction.displayName = "GeneratorFunction";
+	  GeneratorFunctionPrototype[toStringTagSymbol] =
+	    GeneratorFunction.displayName = "GeneratorFunction";
 
 	  // Helper for defining the .next, .throw, and .return methods of the
 	  // Iterator interface in terms of a single ._invoke method.
@@ -8039,16 +8065,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  // Within the body of any async function, `await x` is transformed to
 	  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-	  // `value instanceof AwaitArgument` to determine if the yielded value is
-	  // meant to be awaited. Some may consider the name of this method too
-	  // cutesy, but they are curmudgeons.
+	  // `hasOwn.call(value, "__await")` to determine if the yielded value is
+	  // meant to be awaited.
 	  runtime.awrap = function(arg) {
-	    return new AwaitArgument(arg);
+	    return { __await: arg };
 	  };
-
-	  function AwaitArgument(arg) {
-	    this.arg = arg;
-	  }
 
 	  function AsyncIterator(generator) {
 	    function invoke(method, arg, resolve, reject) {
@@ -8058,8 +8079,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        var result = record.arg;
 	        var value = result.value;
-	        if (value instanceof AwaitArgument) {
-	          return Promise.resolve(value.arg).then(function(value) {
+	        if (value &&
+	            typeof value === "object" &&
+	            hasOwn.call(value, "__await")) {
+	          return Promise.resolve(value.__await).then(function(value) {
 	            invoke("next", value, resolve, reject);
 	          }, function(err) {
 	            invoke("throw", err, resolve, reject);
@@ -8128,6 +8151,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  defineIteratorMethods(AsyncIterator.prototype);
+	  runtime.AsyncIterator = AsyncIterator;
 
 	  // Note that simple async functions are implemented on top of
 	  // AsyncIterator objects; they just return a Promise for the value of
@@ -8287,10 +8311,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // Define Generator.prototype.{next,throw,return} in terms of the
 	  // unified ._invoke helper method.
 	  defineIteratorMethods(Gp);
-
-	  Gp[iteratorSymbol] = function() {
-	    return this;
-	  };
 
 	  Gp[toStringTagSymbol] = "Generator";
 
@@ -16554,6 +16574,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj2 = _interopRequireDefault(_Obj);
 
+	var _Model = __webpack_require__(349);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
+	var _Collection = __webpack_require__(351);
+
+	var _Collection2 = _interopRequireDefault(_Collection);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -16648,6 +16676,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			var _this = _possibleConstructorReturn(this, (View.__proto__ || Object.getPrototypeOf(View)).call(this));
 
 			_this.dataPromises = {};
+
+			/**
+	   * @property dataExpectations
+	   * @type {Object}
+	   */
+			_this.dataExpectations = {};
 
 			/**
 	   * All promises that need to resolve for the 
@@ -16946,6 +16980,32 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return this;
 			}
+
+			/**
+	   * Tell the View to expect given data to present in order to render properly. When this data
+	   * is not present, the View will throw an error.
+	   * 
+	   * @method expect
+	   * @param  {string}  key          The data key that is expected in order for the View to render properly
+	   * @param  {Number}  minimumCount (Default = 1) The minimum number of records we expect
+	   * @param  {Number}  maximumCount (Default = false) The maximum number of recorders we expected
+	   * @chainable
+	   */
+
+		}, {
+			key: 'expect',
+			value: function expect(key) {
+				var minimumCount = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+				var maximumCount = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+
+				// Set it
+				this.dataExpectations[key] = {
+					min: minimumCount,
+					max: maximumCount
+				};
+				return this;
+			}
 		}, {
 			key: 'action',
 			value: function action(key, callback) {
@@ -17005,6 +17065,24 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					Promise.all(_this5.loadPromises).then(function () {
 
+						// Check present of data
+						_underscore2.default.each(_this5.dataExpectations, function (options, key) {
+
+							// Get it
+							var data = _this5.get(key);
+							if (data === undefined) return reject('The View expected ' + key + ' to be present, but it was not.');
+
+							// Model or Collection?
+							if (!(data instanceof _Model2.default || data instanceof _Collection2.default)) return reject('The View expected ' + key + ' to be a Model or Collection, but it was a ' + (typeof data === 'undefined' ? 'undefined' : _typeof(data)));
+
+							// Check count
+							if (data instanceof _Model2.default && options.min && options.min > 1) return reject('The View expected ' + key + ' to have at least ' + options.min + ' records, only one was present');
+							if (data instanceof _Collection2.default) {
+								if (options.min && data.length < options.min) return reject('The View expected ' + key + ' to have at least ' + options.min + ' records, ' + data.length + ' were present');
+								if (options.max && data.length > options.max) return reject('The View expected ' + key + ' to have no more than ' + options.max + ' records, ' + data.length + ' were present');
+							}
+						});
+
 						_this5.renderSync();
 						resolve();
 					}, function (error) {
@@ -17032,9 +17110,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				/////////////////////
 
 				// Before render hook
+				var continueRendering = true;
 				_underscore2.default.each(this.hooks.beforeRender, function (cb) {
-					cb.apply(_this6);
+					if (!continueRendering) return;
+					var result = cb.apply(_this6);
+					if (result === false) continueRendering = false;
 				});
+
+				// Before render returned false?
+				if (!continueRendering) return this;
 
 				// Render it
 				try {
@@ -19820,7 +19904,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!route) throw new Error('There is no route with the name "' + name + '"');
 
 				// Make uri
-				var attributes = _underscore2.default.mapObject(attributeHash, function (value, key) {
+				var attributes = _underscore2.default.mapObject(attributeHash, function (value) {
 					return _this2._getValue(value);
 				});
 				var uri = route.makeUrl(attributes);
@@ -20298,19 +20382,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _Request = __webpack_require__(362);
+	var _Request = __webpack_require__(363);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
-	var _Middleware = __webpack_require__(363);
+	var _Middleware = __webpack_require__(364);
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
 
-	var _Service = __webpack_require__(364);
+	var _Service = __webpack_require__(365);
 
 	var _Service2 = _interopRequireDefault(_Service);
 
-	var _RoutingError = __webpack_require__(365);
+	var _RoutingError = __webpack_require__(362);
 
 	var _RoutingError2 = _interopRequireDefault(_RoutingError);
 
@@ -21581,6 +21665,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Controller2 = _interopRequireDefault(_Controller);
 
+	var _RoutingError = __webpack_require__(362);
+
+	var _RoutingError2 = _interopRequireDefault(_RoutingError);
+
 	var _View = __webpack_require__(345);
 
 	var _View2 = _interopRequireDefault(_View);
@@ -21822,7 +21910,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Make controller
 						var ChickenController = _Controller2.default.registry.get(_this2.controllerClass);
 						if (ChickenController === undefined) {
-							reject('No controller defined with name "' + _this2.controllerClass + '"');
+							_this2._handleError('No controller defined with name "' + _this2.controllerClass + '"');
 							return;
 						}
 						_this2.controller = new ChickenController(_this2);
@@ -21830,12 +21918,20 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Call action
 						var controllerAction = _this2.controller[_this2.controllerAction];
 						if (controllerAction === 'undefined' || typeof controllerAction !== 'function') {
-							reject('There is no action on the "' + _this2.controllerClass + '" controller with the name "' + _this2.controllerAction + '"');
+							_this2._handleError('There is no action on the "' + _this2.controllerClass + '" controller with the name "' + _this2.controllerAction + '"');
 							return;
 						}
 
 						// Make the call
-						_this2._processResult(controllerAction.apply(_this2.controller, _this2.parameterArray), resolve, reject);
+						var actionResult = void 0;
+						try {
+							actionResult = controllerAction.apply(_this2.controller, _this2.parameterArray);
+						} catch (error) {
+							_this2._handleError(error, resolve, reject);
+							return;
+						}
+
+						_this2._processResult(actionResult, resolve, reject);
 					}
 
 					//////////////
@@ -21878,7 +21974,19 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function _processResult(result, resolve, reject) {
 				var _this3 = this;
 
-				// A redirect?
+				/////////////////////////////////////
+				// A 404 in the controller action? //
+				/////////////////////////////////////
+
+				if (result === false) {
+
+					result = new _RoutingError2.default(404, 'Not found');
+				}
+
+				/////////////////
+				// A redirect? //
+				/////////////////
+
 				if (result instanceof _Redirect2.default) {
 
 					//@TODO Cancel the running request?
@@ -21886,64 +21994,74 @@ return /******/ (function(modules) { // webpackBootstrap
 					(0, _App2.default)().goto(result.uri, null, result.flash);
 				}
 
-				///////////////////////////
-				// Is the result a view? //
-				///////////////////////////
+				//////////////////////
+				// A routing error? //
+				//////////////////////
 
-				else if (result instanceof _View2.default) {
-						(function () {
+				else if (result instanceof _RoutingError2.default) {
 
-							// Render the view
-							var view = result;
-							view.render().then(function () {
-
-								// Add it
-								_this3.viewContainer.setAction(_this3);
-								view.addToContainer(_this3.viewContainer);
-								resolve(view);
-							}, function (error) {
-
-								_this3._handleError(error, resolve, reject);
-							});
-						})();
+						// Handle it
+						this._handleError(result, resolve, reject);
 					}
 
-					//////////////////////////////
-					// Is the result a promise? //
-					//////////////////////////////
+					///////////////////////////
+					// Is the result a view? //
+					///////////////////////////
 
-					else if (result instanceof Promise) {
+					else if (result instanceof _View2.default) {
+							(function () {
 
-							// Wait for it to finish
-							result.then(function (promiseResult) {
+								// Render the view
+								var view = result;
+								view.render().then(function () {
 
-								// Process result again!
-								_this3._processResult(promiseResult, resolve, reject);
-							}, function (error) {
-								_this3._handleError(error, resolve, reject);
-							});
+									// Add it
+									_this3.viewContainer.setAction(_this3);
+									view.addToContainer(_this3.viewContainer);
+									resolve(view);
+								}, function (error) {
+
+									_this3._handleError(error, resolve, reject);
+								});
+							})();
 						}
 
-						/////////////////////////////////
-						// Is it rendarable by itself? //
-						/////////////////////////////////
+						//////////////////////////////
+						// Is the result a promise? //
+						//////////////////////////////
 
-						else {
+						else if (result instanceof Promise) {
 
-								// A string
-								if (typeof result === 'string' || result instanceof DocumentFragment) {
+								// Wait for it to finish
+								result.then(function (promiseResult) {
 
-									// Set content
-									this.viewContainer.setAction(this);
-									this.viewContainer.setContent(result);
-									resolve(result);
-								} else {
-
-									// Don't know how to render this...
-									reject('I don\'t know how to render the result for "' + this.targetViewContainer + '"');
-									return;
-								}
+									// Process result again!
+									_this3._processResult(promiseResult, resolve, reject);
+								}, function (error) {
+									_this3._handleError(error, resolve, reject);
+								});
 							}
+
+							/////////////////////////////////
+							// Is it rendarable by itself? //
+							/////////////////////////////////
+
+							else {
+
+									// A string
+									if (typeof result === 'string' || result instanceof DocumentFragment) {
+
+										// Set content
+										this.viewContainer.setAction(this);
+										this.viewContainer.setContent(result);
+										resolve(result);
+									} else {
+
+										// Don't know how to render this...
+										reject('I don\'t know how to render the result for "' + this.targetViewContainer + '"');
+										return;
+									}
+								}
 			}
 		}, {
 			key: '_handleError',
@@ -21991,6 +22109,17 @@ return /******/ (function(modules) { // webpackBootstrap
 							if (callback === 'undefined' || typeof callback !== 'function') {
 								throw new Error('There is no action on the "' + controllerName + '" controller with the name "' + action + '"');
 							}
+						}
+
+						// Is it a route then
+						if (typeof callback === 'string') {
+							(function () {
+
+								var viewUri = callback;
+								callback = function callback() {
+									return new _View2.default(viewUri);
+								};
+							})();
 						}
 					}
 
@@ -22178,6 +22307,30 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ },
 /* 362 */
+/***/ function(module, exports) {
+
+	"use strict";
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Routing
+	 */
+	var RoutingError = function RoutingError(code) {
+		var message = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+		var request = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+		_classCallCheck(this, RoutingError);
+
+		this.code = code;
+		this.message = message;
+		this.request = request;
+	};
+
+	module.exports = RoutingError;
+
+/***/ },
+/* 363 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22269,7 +22422,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Request;
 
 /***/ },
-/* 363 */
+/* 364 */
 /***/ function(module, exports) {
 
 	"use strict";
@@ -22303,7 +22456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Middleware;
 
 /***/ },
-/* 364 */
+/* 365 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -22376,30 +22529,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = Service;
-
-/***/ },
-/* 365 */
-/***/ function(module, exports) {
-
-	"use strict";
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Routing
-	 */
-	var RoutingError = function RoutingError(code) {
-		var message = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-		var request = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-
-		_classCallCheck(this, RoutingError);
-
-		this.code = code;
-		this.message = message;
-		this.request = request;
-	};
-
-	module.exports = RoutingError;
 
 /***/ },
 /* 366 */
@@ -23640,10 +23769,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _jquery = __webpack_require__(298);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
 	var _Api2 = __webpack_require__(367);
 
 	var _Api3 = _interopRequireDefault(_Api2);
@@ -23659,10 +23784,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Collection = __webpack_require__(351);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
-
-	var _Utils = __webpack_require__(352);
-
-	var _Utils2 = _interopRequireDefault(_Utils);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23759,7 +23880,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					_underscore2.default.each(result.linked, function (records, key) {
 
 						// Guess model
-						var modelClass = Chicken.Data.Model.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
+						var modelClass = _Model2.default.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
 						if (!modelClass) throw new Error('Api result contains resource for which there is no Model defined: ' + _inflection2.default.camelize(_inflection2.default.singularize(key)));
 						_underscore2.default.each(records, function (recordData) {
 							_this2.deserializeModel(recordData, apiCall, false, modelClass);
@@ -23770,7 +23891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					_underscore2.default.each(result.linked, function (records, key) {
 
 						// Guess model
-						var modelClass = Chicken.Data.Model.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
+						var modelClass = _Model2.default.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
 						_underscore2.default.each(records, function (recordData) {
 							_this2._deserializeRelationships(recordData, apiCall, key, null, modelClass);
 						});
@@ -24074,7 +24195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _Middleware = __webpack_require__(363);
+	var _Middleware = __webpack_require__(364);
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
 

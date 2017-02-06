@@ -1,12 +1,10 @@
 import inflection from 'inflection';
 import _ from 'underscore';
-import $ from 'jquery';
 
 import Api from '~/Api/Api';
 import PrimitiveJsonApiCall from '~/Api/PrimitiveJsonApiCall';
 import Model from '~/Data/Model';
 import Collection from '~/Data/Collection';
-import Utils from '~/Helpers/Utils';
 
 /**
  * @module Api
@@ -84,7 +82,7 @@ class PrimitiveJsonApi extends Api
 			_.each(result.linked, (records, key) => {
 
 				// Guess model
-				let modelClass = Chicken.Data.Model.registry.get(inflection.camelize(inflection.singularize(key)));
+				let modelClass = Model.registry.get(inflection.camelize(inflection.singularize(key)));
 				if (!modelClass) throw new Error('Api result contains resource for which there is no Model defined: ' + inflection.camelize(inflection.singularize(key)));
 				_.each(records, (recordData) => {
 					this.deserializeModel(recordData, apiCall, false, modelClass);
@@ -95,7 +93,7 @@ class PrimitiveJsonApi extends Api
 			_.each(result.linked, (records, key) => {
 
 				// Guess model
-				let modelClass = Chicken.Data.Model.registry.get(inflection.camelize(inflection.singularize(key)));
+				let modelClass = Model.registry.get(inflection.camelize(inflection.singularize(key)));
 				_.each(records, (recordData) => { 
 					this._deserializeRelationships(recordData, apiCall, key, null, modelClass);
 				});
