@@ -223,6 +223,11 @@ class Component extends View
 	
 	renderSync() {
 
+		// Before render hook
+		_.each(this.hooks.beforeRender, (cb) => {
+			cb.apply(this);
+		});
+
 		// Create the template
 		try {
 
@@ -251,7 +256,7 @@ class Component extends View
 			// Check value type
 			if (value === 'true') value = true;
 			if (value === 'false') value = false;
-			if ($.isNumeric(value)) value = parseFloat(value);
+			if ($.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
 			if (value !== this.attributes[key]) {
 				this.attributes[key] = value;
 			}

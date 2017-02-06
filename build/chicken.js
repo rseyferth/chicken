@@ -98,11 +98,19 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _Auth = __webpack_require__(370);
+	var _PrimitiveJsonApi = __webpack_require__(370);
+
+	var _PrimitiveJsonApi2 = _interopRequireDefault(_PrimitiveJsonApi);
+
+	var _PrimitiveJsonApiCall = __webpack_require__(371);
+
+	var _PrimitiveJsonApiCall2 = _interopRequireDefault(_PrimitiveJsonApiCall);
+
+	var _Auth = __webpack_require__(372);
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
-	var _JWTAuth = __webpack_require__(371);
+	var _JWTAuth = __webpack_require__(373);
 
 	var _JWTAuth2 = _interopRequireDefault(_JWTAuth);
 
@@ -138,11 +146,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelAttribute = __webpack_require__(373);
+	var _ModelAttribute = __webpack_require__(375);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _ModelDefinition = __webpack_require__(374);
+	var _ModelDefinition = __webpack_require__(376);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
 
@@ -150,11 +158,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
-	var _Pivot = __webpack_require__(377);
+	var _Pivot = __webpack_require__(379);
 
 	var _Pivot2 = _interopRequireDefault(_Pivot);
 
-	var _Relationship = __webpack_require__(375);
+	var _Relationship = __webpack_require__(377);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
@@ -225,6 +233,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Controller2 = __webpack_require__(361);
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
+
+	var _FakeHistory = __webpack_require__(380);
+
+	var _FakeHistory2 = _interopRequireDefault(_FakeHistory);
 
 	var _Middleware = __webpack_require__(363);
 
@@ -315,7 +327,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			Api: _Api2.default,
 			ApiCall: _ApiCall2.default,
 			JsonApi: _JsonApi2.default,
-			JsonApiCall: _JsonApiCall2.default
+			JsonApiCall: _JsonApiCall2.default,
+			PrimitiveJsonApi: _PrimitiveJsonApi2.default,
+			PrimitiveJsonApiCall: _PrimitiveJsonApiCall2.default
 		},
 
 		Application: _Application2.default,
@@ -372,6 +386,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		Routing: {
 			Action: _Action2.default,
 			Controller: _Controller3.default,
+			FakeHistory: _FakeHistory2.default,
 			Middleware: _Middleware2.default,
 			Redirect: _Redirect2.default,
 			Request: _Request2.default,
@@ -9017,6 +9032,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // 'metal',
 	    'methane',
 	    'milk',
+	    'minus',
 	    'money',
 	    // 'moose',
 	    'mud',
@@ -9173,6 +9189,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      hives     : new RegExp( '(hi|ti)ves$'                    , 'gi' ),
 	      curves    : new RegExp( '(curve)s$'                      , 'gi' ),
 	      lrves     : new RegExp( '([lr])ves$'                     , 'gi' ),
+	      aves      : new RegExp( '([a])ves$'                      , 'gi' ),
 	      foves     : new RegExp( '([^fo])ves$'                    , 'gi' ),
 	      movies    : new RegExp( '(m)ovies$'                      , 'gi' ),
 	      aeiouyies : new RegExp( '([^aeiouy]|qu)ies$'             , 'gi' ),
@@ -9342,6 +9359,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	    [ regex.plural.hives    , '$1ve' ],
 	    [ regex.plural.curves   , '$1' ],
 	    [ regex.plural.lrves    , '$1f' ],
+	    [ regex.plural.aves     , '$1ve' ],
 	    [ regex.plural.foves    , '$1fe' ],
 	    [ regex.plural.movies   , '$1ovie' ],
 	    [ regex.plural.aeiouyies, '$1y' ],
@@ -9883,8 +9901,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      for( ;i < j; i++ ){
 	        var method = arr[ i ];
 
-	        if( this.hasOwnProperty( method )){
-	          str = this[ method ]( str );
+	        if( inflector.hasOwnProperty( method )){
+	          str = inflector[ method ]( str );
 	        }
 	      }
 
@@ -9895,7 +9913,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @public
 	 */
-	  inflector.version = '1.10.0';
+	  inflector.version = '1.12.0';
 
 	  return inflector;
 	}));
@@ -10259,6 +10277,22 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this;
 			}
 		}, {
+			key: 'gotoNamed',
+			value: function gotoNamed(name) {
+				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+				var query = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+				var flash = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+
+				// Find route
+				var route = this.router.namedRoutes.get(name);
+				if (!route) throw new Error('There is no route defined with the name "' + name + '"');
+
+				// Make uri
+				var uri = route.makeUrl(attributes);
+				return this.goto(uri, query, flash);
+			}
+		}, {
 			key: 'goto',
 			value: function goto(uri) {
 				var query = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
@@ -10398,6 +10432,92 @@ return /******/ (function(modules) { // webpackBootstrap
 	var strictUriEncode = __webpack_require__(306);
 	var objectAssign = __webpack_require__(307);
 
+	function encoderForArrayFormat(opts) {
+		switch (opts.arrayFormat) {
+			case 'index':
+				return function (key, value, index) {
+					return value === null ? [
+						encode(key, opts),
+						'[',
+						index,
+						']'
+					].join('') : [
+						encode(key, opts),
+						'[',
+						encode(index, opts),
+						']=',
+						encode(value, opts)
+					].join('');
+				};
+
+			case 'bracket':
+				return function (key, value) {
+					return value === null ? encode(key, opts) : [
+						encode(key, opts),
+						'[]=',
+						encode(value, opts)
+					].join('');
+				};
+
+			default:
+				return function (key, value) {
+					return value === null ? encode(key, opts) : [
+						encode(key, opts),
+						'=',
+						encode(value, opts)
+					].join('');
+				};
+		}
+	}
+
+	function parserForArrayFormat(opts) {
+		var result;
+
+		switch (opts.arrayFormat) {
+			case 'index':
+				return function (key, value, accumulator) {
+					result = /\[(\d*)]$/.exec(key);
+
+					key = key.replace(/\[\d*]$/, '');
+
+					if (!result) {
+						accumulator[key] = value;
+						return;
+					}
+
+					if (accumulator[key] === undefined) {
+						accumulator[key] = {};
+					}
+
+					accumulator[key][result[1]] = value;
+				};
+
+			case 'bracket':
+				return function (key, value, accumulator) {
+					result = /(\[])$/.exec(key);
+
+					key = key.replace(/\[]$/, '');
+
+					if (!result || accumulator[key] === undefined) {
+						accumulator[key] = value;
+						return;
+					}
+
+					accumulator[key] = [].concat(accumulator[key], value);
+				};
+
+			default:
+				return function (key, value, accumulator) {
+					if (accumulator[key] === undefined) {
+						accumulator[key] = value;
+						return;
+					}
+
+					accumulator[key] = [].concat(accumulator[key], value);
+				};
+		}
+	}
+
 	function encode(value, opts) {
 		if (opts.encode) {
 			return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
@@ -10406,11 +10526,29 @@ return /******/ (function(modules) { // webpackBootstrap
 		return value;
 	}
 
+	function keysSorter(input) {
+		if (Array.isArray(input)) {
+			return input.sort();
+		} else if (typeof input === 'object') {
+			return keysSorter(Object.keys(input)).sort(function (a, b) {
+				return Number(a) - Number(b);
+			}).map(function (key) {
+				return input[key];
+			});
+		}
+
+		return input;
+	}
+
 	exports.extract = function (str) {
 		return str.split('?')[1] || '';
 	};
 
-	exports.parse = function (str) {
+	exports.parse = function (str, opts) {
+		opts = objectAssign({arrayFormat: 'none'}, opts);
+
+		var formatter = parserForArrayFormat(opts);
+
 		// Create an object with no prototype
 		// https://github.com/sindresorhus/query-string/issues/47
 		var ret = Object.create(null);
@@ -10432,31 +10570,36 @@ return /******/ (function(modules) { // webpackBootstrap
 			var key = parts.shift();
 			var val = parts.length > 0 ? parts.join('=') : undefined;
 
-			key = decodeURIComponent(key);
-
 			// missing `=` should be `null`:
 			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
 			val = val === undefined ? null : decodeURIComponent(val);
 
-			if (ret[key] === undefined) {
-				ret[key] = val;
-			} else if (Array.isArray(ret[key])) {
-				ret[key].push(val);
-			} else {
-				ret[key] = [ret[key], val];
-			}
+			formatter(decodeURIComponent(key), val, ret);
 		});
 
-		return ret;
+		return Object.keys(ret).sort().reduce(function (result, key) {
+			var val = ret[key];
+			if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
+				// Sort object keys, not values
+				result[key] = keysSorter(val);
+			} else {
+				result[key] = val;
+			}
+
+			return result;
+		}, Object.create(null));
 	};
 
 	exports.stringify = function (obj, opts) {
 		var defaults = {
 			encode: true,
-			strict: true
+			strict: true,
+			arrayFormat: 'none'
 		};
 
 		opts = objectAssign(defaults, opts);
+
+		var formatter = encoderForArrayFormat(opts);
 
 		return obj ? Object.keys(obj).sort().map(function (key) {
 			var val = obj[key];
@@ -10477,11 +10620,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						return;
 					}
 
-					if (val2 === null) {
-						result.push(encode(key, opts));
-					} else {
-						result.push(encode(key, opts) + '=' + encode(val2, opts));
-					}
+					result.push(formatter(key, val2, result.length));
 				});
 
 				return result.join('&');
@@ -14287,6 +14426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						scope.view = parentScope.self;
 					} else {
 						scope.component = parentScope.self;
+						scope.view = scope.component.view;
 					}
 				}
 
@@ -16156,6 +16296,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function renderSync() {
 				var _this3 = this;
 
+				// Before render hook
+				_underscore2.default.each(this.hooks.beforeRender, function (cb) {
+					cb.apply(_this3);
+				});
+
 				// Create the template
 				try {
 
@@ -16182,7 +16327,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Check value type
 					if (value === 'true') value = true;
 					if (value === 'false') value = false;
-					if (_jquery2.default.isNumeric(value)) value = parseFloat(value);
+					if (_jquery2.default.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
 					if (value !== _this3.attributes[key]) {
 						_this3.attributes[key] = value;
 					}
@@ -19664,6 +19809,25 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 				}
 			}
+		}, {
+			key: 'linkTo',
+			value: function linkTo(params, attributeHash, block) {
+				var _this2 = this;
+
+				// Find named route
+				var name = this._getValue(params[0]);
+				var route = (0, _App2.default)().router.namedRoutes.get(name);
+				if (!route) throw new Error('There is no route with the name "' + name + '"');
+
+				// Make uri
+				var attributes = _underscore2.default.mapObject(attributeHash, function (value, key) {
+					return _this2._getValue(value);
+				});
+				var uri = route.makeUrl(attributes);
+
+				// Make the link
+				return this.link([uri], attributeHash, block);
+			}
 
 			////////////////////////
 			// Control statements //
@@ -19721,10 +19885,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'ifOne',
 			value: function ifOne(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-				var _this2 = this;
+				var _this3 = this;
 
 				var trueConditions = _underscore2.default.filter(this._getValue(params), function (value) {
-					return !!_this2._getValue(value);
+					return !!_this3._getValue(value);
 				});
 
 				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length > 0));
@@ -19732,10 +19896,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'ifAll',
 			value: function ifAll(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-				var _this3 = this;
+				var _this4 = this;
 
 				var trueConditions = _underscore2.default.filter(this._getValue(params), function (value) {
-					return !!_this3._getValue(value);
+					return !!_this4._getValue(value);
 				});
 
 				return this._ifUnless(params, blocks, _Utils2.default.isTruthlike(trueConditions.length === params.length));
@@ -20014,6 +20178,13 @@ return /******/ (function(modules) { // webpackBootstrap
 					return total - item;
 				}, startValue);
 			}
+		}, {
+			key: 'numberFormat',
+			value: function numberFormat(params) {
+				var value = this._getValue(params[0]);
+				if (value === undefined) return '';
+				return value.toLocaleString(window.Chicken.app.i18n.language);
+			}
 
 			///////////
 			// Debug //
@@ -20067,20 +20238,20 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_getValues',
 			value: function _getValues(params) {
-				var _this4 = this;
+				var _this5 = this;
 
 				return params.map(function (value) {
-					return _this4._getValue(value);
+					return _this5._getValue(value);
 				});
 			}
 		}, {
 			key: '_getHashValues',
 			value: function _getHashValues(attributeHash) {
-				var _this5 = this;
+				var _this6 = this;
 
 				var result = {};
 				_underscore2.default.each(attributeHash, function (value, key) {
-					result[key] = _this5._getValue(value);
+					result[key] = _this6._getValue(value);
 				});
 				return result;
 			}
@@ -20924,6 +21095,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				return p;
+			}
+		}, {
+			key: 'makeUrl',
+			value: function makeUrl() {
+				var attributes = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+
+				// Get full pattern
+				var pattern = this.getFullPattern();
+				_underscore2.default.each(attributes, function (value, key) {
+
+					pattern = pattern.split(':' + key).join(value);
+				});
+
+				return pattern;
 			}
 
 			/**
@@ -23442,6 +23628,438 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _inflection = __webpack_require__(302);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _underscore = __webpack_require__(299);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _jquery = __webpack_require__(298);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Api2 = __webpack_require__(367);
+
+	var _Api3 = _interopRequireDefault(_Api2);
+
+	var _PrimitiveJsonApiCall = __webpack_require__(371);
+
+	var _PrimitiveJsonApiCall2 = _interopRequireDefault(_PrimitiveJsonApiCall);
+
+	var _Model = __webpack_require__(349);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
+	var _Collection = __webpack_require__(351);
+
+	var _Collection2 = _interopRequireDefault(_Collection);
+
+	var _Utils = __webpack_require__(352);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Api
+	 */
+	var PrimitiveJsonApi = function (_Api) {
+		_inherits(PrimitiveJsonApi, _Api);
+
+		/**
+	  * @class Api.PrimitiveJsonApi
+	  * @extends Api.Api
+	  *
+	  * @constructor
+	  * @param  {Object} options
+	  */
+		function PrimitiveJsonApi(options) {
+			_classCallCheck(this, PrimitiveJsonApi);
+
+			return _possibleConstructorReturn(this, (PrimitiveJsonApi.__proto__ || Object.getPrototypeOf(PrimitiveJsonApi)).call(this, options));
+		}
+
+		_createClass(PrimitiveJsonApi, [{
+			key: 'call',
+			value: function call(method, uri) {
+				var data = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var ajaxOptions = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+
+
+				// Create api call
+				return new _PrimitiveJsonApiCall2.default(this, method, uri, data, ajaxOptions);
+			}
+		}, {
+			key: 'saveModel',
+			value: function saveModel() /*model, options*/{
+				throw new Error('saveModel is not implemented');
+			}
+		}, {
+			key: 'deleteModel',
+			value: function deleteModel() /*model, options*/{
+				throw new Error('deleteModel is not implemented');
+			}
+		}, {
+			key: 'serialize',
+			value: function serialize() /*model, includeRelated = true, includeRelatedData = false, includedModelGuids = []*/{
+				throw new Error('serialize is not implemented');
+			}
+		}, {
+			key: 'deserialize',
+			value: function deserialize(result) {
+				var _this2 = this;
+
+				var apiCall = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				// Call given?
+				if (!apiCall) {
+					apiCall = new _PrimitiveJsonApiCall2.default(this, 'get', '/foo/bar');
+				}
+
+				// Check relationship map
+				if (result.links) {
+					(function () {
+
+						var map = {};
+						_underscore2.default.each(result.links, function (info, key) {
+
+							// Check key (e.g. journeys.line)
+							var parts = key.split(/\./);
+							var localModel = parts[0];
+							var attribute = parts[1];
+
+							// Store in map
+							map[localModel] = map[localModel] || {};
+							map[localModel][attribute] = info.type;
+						});
+						apiCall.relationshipMap = map;
+					})();
+				}
+
+				// Deduce root element
+				var rootElement = _underscore2.default.camelize(_inflection2.default.pluralize(apiCall.modelClass.modelName), true);
+
+				// Check included data	
+				if (result.linked) {
+
+					// Loop and store them in the model stores
+					_underscore2.default.each(result.linked, function (records, key) {
+
+						// Guess model
+						var modelClass = Chicken.Data.Model.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
+						if (!modelClass) throw new Error('Api result contains resource for which there is no Model defined: ' + _inflection2.default.camelize(_inflection2.default.singularize(key)));
+						_underscore2.default.each(records, function (recordData) {
+							_this2.deserializeModel(recordData, apiCall, false, modelClass);
+						});
+					});
+
+					// Now loop again, and connect related models to each other
+					_underscore2.default.each(result.linked, function (records, key) {
+
+						// Guess model
+						var modelClass = Chicken.Data.Model.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
+						_underscore2.default.each(records, function (recordData) {
+							_this2._deserializeRelationships(recordData, apiCall, key, null, modelClass);
+						});
+					});
+				}
+
+				// Is the result an object or an array
+				var data = result[rootElement];
+				if (data === undefined || data === null) throw new Error('No data received from Api');
+				if (data instanceof Array) {
+
+					return this.deserializeCollection(data, apiCall);
+				} else if (data instanceof Object) {
+
+					return this.deserializeModel(data, apiCall);
+				}
+
+				// Don't know...
+				throw new TypeError('Unrecognized data received from Api');
+			}
+		}, {
+			key: 'deserializeModel',
+			value: function deserializeModel(data, apiCall) {
+				var _this3 = this;
+
+				var deserializeRelationships = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : true;
+				var modelClass = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
+
+				// Look for the type of model
+				modelClass = modelClass || apiCall.modelClass;
+				var modelName = modelClass.modelName;
+
+				// Collect attributes
+				var attributes = {};
+				_underscore2.default.each(data, function (value, key) {
+					attributes[_inflection2.default.camelize(key, true)] = value;
+				});
+
+				// Check if the model is already in the store
+				var model = apiCall.getResponseModel(modelName, data.id);
+				if (!model) {
+
+					// Create a new model.
+					attributes.id = /^\d+$/.test(data.id) ? parseInt(data.id) : data.id;
+					model = new modelClass(attributes);
+					apiCall.storeReponseModel(model);
+				} else {
+
+					// Set the attributes (not overwriting dirty ones)
+					model.setAttributesFromApi(attributes);
+				}
+
+				// Also deserialize relationships?
+				if (deserializeRelationships) {
+					(function () {
+
+						var localKey = _underscore2.default.underscored(_inflection2.default.pluralize(modelName));
+						model.withoutNotifications(function () {
+							_this3._deserializeRelationships(data, apiCall, localKey, model);
+						});
+					})();
+				}
+
+				return model;
+			}
+		}, {
+			key: 'deserializeCollection',
+			value: function deserializeCollection(data, apiCall) {
+				var _this4 = this;
+
+				// Make a collection
+				var collection = new _Collection2.default(apiCall.modelClass);
+
+				// Add records
+				_underscore2.default.each(data, function (recordData) {
+					collection.addFromApi(_this4.deserializeModel(recordData, apiCall), true);
+				});
+
+				return collection;
+			}
+		}, {
+			key: '_deserializeRelationships',
+			value: function _deserializeRelationships(data, apiCall, localModelKey) {
+				var _this5 = this;
+
+				var model = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+				var modelClass = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+
+
+				// Model given?
+				if (model === null) {
+
+					// Look it up in the store			
+					model = apiCall.getResponseModel(this._getModelName(modelClass.modelName), data.id);
+
+					// Not known?
+					if (!model) throw new Error('Could not deserialize relationships for unknown model: ' + this._getModelName(data.type) + ' with id ' + data.id);
+				}
+
+				// Check relationships records.
+				if (data.links) {
+
+					_underscore2.default.each(data.links, function (rel, relationshipName) {
+
+						// Is there data?
+						if (rel) {
+							var _ret3 = function () {
+
+								// __chicken variable?
+								if (relationshipName.match(/^__/)) return {
+										v: void 0
+									};
+
+								// Camelize
+								var modelRelName = _inflection2.default.camelize(relationshipName, true);
+								var resourceType = apiCall.relationshipMap[localModelKey][relationshipName];
+
+								// Is it one record?
+								if (rel instanceof Array) {
+									(function () {
+
+										// Find relationship
+										var relationship = model.getRelationship(modelRelName);
+
+										// Loop and add
+										_underscore2.default.each(rel, function (relData) {
+
+											// Get the model
+											var relatedModel = _this5._getRelatedModel(relData, resourceType, apiCall);
+											if (relatedModel) {
+												(function () {
+
+													// Pivot data defined?
+													var pivotAttributes = null;
+													if (relData.meta && relationship.isPivot() && relationship.pivotModel) {
+
+														// Collect pivot attributes
+														pivotAttributes = {};
+														_underscore2.default.each(relData.meta, function (value, key) {
+															pivotAttributes[_inflection2.default.camelize(key, true)] = value;
+														});
+													}
+
+													// Add to collection
+													model.addRelatedModel(modelRelName, relatedModel, true, pivotAttributes);
+												})();
+											}
+										});
+									})();
+								} else {
+
+									// Get the one
+									var relatedModel = _this5._getRelatedModel(rel, resourceType, apiCall);
+									if (relatedModel) {
+
+										// Set it
+										model.setRelatedModel(modelRelName, relatedModel);
+									}
+								}
+							}();
+
+							if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
+						}
+					});
+				}
+
+				// Trigger the event
+				model.trigger('deserialized', [this]);
+			}
+		}, {
+			key: '_getRelatedModel',
+			value: function _getRelatedModel(relId, relType, apiCall) {
+
+				// Check data integrity
+				if (!relType) throw new TypeError('Api result did not specify the relationship type');
+				if (!relId) throw new TypeError('Api result did not specify the relationship record id');
+
+				// Find model in store
+				relType = this._getModelName(relType);
+				var relModel = apiCall.getResponseModel(relType, relId);
+				return relModel;
+			}
+		}, {
+			key: '_getModelName',
+			value: function _getModelName(resourceType) {
+
+				// directions.locations => Directions.Location
+				// times => Time
+
+				var parts = resourceType.split('.');
+				var modelType = _underscore2.default.map(parts, function (part, index) {
+					part = _inflection2.default.camelize(part);
+					return index === parts.length - 1 ? _inflection2.default.singularize(part) : part;
+				}).join('.');
+
+				return modelType;
+			}
+		}]);
+
+		return PrimitiveJsonApi;
+	}(_Api3.default);
+
+	module.exports = PrimitiveJsonApi;
+
+/***/ },
+/* 371 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _inflection = __webpack_require__(302);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _ApiCall2 = __webpack_require__(347);
+
+	var _ApiCall3 = _interopRequireDefault(_ApiCall2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Api
+	 */
+	var PrimitiveJsonApiCall = function (_ApiCall) {
+		_inherits(PrimitiveJsonApiCall, _ApiCall);
+
+		function PrimitiveJsonApiCall() {
+			_classCallCheck(this, PrimitiveJsonApiCall);
+
+			return _possibleConstructorReturn(this, (PrimitiveJsonApiCall.__proto__ || Object.getPrototypeOf(PrimitiveJsonApiCall)).apply(this, arguments));
+		}
+
+		_createClass(PrimitiveJsonApiCall, [{
+			key: 'include',
+
+
+			/**
+	   * @class Api.PrimitiveJsonApiCall
+	   * @extends Api.ApiCall
+	   * 
+	   * @constructor
+	   * @param  {Api.JsonApi} api 	The Api instance this call originates from
+	   * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+	   * @param  {string} uri			The uri to call
+	   * @param  {Object} data        
+	   * @param  {Object} ajaxOptions 	 
+	   */
+
+			/**
+	    * Include the given relationships in the request
+	    * 
+	    * @method include
+	    * @chainable
+	    * 
+	    * @param  {string} relations  JSONAPI include options for request
+	    */
+			value: function include(relations) {
+				if (relations instanceof Array) {
+					relations = relations.join(',');
+				}
+				return this.query('include', relations);
+			}
+		}, {
+			key: 'filter',
+			value: function filter(key, value) {
+				return this.query('filter[' + _inflection2.default.underscore(key) + ']', value);
+			}
+		}]);
+
+		return PrimitiveJsonApiCall;
+	}(_ApiCall3.default);
+
+	module.exports = PrimitiveJsonApiCall;
+
+/***/ },
+/* 372 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _underscore = __webpack_require__(299);
@@ -23673,7 +24291,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Auth;
 
 /***/ },
-/* 371 */
+/* 373 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -23688,11 +24306,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _Auth2 = __webpack_require__(370);
+	var _Auth2 = __webpack_require__(372);
 
 	var _Auth3 = _interopRequireDefault(_Auth2);
 
-	var _AuthError = __webpack_require__(372);
+	var _AuthError = __webpack_require__(374);
 
 	var _AuthError2 = _interopRequireDefault(_AuthError);
 
@@ -23734,6 +24352,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				refreshMethod: 'post',
 
 				middlewareName: 'auth.jwt',
+
+				beforeSend: false,
 
 				identifierKey: 'email',
 				passwordKey: 'password',
@@ -23816,7 +24436,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					_jquery2.default.ajax({
 						url: _this3.settings.baseUrl + _this3.settings.authenticateUri,
 						data: data,
-						method: _this3.settings.authenticateMethod
+						method: _this3.settings.authenticateMethod,
+						beforeSend: _this3.settings.beforeSend
 					}).then(function (result) {
 
 						// Check token.
@@ -24066,7 +24687,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JWTAuth;
 
 /***/ },
-/* 372 */
+/* 374 */
 /***/ function(module, exports) {
 
 	'use strict';
@@ -24119,7 +24740,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = AuthError;
 
 /***/ },
-/* 373 */
+/* 375 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24129,6 +24750,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _moment = __webpack_require__(304);
 
 	var _moment2 = _interopRequireDefault(_moment);
+
+	var _Observable = __webpack_require__(329);
+
+	var _Observable2 = _interopRequireDefault(_Observable);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -24268,9 +24893,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					case ModelAttribute.String:
 						return value instanceof String ? value : '' + value;
 
-					//Array
-					case ModelAttribute.Array:
-						return value instanceof Array ? JSON.stringify(value) : value;
+					/*//Array
+	    case ModelAttribute.Array: 
+	    	return value instanceof Array ? JSON.stringify(value) : value;
+	    */
 
 					///////////
 					// Dates //
@@ -24282,6 +24908,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					case ModelAttribute.DateTime:
 						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD HH:mm:ss') : value;
+
+					/////////////
+					// Objects //
+					/////////////
+
+					case ModelAttribute.Object:
+						return value instanceof _Observable2.default ? value.attributes : value;
 
 					default:
 						return value;
@@ -24364,7 +24997,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelAttribute;
 
 /***/ },
-/* 374 */
+/* 376 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24379,11 +25012,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _ModelAttribute = __webpack_require__(373);
+	var _ModelAttribute = __webpack_require__(375);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _Relationship = __webpack_require__(375);
+	var _Relationship = __webpack_require__(377);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
@@ -24728,7 +25361,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelDefinition;
 
 /***/ },
-/* 375 */
+/* 377 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -24751,7 +25384,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _PivotCollection = __webpack_require__(376);
+	var _PivotCollection = __webpack_require__(378);
 
 	var _PivotCollection2 = _interopRequireDefault(_PivotCollection);
 
@@ -25044,7 +25677,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Relationship;
 
 /***/ },
-/* 376 */
+/* 378 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25057,7 +25690,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Collection3 = _interopRequireDefault(_Collection2);
 
-	var _Pivot = __webpack_require__(377);
+	var _Pivot = __webpack_require__(379);
 
 	var _Pivot2 = _interopRequireDefault(_Pivot);
 
@@ -25112,7 +25745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PivotCollection;
 
 /***/ },
-/* 377 */
+/* 379 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25212,6 +25845,46 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	module.exports = Pivot;
+
+/***/ },
+/* 380 */
+/***/ function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var FakeHistory = function () {
+		function FakeHistory() {
+			var location = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+			_classCallCheck(this, FakeHistory);
+
+			this.location = location || {
+				action: 'POP',
+				hash: '',
+				key: 'abc',
+				pathname: '/',
+				search: ''
+			};
+		}
+
+		_createClass(FakeHistory, [{
+			key: 'listen',
+			value: function listen() /*callback*/{}
+		}, {
+			key: 'getCurrentLocation',
+			value: function getCurrentLocation() {
+				return this.location;
+			}
+		}]);
+
+		return FakeHistory;
+	}();
+
+	module.exports = FakeHistory;
 
 /***/ }
 /******/ ])

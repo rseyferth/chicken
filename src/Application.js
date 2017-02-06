@@ -314,6 +314,18 @@ class Application extends Observable {
 
 	}
 
+	gotoNamed(name, attributes = {}, query = null, flash = {}) {
+
+		// Find route
+		let route = this.router.namedRoutes.get(name);
+		if (!route) throw new Error('There is no route defined with the name "' + name + '"');
+
+		// Make uri
+		let uri = route.makeUrl(attributes);
+		return this.goto(uri, query, flash);
+
+	}
+
 	goto(uri, query = null, flash = {}) {
 
 		// Query in the uri?

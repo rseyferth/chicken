@@ -83,6 +83,27 @@ class Helpers
 	}
 
 
+	linkTo(params, attributeHash, block) {
+
+		// Find named route
+		let name = this._getValue(params[0]);
+		let route = App().router.namedRoutes.get(name);
+		if (!route) throw new Error('There is no route with the name "' + name + '"');
+
+		// Make uri
+		let attributes = _.mapObject(attributeHash, (value, key) => {
+			return this._getValue(value);
+		});
+		let uri = route.makeUrl(attributes);
+
+		
+		// Make the link
+		return this.link([uri], attributeHash, block);
+		
+
+	}
+
+
 	////////////////////////
 	// Control statements //
 	////////////////////////
@@ -415,6 +436,12 @@ class Helpers
 		return values.reduce((total, item) => { 
 			return total - item;
 		}, startValue);	
+	}
+
+	numberFormat(params) {
+		let value = this._getValue(params[0]);
+		if (value === undefined) return '';
+		return value.toLocaleString(window.Chicken.app.i18n.language);
 	}
 
 

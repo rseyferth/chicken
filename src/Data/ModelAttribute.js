@@ -1,4 +1,5 @@
 import moment from 'moment';
+import Observable from '~/Core/Observable';
 
 class ModelAttribute {
 
@@ -120,10 +121,10 @@ class ModelAttribute {
 			case ModelAttribute.String:
 				return value instanceof String ? value : '' + value;
 
-			//Array
+			/*//Array
 			case ModelAttribute.Array: 
 				return value instanceof Array ? JSON.stringify(value) : value;
-
+*/
 
 			///////////
 			// Dates //
@@ -136,6 +137,14 @@ class ModelAttribute {
 			case ModelAttribute.DateTime:
 				return moment.isMoment(value) ? value.format('YYYY-MM-DD HH:mm:ss') : value;
 
+
+			/////////////
+			// Objects //
+			/////////////
+
+			case ModelAttribute.Object:
+				return value instanceof Observable ? value.attributes : value;
+				
 
 			default:
 				return value;

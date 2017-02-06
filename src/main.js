@@ -34,6 +34,8 @@ import Api from '~/Api/Api';
 import ApiCall from '~/Api/ApiCall';
 import JsonApi from '~/Api/JsonApi';
 import JsonApiCall from '~/Api/JsonApiCall';
+import PrimitiveJsonApi from '~/Api/PrimitiveJsonApi';
+import PrimitiveJsonApiCall from '~/Api/PrimitiveJsonApiCall';
 
 // Auth
 import Auth from '~/Auth/Auth';
@@ -81,6 +83,7 @@ import I18n from '~/Localization/I18n';
 // Routing
 import Action from '~/Routing/Action';
 import Controller from '~/Routing/Controller';
+import FakeHistory from '~/Routing/FakeHistory';
 import Middleware from '~/Routing/Middleware';
 import Redirect from '~/Routing/Redirect';
 import Request from '~/Routing/Request';
@@ -105,7 +108,9 @@ var Chicken = {
 		Api: Api,
 		ApiCall: ApiCall,
 		JsonApi: JsonApi,
-		JsonApiCall: JsonApiCall
+		JsonApiCall: JsonApiCall,
+		PrimitiveJsonApi: PrimitiveJsonApi,
+		PrimitiveJsonApiCall: PrimitiveJsonApiCall
 	},
 
 	Application: Application,
@@ -162,6 +167,7 @@ var Chicken = {
 	Routing: {
 		Action: Action,
 		Controller: Controller,
+		FakeHistory: FakeHistory,
 		Middleware: Middleware,
 		Redirect: Redirect,
 		Request: Request,
