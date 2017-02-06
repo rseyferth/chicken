@@ -18224,8 +18224,6 @@ return /******/ (function(modules) { // webpackBootstrap
 						return true;
 					});
 
-					console.log(modelAttr);
-
 					// Now uncast the values
 					attr = _underscore2.default.mapObject(modelAttr, function (value, key) {
 
