@@ -384,7 +384,7 @@ class Model extends Observable
 			});
 
 			// Not only dirty?
-			if (!onlyDirty) {
+			if (!onlyDirty && !modelDefinition.isDynamic) {
 
 				// Also add defined attributes that were not set in the model (by default value)
 				let missingKeys = _.difference(modelDefinition.getApiAttributeNames(), _.keys(attr));

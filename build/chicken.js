@@ -18224,6 +18224,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						return true;
 					});
 
+					console.log(modelAttr);
+
 					// Now uncast the values
 					attr = _underscore2.default.mapObject(modelAttr, function (value, key) {
 
@@ -18237,7 +18239,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 
 					// Not only dirty?
-					if (!onlyDirty) {
+					if (!onlyDirty && !modelDefinition.isDynamic) {
 
 						// Also add defined attributes that were not set in the model (by default value)
 						var missingKeys = _underscore2.default.difference(modelDefinition.getApiAttributeNames(), _underscore2.default.keys(attr));
@@ -19332,7 +19334,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		// Combine items by id
 		collections = _underscore2.default.flatten(collections);
-		var itemArrays = _underscore2.default.pluck(collections, 'itemsById');
+		var itemArrays = _underscore2.default.map(_underscore2.default.pluck(collections, 'items'), function (arr) {
+			var items = {};
+			_underscore2.default.each(arr, function (item) {
+				items[item.get('id')] = item;
+			});
+			return items;
+		});
 		itemArrays.unshift({});
 		var resultArray = _underscore2.default.extend.apply(undefined, itemArrays);
 
@@ -24876,6 +24884,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
+	var _ObservableArray = __webpack_require__(340);
+
+	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -24889,6 +24901,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			this.isPrimaryKey = false;
 			this.isNullable = false;
+			this.isUnique = false;
 
 			this.defaultValue = undefined;
 			this.includeInRequests = true;
@@ -24910,6 +24923,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				var isPrimaryKey = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
 				this.isPrimaryKey = isPrimaryKey;
+				return this;
+			}
+		}, {
+			key: 'unique',
+			value: function unique() {
+				var isUnique = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+				this.isUnique = isUnique;
 				return this;
 			}
 		}, {
@@ -25014,10 +25035,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					case ModelAttribute.String:
 						return value instanceof String ? value : '' + value;
 
-					/*//Array
-	    case ModelAttribute.Array: 
-	    	return value instanceof Array ? JSON.stringify(value) : value;
-	    */
+					//Array
+					case ModelAttribute.Array:
+						if (value instanceof _ObservableArray2.default) value = value.toArray();
+						return value instanceof Array ? JSON.stringify(value) : value;
 
 					///////////
 					// Dates //

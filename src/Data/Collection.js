@@ -233,7 +233,13 @@ Collection.combine = (...collections) => {
 
 	// Combine items by id
 	collections = _.flatten(collections);
-	let itemArrays = _.pluck(collections, 'itemsById');
+	let itemArrays = _.map(_.pluck(collections, 'items'), (arr) => {
+		let items = {};
+		_.each(arr, (item) => {
+			items[item.get('id')] = item;
+		});		
+		return items;
+	});
 	itemArrays.unshift({});
 	let resultArray = _.extend.apply(this, itemArrays);
 
