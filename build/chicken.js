@@ -19904,7 +19904,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!route) throw new Error('There is no route with the name "' + name + '"');
 
 				// Make uri
-				var attributes = _underscore2.default.mapObject(attributeHash, function (value, key) {
+				var attributes = _underscore2.default.mapObject(attributeHash, function (value) {
 					return _this2._getValue(value);
 				});
 				var uri = route.makeUrl(attributes);
@@ -23769,10 +23769,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _jquery = __webpack_require__(298);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
 	var _Api2 = __webpack_require__(367);
 
 	var _Api3 = _interopRequireDefault(_Api2);
@@ -23788,10 +23784,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Collection = __webpack_require__(351);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
-
-	var _Utils = __webpack_require__(352);
-
-	var _Utils2 = _interopRequireDefault(_Utils);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -23888,7 +23880,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					_underscore2.default.each(result.linked, function (records, key) {
 
 						// Guess model
-						var modelClass = Chicken.Data.Model.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
+						var modelClass = _Model2.default.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
 						if (!modelClass) throw new Error('Api result contains resource for which there is no Model defined: ' + _inflection2.default.camelize(_inflection2.default.singularize(key)));
 						_underscore2.default.each(records, function (recordData) {
 							_this2.deserializeModel(recordData, apiCall, false, modelClass);
@@ -23899,7 +23891,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					_underscore2.default.each(result.linked, function (records, key) {
 
 						// Guess model
-						var modelClass = Chicken.Data.Model.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
+						var modelClass = _Model2.default.registry.get(_inflection2.default.camelize(_inflection2.default.singularize(key)));
 						_underscore2.default.each(records, function (recordData) {
 							_this2._deserializeRelationships(recordData, apiCall, key, null, modelClass);
 						});
