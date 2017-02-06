@@ -92,6 +92,12 @@ class View extends Observable
 		this.dataPromises = {};
 
 		/**
+		 * @property dataExpectations
+		 * @type {Object}
+		 */
+		this.dataExpectations = {};
+
+		/**
 		 * All promises that need to resolve for the 
 		 * page to load.
 		 *
@@ -419,6 +425,27 @@ class View extends Observable
 
 	} 
 
+	/**
+	 * Tell the View to expect given data to present in order to render properly. When this data
+	 * is not present, the View will throw an error.
+	 * 
+	 * @method expect
+	 * @param  {string}  key          The data key that is expected in order for the View to render properly
+	 * @param  {Number}  minimumCount (Default = 1) The minimum number of records we expect
+	 * @param  {Number}  maximumCount (Default = false) The maximum number of recorders we expected
+	 * @chainable
+	 */
+	expect(key, minimumCount = 1, maximumCount = false) {
+
+		// Set it
+		this.dataExpectations[key] = {
+			min: minimumCount,
+			max: maximumCount
+		};
+		return this;
+
+	}
+
 	action(key, callback) {
 
 		this.actions[key] = callback;
@@ -471,6 +498,16 @@ class View extends Observable
 
 			Promise.all(this.loadPromises).then(() => {
 
+				// Check present of data
+				_.each(this.dataExpectations, (options, key) => {
+
+					// Get it
+					let data = this.get(key);
+					if (data === undefined) return reject('The View expected ' + key + ' to be present, but it was not.');
+					console.log(key, data);
+
+				});
+
 				this.renderSync();
 				resolve();
 
@@ -502,9 +539,15 @@ class View extends Observable
 		/////////////////////
 
 		// Before render hook
+		let continueRendering = true;
 		_.each(this.hooks.beforeRender, (cb) => {
-			cb.apply(this);
+			if (!continueRendering) return;
+			let result = cb.apply(this);
+			if (result === false) continueRendering = false;
 		});
+
+		// Before render returned false?
+		if (!continueRendering) return this;
 
 		// Render it
 		try {
