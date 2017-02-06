@@ -16574,6 +16574,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Obj2 = _interopRequireDefault(_Obj);
 
+	var _Model = __webpack_require__(349);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
+	var _Collection = __webpack_require__(351);
+
+	var _Collection2 = _interopRequireDefault(_Collection);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -17063,7 +17071,16 @@ return /******/ (function(modules) { // webpackBootstrap
 							// Get it
 							var data = _this5.get(key);
 							if (data === undefined) return reject('The View expected ' + key + ' to be present, but it was not.');
-							console.log(key, data);
+
+							// Model or Collection?
+							if (!(data instanceof _Model2.default || data instanceof _Collection2.default)) return reject('The View expected ' + key + ' to be a Model or Collection, but it was a ' + (typeof data === 'undefined' ? 'undefined' : _typeof(data)));
+
+							// Check count
+							if (data instanceof _Model2.default && options.min && options.min > 1) return reject('The View expected ' + key + ' to have at least ' + options.min + ' records, only one was present');
+							if (data instanceof _Collection2.default) {
+								if (options.min && data.length < options.min) return reject('The View expected ' + key + ' to have at least ' + options.min + ' records, ' + data.length + ' were present');
+								if (options.max && data.length > options.max) return reject('The View expected ' + key + ' to have no more than ' + options.max + ' records, ' + data.length + ' were present');
+							}
 						});
 
 						_this5.renderSync();

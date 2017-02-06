@@ -7,6 +7,8 @@ import Observable from '~/Core/Observable';
 import Binding from '~/Dom/Binding';
 import ApiCall from '~/Api/ApiCall';
 import Obj from '~/Core/Obj';
+import Model from '~/Data/Model';
+import Collection from '~/Data/Collection';
 
 /**
  * @module Dom
@@ -504,7 +506,16 @@ class View extends Observable
 					// Get it
 					let data = this.get(key);
 					if (data === undefined) return reject('The View expected ' + key + ' to be present, but it was not.');
-					console.log(key, data);
+					
+					// Model or Collection?
+					if (!(data instanceof Model || data instanceof Collection)) return reject('The View expected ' + key + ' to be a Model or Collection, but it was a ' + (typeof data)); 
+
+					// Check count
+					if (data instanceof Model && options.min && options.min > 1) return reject('The View expected ' + key + ' to have at least ' + options.min + ' records, only one was present');
+					if (data instanceof Collection) {
+						if (options.min && data.length < options.min) return reject('The View expected ' + key + ' to have at least ' + options.min + ' records, ' + data.length + ' were present');
+						if (options.max && data.length > options.max) return reject('The View expected ' + key + ' to have no more than ' + options.max + ' records, ' + data.length + ' were present');
+					}
 
 				});
 
