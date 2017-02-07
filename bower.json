@@ -11,7 +11,8 @@
     "xregexp": "^3.1.1",
     "htmlbars-standalone": "0.0.*",
     "moment": "^2.15.0",
-    "underscore.string": "^3.3.4"
+    "underscore.string": "^3.3.4",
+    "jquery.ajaxq": "^0.5.2"
   },
   "license": "ISC",
   "homepage": "https://github.com/rseyferth/chicken",

@@ -22880,6 +22880,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.settings = _jquery2.default.extend({
 				baseUrl: '/api',
 
+				queueAjaxCalls: true,
+
 				auth: false,
 
 				beforeSend: false
@@ -23053,7 +23055,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'ajax',
 			value: function ajax(options) {
-				return _jquery2.default.ajax(this.getAjaxOptions(options));
+				var method = this.settings.queueAjaxCalls ? _jquery2.default.ajaxq : _jquery2.default.ajax;
+				if (method === undefined) throw new Error('Could not find Ajax or AjaxQ library. Did you include jquery.ajaxq into your project?');
+				return method.apply(null, [this.getAjaxOptions(options)]);
 			}
 
 			/**

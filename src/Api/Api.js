@@ -21,6 +21,8 @@ class Api {
 		this.settings = $.extend({
 			baseUrl: '/api',
 			
+			queueAjaxCalls: true,
+
 			auth: false,
 
 			beforeSend: false
@@ -151,7 +153,9 @@ class Api {
 	 * @return {jQuery Ajax call}         
 	 */
 	ajax(options) {
-		return $.ajax(this.getAjaxOptions(options));
+		let method = this.settings.queueAjaxCalls ? $.ajaxq : $.ajax;
+		if (method === undefined) throw new Error('Could not find Ajax or AjaxQ library. Did you include jquery.ajaxq into your project?');
+		return method.apply(null, [this.getAjaxOptions(options)]);
 	}
 
 	/**
