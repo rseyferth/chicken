@@ -210,4 +210,4 @@ gulp.task('webpack', [], () => {
 // Default //
 /////////////
 
-gulp.task('default', ['lint', 'mocha', 'docs', 'webpack']);
+gulp.task('default', ['lint', 'docs', 'webpack']);

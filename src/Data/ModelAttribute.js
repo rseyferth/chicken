@@ -1,5 +1,6 @@
 import moment from 'moment';
 import Observable from '~/Core/Observable';
+import ObservableArray from '~/Core/ObservableArray';
 
 class ModelAttribute {
 
@@ -10,6 +11,7 @@ class ModelAttribute {
 
 		this.isPrimaryKey = false;
 		this.isNullable = false;
+		this.isUnique = false;
 
 		this.defaultValue = undefined;		
 		this.includeInRequests = true;
@@ -27,6 +29,10 @@ class ModelAttribute {
 
 	primary(isPrimaryKey = true) {
 		this.isPrimaryKey = isPrimaryKey;
+		return this;
+	}
+	unique(isUnique = true) {
+		this.isUnique = isUnique;
 		return this;
 	}
 
@@ -121,10 +127,11 @@ class ModelAttribute {
 			case ModelAttribute.String:
 				return value instanceof String ? value : '' + value;
 
-			/*//Array
+			//Array
 			case ModelAttribute.Array: 
+				if (value instanceof ObservableArray) value = value.toArray();
 				return value instanceof Array ? JSON.stringify(value) : value;
-*/
+
 
 			///////////
 			// Dates //
