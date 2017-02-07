@@ -44,6 +44,19 @@ class ApiError {
 
 	}
 
+	getFormErrors() {
+
+		// JSON body with message?
+		if (this.xhrError.responseJSON && this.xhrError.responseJSON.errors) {
+
+			// Get errors
+			return this.xhrError.responseJSON.errors;
+
+		}
+		return {};
+
+	}
+
 	getStatus() {
 
 		return this.xhrError.status;

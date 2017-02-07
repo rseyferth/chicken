@@ -17772,6 +17772,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				return 'Unknown error';
 			}
 		}, {
+			key: 'getFormErrors',
+			value: function getFormErrors() {
+
+				// JSON body with message?
+				if (this.xhrError.responseJSON && this.xhrError.responseJSON.errors) {
+
+					// Get errors
+					return this.xhrError.responseJSON.errors;
+				}
+				return {};
+			}
+		}, {
 			key: 'getStatus',
 			value: function getStatus() {
 
