@@ -130,7 +130,7 @@ class ModelAttribute {
 			//Array
 			case ModelAttribute.Array: 
 				if (value instanceof ObservableArray) value = value.toArray();
-				return value instanceof Array ? JSON.stringify(value) : value;
+				return value;				
 
 
 			///////////

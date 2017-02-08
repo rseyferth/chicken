@@ -21,7 +21,7 @@ class Api {
 		this.settings = $.extend({
 			baseUrl: '/api',
 			
-			queueAjaxCalls: true,
+			queueAjaxCalls: false,
 
 			auth: false,
 

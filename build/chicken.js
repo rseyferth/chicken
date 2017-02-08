@@ -22892,7 +22892,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.settings = _jquery2.default.extend({
 				baseUrl: '/api',
 
-				queueAjaxCalls: true,
+				queueAjaxCalls: false,
 
 				auth: false,
 
@@ -25052,7 +25052,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					//Array
 					case ModelAttribute.Array:
 						if (value instanceof _ObservableArray2.default) value = value.toArray();
-						return value instanceof Array ? JSON.stringify(value) : value;
+						return value;
 
 					///////////
 					// Dates //
