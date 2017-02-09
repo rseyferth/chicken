@@ -715,6 +715,9 @@ class Model extends Observable
 			// Is it new?
 			if (newValue !== undefined && oldValue === undefined) return true;
 
+			//uncast newValue for comparison with original value
+			newValue = this.uncastValue(key, newValue);
+
 			// Has it changed
 			return !Utils.areEqual(oldValue, newValue);
 
