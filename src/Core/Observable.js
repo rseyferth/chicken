@@ -471,11 +471,17 @@ class Observable extends Obj {
 		if (parts.length > 1) {
 
 			// Get the object concerned
-			let objKey = parts.pop();
-			let obj = this.get(parts.join('.'));
+			let attrKey = parts.shift();
+			let obj = this.get(attrKey);
+			let objKey = parts.join('.');
 
 			// Is it an observable?
 			if (Observable.isObservable(obj) && obj.observe) {
+			
+				// Observe this observable itself
+				this.observe(attrKey, callback);
+
+				// Go deeper
 				return obj.observe(objKey, callback);				
 			}
 
