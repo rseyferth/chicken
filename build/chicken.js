@@ -12842,7 +12842,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					return value.get(parts.join('.'));
 				} else {
 
-					throw new Error('The found value for ' + currentPart + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)));
+					// Nothing to be retrieved
+					return;
+					//throw new Error('The found value for ' + currentPart + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value));
 				}
 			}
 		}, {
@@ -13127,7 +13129,6 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Go deeper
 						return obj.observe(objKey, callback);
 					}
-
 					throw new Error('Cannot observe property of non-existing object: ' + key);
 				}
 
@@ -18514,6 +18515,24 @@ return /******/ (function(modules) { // webpackBootstrap
 				return obj;
 			}
 
+			/**
+	   * Restore all attributes to their original values
+	   * 
+	   * @method reset
+	   * @chainable
+	   */
+
+		}, {
+			key: 'reset',
+			value: function reset() {
+				var _this7 = this;
+
+				_underscore2.default.each(this.originalValues, function (value, key) {
+					_this7.set(key, value);
+				});
+				return this;
+			}
+
 			//////////////////////////
 			// Forms and validation //
 			//////////////////////////
@@ -18547,14 +18566,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getDirty',
 			value: function getDirty() {
-				var _this7 = this;
+				var _this8 = this;
 
 				// Get dirty values
 				var dirty = {};
 				_underscore2.default.each(this.attributes, function (value, key) {
 
 					// Not in original or changed?
-					if (_this7.isDirty(key)) {
+					if (_this8.isDirty(key)) {
 
 						// Then it's dirty
 						dirty[key] = value;
@@ -18576,7 +18595,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'isDirty',
 			value: function isDirty() {
-				var _this8 = this;
+				var _this9 = this;
 
 				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -18608,7 +18627,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					//check relationships with touchLocalOnUpdate
 					var dirtyRelation = _underscore2.default.find(this.related, function (rel, key) {
-						if (_this8.getRelationship(key) && _this8.getRelationship(key).touchLocalOnUpdate) {
+						if (_this9.getRelationship(key) && _this9.getRelationship(key).touchLocalOnUpdate) {
 							return rel.isDirty();
 						}
 						return false;
@@ -18629,7 +18648,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'resetDirty',
 			value: function resetDirty() {
-				var _this9 = this;
+				var _this10 = this;
 
 				var keys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -18641,7 +18660,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Specific key?
 				_underscore2.default.each(keys, function (key) {
 
-					_this9.originalValues[key] = _this9.uncastValue(key, _this9.attributes[key]);
+					_this10.originalValues[key] = _this10.uncastValue(key, _this10.attributes[key]);
 				});
 				return this;
 			}
@@ -18667,15 +18686,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_scheduleUpdateDirty',
 			value: function _scheduleUpdateDirty() {
-				var _this10 = this;
+				var _this11 = this;
 
 				// Already going?
 				if (this._scheduleUpdateDirtyTimeout) return;
 
 				// Wait a bit
 				this._scheduleUpdateDirtyTimeout = setTimeout(function () {
-					_this10.updateDirty();
-					_this10._scheduleUpdateDirtyTimeout = null;
+					_this11.updateDirty();
+					_this11._scheduleUpdateDirtyTimeout = null;
 				}, Model.UpdateDirtyDelay);
 			}
 
@@ -18730,7 +18749,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'addRelatedModel',
 			value: function addRelatedModel(relationshipName, relatedModel) {
-				var _this11 = this;
+				var _this12 = this;
 
 				var fromApi = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 				var pivotAttributes = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
@@ -18774,12 +18793,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Set it
 					relatedModel.withoutNotifications(function () {
-						relatedModel.setRelatedModel(relationship.inverseRelationshipName, _this11);
+						relatedModel.setRelatedModel(relationship.inverseRelationshipName, _this12);
 					});
 				}
 
 				// Trigger
 				this._scheduleAttributeChanged(relationshipName);
+
+				return this;
+			}
+		}, {
+			key: 'deleteRelatedModel',
+			value: function deleteRelatedModel(relationshipName, model) {
+
+				// Check if collection exists
+				var relationship = this.getRelationship(relationshipName);
+				if (!(this.related[relationshipName] instanceof _Collection2.default)) {
+					throw new TypeError('Tried to delete a related model from a non-existing relationship');
+				}
+
+				// Remove it
+				this.related[relationshipName].delete(model);
+
+				// Trigger
+				this._scheduleAttributeChanged(relationshipName);
+
+				// Set the inverse?
+				if (relationship && relationship.inverseRelationshipName && relatedModel.hasRelationship(relationship.inverseRelationshipName)) {
+
+					// Set it
+					relatedModel.withoutNotifications(function () {
+						relatedModel.setRelatedModel(relationship.inverseRelationshipName, null);
+					});
+				}
 
 				return this;
 			}
@@ -18900,7 +18946,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'clone',
 			value: function clone(cacheMap) {
-				var _this12 = this;
+				var _this13 = this;
 
 				//create cacheMap?
 				if (!cacheMap) cacheMap = new Map();
@@ -18918,7 +18964,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				//get all attributes
 				var attr = {};
 				_underscore2.default.each(this.attributes, function (value, key) {
-					attr[key] = _this12.get(key);
+					attr[key] = _this13.get(key);
 					if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
 						attr[key] = attr[key].clone(cacheMap);
 					}
