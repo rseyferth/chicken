@@ -87,6 +87,34 @@ class Helpers
 
 		// Find named route
 		let name = this._getValue(params[0]);
+
+		// Relative route?
+		if (/^\./.test(name)) {
+
+			// Current name?
+			let curName = App().currentRoute.route.name;
+			if (!curName) throw new Error('The current route does not have a name, so relative links are not possible from here');
+
+			// ..? (Level up)
+			if (/^\.\./.test(name)) {
+
+				// Remove last part
+				let parts = curName.split(/\./);
+				parts.pop();
+				curName = parts.join('.');
+				name = name.replace(/^\./, '');
+
+			}
+
+			// Add it.
+			name = curName + name;
+
+			// Remove any trailing dots
+			name = name.replace(/\.+$/, '');
+
+		}
+
+		// Find route
 		let route = App().router.namedRoutes.get(name);
 		if (!route) throw new Error('There is no route with the name "' + name + '"');
 

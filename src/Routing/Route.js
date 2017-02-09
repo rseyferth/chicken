@@ -3,6 +3,7 @@ import XRegExp from 'xregexp';
 
 import Obj from '~/Core/Obj';
 import RouteMatch from '~/Routing/RouteMatch';
+import Model from '~/Data/Model';
 
 /**
  * @module Routing
@@ -313,6 +314,9 @@ class Route extends Obj
 		let pattern = this.getFullPattern();
 		_.each(attributes, (value, key) => {
 			
+			// Is the value a model?
+			if (value instanceof Model) value = value.get('id');
+
 			pattern = pattern.split(':' + key).join(value);			
 
 		});

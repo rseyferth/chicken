@@ -12991,11 +12991,17 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (parts.length > 1) {
 
 					// Get the object concerned
-					var objKey = parts.pop();
-					var obj = this.get(parts.join('.'));
+					var attrKey = parts.shift();
+					var obj = this.get(attrKey);
+					var objKey = parts.join('.');
 
 					// Is it an observable?
 					if (Observable.isObservable(obj) && obj.observe) {
+
+						// Observe this observable itself
+						this.observe(attrKey, callback);
+
+						// Go deeper
 						return obj.observe(objKey, callback);
 					}
 
@@ -19798,6 +19804,32 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Find named route
 				var name = this._getValue(params[0]);
+
+				// Relative route?
+				if (/^\./.test(name)) {
+
+					// Current name?
+					var curName = (0, _App2.default)().currentRoute.route.name;
+					if (!curName) throw new Error('The current route does not have a name, so relative links are not possible from here');
+
+					// ..? (Level up)
+					if (/^\.\./.test(name)) {
+
+						// Remove last part
+						var parts = curName.split(/\./);
+						parts.pop();
+						curName = parts.join('.');
+						name = name.replace(/^\./, '');
+					}
+
+					// Add it.
+					name = curName + name;
+
+					// Remove any trailing dots
+					name = name.replace(/\.+$/, '');
+				}
+
+				// Find route
 				var route = (0, _App2.default)().router.namedRoutes.get(name);
 				if (!route) throw new Error('There is no route with the name "' + name + '"');
 
@@ -20766,6 +20798,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
+	var _Model = __webpack_require__(349);
+
+	var _Model2 = _interopRequireDefault(_Model);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21087,6 +21123,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Get full pattern
 				var pattern = this.getFullPattern();
 				_underscore2.default.each(attributes, function (value, key) {
+
+					// Is the value a model?
+					if (value instanceof _Model2.default) value = value.get('id');
 
 					pattern = pattern.split(':' + key).join(value);
 				});
@@ -22772,7 +22811,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.settings = _jquery2.default.extend({
 				baseUrl: '/api',
 
-				queueAjaxCalls: true,
+				queueAjaxCalls: false,
 
 				auth: false,
 
@@ -24932,7 +24971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					//Array
 					case ModelAttribute.Array:
 						if (value instanceof _ObservableArray2.default) value = value.toArray();
-						return value instanceof Array ? JSON.stringify(value) : value;
+						return value;
 
 					///////////
 					// Dates //
