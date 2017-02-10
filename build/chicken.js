@@ -7971,8 +7971,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	!(function(global) {
 	  "use strict";
 
-	  var Op = Object.prototype;
-	  var hasOwn = Op.hasOwnProperty;
+	  var hasOwn = Object.prototype.hasOwnProperty;
 	  var undefined; // More compressible than void 0.
 	  var $Symbol = typeof Symbol === "function" ? Symbol : {};
 	  var iteratorSymbol = $Symbol.iterator || "@@iterator";
@@ -7996,9 +7995,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	  runtime = global.regeneratorRuntime = inModule ? module.exports : {};
 
 	  function wrap(innerFn, outerFn, self, tryLocsList) {
-	    // If outerFn provided and outerFn.prototype is a Generator, then outerFn.prototype instanceof Generator.
-	    var protoGenerator = outerFn && outerFn.prototype instanceof Generator ? outerFn : Generator;
-	    var generator = Object.create(protoGenerator.prototype);
+	    // If outerFn provided, then outerFn.prototype instanceof Generator.
+	    var generator = Object.create((outerFn || Generator).prototype);
 	    var context = new Context(tryLocsList || []);
 
 	    // The ._invoke method unifies the implementations of the .next,
@@ -8044,29 +8042,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  function GeneratorFunction() {}
 	  function GeneratorFunctionPrototype() {}
 
-	  // This is a polyfill for %IteratorPrototype% for environments that
-	  // don't natively support it.
-	  var IteratorPrototype = {};
-	  IteratorPrototype[iteratorSymbol] = function () {
-	    return this;
-	  };
-
-	  var getProto = Object.getPrototypeOf;
-	  var NativeIteratorPrototype = getProto && getProto(getProto(values([])));
-	  if (NativeIteratorPrototype &&
-	      NativeIteratorPrototype !== Op &&
-	      hasOwn.call(NativeIteratorPrototype, iteratorSymbol)) {
-	    // This environment has a native %IteratorPrototype%; use it instead
-	    // of the polyfill.
-	    IteratorPrototype = NativeIteratorPrototype;
-	  }
-
-	  var Gp = GeneratorFunctionPrototype.prototype =
-	    Generator.prototype = Object.create(IteratorPrototype);
+	  var Gp = GeneratorFunctionPrototype.prototype = Generator.prototype;
 	  GeneratorFunction.prototype = Gp.constructor = GeneratorFunctionPrototype;
 	  GeneratorFunctionPrototype.constructor = GeneratorFunction;
-	  GeneratorFunctionPrototype[toStringTagSymbol] =
-	    GeneratorFunction.displayName = "GeneratorFunction";
+	  GeneratorFunctionPrototype[toStringTagSymbol] = GeneratorFunction.displayName = "GeneratorFunction";
 
 	  // Helper for defining the .next, .throw, and .return methods of the
 	  // Iterator interface in terms of a single ._invoke method.
@@ -8103,11 +8082,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	  // Within the body of any async function, `await x` is transformed to
 	  // `yield regeneratorRuntime.awrap(x)`, so that the runtime can test
-	  // `hasOwn.call(value, "__await")` to determine if the yielded value is
-	  // meant to be awaited.
+	  // `value instanceof AwaitArgument` to determine if the yielded value is
+	  // meant to be awaited. Some may consider the name of this method too
+	  // cutesy, but they are curmudgeons.
 	  runtime.awrap = function(arg) {
-	    return { __await: arg };
+	    return new AwaitArgument(arg);
 	  };
+
+	  function AwaitArgument(arg) {
+	    this.arg = arg;
+	  }
 
 	  function AsyncIterator(generator) {
 	    function invoke(method, arg, resolve, reject) {
@@ -8117,10 +8101,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      } else {
 	        var result = record.arg;
 	        var value = result.value;
-	        if (value &&
-	            typeof value === "object" &&
-	            hasOwn.call(value, "__await")) {
-	          return Promise.resolve(value.__await).then(function(value) {
+	        if (value instanceof AwaitArgument) {
+	          return Promise.resolve(value.arg).then(function(value) {
 	            invoke("next", value, resolve, reject);
 	          }, function(err) {
 	            invoke("throw", err, resolve, reject);
@@ -8189,7 +8171,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	  }
 
 	  defineIteratorMethods(AsyncIterator.prototype);
-	  runtime.AsyncIterator = AsyncIterator;
 
 	  // Note that simple async functions are implemented on top of
 	  // AsyncIterator objects; they just return a Promise for the value of
@@ -8349,6 +8330,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	  // Define Generator.prototype.{next,throw,return} in terms of the
 	  // unified ._invoke helper method.
 	  defineIteratorMethods(Gp);
+
+	  Gp[iteratorSymbol] = function() {
+	    return this;
+	  };
 
 	  Gp[toStringTagSymbol] = "Generator";
 
@@ -9090,7 +9075,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    // 'metal',
 	    'methane',
 	    'milk',
-	    'minus',
 	    'money',
 	    // 'moose',
 	    'mud',
@@ -9247,7 +9231,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      hives     : new RegExp( '(hi|ti)ves$'                    , 'gi' ),
 	      curves    : new RegExp( '(curve)s$'                      , 'gi' ),
 	      lrves     : new RegExp( '([lr])ves$'                     , 'gi' ),
-	      aves      : new RegExp( '([a])ves$'                      , 'gi' ),
 	      foves     : new RegExp( '([^fo])ves$'                    , 'gi' ),
 	      movies    : new RegExp( '(m)ovies$'                      , 'gi' ),
 	      aeiouyies : new RegExp( '([^aeiouy]|qu)ies$'             , 'gi' ),
@@ -9417,7 +9400,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	    [ regex.plural.hives    , '$1ve' ],
 	    [ regex.plural.curves   , '$1' ],
 	    [ regex.plural.lrves    , '$1f' ],
-	    [ regex.plural.aves     , '$1ve' ],
 	    [ regex.plural.foves    , '$1fe' ],
 	    [ regex.plural.movies   , '$1ovie' ],
 	    [ regex.plural.aeiouyies, '$1y' ],
@@ -9959,8 +9941,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	      for( ;i < j; i++ ){
 	        var method = arr[ i ];
 
-	        if( inflector.hasOwnProperty( method )){
-	          str = inflector[ method ]( str );
+	        if( this.hasOwnProperty( method )){
+	          str = this[ method ]( str );
 	        }
 	      }
 
@@ -9971,7 +9953,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	/**
 	 * @public
 	 */
-	  inflector.version = '1.12.0';
+	  inflector.version = '1.10.0';
 
 	  return inflector;
 	}));
@@ -10490,92 +10472,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	var strictUriEncode = __webpack_require__(306);
 	var objectAssign = __webpack_require__(307);
 
-	function encoderForArrayFormat(opts) {
-		switch (opts.arrayFormat) {
-			case 'index':
-				return function (key, value, index) {
-					return value === null ? [
-						encode(key, opts),
-						'[',
-						index,
-						']'
-					].join('') : [
-						encode(key, opts),
-						'[',
-						encode(index, opts),
-						']=',
-						encode(value, opts)
-					].join('');
-				};
-
-			case 'bracket':
-				return function (key, value) {
-					return value === null ? encode(key, opts) : [
-						encode(key, opts),
-						'[]=',
-						encode(value, opts)
-					].join('');
-				};
-
-			default:
-				return function (key, value) {
-					return value === null ? encode(key, opts) : [
-						encode(key, opts),
-						'=',
-						encode(value, opts)
-					].join('');
-				};
-		}
-	}
-
-	function parserForArrayFormat(opts) {
-		var result;
-
-		switch (opts.arrayFormat) {
-			case 'index':
-				return function (key, value, accumulator) {
-					result = /\[(\d*)]$/.exec(key);
-
-					key = key.replace(/\[\d*]$/, '');
-
-					if (!result) {
-						accumulator[key] = value;
-						return;
-					}
-
-					if (accumulator[key] === undefined) {
-						accumulator[key] = {};
-					}
-
-					accumulator[key][result[1]] = value;
-				};
-
-			case 'bracket':
-				return function (key, value, accumulator) {
-					result = /(\[])$/.exec(key);
-
-					key = key.replace(/\[]$/, '');
-
-					if (!result || accumulator[key] === undefined) {
-						accumulator[key] = value;
-						return;
-					}
-
-					accumulator[key] = [].concat(accumulator[key], value);
-				};
-
-			default:
-				return function (key, value, accumulator) {
-					if (accumulator[key] === undefined) {
-						accumulator[key] = value;
-						return;
-					}
-
-					accumulator[key] = [].concat(accumulator[key], value);
-				};
-		}
-	}
-
 	function encode(value, opts) {
 		if (opts.encode) {
 			return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
@@ -10584,29 +10480,11 @@ return /******/ (function(modules) { // webpackBootstrap
 		return value;
 	}
 
-	function keysSorter(input) {
-		if (Array.isArray(input)) {
-			return input.sort();
-		} else if (typeof input === 'object') {
-			return keysSorter(Object.keys(input)).sort(function (a, b) {
-				return Number(a) - Number(b);
-			}).map(function (key) {
-				return input[key];
-			});
-		}
-
-		return input;
-	}
-
 	exports.extract = function (str) {
 		return str.split('?')[1] || '';
 	};
 
-	exports.parse = function (str, opts) {
-		opts = objectAssign({arrayFormat: 'none'}, opts);
-
-		var formatter = parserForArrayFormat(opts);
-
+	exports.parse = function (str) {
 		// Create an object with no prototype
 		// https://github.com/sindresorhus/query-string/issues/47
 		var ret = Object.create(null);
@@ -10628,36 +10506,31 @@ return /******/ (function(modules) { // webpackBootstrap
 			var key = parts.shift();
 			var val = parts.length > 0 ? parts.join('=') : undefined;
 
+			key = decodeURIComponent(key);
+
 			// missing `=` should be `null`:
 			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
 			val = val === undefined ? null : decodeURIComponent(val);
 
-			formatter(decodeURIComponent(key), val, ret);
+			if (ret[key] === undefined) {
+				ret[key] = val;
+			} else if (Array.isArray(ret[key])) {
+				ret[key].push(val);
+			} else {
+				ret[key] = [ret[key], val];
+			}
 		});
 
-		return Object.keys(ret).sort().reduce(function (result, key) {
-			var val = ret[key];
-			if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
-				// Sort object keys, not values
-				result[key] = keysSorter(val);
-			} else {
-				result[key] = val;
-			}
-
-			return result;
-		}, Object.create(null));
+		return ret;
 	};
 
 	exports.stringify = function (obj, opts) {
 		var defaults = {
 			encode: true,
-			strict: true,
-			arrayFormat: 'none'
+			strict: true
 		};
 
 		opts = objectAssign(defaults, opts);
-
-		var formatter = encoderForArrayFormat(opts);
 
 		return obj ? Object.keys(obj).sort().map(function (key) {
 			var val = obj[key];
@@ -10678,7 +10551,11 @@ return /******/ (function(modules) { // webpackBootstrap
 						return;
 					}
 
-					result.push(formatter(key, val2, result.length));
+					if (val2 === null) {
+						result.push(encode(key, opts));
+					} else {
+						result.push(encode(key, opts) + '=' + encode(val2, opts));
+					}
 				});
 
 				return result.join('&');
@@ -23551,6 +23428,13 @@ return /******/ (function(modules) { // webpackBootstrap
 							var relationships = {};
 							_underscore2.default.each(model.related, function (relatedData, key) {
 
+								// @ TEMP FIX
+								// skip belongsto relations as the api resrouceController does not support saving this relationType
+								var relationship = model.getRelationship(key);
+								if (relationship && relationship.type === 'BelongsTo') {
+									return;
+								}
+
 								// Is it a collection?
 								if (relatedData instanceof _Collection2.default) {
 
@@ -23561,7 +23445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 										relationships[key] = { data: _underscore2.default.map(relatedData.items, function (item) {
 
 												// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
-												if (includeRelatedData === false || _underscore2.default.indexOf(includeRelatedData, key) === -1) {
+												if (includeRelatedData === false || !_underscore2.default.contains(includeRelatedData, key)) {
 													includedModelGuids.push(_Utils2.default.uidFor(item));
 												}
 
