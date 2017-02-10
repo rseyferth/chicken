@@ -18860,11 +18860,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				this._scheduleAttributeChanged(relationshipName);
 
 				// Set the inverse?
-				if (relationship && relationship.inverseRelationshipName && relatedModel.hasRelationship(relationship.inverseRelationshipName)) {
+				if (relationship && relationship.inverseRelationshipName && model.hasRelationship(relationship.inverseRelationshipName)) {
 
 					// Set it
-					relatedModel.withoutNotifications(function () {
-						relatedModel.setRelatedModel(relationship.inverseRelationshipName, null);
+					model.withoutNotifications(function () {
+						model.setRelatedModel(relationship.inverseRelationshipName, null);
 					});
 				}
 
