@@ -165,12 +165,14 @@ class JsonApi extends Api
 			// Include related?
 			if (includeRelated) {
 
-				console.log(includeRelatedData);
-
-
 				// Loop through relationships
 				let relationships = {};
 				_.each(model.related, (relatedData, key) => {
+				
+					//includeRelatedData defined? limit to these relations
+					if (includeRelatedData && _.indexOf(includeRelatedData, key) === -1) {
+						return;
+					}
 
 					// Is it a collection?
 					if (relatedData instanceof Collection) {
