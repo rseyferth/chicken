@@ -169,8 +169,10 @@ class JsonApi extends Api
 				let relationships = {};
 				_.each(model.related, (relatedData, key) => {
 				
-					//includeRelatedData defined? limit to these relations
-					if (includeRelatedData && _.indexOf(includeRelatedData, key) === -1) {
+					// @ TEMP FIX
+					// skip belongsto relations as the api resrouceController does not support saving this relationType
+					let relationship = model.getRelationship(key);
+					if (relationship && relationship.type === 'BelongsTo') {
 						return;
 					}
 
@@ -184,7 +186,7 @@ class JsonApi extends Api
 							relationships[key] = { data: _.map(relatedData.items, (item) => {
 
 								// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
-								if (includeRelatedData === false || _.indexOf(includeRelatedData, key) === -1) {
+								if (includeRelatedData === false || !_.contains(includeRelatedData, key)) {
 									includedModelGuids.push(Utils.uidFor(item));
 								}
 

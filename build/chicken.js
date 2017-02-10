@@ -23428,8 +23428,10 @@ return /******/ (function(modules) { // webpackBootstrap
 							var relationships = {};
 							_underscore2.default.each(model.related, function (relatedData, key) {
 
-								//includeRelatedData defined? limit to these relations
-								if (includeRelatedData && _underscore2.default.indexOf(includeRelatedData, key) === -1) {
+								// @ TEMP FIX
+								// skip belongsto relations as the api resrouceController does not support saving this relationType
+								var relationship = model.getRelationship(key);
+								if (relationship && relationship.type === 'BelongsTo') {
 									return;
 								}
 
@@ -23443,7 +23445,7 @@ return /******/ (function(modules) { // webpackBootstrap
 										relationships[key] = { data: _underscore2.default.map(relatedData.items, function (item) {
 
 												// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
-												if (includeRelatedData === false || _underscore2.default.indexOf(includeRelatedData, key) === -1) {
+												if (includeRelatedData === false || !_underscore2.default.contains(includeRelatedData, key)) {
 													includedModelGuids.push(_Utils2.default.uidFor(item));
 												}
 
