@@ -165,6 +165,8 @@ class JsonApi extends Api
 			// Include related?
 			if (includeRelated) {
 
+				console.log(includeRelatedData);
+
 
 				// Loop through relationships
 				let relationships = {};

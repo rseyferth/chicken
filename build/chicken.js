@@ -23386,6 +23386,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (includeRelated) {
 						(function () {
 
+							console.log(includeRelatedData);
+
 							// Loop through relationships
 							var relationships = {};
 							_underscore2.default.each(model.related, function (relatedData, key) {
