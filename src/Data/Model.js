@@ -640,6 +640,21 @@ class Model extends Observable
 
 	}
 
+	/**
+	 * Restore all attributes to their original values
+	 * 
+	 * @method reset
+	 * @chainable
+	 */
+	reset() {
+
+		_.each(this.originalValues, (value, key) => {
+			this.set(key, value);
+		});
+		return this;
+
+	}
+
 
 	//////////////////////////
 	// Forms and validation //
@@ -897,6 +912,36 @@ class Model extends Observable
 		this._scheduleAttributeChanged(relationshipName);
 
 		return this;
+
+	}
+
+	deleteRelatedModel(relationshipName, model) {
+
+		// Check if collection exists
+		let relationship = this.getRelationship(relationshipName);
+		if (!(this.related[relationshipName] instanceof Collection)) {
+			throw new TypeError('Tried to delete a related model from a non-existing relationship');
+		}
+
+		// Remove it
+		this.related[relationshipName].delete(model);
+
+		// Trigger
+		this._scheduleAttributeChanged(relationshipName);
+
+
+		// Set the inverse?
+		if (relationship && relationship.inverseRelationshipName && relatedModel.hasRelationship(relationship.inverseRelationshipName)) {
+
+			// Set it
+			relatedModel.withoutNotifications(() => {
+				relatedModel.setRelatedModel(relationship.inverseRelationshipName, null);
+			});
+			
+		}
+
+		return this;
+
 
 	}
 

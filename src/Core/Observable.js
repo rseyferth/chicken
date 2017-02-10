@@ -205,7 +205,9 @@ class Observable extends Obj {
 
 		} else {
 
-			throw new Error('The found value for ' + currentPart + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value));
+			// Nothing to be retrieved
+			return;
+			//throw new Error('The found value for ' + currentPart + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value));
 
 		}
 
@@ -482,9 +484,9 @@ class Observable extends Obj {
 				this.observe(attrKey, callback);
 
 				// Go deeper
-				return obj.observe(objKey, callback);				
-			}
+				return obj.observe(objKey, callback);
 
+			}
 			throw new Error('Cannot observe property of non-existing object: ' + key);
 			
 		}
