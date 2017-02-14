@@ -13370,6 +13370,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this._getPromiseInfo(key).promise;
 			}
 		}, {
+			key: 'resetPromise',
+			value: function resetPromise(key) {
+				this._promises.delete(key);
+			}
+		}, {
 			key: '_getPromiseInfo',
 			value: function _getPromiseInfo(key) {
 
@@ -17414,15 +17419,20 @@ return /******/ (function(modules) { // webpackBootstrap
 			return _this;
 		}
 
-		/**
-	  * Execute the Api Call
-	  *
-	  * @method execute
-	  * @return {Promise}
-	  */
-
-
 		_createClass(ApiCall, [{
+			key: 'reset',
+			value: function reset() {
+				this.resetPromise('complete');
+			}
+
+			/**
+	   * Execute the Api Call
+	   *
+	   * @method execute
+	   * @return {Promise}
+	   */
+
+		}, {
 			key: 'execute',
 			value: function execute() {
 				var _this2 = this;
@@ -18857,8 +18867,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Create copy of model and its attributes and relations
 	   *
 	   * @method clone
-	   * @param  {Chicken.Data.Model}  obj
-	   * @return {Boolean}     
+	   * @param  {cacheMap}  obj
+	   * @return {Copy}     
 	   */
 
 		}, {
@@ -23775,6 +23785,16 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'filter',
 			value: function filter(key, value) {
 				return this.query('filter[' + _inflection2.default.underscore(key) + ']', value);
+			}
+		}, {
+			key: 'sort',
+			value: function sort(key, value) {
+
+				if (value.toLowerCase() === 'desc') {
+					key = '-' + key;
+				}
+
+				return this.query('sort', key);
 			}
 		}]);
 

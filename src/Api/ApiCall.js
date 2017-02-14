@@ -121,6 +121,11 @@ class ApiCall extends Obj {
 
 	}
 
+	reset() {
+		this.resetPromise('complete');
+	}
+	
+
 	/**
 	 * Execute the Api Call
 	 *
