@@ -256,7 +256,7 @@ class Component extends View
 			// Check value type
 			if (value === 'true') value = true;
 			if (value === 'false') value = false;
-			if ($.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
+			if (!(value instanceof Object) && $.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
 			if (value !== this.attributes[key]) {
 				this.attributes[key] = value;
 			}

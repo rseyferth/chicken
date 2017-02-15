@@ -16397,7 +16397,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Check value type
 					if (value === 'true') value = true;
 					if (value === 'false') value = false;
-					if (_jquery2.default.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
+					if (!(value instanceof Object) && _jquery2.default.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
 					if (value !== _this3.attributes[key]) {
 						_this3.attributes[key] = value;
 					}
