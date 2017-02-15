@@ -354,6 +354,34 @@ class Component extends View
 
 	}
 
+	getAttributes(prefix = false) {
+
+		// Get all keys with uiX
+		let result = {};
+		let regex = prefix ? new RegExp('^' + prefix + '[A-Z]') : false;
+		_.each(this.attributes, (value, key) => {
+
+			// Prefixed?
+			if (regex) {
+
+				// Match?
+				if (!regex.test(key)) return;
+
+				// Remove it
+				key = _.decapitalize(key.substr(prefix.length));
+
+			}
+
+			// Set it
+			result[key] = value;
+
+		});
+
+		return result;
+
+	}
+
+
 
 	get(key) {
 
