@@ -39,6 +39,15 @@ class JsonApiCall extends ApiCall {
 		return this.query('filter[' + inflection.underscore(key) + ']', value);
 	}
 
+	sort(key, value) {
+
+		if (value.toLowerCase() === 'desc') {
+			key = '-' + key;
+		}
+
+		return this.query('sort', key);
+	}
+
 
 }
 module.exports = JsonApiCall;

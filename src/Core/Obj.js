@@ -47,6 +47,10 @@ class Obj {
 		return this._getPromiseInfo(key).promise;
 	}
 
+	resetPromise(key) {
+		this._promises.delete(key);
+	}
+
 	_getPromiseInfo(key) {
 
 		// Was the promise already defined

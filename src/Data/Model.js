@@ -1050,8 +1050,8 @@ class Model extends Observable
 	 * Create copy of model and its attributes and relations
 	 *
 	 * @method clone
-	 * @param  {Chicken.Data.Model}  obj
-	 * @return {Boolean}     
+	 * @param  {cacheMap}  obj
+	 * @return {Copy}     
 	 */
 	clone(cacheMap) {
 
