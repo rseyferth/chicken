@@ -20384,6 +20384,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function camelize(params) {
 
 				var string = this._getValue(params[0]);
+				var capitalFirstLetter = !!this._getValue(params[1]);
 
 				return _inflection2.default.camelize(string, !capitalFirstLetter);
 			}

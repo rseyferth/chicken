@@ -393,7 +393,8 @@ class Helpers
 	camelize(params) {
 
 		let string = this._getValue(params[0]);
-
+		let capitalFirstLetter = !!this._getValue(params[1]);
+		
 		return inflection.camelize(string, !capitalFirstLetter);
 
 	}
