@@ -383,10 +383,16 @@ class Helpers
 	// Strings //
 	/////////////
 
+	isNumeric(params) {
+		
+		let string = this._getValue(params[0]);
+		return /^-?\d*(\.\d+)?$/.test(string);
+
+	}
+
 	camelize(params) {
 
 		let string = this._getValue(params[0]);
-		let capitalFirstLetter = !!this._getValue(params[1]);
 
 		return inflection.camelize(string, !capitalFirstLetter);
 

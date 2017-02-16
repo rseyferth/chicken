@@ -39,13 +39,17 @@ class JsonApiCall extends ApiCall {
 		return this.query('filter[' + inflection.underscore(key) + ']', value);
 	}
 
-	sort(key, value) {
+	sort(key, direction = 'ascending') {
 
-		if (value.toLowerCase() === 'desc') {
-			key = '-' + key;
-		}
+		// Format key
+		key = inflection.underscore(key);
 
+		// Check direction
+		if (/^desc/.test(direction)) key = '-' + key;
+
+		// Apply
 		return this.query('sort', key);
+
 	}
 
 

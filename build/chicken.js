@@ -19259,6 +19259,10 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.itemsById = {};
 			_this.originalIds = [];
 
+			_this.meta = {};
+
+			_this.page = {};
+
 			return _this;
 		}
 
@@ -19267,6 +19271,26 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function knows(id) {
 				if (_ClassMap2.default.isA(id, 'Model')) id = id.get('id');
 				return this.itemsById[id] !== undefined;
+			}
+		}, {
+			key: 'setMetaData',
+			value: function setMetaData(data) {
+
+				this.meta = _underscore2.default.extend(this.meta, data);
+				return this;
+			}
+		}, {
+			key: 'setPageInfo',
+			value: function setPageInfo(currentPage, pageCount) {
+				var recordsPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+				var totalRecordCount = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
+
+				this.page = {
+					current: currentPage,
+					count: pageCount,
+					size: recordsPerPage,
+					totalRecordCount: totalRecordCount
+				};
 			}
 		}, {
 			key: 'addFromApi',
@@ -20348,11 +20372,18 @@ return /******/ (function(modules) { // webpackBootstrap
 			/////////////
 
 		}, {
+			key: 'isNumeric',
+			value: function isNumeric(params) {
+
+				var string = this._getValue(params[0]);
+				return (/^-?\d*(\.\d+)?$/.test(string)
+				);
+			}
+		}, {
 			key: 'camelize',
 			value: function camelize(params) {
 
 				var string = this._getValue(params[0]);
-				var capitalFirstLetter = !!this._getValue(params[1]);
 
 				return _inflection2.default.camelize(string, !capitalFirstLetter);
 			}
@@ -23671,7 +23702,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (data === undefined || data === null) throw new Error('No data received from Api');
 				if (data instanceof Array) {
 
-					return this.deserializeCollection(data, apiCall);
+					return this.deserializeCollection(data, apiCall, result.meta);
 				} else if (data instanceof Object) {
 
 					return this.deserializeModel(data, apiCall);
@@ -23735,6 +23766,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function deserializeCollection(data, apiCall) {
 				var _this5 = this;
 
+				var meta = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+
 				// Make a collection
 				var collection = new _Collection2.default(apiCall.modelClass);
 
@@ -23742,6 +23776,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				_underscore2.default.each(data, function (recordData) {
 					collection.addFromApi(_this5.deserializeModel(recordData, apiCall), true);
 				});
+
+				// Store meta data
+				if (meta) {
+
+					// Store it
+					collection.setMetaData(meta);
+
+					// Check pagination
+					if (meta.pagination) {
+						collection.setPageInfo(meta.pagination.current_page, meta.pagination.total_pages, meta.pagination.per_page, meta.pagination.total);
+					}
+				}
 
 				return collection;
 			}
@@ -23938,12 +23984,17 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: 'sort',
-			value: function sort(key, value) {
+			value: function sort(key) {
+				var direction = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'ascending';
 
-				if (value.toLowerCase() === 'desc') {
-					key = '-' + key;
-				}
 
+				// Format key
+				key = _inflection2.default.underscore(key);
+
+				// Check direction
+				if (/^desc/.test(direction)) key = '-' + key;
+
+				// Apply
 				return this.query('sort', key);
 			}
 		}]);

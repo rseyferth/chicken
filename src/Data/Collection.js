@@ -15,6 +15,9 @@ class Collection extends ObservableArray
 		this.itemsById = {};
 		this.originalIds = [];
 
+		this.meta = {};
+
+		this.page = {};
 
 	}
 
@@ -22,6 +25,24 @@ class Collection extends ObservableArray
 		if (ClassMap.isA(id, 'Model')) id = id.get('id');
 		return this.itemsById[id] !== undefined;
 	}
+
+	setMetaData(data) {
+
+		this.meta = _.extend(this.meta, data);
+		return this;
+
+	}
+
+	setPageInfo(currentPage, pageCount, recordsPerPage = null, totalRecordCount = null) {
+		this.page = {
+			current: currentPage,
+			count: pageCount,
+			size: recordsPerPage,
+			totalRecordCount: totalRecordCount
+		};
+	}
+
+	
 
 
 	addFromApi(item) {

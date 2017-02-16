@@ -257,7 +257,7 @@ class JsonApi extends Api
 		if (data === undefined || data === null) throw new Error('No data received from Api');
 		if (data instanceof Array) {
 
-			return this.deserializeCollection(data, apiCall);
+			return this.deserializeCollection(data, apiCall, result.meta);
 
 		} else if (data instanceof Object) {
 
@@ -318,7 +318,7 @@ class JsonApi extends Api
 		return model;
 
 	}
-	deserializeCollection(data, apiCall) {
+	deserializeCollection(data, apiCall, meta = null) {
 
 		// Make a collection
 		let collection = new Collection(apiCall.modelClass);
@@ -327,6 +327,24 @@ class JsonApi extends Api
 		_.each(data, (recordData) => {
 			collection.addFromApi(this.deserializeModel(recordData, apiCall), true);
 		});
+
+		// Store meta data
+		if (meta) {
+
+			// Store it
+			collection.setMetaData(meta);
+
+			// Check pagination
+			if (meta.pagination) {
+				collection.setPageInfo(
+					meta.pagination.current_page,
+					meta.pagination.total_pages,
+					meta.pagination.per_page,
+					meta.pagination.total
+				);
+			}
+
+		}
 		
 		return collection;
 
