@@ -649,6 +649,11 @@ class ObservableArray extends Obj
 
 	}
 
+	contains(item) {
+
+		return _.contains(this.items, item);
+	}
+
 
 	map(callback) {
 

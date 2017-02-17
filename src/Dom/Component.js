@@ -256,13 +256,14 @@ class Component extends View
 			// Check value type
 			if (value === 'true') value = true;
 			if (value === 'false') value = false;
+
 			if (!(value instanceof Object) && $.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
 			if (value !== this.attributes[key]) {
 				this.attributes[key] = value;
 			}
 
 			// Is it a useful value?
-			if (typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number') {
+			if (typeof value === 'string' || typeof value === 'number') {
 				let attrKey = inflection.underscore(key).split('_').join('-');
 				this.element.setAttribute(attrKey, value);
 			}

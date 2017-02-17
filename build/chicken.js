@@ -15427,6 +15427,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 			}
 		}, {
+			key: 'contains',
+			value: function contains(item) {
+
+				return _underscore2.default.contains(this.items, item);
+			}
+		}, {
 			key: 'map',
 			value: function map(callback) {
 
@@ -16397,13 +16403,14 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Check value type
 					if (value === 'true') value = true;
 					if (value === 'false') value = false;
+
 					if (!(value instanceof Object) && _jquery2.default.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
 					if (value !== _this3.attributes[key]) {
 						_this3.attributes[key] = value;
 					}
 
 					// Is it a useful value?
-					if (typeof value === 'string' || typeof value === 'boolean' || typeof value === 'number') {
+					if (typeof value === 'string' || typeof value === 'number') {
 						var attrKey = _inflection2.default.underscore(key).split('_').join('-');
 						_this3.element.setAttribute(attrKey, value);
 					}
@@ -17015,7 +17022,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof key !== 'string') throw new TypeError('[Dom.View] The "with" method accepts either a key, value or hash-object as arguments.');
 
 					// Is it an Api call?
-					if (value instanceof _ApiCall2.default) {
+					if (value instanceof _ApiCall2.default && !value.doNotExecuteInView) {
 
 						// Get the promise and add to api calls list
 						this.apiCalls.push(value);
@@ -17566,6 +17573,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.resolvesOnError = false;
 
+			/**
+	   * @property doNotExecuteInView
+	   * @type {Boolean}
+	   */
+			_this.doNotExecuteInView = false;
+
 			return _this;
 		}
 
@@ -17792,6 +17805,23 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'setData',
 			value: function setData(data) {
 				this.data = data;
+				return this;
+			}
+
+			/**
+	   * Do not execute this ApiCall when resolving the View,
+	   * but instead pass on the ApiCall itself.
+	   * 
+	   * @param  {Boolean} doNotExecuteInView 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'doNotExecute',
+			value: function doNotExecute() {
+				var doNotExecuteInView = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+				this.doNotExecuteInView = doNotExecuteInView;
 				return this;
 			}
 		}]);

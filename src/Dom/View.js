@@ -379,7 +379,7 @@ class View extends Observable
 			if (typeof key !== 'string') throw new TypeError('[Dom.View] The "with" method accepts either a key, value or hash-object as arguments.');
 
 			// Is it an Api call?
-			if (value instanceof ApiCall) {
+			if (value instanceof ApiCall && !value.doNotExecuteInView) {
 
 				// Get the promise and add to api calls list
 				this.apiCalls.push(value);

@@ -119,6 +119,12 @@ class ApiCall extends Obj {
 		 */
 		this.resolvesOnError = false;
 
+		/**
+		 * @property doNotExecuteInView
+		 * @type {Boolean}
+		 */
+		this.doNotExecuteInView = false;
+
 	}
 
 	reset() {
@@ -341,6 +347,17 @@ class ApiCall extends Obj {
 		return this;
 	}
 
+	/**
+	 * Do not execute this ApiCall when resolving the View,
+	 * but instead pass on the ApiCall itself.
+	 * 
+	 * @param  {Boolean} doNotExecuteInView 
+	 * @chainable
+	 */
+	doNotExecute(doNotExecuteInView = true) {
+		this.doNotExecuteInView = doNotExecuteInView;
+		return this;
+	}
 
 }
 module.exports = ApiCall;
