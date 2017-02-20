@@ -329,6 +329,8 @@ class Observable extends Obj {
 
 
 	}
+
+
 	_set(key, value) {
 
 		// Is there a current value that is a reference?
@@ -352,6 +354,22 @@ class Observable extends Obj {
 		return this.withoutNotifications(() => {
 			this.set(key, value, convertToObservables);
 		});
+	}
+
+
+
+	unset(key) {
+
+		this._unset(key);
+		
+		// Update attribute
+		this._scheduleAttributeChanged(key);
+
+		return this;	
+	}
+
+	_unset(key) {
+		delete this.attributes[key];
 	}
 
 

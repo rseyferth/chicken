@@ -46,7 +46,7 @@ class JsonApiCall extends ApiCall {
 
 		// Check direction
 		if (/^desc/.test(direction)) key = '-' + key;
-
+		
 		// Apply
 		return this.query('sort', key);
 

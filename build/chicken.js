@@ -13027,6 +13027,22 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 			}
 		}, {
+			key: 'unset',
+			value: function unset(key) {
+
+				this._unset(key);
+
+				// Update attribute
+				this._scheduleAttributeChanged(key);
+
+				return this;
+			}
+		}, {
+			key: '_unset',
+			value: function _unset(key) {
+				delete this.attributes[key];
+			}
+		}, {
 			key: 'import',
 			value: function _import(obj) {
 				var _this4 = this;
@@ -16581,12 +16597,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				var _this6 = this;
 
 				// I am destroyed
+				if (this.isDestroyed) return this;
 				this.isDestroyed = true;
 
 				// Call the hooks
 				_underscore2.default.each(this.hooks.beforeDestroy, function (cb) {
 					cb.apply(_this6);
 				});
+				return this;
 			}
 		}]);
 
@@ -17254,6 +17272,21 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Revalidate!
 						_this7.revalidate();
+
+						// Check if components are still there
+						_underscore2.default.each(_this7.components, function (component, key) {
+
+							// Element rendered?
+							if (component.$element && component.$element.length > 0) {
+
+								// No longer in DOM
+								if (!_jquery2.default.contains(document.documentElement, component.$element[0])) {
+
+									component.destroy();
+									delete _this7.components[key];
+								}
+							}
+						});
 					}, View.RevalidationDelay);
 				}
 
@@ -19315,12 +19348,20 @@ return /******/ (function(modules) { // webpackBootstrap
 				var recordsPerPage = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
 				var totalRecordCount = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
 
+
+				// Basics
 				this.page = {
-					current: currentPage,
-					count: pageCount,
+					currentPage: currentPage,
+					pageCount: pageCount,
 					size: recordsPerPage,
-					totalRecordCount: totalRecordCount
+					recordCount: totalRecordCount
 				};
+
+				// Calculate current
+				if (recordsPerPage) {
+					this.page.from = (currentPage - 1) * recordsPerPage + 1;
+					this.page.through = Math.min(totalRecordCount, currentPage * recordsPerPage);
+				}
 			}
 		}, {
 			key: 'addFromApi',

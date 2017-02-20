@@ -34,12 +34,20 @@ class Collection extends ObservableArray
 	}
 
 	setPageInfo(currentPage, pageCount, recordsPerPage = null, totalRecordCount = null) {
+
+		// Basics
 		this.page = {
-			current: currentPage,
-			count: pageCount,
+			currentPage: currentPage,
+			pageCount: pageCount,
 			size: recordsPerPage,
-			totalRecordCount: totalRecordCount
+			recordCount: totalRecordCount
 		};
+		
+		// Calculate current
+		if (recordsPerPage) {
+			this.page.from = (currentPage - 1) * recordsPerPage + 1;
+			this.page.through = Math.min(totalRecordCount, currentPage * recordsPerPage);
+		}
 	}
 
 	

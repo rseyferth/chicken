@@ -610,7 +610,27 @@ class View extends Observable
 			this.revalidateTimeout = setTimeout(() => {
 
 				// Revalidate!
-				this.revalidate();				
+				this.revalidate();
+
+				// Check if components are still there
+				_.each(this.components, (component, key) => {
+
+					// Element rendered?
+					if (component.$element && component.$element.length > 0) {
+						
+						// No longer in DOM
+						if (!$.contains(document.documentElement, component.$element[0])) {
+							
+							component.destroy();
+							delete this.components[key];
+							
+						}
+
+
+					}
+
+				});
+
 
 			}, View.RevalidationDelay);
 

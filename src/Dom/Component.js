@@ -443,12 +443,14 @@ class Component extends View
 	destroy() {
 
 		// I am destroyed
+		if (this.isDestroyed) return this;
 		this.isDestroyed = true;
 
 		// Call the hooks
 		_.each(this.hooks.beforeDestroy, (cb) => {
 			cb.apply(this);
 		});
+		return this;
 		
 	}
 
