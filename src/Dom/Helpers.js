@@ -448,6 +448,20 @@ class Helpers
 		}
 	}
 
+	momentIsAfter(params) {
+		let moment1 = this._getValue(params[0]);
+		let moment2 = this._getValue(params[1]);
+
+		console.log(moment1, moment2);
+
+		if (moment.isMoment(moment1) && moment.isMoment(moment2)) {
+			return moment1.isAfter(moment2);
+		} 
+		
+		return false;
+		
+	}
+
 
 	fileSize(params) {
 		let value = this._getValue(params[0]);
