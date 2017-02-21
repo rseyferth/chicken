@@ -123,8 +123,8 @@ let Utils = {
 		if (value1 === value2) return true;
 
 		// Is one or both a moment?
-		if (moment.isMoment(value1)) return value1.isSame(value2);
-		if (moment.isMoment(value2)) return value2.isSame(value1);
+		if (moment.isMoment(value1) && value2 !== undefined) return value1.isSame(value2);
+		if (moment.isMoment(value2) && value1 !== undefined) return value2.isSame(value1);
 
 		// One of them null or undefined?
 		if (value1 === undefined || value2 === undefined || value1 === null || value2 === null) return false;
