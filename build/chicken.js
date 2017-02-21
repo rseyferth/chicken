@@ -20394,8 +20394,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				var moment1 = this._getValue(params[0]);
 				var moment2 = this._getValue(params[1]);
 
-				console.log(moment1, moment2);
-
 				if (_moment2.default.isMoment(moment1) && _moment2.default.isMoment(moment2)) {
 					return moment1.isAfter(moment2);
 				}
