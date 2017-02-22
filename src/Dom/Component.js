@@ -263,7 +263,7 @@ class Component extends View
 			}
 
 			// Is it a useful value?
-			if (typeof value === 'string' || typeof value === 'number') {
+			if (key !== 'title' && (typeof value === 'string' || typeof value === 'number')) {
 				let attrKey = inflection.underscore(key).split('_').join('-');
 				this.element.setAttribute(attrKey, value);
 			}

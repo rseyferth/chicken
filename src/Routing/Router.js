@@ -6,11 +6,13 @@ import ApiError from '~/Api/ApiError';
 import Obj from '~/Core/Obj';
 import SettingsObject from '~/Core/SettingsObject';
 import Route from '~/Routing/Route';
+import RouteMatch from '~/Routing/RouteMatch';
 import Request from '~/Routing/Request';
 import Middleware from '~/Routing/Middleware';
 import Service from '~/Data/Service';
 import RoutingError from '~/Routing/RoutingError';
 import Redirect from '~/Routing/Redirect';
+import View from '~/Dom/View';
 
 /**
  * @module Routing
@@ -61,6 +63,7 @@ class Router extends Obj
 			'api.404': [],
 			'api.500': [],
 			'router': [],
+			'router.403': [],
 			'router.404': []
 		};
 
@@ -114,6 +117,17 @@ class Router extends Obj
 		return route;
 
 	}
+
+	errorRoute(errorKey, actions, options = {}) {
+
+		// Get route
+		let route = this.route('/__errors/' + errorKey, actions, options);
+		this.handleErrors(errorKey, route);
+
+		return this;
+
+	}
+
 
 	catchAll(actions, options = {}) {
 
@@ -319,11 +333,16 @@ class Router extends Obj
 			let cb = callbacksToExecute.shift();
 
 			// Get the next in line
-			let result = cb.apply(this, [nextCallback, request, routeMatch]);
+			try {
+				cb.apply(this, [nextCallback, request, routeMatch]);				
+			} catch (error) {
+				
+				// Get error route match
+				routeMatch = this.getErrorRouteMatch(error);
+				
+				// Break out
+				executeActions();
 
-			// Is there a result?
-			if (result !== undefined) {
-				// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'				
 			}
 
 		};
@@ -417,7 +436,21 @@ class Router extends Obj
 
 			// Get handler and call it
 			let handler = handlers.shift();
-			let result = handler(error, error.request, this);
+			
+			// Is it a callback?
+			let result;
+			if (typeof handler === 'function') {
+
+				// Call handler
+				let result = handler(error, error.request, this);
+
+
+			} else {
+
+				// Just use the value itself (probably a Route defined through 'errorRoute(...')
+				result = handler;
+
+			}
 
 			// Anything?
 			if (result) {
@@ -434,6 +467,16 @@ class Router extends Obj
 		if (handlerResult instanceof Redirect) {
 			return this.application.goto(handlerResult.uri);
 		}
+
+		// Is it a Route?
+		if (handlerResult instanceof Route) {
+
+			// Fake a match
+			let match = new RouteMatch(handlerResult, {}, error && error.request ? error.request : null);
+			return match;
+
+		}
+
 
 	}
 

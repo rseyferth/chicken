@@ -147,7 +147,7 @@ class RouteMatch
 
 
 	_readActionsFromRoute(route) {
-
+		
 		// Collect parameters from route
 		var params = new Map();
 		var paramArray = [];

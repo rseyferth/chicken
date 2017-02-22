@@ -16426,7 +16426,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 
 					// Is it a useful value?
-					if (typeof value === 'string' || typeof value === 'number') {
+					if (key !== 'title' && (typeof value === 'string' || typeof value === 'number')) {
 						var attrKey = _inflection2.default.underscore(key).split('_').join('-');
 						_this3.element.setAttribute(attrKey, value);
 					}
@@ -20659,6 +20659,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Route2 = _interopRequireDefault(_Route);
 
+	var _RouteMatch = __webpack_require__(358);
+
+	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
+
 	var _Request = __webpack_require__(363);
 
 	var _Request2 = _interopRequireDefault(_Request);
@@ -20678,6 +20682,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var _Redirect = __webpack_require__(360);
 
 	var _Redirect2 = _interopRequireDefault(_Redirect);
+
+	var _View = __webpack_require__(345);
+
+	var _View2 = _interopRequireDefault(_View);
 
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -20734,6 +20742,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				'api.404': [],
 				'api.500': [],
 				'router': [],
+				'router.403': [],
 				'router.404': []
 			};
 
@@ -20785,6 +20794,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Return route
 				return route;
+			}
+		}, {
+			key: 'errorRoute',
+			value: function errorRoute(errorKey, actions) {
+				var options = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+
+
+				// Get route
+				var route = this.route('/__errors/' + errorKey, actions, options);
+				this.handleErrors(errorKey, route);
+
+				return this;
 			}
 		}, {
 			key: 'catchAll',
@@ -20979,11 +21000,15 @@ return /******/ (function(modules) { // webpackBootstrap
 					var cb = callbacksToExecute.shift();
 
 					// Get the next in line
-					var result = cb.apply(_this2, [nextCallback, request, routeMatch]);
+					try {
+						cb.apply(_this2, [nextCallback, request, routeMatch]);
+					} catch (error) {
 
-					// Is there a result?
-					if (result !== undefined) {
-						// 'WE GOT TO DO SOMETHING WITH THIS MIDDLEWARE RESULT'				
+						// Get error route match
+						routeMatch = _this2.getErrorRouteMatch(error);
+
+						// Break out
+						executeActions();
 					}
 				};
 				nextCallback();
@@ -21068,7 +21093,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Get handler and call it
 					var handler = handlers.shift();
-					var result = handler(error, error.request, this);
+
+					// Is it a callback?
+					var result = void 0;
+					if (typeof handler === 'function') {
+
+						// Call handler
+						var _result = handler(error, error.request, this);
+					} else {
+
+						// Just use the value itself (probably a Route defined through 'errorRoute(...')
+						result = handler;
+					}
 
 					// Anything?
 					if (result) {
@@ -21083,6 +21119,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				// A generic redirect?
 				if (handlerResult instanceof _Redirect2.default) {
 					return this.application.goto(handlerResult.uri);
+				}
+
+				// Is it a Route?
+				if (handlerResult instanceof _Route2.default) {
+
+					// Fake a match
+					var match = new _RouteMatch2.default(handlerResult, {}, error && error.request ? error.request : null);
+					return match;
 				}
 			}
 
