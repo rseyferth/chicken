@@ -229,7 +229,7 @@ class Observable extends Obj {
 	 *        						Whether to convert standard object values into Observable instances
 	 * @chainable
 	 */
-	set(key, value, convertToObservables = false) {
+	set(key, value, convertToObservables = false) {	
 
 		// Convert?
 		if (convertToObservables === true && typeof value === 'object' && value !== null) {
