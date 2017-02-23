@@ -50,6 +50,21 @@ class Collection extends ObservableArray
 		}
 	}
 
+
+	get(key) {
+
+		// Page info?
+		if (this.page && /^page\.(currentPage|pageCount|size|recordCount)$/.test(key)) {
+			let [foo, k] = key.split(/\./);
+			return this.page[k];
+		}
+
+
+		// Basics
+		return super.get();
+
+	}
+
 	
 
 

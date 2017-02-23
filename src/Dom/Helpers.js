@@ -516,7 +516,7 @@ class Helpers
 		let key = this._getValue(params[0]);
 
 		// Get from app
-		return App().i18n.translate(key, attributeHash);
+		return App().i18n.translate(key, attributeHash, this._getValue(params[1]));
 
 	}
 

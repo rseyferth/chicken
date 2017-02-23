@@ -121,6 +121,7 @@ class Router extends Obj
 	errorRoute(errorKey, actions, options = {}) {
 
 		// Get route
+		options.isErrorRoute = true;
 		let route = this.route('/__errors/' + errorKey, actions, options);
 		this.handleErrors(errorKey, route);
 
