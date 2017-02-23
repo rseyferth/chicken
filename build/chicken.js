@@ -12847,7 +12847,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Split
 				if (key === undefined) throw new TypeError('There was no key provided');
-				var parts = Number.isInteger(key) ? [key] : key.split(/\./);
+				var parts = key;
+				if (typeof key === 'string') parts = key.split(/\./);
 				var currentPart = parts.shift();
 
 				// Get value
@@ -13543,6 +13544,10 @@ return /******/ (function(modules) { // webpackBootstrap
 				// The last one should be a callback
 				var successCallback = args.pop();
 				var failCallback = function failCallback(error) {
+					for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+						args[_key4 - 1] = arguments[_key4];
+					}
+
 					throw new Error('Uncaught promise failure for ' + args.join(', ') + ': ' + error);
 				};
 				if (args.length > 1 && typeof _underscore2.default.last(args) === 'function') {
@@ -13639,8 +13644,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function trigger(eventName) {
 				var _this2 = this;
 
-				for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-					args[_key4 - 1] = arguments[_key4];
+				for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+					args[_key5 - 1] = arguments[_key5];
 				}
 
 				// Get the callbacks
@@ -16289,6 +16294,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Do I have a parent?
 			if (_this.parentComponent) {
 				_this.parentComponent.components[_this.getId()] = _this;
+				_this.set('_PARENT_', _this.parentComponent);
 			}
 
 			/**
@@ -16298,6 +16304,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.view = _this.scope.view;
 			if (_this.view) {
 				_this.view.components[_this.getId()] = _this;
+				if (!_this.parentComponent) _this.set('_PARENT_', _this.view);
+				_this.set('_PARENTVIEW_', _this.view);
 			}
 
 			/**
@@ -16540,8 +16548,26 @@ return /******/ (function(modules) { // webpackBootstrap
 				return result;
 			}
 		}, {
+			key: '_convertParentKeys',
+			value: function _convertParentKeys(key) {
+
+				// Not a string?
+				if (typeof key !== 'string') return key;
+
+				// Replace ^'s to mean parentComponent/View
+				key = key.split(/\^/).join('_PARENT_.');
+
+				// Replace @ to mean parentView
+				key = key.replace(/^@/, '_PARENTVIEW_.');
+
+				return key;
+			}
+		}, {
 			key: 'get',
 			value: function get(key) {
+
+				// Process the key
+				key = this._convertParentKeys(key);
 
 				// Do basics first
 				var value = _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key);
@@ -16565,21 +16591,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'observe',
 			value: function observe(key, callback) {
 
-				// Directly on me?
-				if (!/\./.test(key)) {
-
-					// Does it not have a value
-					if (_get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key) === undefined) {
-
-						// Bubble up.
-						if (this.parentComponent) {
-							return this.parentComponent.observe(key, callback);
-						} else if (this.view) {
-
-							return this.view.observe(key, callback);
-						}
-					}
-				}
+				// Process the key
+				key = this._convertParentKeys(key);
 
 				return _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'observe', this).call(this, key, callback);
 			}
@@ -16587,22 +16600,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'disregard',
 			value: function disregard(key, callback) {
 
-				// Directly on me?
-				if (!/\./.test(key)) {
-
-					// Does it not have a value
-					if (_get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key) === undefined) {
-
-						// Bubble up.
-						if (this.parentComponent) {
-
-							return this.parentComponent.disregard(key, callback);
-						} else if (this.view) {
-
-							return this.view.disregard(key, callback);
-						}
-					}
-				}
+				// Process the key
+				key = this._convertParentKeys(key);
 
 				return _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'disregard', this).call(this, key, callback);
 			}
@@ -17268,12 +17267,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!continueRendering) return this;
 
 				// Render it
-				try {
-					this.renderResult = this.getTemplate().render(this, this.renderer);
-				} catch (error) {
-					this.rejectPromise('render', error);
-					return;
-				}
+				this.renderResult = this.getTemplate().render(this, this.renderer);
 
 				// Localize and be done!
 				this.documentFragment = this.renderResult.fragment;
@@ -19420,7 +19414,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (this.page && /^page\.(currentPage|pageCount|size|recordCount)$/.test(key)) {
 					var _key$split = key.split(/\./),
 					    _key$split2 = _slicedToArray(_key$split, 2),
-					    foo = _key$split2[0],
 					    k = _key$split2[1];
 
 					return this.page[k];
@@ -20761,10 +20754,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 
-	var _View = __webpack_require__(345);
-
-	var _View2 = _interopRequireDefault(_View);
-
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -21178,7 +21167,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (typeof handler === 'function') {
 
 						// Call handler
-						var _result = handler(error, error.request, this);
+						result = handler(error, error.request, this);
 					} else {
 
 						// Just use the value itself (probably a Route defined through 'errorRoute(...')

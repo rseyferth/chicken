@@ -561,12 +561,7 @@ class View extends Observable
 		if (!continueRendering) return this;
 
 		// Render it
-		try {
-			this.renderResult = this.getTemplate().render(this, this.renderer);
-		} catch (error) {
-			this.rejectPromise('render', error);
-			return;
-		}
+		this.renderResult = this.getTemplate().render(this, this.renderer);
 		
 		// Localize and be done!
 		this.documentFragment = this.renderResult.fragment;

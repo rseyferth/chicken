@@ -55,7 +55,7 @@ class Collection extends ObservableArray
 
 		// Page info?
 		if (this.page && /^page\.(currentPage|pageCount|size|recordCount)$/.test(key)) {
-			let [foo, k] = key.split(/\./);
+			let [, k] = key.split(/\./);
 			return this.page[k];
 		}
 

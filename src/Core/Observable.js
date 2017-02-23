@@ -171,7 +171,8 @@ class Observable extends Obj {
 
 		// Split
 		if (key === undefined) throw new TypeError('There was no key provided');
-		let parts = Number.isInteger(key) ? [key] : key.split(/\./);
+		let parts = key;
+		if (typeof key === 'string') parts = key.split(/\./);
 		let currentPart = parts.shift();
 
 		// Get value

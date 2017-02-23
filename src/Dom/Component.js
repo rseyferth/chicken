@@ -121,7 +121,9 @@ class Component extends View
 		// Do I have a parent?
 		if (this.parentComponent) {
 			this.parentComponent.components[this.getId()] = this;
+			this.set('_PARENT_', this.parentComponent);
 		}
+
 
 
 		/**
@@ -131,6 +133,8 @@ class Component extends View
 		this.view = this.scope.view;
 		if (this.view) {
 			this.view.components[this.getId()] = this;
+			if (!this.parentComponent) this.set('_PARENT_', this.view);
+			this.set('_PARENTVIEW_', this.view);
 		}
 		
 		/**
@@ -382,9 +386,26 @@ class Component extends View
 
 	}
 
+	_convertParentKeys(key) {
+
+		// Not a string?
+		if (typeof key !== 'string') return key;
+
+		// Replace ^'s to mean parentComponent/View
+		key = key.split(/\^/).join('_PARENT_.');
+
+		// Replace @ to mean parentView
+		key = key.replace(/^@/, '_PARENTVIEW_.');
+
+		return key;
+
+	}
 
 
 	get(key) {
+
+		// Process the key
+		key = this._convertParentKeys(key);
 
 		// Do basics first
 		let value = super.get(key);
@@ -411,25 +432,8 @@ class Component extends View
 
 	observe(key, callback) {
 
-		// Directly on me?
-		if (!/\./.test(key)) {
-
-			// Does it not have a value
-			if (super.get(key) === undefined) {
-
-				// Bubble up.
-				if (this.parentComponent) {
-					return this.parentComponent.observe(key, callback);
-
-				} else if (this.view) {
-
-					return this.view.observe(key, callback);
-					
-				}
-				
-			}
-
-		}
+		// Process the key
+		key = this._convertParentKeys(key);
 
 		return super.observe(key, callback);
 
@@ -437,26 +441,8 @@ class Component extends View
 
 	disregard(key, callback) {
 
-		// Directly on me?
-		if (!/\./.test(key)) {
-
-			// Does it not have a value
-			if (super.get(key) === undefined) {
-
-				// Bubble up.
-				if (this.parentComponent) {
-					
-					return this.parentComponent.disregard(key, callback);
-
-				} else if (this.view) {
-
-					return this.view.disregard(key, callback);
-					
-				}
-				
-			}
-
-		}
+		// Process the key
+		key = this._convertParentKeys(key);
 
 		return super.disregard(key, callback);
 

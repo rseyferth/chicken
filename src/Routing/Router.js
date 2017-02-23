@@ -12,7 +12,6 @@ import Middleware from '~/Routing/Middleware';
 import Service from '~/Data/Service';
 import RoutingError from '~/Routing/RoutingError';
 import Redirect from '~/Routing/Redirect';
-import View from '~/Dom/View';
 
 /**
  * @module Routing
@@ -443,8 +442,7 @@ class Router extends Obj
 			if (typeof handler === 'function') {
 
 				// Call handler
-				let result = handler(error, error.request, this);
-
+				result = handler(error, error.request, this);
 
 			} else {
 

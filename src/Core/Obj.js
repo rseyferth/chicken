@@ -75,8 +75,8 @@ class Obj {
 
 		// The last one should be a callback
 		var successCallback = args.pop();
-		var failCallback = (error) => {
-			throw new Error('Uncaught promise failure for ' + args.join(', ') + ': ' + error);
+		var failCallback = (error, ...args) => {
+			throw new Error('Uncaught promise failure for ' + args.join(', ') + ': ' + error);			
 		};
 		if (args.length > 1 && typeof _.last(args) === 'function') {
 			failCallback = successCallback;
