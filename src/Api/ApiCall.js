@@ -130,6 +130,16 @@ class ApiCall extends Obj {
 	reset() {
 		this.resetPromise('complete');
 	}
+
+
+	executeHook(type, args = []) {
+
+		args.unshift(this);
+		_.each(ApiCall.hooks[type], (cb) => {
+			cb.apply(this, args);
+		});
+
+	}
 	
 
 	/**
@@ -139,6 +149,9 @@ class ApiCall extends Obj {
 	 * @return {Promise}
 	 */
 	execute() {
+
+		// Do hook
+		this.executeHook('beforeExecute');
 
 		// Authorize it
 		let auth = this.api.getAuth();
@@ -206,9 +219,11 @@ class ApiCall extends Obj {
 
 					}
 
+					// Do hook
+					this.executeHook('beforeResolve', [response]);
+
 					// Done!
 					resolve(response);
-
 					
 				}).fail((error) => {
 
@@ -360,4 +375,16 @@ class ApiCall extends Obj {
 	}
 
 }
+
+ApiCall.hooks = {
+
+	beforeExecute: [],
+	beforeResolve: []
+
+};
+ApiCall.hook = (type, callback) => {
+	if (_.contains(ApiCall.hooks, type)) throw new Error('Unknown ApiCall hook, use on of the following: ' + _.keys(ApiCall.hooks).join(', '));
+	ApiCall.hooks[type].push(callback);
+};
+
 module.exports = ApiCall;

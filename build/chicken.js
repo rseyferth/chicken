@@ -17659,6 +17659,19 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function reset() {
 				this.resetPromise('complete');
 			}
+		}, {
+			key: 'executeHook',
+			value: function executeHook(type) {
+				var _this2 = this;
+
+				var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+
+				args.unshift(this);
+				_underscore2.default.each(ApiCall.hooks[type], function (cb) {
+					cb.apply(_this2, args);
+				});
+			}
 
 			/**
 	   * Execute the Api Call
@@ -17670,7 +17683,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'execute',
 			value: function execute() {
-				var _this2 = this;
+				var _this3 = this;
+
+				// Do hook
+				this.executeHook('beforeExecute');
 
 				// Authorize it
 				var auth = this.api.getAuth();
@@ -17680,19 +17696,19 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this.promise('complete', function (resolve, reject) {
 
 					// Combine options
-					var queryString = _queryString2.default.stringify(_this2.queryParams);
+					var queryString = _queryString2.default.stringify(_this3.queryParams);
 					if (queryString.length > 0) queryString = '?' + queryString;
 					var options = _jquery2.default.extend({
 
-						url: _this2.api.makeUrl(_this2.uri) + queryString,
-						method: _this2.method,
-						data: _this2.data
+						url: _this3.api.makeUrl(_this3.uri) + queryString,
+						method: _this3.method,
+						data: _this3.data
 
-					}, _this2.ajaxOptions);
+					}, _this3.ajaxOptions);
 
 					// Before send
 					var beforeSends = [];
-					if (_this2.api.settings.beforeSend) beforeSends.push(_this2.api.settings.beforeSend);
+					if (_this3.api.settings.beforeSend) beforeSends.push(_this3.api.settings.beforeSend);
 					if (options.beforeSend) beforeSends.push(options.beforeSend);
 					options.beforeSend = function (jqXhr, settings) {
 
@@ -17703,7 +17719,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					};
 
 					// Make the call
-					_this2.api.ajax(options).then(function (result, statusText, jqXhr) {
+					_this3.api.ajax(options).then(function (result, statusText, jqXhr) {
 
 						// 204 (No-Content)?
 						if (jqXhr.status === 204 && result === undefined) {
@@ -17718,14 +17734,14 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 
 						// Deserialize it
-						var response = _this2.api.deserialize(result, _this2);
+						var response = _this3.api.deserialize(result, _this3);
 
 						// Do we expect a single model?
-						if (_this2.expectModel && response instanceof _Collection2.default) {
+						if (_this3.expectModel && response instanceof _Collection2.default) {
 							response = response.first();
 
 							// Or a collection
-						} else if (_this2.expectCollection && response instanceof _Model2.default) {
+						} else if (_this3.expectCollection && response instanceof _Model2.default) {
 
 							// Make a collection of it
 							var coll = new _Collection2.default();
@@ -17733,18 +17749,21 @@ return /******/ (function(modules) { // webpackBootstrap
 							response = coll;
 						}
 
+						// Do hook
+						_this3.executeHook('beforeResolve', [response]);
+
 						// Done!
 						resolve(response);
 					}).fail(function (error) {
 
-						if (_this2.resolvesOnError) {
+						if (_this3.resolvesOnError) {
 
 							//resolve with null
 							resolve(null);
 						} else {
 
 							// Make error
-							var errorObj = new _ApiError2.default(_this2, error);
+							var errorObj = new _ApiError2.default(_this3, error);
 							if (auth) {
 								errorObj = auth.processApiError(errorObj);
 							}
@@ -17900,6 +17919,17 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		return ApiCall;
 	}(_Obj3.default);
+
+	ApiCall.hooks = {
+
+		beforeExecute: [],
+		beforeResolve: []
+
+	};
+	ApiCall.hook = function (type, callback) {
+		if (_underscore2.default.contains(ApiCall.hooks, type)) throw new Error('Unknown ApiCall hook, use on of the following: ' + _underscore2.default.keys(ApiCall.hooks).join(', '));
+		ApiCall.hooks[type].push(callback);
+	};
 
 	module.exports = ApiCall;
 
