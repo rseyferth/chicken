@@ -16561,6 +16561,51 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return value;
 			}
+		}, {
+			key: 'observe',
+			value: function observe(key, callback) {
+
+				// Directly on me?
+				if (!/\./.test(key)) {
+
+					// Does it not have a value
+					if (_get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key) === undefined) {
+
+						// Bubble up.
+						if (this.parentComponent) {
+							return this.parentComponent.observe(key, callback);
+						} else if (this.view) {
+
+							return this.view.observe(key, callback);
+						}
+					}
+				}
+
+				return _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'observe', this).call(this, key, callback);
+			}
+		}, {
+			key: 'disregard',
+			value: function disregard(key, callback) {
+
+				// Directly on me?
+				if (!/\./.test(key)) {
+
+					// Does it not have a value
+					if (_get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key) === undefined) {
+
+						// Bubble up.
+						if (this.parentComponent) {
+
+							return this.parentComponent.disregard(key, callback);
+						} else if (this.view) {
+
+							return this.view.disregard(key, callback);
+						}
+					}
+				}
+
+				return _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'disregard', this).call(this, key, callback);
+			}
 
 			/**
 	   * Set default values for component attributes. Use this in the initCallback.

@@ -409,6 +409,60 @@ class Component extends View
 
 	}
 
+	observe(key, callback) {
+
+		// Directly on me?
+		if (!/\./.test(key)) {
+
+			// Does it not have a value
+			if (super.get(key) === undefined) {
+
+				// Bubble up.
+				if (this.parentComponent) {
+					return this.parentComponent.observe(key, callback);
+
+				} else if (this.view) {
+
+					return this.view.observe(key, callback);
+					
+				}
+				
+			}
+
+		}
+
+		return super.observe(key, callback);
+
+	}
+
+	disregard(key, callback) {
+
+		// Directly on me?
+		if (!/\./.test(key)) {
+
+			// Does it not have a value
+			if (super.get(key) === undefined) {
+
+				// Bubble up.
+				if (this.parentComponent) {
+					
+					return this.parentComponent.disregard(key, callback);
+
+				} else if (this.view) {
+
+					return this.view.disregard(key, callback);
+					
+				}
+				
+			}
+
+		}
+
+		return super.disregard(key, callback);
+
+	}
+
+
 	/**
 	 * Set default values for component attributes. Use this in the initCallback.
 	 *
