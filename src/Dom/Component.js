@@ -397,12 +397,20 @@ class Component extends View
 		// Replace @ to mean parentView
 		key = key.replace(/^@/, '_PARENTVIEW_.');
 
+		// Remove $
+		key = key.replace(/^\$/, '');
+
 		return key;
 
 	}
 
 
 	get(key) {
+
+		// Only for me?
+		if (/^\$/.test(key)) {
+			return super.get(key);
+		}
 
 		// Process the key
 		key = this._convertParentKeys(key);

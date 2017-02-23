@@ -16560,11 +16560,19 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Replace @ to mean parentView
 				key = key.replace(/^@/, '_PARENTVIEW_.');
 
+				// Remove $
+				key = key.replace(/^\$/, '');
+
 				return key;
 			}
 		}, {
 			key: 'get',
 			value: function get(key) {
+
+				// Only for me?
+				if (/^\$/.test(key)) {
+					return _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key);
+				}
 
 				// Process the key
 				key = this._convertParentKeys(key);
