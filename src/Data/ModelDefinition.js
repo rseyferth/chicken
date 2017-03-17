@@ -45,6 +45,10 @@ class ModelDefinition
 			rel.addLocalKeyToModelDefinitionAttributes(this);
 		}); 
 
+
+		// Guess the default table name
+		this.tableName = inflection.pluralize(_.underscored(this.name));
+
 	}
 
 	/**

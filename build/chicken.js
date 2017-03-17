@@ -16143,6 +16143,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
@@ -16294,7 +16296,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Do I have a parent?
 			if (_this.parentComponent) {
 				_this.parentComponent.components[_this.getId()] = _this;
-				_this.set('_PARENT_', _this.parentComponent);
+				_this.set('_', _this.parentComponent);
 			}
 
 			/**
@@ -16304,8 +16306,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.view = _this.scope.view;
 			if (_this.view) {
 				_this.view.components[_this.getId()] = _this;
-				if (!_this.parentComponent) _this.set('_PARENT_', _this.view);
-				_this.set('_PARENTVIEW_', _this.view);
+				if (!_this.parentComponent) _this.set('_', _this.view);
+				_this.set('$', _this.view);
 			}
 
 			/**
@@ -16541,6 +16543,11 @@ return /******/ (function(modules) { // webpackBootstrap
 						key = _underscore2.default.decapitalize(key.substr(prefix.length));
 					}
 
+					// Value
+					if (value !== null && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.getValue === 'function') {
+						value = value.getValue();
+					}
+
 					// Set it
 					result[key] = value;
 				});
@@ -16548,34 +16555,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				return result;
 			}
 		}, {
-			key: '_convertParentKeys',
-			value: function _convertParentKeys(key) {
-
-				// Not a string?
-				if (typeof key !== 'string') return key;
-
-				// Replace ^'s to mean parentComponent/View
-				key = key.split(/\^/).join('_PARENT_.');
-
-				// Replace @ to mean parentView
-				key = key.replace(/^@/, '_PARENTVIEW_.');
-
-				// Remove $
-				key = key.replace(/^\$/, '');
-
-				return key;
-			}
-		}, {
 			key: 'get',
 			value: function get(key) {
-
-				// Only for me?
-				if (/^\$/.test(key)) {
-					return _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key);
-				}
-
-				// Process the key
-				key = this._convertParentKeys(key);
 
 				// Do basics first
 				var value = _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key);
@@ -16595,24 +16576,6 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return value;
 			}
-		}, {
-			key: 'observe',
-			value: function observe(key, callback) {
-
-				// Process the key
-				key = this._convertParentKeys(key);
-
-				return _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'observe', this).call(this, key, callback);
-			}
-		}, {
-			key: 'disregard',
-			value: function disregard(key, callback) {
-
-				// Process the key
-				key = this._convertParentKeys(key);
-
-				return _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'disregard', this).call(this, key, callback);
-			}
 
 			/**
 	   * Set default values for component attributes. Use this in the initCallback.
@@ -16631,7 +16594,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					_underscore2.default.each(hash, function (value, key) {
 
 						// Set?
-						if (_this5.get(key) === undefined) {
+						if (_this5.attributes[key] === undefined) {
 							_this5.set(key, value);
 						}
 					});
@@ -24197,6 +24160,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (relations instanceof Array) {
 					relations = relations.join(',');
 				}
+				relations = _inflection2.default.underscore(relations);
 				return this.query('include', relations);
 			}
 		}, {
@@ -25676,6 +25640,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			_underscore2.default.each(this.relationships, function (rel) {
 				rel.addLocalKeyToModelDefinitionAttributes(_this);
 			});
+
+			// Guess the default table name
+			this.tableName = _inflection2.default.pluralize(_underscore2.default.underscored(this.name));
 		}
 
 		/**

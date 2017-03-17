@@ -31,6 +31,7 @@ class JsonApiCall extends ApiCall {
 		if (relations instanceof Array) {
 			relations = relations.join(',');
 		}
+		relations = inflection.underscore(relations);
 		return this.query('include', relations);
 	}
 

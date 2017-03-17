@@ -121,7 +121,7 @@ class Component extends View
 		// Do I have a parent?
 		if (this.parentComponent) {
 			this.parentComponent.components[this.getId()] = this;
-			this.set('_PARENT_', this.parentComponent);
+			this.set('_', this.parentComponent);
 		}
 
 
@@ -133,8 +133,8 @@ class Component extends View
 		this.view = this.scope.view;
 		if (this.view) {
 			this.view.components[this.getId()] = this;
-			if (!this.parentComponent) this.set('_PARENT_', this.view);
-			this.set('_PARENTVIEW_', this.view);
+			if (!this.parentComponent) this.set('_', this.view);
+			this.set('$', this.view);
 		}
 		
 		/**
@@ -377,6 +377,11 @@ class Component extends View
 
 			}
 
+			// Value
+			if (value !== null && typeof value === 'object' && typeof value.getValue === 'function') {
+				value = value.getValue();
+			}
+
 			// Set it
 			result[key] = value;
 
@@ -386,34 +391,7 @@ class Component extends View
 
 	}
 
-	_convertParentKeys(key) {
-
-		// Not a string?
-		if (typeof key !== 'string') return key;
-
-		// Replace ^'s to mean parentComponent/View
-		key = key.split(/\^/).join('_PARENT_.');
-
-		// Replace @ to mean parentView
-		key = key.replace(/^@/, '_PARENTVIEW_.');
-
-		// Remove $
-		key = key.replace(/^\$/, '');
-
-		return key;
-
-	}
-
-
 	get(key) {
-
-		// Only for me?
-		if (/^\$/.test(key)) {
-			return super.get(key);
-		}
-
-		// Process the key
-		key = this._convertParentKeys(key);
 
 		// Do basics first
 		let value = super.get(key);
@@ -438,24 +416,6 @@ class Component extends View
 
 	}
 
-	observe(key, callback) {
-
-		// Process the key
-		key = this._convertParentKeys(key);
-
-		return super.observe(key, callback);
-
-	}
-
-	disregard(key, callback) {
-
-		// Process the key
-		key = this._convertParentKeys(key);
-
-		return super.disregard(key, callback);
-
-	}
-
 
 	/**
 	 * Set default values for component attributes. Use this in the initCallback.
@@ -470,7 +430,7 @@ class Component extends View
 			_.each(hash, (value, key) => {
 
 				// Set?
-				if (this.get(key) === undefined) {
+				if (this.attributes[key] === undefined) {
 					this.set(key, value);
 				}
 
