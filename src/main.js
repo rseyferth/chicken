@@ -32,6 +32,7 @@ import Application from '~/Application';
 // Api
 import Api from '~/Api/Api';
 import ApiCall from '~/Api/ApiCall';
+import ApiError from '~/Api/ApiError';
 import JsonApi from '~/Api/JsonApi';
 import JsonApiCall from '~/Api/JsonApiCall';
 import PrimitiveJsonApi from '~/Api/PrimitiveJsonApi';
@@ -108,6 +109,7 @@ var Chicken = {
 	Api: {
 		Api: Api,
 		ApiCall: ApiCall,
+		ApiError: ApiError,
 		JsonApi: JsonApi,
 		JsonApiCall: JsonApiCall,
 		PrimitiveJsonApi: PrimitiveJsonApi,

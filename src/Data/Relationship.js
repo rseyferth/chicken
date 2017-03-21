@@ -30,6 +30,8 @@ class Relationship {
 
 		this.touchLocalOnUpdate = false;
 
+		this.sortCallback = false;
+
 	}
 
 	////////////////////////
@@ -185,6 +187,21 @@ class Relationship {
 		//add key as integer 		
 		if (this.localKey.indexOf('Id') !== -1) modelDefinition.integer(this.localKey);
 		if (this.localKey.indexOf('Key') !== -1) modelDefinition.string(this.localKey);
+		return this;
+
+	}
+
+
+	/**
+	 * Add sorting method to the relationship. The given callback will be
+	 * called when the relationship Collection is instantiated from the API.
+	 * 
+	 * @param  {Function} callback 
+	 * @chainable
+	 */
+	sorted(callback) {
+
+		this.sortCallback = callback;
 		return this;
 
 	}

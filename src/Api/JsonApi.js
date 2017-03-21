@@ -407,6 +407,14 @@ class JsonApi extends Api
 							}
 						});
 
+						// Is the relationship sorted?						
+						if (relationship && relationship.sortCallback && model.related[modelRelName]) {
+
+							// Apply sorting
+							model.related[modelRelName].sortBy(relationship.sortCallback);
+
+						}
+
 					} else if (rel.data instanceof Object) {
 
 						// Get the one

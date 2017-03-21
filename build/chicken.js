@@ -90,6 +90,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _ApiCall2 = _interopRequireDefault(_ApiCall);
 
+	var _ApiError = __webpack_require__(348);
+
+	var _ApiError2 = _interopRequireDefault(_ApiError);
+
 	var _JsonApi = __webpack_require__(368);
 
 	var _JsonApi2 = _interopRequireDefault(_JsonApi);
@@ -330,6 +334,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		Api: {
 			Api: _Api2.default,
 			ApiCall: _ApiCall2.default,
+			ApiError: _ApiError2.default,
 			JsonApi: _JsonApi2.default,
 			JsonApiCall: _JsonApiCall2.default,
 			PrimitiveJsonApi: _PrimitiveJsonApi2.default,
@@ -24037,6 +24042,13 @@ return /******/ (function(modules) { // webpackBootstrap
 												})();
 											}
 										});
+
+										// Is the relationship sorted?						
+										if (relationship && relationship.sortCallback && model.related[modelRelName]) {
+
+											// Apply sorting
+											model.related[modelRelName].sortBy(relationship.sortCallback);
+										}
 									})();
 								} else if (rel.data instanceof Object) {
 
@@ -25992,6 +26004,8 @@ return /******/ (function(modules) { // webpackBootstrap
 			this.inverseRelationshipName = null;
 
 			this.touchLocalOnUpdate = false;
+
+			this.sortCallback = false;
 		}
 
 		////////////////////////
@@ -26171,6 +26185,22 @@ return /******/ (function(modules) { // webpackBootstrap
 				//add key as integer 		
 				if (this.localKey.indexOf('Id') !== -1) modelDefinition.integer(this.localKey);
 				if (this.localKey.indexOf('Key') !== -1) modelDefinition.string(this.localKey);
+				return this;
+			}
+
+			/**
+	   * Add sorting method to the relationship. The given callback will be
+	   * called when the relationship Collection is instantiated from the API.
+	   * 
+	   * @param  {Function} callback 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'sorted',
+			value: function sorted(callback) {
+
+				this.sortCallback = callback;
 				return this;
 			}
 		}, {
