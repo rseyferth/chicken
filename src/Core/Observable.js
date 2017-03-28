@@ -392,6 +392,67 @@ class Observable extends Obj {
 
 
 	/**
+	 * Increment given attribute's numeric value
+	 *
+	 * @method increment
+	 * @param  {string} key          
+	 * @param  {Number} by           (Default = 1)
+	 * @param  {Number} defaultValue (Default = 0)
+	 * @chainable
+	 */
+	increment(key, by = 1, defaultValue = 0) {
+
+		let v = this.get(key);
+		if (v === undefined || typeof v !== 'number') v = defaultValue;
+		v += by;
+		this.set(key, v);
+		return this;
+
+	}
+
+	/**
+	 * Decrement given attribute's numeric value
+	 *
+	 * @method increment
+	 * @param  {string} key          
+	 * @param  {Number} by           (Default = 1)
+	 * @param  {Number} defaultValue (Default = 0)
+	 * @chainable
+	 */
+	decrement(key, by = 1, defaultValue = 0) {
+
+		let v = this.get(key);
+		if (v === undefined || typeof v !== 'number') v = defaultValue;
+		v -= by;
+		this.set(key, v);
+		return this;
+
+	}
+
+	/**
+	 * Toggle the given attribute's boolean value
+	 *
+	 * @method toggle
+	 * @param  {string}  key                
+	 * @param  {Boolean} valueWhenUndefined  (Default = true) What value to set when the attribute does not have a value yet
+	 * @chainable
+	 */
+	toggle(key, valueWhenUndefined = true) {
+
+		let v = this.get(key);
+		if (v === undefined || typeof v !== 'boolean') {
+			v = valueWhenUndefined;
+		} else {
+			v = !v;
+		}
+		this.set(key, v);
+		return this;
+
+
+	}
+
+
+	/**
 	 * Listen for any changes in any of the object's attributes. 
 	 * The callback will receive an array containing the names of
 	 * all updates attributes. 

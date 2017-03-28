@@ -353,7 +353,6 @@ class Model extends Observable
 			// Use only attributes in the model definition
 			let modelAttr = _.pick(attr, (value, key) => {
 
-
 				// Dynamic?
 				if (!modelDefinition.isDynamic) {
 
@@ -1045,6 +1044,27 @@ class Model extends Observable
 
 	}
 
+	createCopy() {
+
+		// Get all attributes
+		let attr = {};
+		_.each(this.attributes, (value, key) => {
+
+			// Not computed?
+			if (value instanceof ComputedProperty) return;
+			attr[key] = this.get(key);
+			
+			
+		});
+		delete attr.id;
+		
+		// Create model
+		let constr = this.constructor;
+		let copy = new constr(attr);
+
+		return copy;
+	}
+
 
 	/**
 	 * Create copy of model and its attributes and relations
@@ -1068,9 +1088,13 @@ class Model extends Observable
 		//store in cacheMap
 		cacheMap.set(this, copy);
 
-		//get all attributes
+		// Get all attributes
 		let attr = {};
 		_.each(this.attributes, (value, key) => {
+
+			// Not computed?
+			if (value instanceof ComputedProperty) return;
+
 			attr[key] = this.get(key);
 			if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
 				attr[key] = attr[key].clone(cacheMap);

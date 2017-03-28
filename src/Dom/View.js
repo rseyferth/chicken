@@ -9,6 +9,7 @@ import ApiCall from '~/Api/ApiCall';
 import Obj from '~/Core/Obj';
 import Model from '~/Data/Model';
 import Collection from '~/Data/Collection';
+import Utils from '~/Helpers/Utils';
 
 /**
  * @module Dom
@@ -128,6 +129,16 @@ class View extends Observable
 		 * @type {string}
 		 */
 		this.templateUrl = null;
+
+
+		/**
+		 * The prefix to add before translations when in the view
+		 * a translate key starts with a dot (e.g. {{t ".title"}} )
+		 * 
+		 * @property translationKeyPrefix
+		 * @type {string}
+		 */
+		this.translationKeyPrefix = null;
 
 
 		/**
@@ -455,6 +466,11 @@ class View extends Observable
 
 	}
 
+	translationPrefix(key) {
+		this.translationKeyPrefix = key;
+		return this;
+	}
+
 
 	sendAction(name = null, ...args) {
 
@@ -548,6 +564,39 @@ class View extends Observable
 		/////////////////////
 		// Create template //
 		/////////////////////
+
+		// Translation key?
+		if (this.translationKeyPrefix) {
+
+			// Add the 'l' translate helper
+			let langHelper = (params, attributeHash) => {
+				
+				// Get key
+				let key = Utils.getValue(params[0]);
+				key = `${this.translationKeyPrefix}.${key}`;
+
+				// Translate
+				return App().i18n.translate(key, attributeHash, Utils.getValue(params[1]));
+
+			};
+
+			// Catch use of 'l' helper
+			this.renderer.helpers = new Proxy(this.renderer.helpers, {
+				get(target, name) {
+
+					// 'l'?
+					if (name === 'l') {
+						return langHelper;
+					}
+
+					// Return original
+					return target[name];
+
+				}
+			});
+
+		}
+
 
 		// Before render hook
 		let continueRendering = true;

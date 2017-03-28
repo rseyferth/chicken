@@ -667,7 +667,31 @@ class ObservableArray extends Obj
 
 	}
 
-	filter(callback, returnObservableArray = false) {
+	filter(...args) {
+
+		// Parse arguments
+		if (args.length === 0) throw new Error('The filter method requires at least one argument.');
+		let callback;
+		let returnObservableArray = true;
+		if (typeof args[0] === 'function') {
+
+			// Use given callback method
+			callback = args[0];
+			if (args.length > 1) returnObservableArray = args[1];
+
+		} else if (typeof args[0] === 'string') {
+
+			// Create callback
+			let key = args[0];
+			let value = args[1];
+			callback = (item) => {
+				return item.get(key) == value;
+			};
+			if (args.length > 2) returnObservableArray = args[2];
+
+		}
+		
+		// Do the filter
 		let result = _.filter(this.items, callback);
 		return returnObservableArray ? new ObservableArray(result, false) : result;
 	}

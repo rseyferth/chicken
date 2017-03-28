@@ -13070,6 +13070,79 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 
 			/**
+	   * Increment given attribute's numeric value
+	   *
+	   * @method increment
+	   * @param  {string} key          
+	   * @param  {Number} by           (Default = 1)
+	   * @param  {Number} defaultValue (Default = 0)
+	   * @chainable
+	   */
+
+		}, {
+			key: 'increment',
+			value: function increment(key) {
+				var by = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+				var defaultValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+
+				var v = this.get(key);
+				if (v === undefined || typeof v !== 'number') v = defaultValue;
+				v += by;
+				this.set(key, v);
+				return this;
+			}
+
+			/**
+	   * Decrement given attribute's numeric value
+	   *
+	   * @method increment
+	   * @param  {string} key          
+	   * @param  {Number} by           (Default = 1)
+	   * @param  {Number} defaultValue (Default = 0)
+	   * @chainable
+	   */
+
+		}, {
+			key: 'decrement',
+			value: function decrement(key) {
+				var by = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+				var defaultValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+
+				var v = this.get(key);
+				if (v === undefined || typeof v !== 'number') v = defaultValue;
+				v -= by;
+				this.set(key, v);
+				return this;
+			}
+
+			/**
+	   * Toggle the given attribute's boolean value
+	   *
+	   * @method toggle
+	   * @param  {string}  key                
+	   * @param  {Boolean} valueWhenUndefined  (Default = true) What value to set when the attribute does not have a value yet
+	   * @chainable
+	   */
+
+		}, {
+			key: 'toggle',
+			value: function toggle(key) {
+				var valueWhenUndefined = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+
+				var v = this.get(key);
+				if (v === undefined || typeof v !== 'boolean') {
+					v = valueWhenUndefined;
+				} else {
+					v = !v;
+				}
+				this.set(key, v);
+				return this;
+			}
+
+			/**
 	   * Listen for any changes in any of the object's attributes. 
 	   * The callback will receive an array containing the names of
 	   * all updates attributes. 
@@ -15472,9 +15545,33 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 		}, {
 			key: 'filter',
-			value: function filter(callback) {
-				var returnObservableArray = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+			value: function filter() {
+				var _arguments = arguments;
 
+
+				// Parse arguments
+				if (arguments.length === 0) throw new Error('The filter method requires at least one argument.');
+				var callback = void 0;
+				var returnObservableArray = true;
+				if (typeof (arguments.length <= 0 ? undefined : arguments[0]) === 'function') {
+
+					// Use given callback method
+					callback = arguments.length <= 0 ? undefined : arguments[0];
+					if (arguments.length > 1) returnObservableArray = arguments.length <= 1 ? undefined : arguments[1];
+				} else if (typeof (arguments.length <= 0 ? undefined : arguments[0]) === 'string') {
+					(function () {
+
+						// Create callback
+						var key = _arguments.length <= 0 ? undefined : _arguments[0];
+						var value = _arguments.length <= 1 ? undefined : _arguments[1];
+						callback = function callback(item) {
+							return item.get(key) == value;
+						};
+						if (_arguments.length > 2) returnObservableArray = _arguments.length <= 2 ? undefined : _arguments[2];
+					})();
+				}
+
+				// Do the filter
 				var result = _underscore2.default.filter(this.items, callback);
 				return returnObservableArray ? new ObservableArray(result, false) : result;
 			}
@@ -16704,6 +16801,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
+	var _Utils = __webpack_require__(352);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -16831,6 +16932,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {string}
 	   */
 			_this.templateUrl = null;
+
+			/**
+	   * The prefix to add before translations when in the view
+	   * a translate key starts with a dot (e.g. {{t ".title"}} )
+	   * 
+	   * @property translationKeyPrefix
+	   * @type {string}
+	   */
+			_this.translationKeyPrefix = null;
 
 			/**
 	   * @property actions
@@ -17136,6 +17246,12 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this;
 			}
 		}, {
+			key: 'translationPrefix',
+			value: function translationPrefix(key) {
+				this.translationKeyPrefix = key;
+				return this;
+			}
+		}, {
 			key: 'sendAction',
 			value: function sendAction() {
 				var _this4 = this;
@@ -17230,6 +17346,37 @@ return /******/ (function(modules) { // webpackBootstrap
 				/////////////////////
 				// Create template //
 				/////////////////////
+
+				// Translation key?
+				if (this.translationKeyPrefix) {
+					(function () {
+
+						// Add the 'l' translate helper
+						var langHelper = function langHelper(params, attributeHash) {
+
+							// Get key
+							var key = _Utils2.default.getValue(params[0]);
+							key = _this6.translationKeyPrefix + '.' + key;
+
+							// Translate
+							return (0, _App2.default)().i18n.translate(key, attributeHash, _Utils2.default.getValue(params[1]));
+						};
+
+						// Catch use of 'l' helper
+						_this6.renderer.helpers = new Proxy(_this6.renderer.helpers, {
+							get: function get(target, name) {
+
+								// 'l'?
+								if (name === 'l') {
+									return langHelper;
+								}
+
+								// Return original
+								return target[name];
+							}
+						});
+					})();
+				}
 
 				// Before render hook
 				var continueRendering = true;
@@ -19120,6 +19267,27 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return _Utils2.default.uidFor(this) === _Utils2.default.uidFor(obj);
 			}
+		}, {
+			key: 'createCopy',
+			value: function createCopy() {
+				var _this13 = this;
+
+				// Get all attributes
+				var attr = {};
+				_underscore2.default.each(this.attributes, function (value, key) {
+
+					// Not computed?
+					if (value instanceof _ComputedProperty2.default) return;
+					attr[key] = _this13.get(key);
+				});
+				delete attr.id;
+
+				// Create model
+				var constr = this.constructor;
+				var copy = new constr(attr);
+
+				return copy;
+			}
 
 			/**
 	   * Create copy of model and its attributes and relations
@@ -19132,7 +19300,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'clone',
 			value: function clone(cacheMap) {
-				var _this13 = this;
+				var _this14 = this;
 
 				//create cacheMap?
 				if (!cacheMap) cacheMap = new Map();
@@ -19147,10 +19315,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				//store in cacheMap
 				cacheMap.set(this, copy);
 
-				//get all attributes
+				// Get all attributes
 				var attr = {};
 				_underscore2.default.each(this.attributes, function (value, key) {
-					attr[key] = _this13.get(key);
+
+					// Not computed?
+					if (value instanceof _ComputedProperty2.default) return;
+
+					attr[key] = _this14.get(key);
 					if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
 						attr[key] = attr[key].clone(cacheMap);
 					}
