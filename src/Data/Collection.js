@@ -61,7 +61,7 @@ class Collection extends ObservableArray
 
 
 		// Basics
-		return super.get();
+		return super.get(key);
 
 	}
 

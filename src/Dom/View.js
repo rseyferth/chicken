@@ -149,6 +149,15 @@ class View extends Observable
 
 		};
 
+
+		/**
+		 * Local DOM helpers that only apply to this view
+		 * 
+		 * @property helpers
+		 * @type {Object}
+		 */
+		this.helpers = {};
+
 		/**
 		 * @property components
 		 * @type {Object}
@@ -182,6 +191,8 @@ class View extends Observable
 		this.renderer = renderer ? renderer : App().config('renderer');
 
 
+
+
 		/**
 		 * The RenderResult gotten back from the Template rendering.
 		 * 
@@ -197,6 +208,8 @@ class View extends Observable
 		 * @type {DocumentFragment}
 		 */
 		this.documentFragment = null;
+
+
 
 
 		/**
@@ -466,8 +479,35 @@ class View extends Observable
 
 	}
 
+	helper(key, callback) {
+
+		this.helpers[key] = callback;
+		return this;
+
+	}
+
+
 	translationPrefix(key) {
+
+		// Store prefix
 		this.translationKeyPrefix = key;
+
+		// Register the 'l' helper
+		if (this.helpers.l === undefined) {
+
+			this.helper('l', (params, attributeHash) => {
+				
+				// Get key
+				let key = Utils.getValue(params[0]);
+				key = `${this.translationKeyPrefix}.${key}`;
+
+				// Translate
+				return App().i18n.translate(key, attributeHash, Utils.getValue(params[1]));
+
+			});
+
+		}
+
 		return this;
 	}
 
@@ -565,37 +605,20 @@ class View extends Observable
 		// Create template //
 		/////////////////////
 
-		// Translation key?
-		if (this.translationKeyPrefix) {
+		// Catch use of local helpers
+		this.renderer.helpers = new Proxy(this.renderer.helpers, {
+			
+			get: (target, name) => {
 
-			// Add the 'l' translate helper
-			let langHelper = (params, attributeHash) => {
-				
-				// Get key
-				let key = Utils.getValue(params[0]);
-				key = `${this.translationKeyPrefix}.${key}`;
+				// Local helper?
+				if (this.helpers[name]) return this.helpers[name];
 
-				// Translate
-				return App().i18n.translate(key, attributeHash, Utils.getValue(params[1]));
+				// Return original
+				return target[name];
 
-			};
-
-			// Catch use of 'l' helper
-			this.renderer.helpers = new Proxy(this.renderer.helpers, {
-				get(target, name) {
-
-					// 'l'?
-					if (name === 'l') {
-						return langHelper;
-					}
-
-					// Return original
-					return target[name];
-
-				}
-			});
-
-		}
+			}
+		
+		});
 
 
 		// Before render hook
