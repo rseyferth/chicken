@@ -273,6 +273,20 @@ class Collection extends ObservableArray
 
 }
 
+Collection.fromArray = (arr) => {
+
+	// Get class from first item
+	let item = _.first(arr);
+	if (!(ClassMap.isA(item, 'Model'))) throw new TypeError('The array needs to contain model instances');
+	
+	// Create collection
+	let coll = new Collection(item.constructor);
+	coll.items = arr;
+	return coll;
+
+
+};
+
 Collection.combine = (...collections) => {
 
 	// Combine items by id

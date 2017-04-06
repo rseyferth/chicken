@@ -175,7 +175,7 @@ class Model extends Observable
 		
 		// Is there a setter?
 		let methodName = 'set' + inflection.camelize(key);
-		if (this[methodName] && typeof this[methodName] === 'function') {
+		if (this[methodName] && typeof this[methodName] === 'function' && !(value instanceof ComputedProperty)) {
 			return this[methodName].apply(this, [value]);
 		}
 

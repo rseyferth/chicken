@@ -18424,7 +18424,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Is there a setter?
 				var methodName = 'set' + _inflection2.default.camelize(key);
-				if (this[methodName] && typeof this[methodName] === 'function') {
+				if (this[methodName] && typeof this[methodName] === 'function' && !(value instanceof _ComputedProperty2.default)) {
 					return this[methodName].apply(this, [value]);
 				}
 
@@ -19849,6 +19849,18 @@ return /******/ (function(modules) { // webpackBootstrap
 
 		return Collection;
 	}(_ObservableArray3.default);
+
+	Collection.fromArray = function (arr) {
+
+		// Get class from first item
+		var item = _underscore2.default.first(arr);
+		if (!_ClassMap2.default.isA(item, 'Model')) throw new TypeError('The array needs to contain model instances');
+
+		// Create collection
+		var coll = new Collection(item.constructor);
+		coll.items = arr;
+		return coll;
+	};
 
 	Collection.combine = function () {
 		for (var _len = arguments.length, collections = Array(_len), _key = 0; _key < _len; _key++) {
