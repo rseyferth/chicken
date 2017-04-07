@@ -14654,6 +14654,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			lookupHelper: function lookupHelper(renderer, scope, helperName) {
 
+				// Scope helper?
+				if (scope.self && typeof scope.self.getHelper === 'function') {
+					var helper = scope.self.getHelper(helperName);
+					if (helper) return helper;
+				}
+
 				// Use helper?
 				if (_Helpers2.default.User[helperName]) {
 					return _Helpers2.default.User[helperName];
@@ -16481,6 +16487,21 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		_createClass(Component, [{
+			key: 'getHelper',
+			value: function getHelper(key) {
+
+				// Me?
+				if (this.helpers[key]) return this.helpers[key];
+
+				// Parent component?
+				if (this.parentComponent) return this.parentComponent.getHelper(key);
+
+				// View
+				if (this.view) return this.view.getHelper(key);
+
+				return false;
+			}
+		}, {
 			key: 'getId',
 			value: function getId() {
 
@@ -16959,6 +16980,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.templateString = null;
 
 			/**
+	   * @property source
+	   * @type {string}
+	   */
+			_this.source = source;
+
+			/**
 	   * @property template
 	   * @type {HTMLBars template}
 	   */
@@ -17298,11 +17325,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this;
 			}
 		}, {
+			key: 'getHelper',
+			value: function getHelper(key) {
+
+				return this.helpers[key] || false;
+			}
+		}, {
 			key: 'translationPrefix',
-			value: function translationPrefix(key) {
+			value: function translationPrefix() {
 				var _this4 = this;
 
+				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+
 				// Store prefix
+				if (key === false) key = this.source;
 				this.translationKeyPrefix = key;
 
 				// Register the 'l' helper
@@ -17416,20 +17453,6 @@ return /******/ (function(modules) { // webpackBootstrap
 				/////////////////////
 				// Create template //
 				/////////////////////
-
-				// Catch use of local helpers
-				this.renderer.helpers = new Proxy(this.renderer.helpers, {
-
-					get: function get(target, name) {
-
-						// Local helper?
-						if (_this7.helpers[name]) return _this7.helpers[name];
-
-						// Return original
-						return target[name];
-					}
-
-				});
 
 				// Before render hook
 				var continueRendering = true;
@@ -18421,6 +18444,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_set',
 			value: function _set(key, value) {
+				var _this2 = this;
 
 				// Is there a setter?
 				var methodName = 'set' + _inflection2.default.camelize(key);
@@ -18430,10 +18454,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Is it a relationship that was not yet loaded
 				if (!this.related) this.related = {};
-				if (this.getRelationship(key)) {
+				var relationship = this.getRelationship(key);
+				if (relationship) {
 
-					// Set the model
-					this.setRelatedModel(key, value);
+					// Many?
+					if (relationship.usesCollection()) {
+
+						// Already initialized?
+						if (this.related[key]) this.related[key].empty();
+
+						// Initialize relationship
+						if (!(value instanceof _Collection2.default)) throw new TypeError('The \'' + key + '\' relationship expects a Collection as value');
+						value.each(function (model) {
+							_this2.addRelatedModel(key, model);
+						});
+					} else {
+
+						// Set the model
+						this.setRelatedModel(key, value);
+					}
 				} else {
 
 					// Cast if necessary
@@ -18460,12 +18499,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'observe',
 			value: function observe(keyOrKeys, callback) {
-				var _this2 = this;
+				var _this3 = this;
 
 				//can have multiple keys, call function for each key
 				if (Array.isArray(keyOrKeys)) {
 					_underscore2.default.each(keyOrKeys, function (key) {
-						_this2.observe(key, callback);
+						_this3.observe(key, callback);
 					});
 					return this;
 				}
@@ -18477,7 +18516,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					if (this._relationshipStudies[key] === undefined) {
 						this._relationshipStudies[key] = function () {
-							_this2._scheduleAttributeChanged(key);
+							_this3._scheduleAttributeChanged(key);
 						};
 						this.get(key).study(this._relationshipStudies[key]);
 					}
@@ -18569,17 +18608,17 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'setAttributesFromApi',
 			value: function setAttributesFromApi(attributes) {
-				var _this3 = this;
+				var _this4 = this;
 
 				// Loop through them and set values that are not dirty
 				_underscore2.default.each(attributes, function (value, key) {
 
 					// Dirty?
-					if (_this3.isDirty(key)) return;
+					if (_this4.isDirty(key)) return;
 
 					// Set it, and see this as a non-dirty value
-					_this3.setAttribute(key, value);
-					_this3.originalValues[key] = _this3.uncastValue(key, _this3.attributes[key]);
+					_this4.setAttribute(key, value);
+					_this4.originalValues[key] = _this4.uncastValue(key, _this4.attributes[key]);
 				});
 				return this;
 			}
@@ -18596,7 +18635,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getAttributesForApi',
 			value: function getAttributesForApi() {
-				var _this4 = this;
+				var _this5 = this;
 
 				var onlyDirty = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
@@ -18633,7 +18672,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						value = _Utils2.default.getValue(value);
 
 						// Uncast it for DB usage
-						var definition = _this4.getAttributeDefinition(key);
+						var definition = _this5.getAttributeDefinition(key);
 						if (definition) value = definition.uncast(value);
 						return value;
 					});
@@ -18644,7 +18683,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Also add defined attributes that were not set in the model (by default value)
 						var missingKeys = _underscore2.default.difference(modelDefinition.getApiAttributeNames(), _underscore2.default.keys(attr));
 						_underscore2.default.each(missingKeys, function (key) {
-							attr[key] = _this4.getAttributeDefinition(key).getDefaultValue();
+							attr[key] = _this5.getAttributeDefinition(key).getDefaultValue();
 						});
 					}
 
@@ -18749,7 +18788,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'save',
 			value: function save() {
-				var _this5 = this;
+				var _this6 = this;
 
 				var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -18777,28 +18816,28 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (result instanceof Model) {
 
 						// Use id for me.
-						if (!_this5.get('id')) {
-							_this5.set('id', result.get('id'));
-							_this5.state.set('new', false);
+						if (!_this6.get('id')) {
+							_this6.set('id', result.get('id'));
+							_this6.state.set('new', false);
 						}
 					}
 
 					// No longer dirty!
-					_this5.state.set('dirty', false);
+					_this6.state.set('dirty', false);
 
 					// No longer busy
-					_this5.state.set('busy', false);
-					_this5.state.set('saving', false);
+					_this6.state.set('busy', false);
+					_this6.state.set('saving', false);
 
 					// Trigger.
-					_this5.trigger('save', apiCall);
+					_this6.trigger('save', apiCall);
 				}, function () {
 
 					// No longer busy
-					_this5.state.set('busy', false);
-					_this5.state.set('saving', false);
+					_this6.state.set('busy', false);
+					_this6.state.set('saving', false);
 
-					_this5.trigger('error', apiCall);
+					_this6.trigger('error', apiCall);
 				});
 
 				// Done.
@@ -18821,7 +18860,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'delete',
 			value: function _delete() {
-				var _this6 = this;
+				var _this7 = this;
 
 				var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
 
@@ -18845,19 +18884,19 @@ return /******/ (function(modules) { // webpackBootstrap
 				apiCall.getPromise('complete').then(function () {
 
 					// No longer busy
-					_this6.state.set('busy', false);
-					_this6.state.set('saving', false);
-					_this6.state.set('deleted', true);
+					_this7.state.set('busy', false);
+					_this7.state.set('saving', false);
+					_this7.state.set('deleted', true);
 
 					//remove model from the store
-					Model.deleteFromStore(_this6.getModelName(), _this6.get('id'));
+					Model.deleteFromStore(_this7.getModelName(), _this7.get('id'));
 				}, function () {
 
 					// No longer busy
-					_this6.state.set('busy', false);
-					_this6.state.set('saving', false);
+					_this7.state.set('busy', false);
+					_this7.state.set('saving', false);
 
-					_this6.trigger('error', apiCall);
+					_this7.trigger('error', apiCall);
 				});
 
 				// Done.
@@ -18906,10 +18945,10 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'reset',
 			value: function reset() {
-				var _this7 = this;
+				var _this8 = this;
 
 				_underscore2.default.each(this.originalValues, function (value, key) {
-					_this7.set(key, value);
+					_this8.set(key, value);
 				});
 				return this;
 			}
@@ -18947,14 +18986,14 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'getDirty',
 			value: function getDirty() {
-				var _this8 = this;
+				var _this9 = this;
 
 				// Get dirty values
 				var dirty = {};
 				_underscore2.default.each(this.attributes, function (value, key) {
 
 					// Not in original or changed?
-					if (_this8.isDirty(key)) {
+					if (_this9.isDirty(key)) {
 
 						// Then it's dirty
 						dirty[key] = value;
@@ -18976,7 +19015,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'isDirty',
 			value: function isDirty() {
-				var _this9 = this;
+				var _this10 = this;
 
 				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -19011,7 +19050,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					//check relationships with touchLocalOnUpdate
 					var dirtyRelation = _underscore2.default.find(this.related, function (rel, key) {
-						if (_this9.getRelationship(key) && _this9.getRelationship(key).touchLocalOnUpdate) {
+						if (_this10.getRelationship(key) && _this10.getRelationship(key).touchLocalOnUpdate) {
 							return rel.isDirty();
 						}
 						return false;
@@ -19032,7 +19071,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'resetDirty',
 			value: function resetDirty() {
-				var _this10 = this;
+				var _this11 = this;
 
 				var keys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
 
@@ -19044,7 +19083,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Specific key?
 				_underscore2.default.each(keys, function (key) {
 
-					_this10.originalValues[key] = _this10.uncastValue(key, _this10.attributes[key]);
+					_this11.originalValues[key] = _this11.uncastValue(key, _this11.attributes[key]);
 				});
 				return this;
 			}
@@ -19070,15 +19109,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: '_scheduleUpdateDirty',
 			value: function _scheduleUpdateDirty() {
-				var _this11 = this;
+				var _this12 = this;
 
 				// Already going?
 				if (this._scheduleUpdateDirtyTimeout) return;
 
 				// Wait a bit
 				this._scheduleUpdateDirtyTimeout = setTimeout(function () {
-					_this11.updateDirty();
-					_this11._scheduleUpdateDirtyTimeout = null;
+					_this12.updateDirty();
+					_this12._scheduleUpdateDirtyTimeout = null;
 				}, Model.UpdateDirtyDelay);
 			}
 
@@ -19133,7 +19172,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'addRelatedModel',
 			value: function addRelatedModel(relationshipName, relatedModel) {
-				var _this12 = this;
+				var _this13 = this;
 
 				var fromApi = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
 				var pivotAttributes = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : null;
@@ -19177,7 +19216,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Set it
 					relatedModel.withoutNotifications(function () {
-						relatedModel.setRelatedModel(relationship.inverseRelationshipName, _this12);
+						relatedModel.setRelatedModel(relationship.inverseRelationshipName, _this13);
 					});
 				}
 
@@ -19321,7 +19360,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'createCopy',
 			value: function createCopy() {
-				var _this13 = this;
+				var _this14 = this;
 
 				// Get all attributes
 				var attr = {};
@@ -19329,7 +19368,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Not computed?
 					if (value instanceof _ComputedProperty2.default) return;
-					attr[key] = _this13.get(key);
+					attr[key] = _this14.get(key);
 				});
 				delete attr.id;
 
@@ -19351,7 +19390,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'clone',
 			value: function clone(cacheMap) {
-				var _this14 = this;
+				var _this15 = this;
 
 				//create cacheMap?
 				if (!cacheMap) cacheMap = new Map();
@@ -19373,7 +19412,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Not computed?
 					if (value instanceof _ComputedProperty2.default) return;
 
-					attr[key] = _this14.get(key);
+					attr[key] = _this15.get(key);
 					if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
 						attr[key] = attr[key].clone(cacheMap);
 					}

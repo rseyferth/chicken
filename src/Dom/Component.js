@@ -173,6 +173,24 @@ class Component extends View
 	}
 
 
+
+	getHelper(key) {
+		
+		// Me?
+		if (this.helpers[key]) return this.helpers[key];
+
+		// Parent component?
+		if (this.parentComponent) return this.parentComponent.getHelper(key);
+
+		// View
+		if (this.view) return this.view.getHelper(key);
+
+		return false;
+		
+	}
+
+
+
 	getId() {
 
 		// Already set?

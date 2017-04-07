@@ -181,10 +181,27 @@ class Model extends Observable
 
 		// Is it a relationship that was not yet loaded
 		if (!this.related) this.related = {};
-		if (this.getRelationship(key)) {
+		let relationship = this.getRelationship(key);
+		if (relationship) {
 
-			// Set the model
-			this.setRelatedModel(key, value);			
+			// Many?
+			if (relationship.usesCollection()) {
+
+				// Already initialized?
+				if (this.related[key]) this.related[key].empty();
+
+				// Initialize relationship
+				if (!(value instanceof Collection)) throw new TypeError(`The '${key}' relationship expects a Collection as value`);
+				value.each((model) => {
+					this.addRelatedModel(key, model);
+				});
+
+			} else {
+
+				// Set the model
+				this.setRelatedModel(key, value);
+
+			}
 
 		} else {
 		

@@ -203,6 +203,12 @@ class Renderer
 
 			lookupHelper: (renderer, scope, helperName) => {
 				
+				// Scope helper?
+				if (scope.self && typeof scope.self.getHelper === 'function') {
+					let helper = scope.self.getHelper(helperName);
+					if (helper) return helper;
+				}
+
 				// Use helper?
 				if (Helpers.User[helperName]) {
 					return Helpers.User[helperName];

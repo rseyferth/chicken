@@ -118,6 +118,12 @@ class View extends Observable
 
 
 		/**
+		 * @property source
+		 * @type {string}
+		 */
+		this.source = source;
+
+		/**
 		 * @property template
 		 * @type {HTMLBars template}
 		 */
@@ -285,12 +291,16 @@ class View extends Observable
 		}
 
 
+
+
 		// Definition callback?
 		if (initCallback) {
 			initCallback.apply(this);
 		}
 
 
+
+		
 
 
 	}
@@ -486,10 +496,17 @@ class View extends Observable
 
 	}
 
+	getHelper(key) {
+		
+		return this.helpers[key] || false;
 
-	translationPrefix(key) {
+	}
+
+
+	translationPrefix(key = false) {
 
 		// Store prefix
+		if (key === false) key = this.source;
 		this.translationKeyPrefix = key;
 
 		// Register the 'l' helper
@@ -605,22 +622,6 @@ class View extends Observable
 		// Create template //
 		/////////////////////
 
-		// Catch use of local helpers
-		this.renderer.helpers = new Proxy(this.renderer.helpers, {
-			
-			get: (target, name) => {
-
-				// Local helper?
-				if (this.helpers[name]) return this.helpers[name];
-
-				// Return original
-				return target[name];
-
-			}
-		
-		});
-
-
 		// Before render hook
 		let continueRendering = true;
 		_.each(this.hooks.beforeRender, (cb) => {
@@ -638,6 +639,7 @@ class View extends Observable
 		// Localize and be done!
 		this.documentFragment = this.renderResult.fragment;
 		this.resolvePromise('render', this.documentFragment);
+
 
 
 		return this;
