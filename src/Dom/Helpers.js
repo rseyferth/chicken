@@ -245,6 +245,38 @@ class Helpers
 	}
 
 
+
+	//////////////////////
+	// Boolean switches //
+	//////////////////////
+
+	either(params) {
+
+		// Look for a truthlike param
+		let values = this._getValues(params);
+		for (let q = 0; q < values.length; q++) {
+			if (Utils.isTruthlike(values[q])) return true;
+		}
+		return false;
+
+	}
+	neither(params) {
+
+		return !this.either(params);
+
+	}
+	both(params) {
+
+		// Look for a non-truthlike param
+		let values = this._getValues(params);
+		for (let q = 0; q < values.length; q++) {
+			if (!Utils.isTruthlike(values[q])) return false;
+		}
+		return true;
+
+	}
+
+
 	////////////
 	// Values //
 	////////////

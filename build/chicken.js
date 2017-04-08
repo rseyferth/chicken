@@ -20626,6 +20626,39 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 
+			//////////////////////
+			// Boolean switches //
+			//////////////////////
+
+		}, {
+			key: 'either',
+			value: function either(params) {
+
+				// Look for a truthlike param
+				var values = this._getValues(params);
+				for (var q = 0; q < values.length; q++) {
+					if (_Utils2.default.isTruthlike(values[q])) return true;
+				}
+				return false;
+			}
+		}, {
+			key: 'neither',
+			value: function neither(params) {
+
+				return !this.either(params);
+			}
+		}, {
+			key: 'both',
+			value: function both(params) {
+
+				// Look for a non-truthlike param
+				var values = this._getValues(params);
+				for (var q = 0; q < values.length; q++) {
+					if (!_Utils2.default.isTruthlike(values[q])) return false;
+				}
+				return true;
+			}
+
 			////////////
 			// Values //
 			////////////
