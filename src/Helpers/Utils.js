@@ -5,6 +5,7 @@ import Querystring from 'query-string';
 import Observable from '~/Core/Observable';
 import ObservableArray from '~/Core/ObservableArray';
 import Binding from '~/Dom/Binding';
+import HelperProxy from '~/Dom/HelperProxy';
 import ComputedProperty from '~/Core/ComputedProperty';
 import Reference from '~/Core/Reference';
 import ClassMap from '~/Helpers/ClassMap';
@@ -27,6 +28,7 @@ let Utils = {
 
 
 	getValue: (obj) => {
+		if (obj instanceof HelperProxy) return obj.invoke();
 		if (obj instanceof Binding || obj instanceof ComputedProperty || obj instanceof Reference) {
 			return obj.getValue();
 		}

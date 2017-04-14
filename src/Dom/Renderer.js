@@ -7,6 +7,7 @@ import Binding from '~/Dom/Binding';
 import ActionBinding from '~/Dom/ActionBinding';
 import Component from '~/Dom/Component';
 import ComponentDefinition from '~/Dom/ComponentDefinition';
+import HelperProxy from '~/Dom/HelperProxy';
 import Helpers from '~/Dom/Helpers';
 import View from '~/Dom/View';
 import Utils from '~/Helpers/Utils';
@@ -111,7 +112,16 @@ class Renderer
 			 * @return {mixed}           
 			 */
 			getValue: (reference) => {
-				return reference instanceof Binding ? reference.getValue() : reference;
+
+				// Is it a binding?
+				if (reference instanceof Binding) return reference.getValue();
+
+				// A helper?
+				if (reference instanceof HelperProxy) return reference.invoke();
+
+				// Just a value
+				return reference;
+
 			},
 
 			/**
@@ -123,7 +133,7 @@ class Renderer
 			 * @param  {Scope} scope    
 			 * @param  {string} type   				Values can be `@range`, `@attribute`, or helper names
 			 * @param  {array} values     			Array of values that have been linked to the morph. The should be Binding instances
-			 * @return {[type]}          [description]
+			 * @return 
 			 */
 			linkRenderNode: (morph, renderer, scope, type, values) => {
 				
@@ -200,9 +210,8 @@ class Renderer
 
 			},
 
+			findHelper(renderer, scope, helperName) {
 
-			lookupHelper: (renderer, scope, helperName) => {
-				
 				// Scope helper?
 				if (scope.self && typeof scope.self.getHelper === 'function') {
 					let helper = scope.self.getHelper(helperName);
@@ -219,7 +228,19 @@ class Renderer
 					return renderer.helpers[helperName];
 				}
 
-				throw new Error('There is no helper registered with the name "' + helperName + '"');
+			},
+
+
+			lookupHelper: (renderer, scope, helperName) => {
+				
+				// Find a helper
+				let helper = this.hooks.findHelper(renderer, scope, helperName);
+				if (!helper) throw new Error('There is no helper registered with the name "' + helperName + '"');
+
+				// Create the wrapper
+				let proxy = new HelperProxy(helperName, helper, this.helpers);
+				return proxy;
+
 			},
 
 			invokeHelper: (morph, renderer, scope, visitor, params, attributeHash, helper, options) => {
@@ -234,10 +255,48 @@ class Renderer
 
 				} 
 
-				// Call the helper with its own context
+				// Do we have a morph?
+				if (morph) {
+
+					// Loop through params to hook up bindings
+					_.each(params, (value) => {
+						if (value instanceof Binding) {
+							value.addMorph(morph, scope);
+						}
+					});
+
+					// And the attribute
+					_.each(attributeHash, (value) => {
+						if (value instanceof Binding) {
+							value.addMorph(morph, scope);
+						}
+					});
+
+				}
+
+				// Set arguments 
+				helper.setArguments(params, attributeHash, options, morph, renderer, scope, visitor);
+
+				// Invoke it once to see if the helper returns a value, or is a block-type helper
+				let helperResult = helper.invoke();
+				let helperValue;
+				if (helperResult === undefined) {
+
+					// No result, then we don't want to return a value
+					helperValue = false;
+
+				} else {
+
+					// A value was returned, meaning this helper is used as a value getter, and might need
+					// to be invoked again when bound values change: thus, return the proxy
+					helperValue = helper;
+
+				}	
+
+				// Invoke the helper and give back the value
 				return { 
-					value: helper.apply(this.helpers, [params, attributeHash, options, morph, renderer, scope, visitor]),
-					link: true
+					value: helperValue,
+					link: !!helperValue
 				};
 
 			},

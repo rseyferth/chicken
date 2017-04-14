@@ -63,9 +63,11 @@ class Binding
 
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
+
 				morph.isDirty = true;
 				if (morph.view) morph.view.scheduleRevalidate();
 				if (morph.component) morph.component.scheduleRevalidate();
+
 			});
 
 		};
@@ -186,7 +188,7 @@ Binding.TwoWay = {
 		match: (morph) => {
 			return morph.element && /^INPUT$/.test(morph.element.tagName) 
 				&& morph.attrName === 'value'
-				&& /^text|date|time|password|number|email$/.test(morph.element.type);
+				&& /^text|search|date|time|password|number|email$/.test(morph.element.type);
 		},
 		bind: (binding, morph) => {
 
