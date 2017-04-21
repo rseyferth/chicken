@@ -333,6 +333,10 @@ class Helpers
 	isNull(params) {
 		return this._getValue(params[0]) === null;
 	}
+	isSet(params) {
+		let value = this._getValue(params[0]);
+		return value !== null && value !== undefined;
+	}
 
 	gt(params) {
 

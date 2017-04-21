@@ -318,6 +318,27 @@ class Model extends Observable
 
 	}
 
+	/**
+	 * Get the value of a translation
+	 *
+	 * @method translation
+	 * @param  {string} key  
+	 * @param  {string} language     (Default = null) When null, the application language will be used
+	 * @return {string|null}
+	 */
+	translation(key, language = null) {
+
+		// Language given?
+		if (!language) language = App().i18n.language;
+
+		// Retrieve value
+		let v = this.get(key);
+		if (!v || !(v instanceof Object) || !v[language]) return null;
+		return v[language];
+
+	}
+
+
 
 	/////////////////////////
 	// Api related methods //

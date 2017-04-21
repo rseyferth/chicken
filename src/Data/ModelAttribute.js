@@ -43,6 +43,7 @@ class ModelAttribute {
 
 	hidden(isHiddenFromRequests = true) {
 		this.includeInRequests = !isHiddenFromRequests;
+		return this;
 	}
 
 
