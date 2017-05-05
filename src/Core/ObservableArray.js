@@ -591,7 +591,7 @@ class ObservableArray extends Obj
 
 
 	each(callback) {
-
+		
 		_.each(this.items, callback);
 		return this;
 
@@ -664,6 +664,12 @@ class ObservableArray extends Obj
 	extend(observableArray) {
 
 		return _.extend(this.items, observableArray.items);
+
+	}
+
+	unshift(item) {
+
+		this.items.unshift(item);
 
 	}
 
