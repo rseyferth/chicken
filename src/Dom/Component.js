@@ -197,7 +197,7 @@ class Component extends View
 		if (!this._id) {
 
 			// Set as attribute
-			let id = this.get('id');
+			let id = this.attributes.id;
 			if (id) {
 				this._id = id;
 			} else {

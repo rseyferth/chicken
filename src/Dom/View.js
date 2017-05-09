@@ -262,6 +262,11 @@ class View extends Observable
 		// Name?
 		else if (/[a-z0-9\-]+\./.test(source) || /^[a-zA-Z]+$/.test(source)) {
 
+			// Set translation prefix?
+			if (this.constructor.name === 'View' && View.AutoTranslationPrefix) {
+				this.translationPrefix(source);
+			}
+
 			// Is it cached?
 			if (View.TemplateCache.has(source)) {
 
@@ -834,6 +839,17 @@ View.TemplateCache = new Map();
  * @type {Number}
  */
 View.RevalidationDelay = 3;
+
+
+/**
+ * When this is true, a translation-prefix will automatically be set
+ * upon creation of this View, with the same value as the given source.
+ * 
+ * @property AutoTranslationPrefix
+ * @static
+ * @type {Boolean}
+ */
+View.AutoTranslationPrefix = false;
 
 
 View.any = new Obj();

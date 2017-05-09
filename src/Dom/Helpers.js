@@ -474,6 +474,15 @@ class Helpers
 	// Dates and times //
 	/////////////////////
 
+	moment(params) {
+		let value = this._getValue(params[0]);
+		if (!moment.isMoment(value)) {
+			value = moment(value);
+		}
+		return value;
+
+	}
+
 	momentFormat(params) {
 		let value = this._getValue(params[0]);
 		let format = this._getValue(params[1]);

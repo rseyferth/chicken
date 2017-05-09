@@ -333,6 +333,7 @@ class Model extends Observable
 
 		// Retrieve value
 		let v = this.get(key);
+		if (v instanceof Observable) v = v.toObject();
 		if (!v || !(v instanceof Object) || !v[language]) return null;
 		return v[language];
 

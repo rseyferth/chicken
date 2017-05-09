@@ -16530,7 +16530,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!this._id) {
 
 					// Set as attribute
-					var id = this.get('id');
+					var id = this.attributes.id;
 					if (id) {
 						this._id = id;
 					} else {
@@ -17123,6 +17123,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Name?
 				else if (/[a-z0-9\-]+\./.test(source) || /^[a-zA-Z]+$/.test(source)) {
 
+						// Set translation prefix?
+						if (_this.constructor.name === 'View' && View.AutoTranslationPrefix) {
+							_this.translationPrefix(source);
+						}
+
 						// Is it cached?
 						if (View.TemplateCache.has(source)) {
 
@@ -17685,6 +17690,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * @type {Number}
 	 */
 	View.RevalidationDelay = 3;
+
+	/**
+	 * When this is true, a translation-prefix will automatically be set
+	 * upon creation of this View, with the same value as the given source.
+	 * 
+	 * @property AutoTranslationPrefix
+	 * @static
+	 * @type {Boolean}
+	 */
+	View.AutoTranslationPrefix = false;
 
 	View.any = new _Obj2.default();
 
@@ -18632,6 +18647,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Retrieve value
 				var v = this.get(key);
+				if (v instanceof _Observable3.default) v = v.toObject();
 				if (!v || !(v instanceof Object) || !v[language]) return null;
 				return v[language];
 			}
@@ -20471,9 +20487,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _moment = __webpack_require__(304);
+	var _moment2 = __webpack_require__(304);
 
-	var _moment2 = _interopRequireDefault(_moment);
+	var _moment3 = _interopRequireDefault(_moment2);
 
 	var _filesize = __webpack_require__(356);
 
@@ -20973,11 +20989,20 @@ return /******/ (function(modules) { // webpackBootstrap
 			/////////////////////
 
 		}, {
+			key: 'moment',
+			value: function moment(params) {
+				var value = this._getValue(params[0]);
+				if (!_moment3.default.isMoment(value)) {
+					value = (0, _moment3.default)(value);
+				}
+				return value;
+			}
+		}, {
 			key: 'momentFormat',
 			value: function momentFormat(params) {
 				var value = this._getValue(params[0]);
 				var format = this._getValue(params[1]);
-				if (_moment2.default.isMoment(value)) {
+				if (_moment3.default.isMoment(value)) {
 					return value.format(format);
 				} else {
 					return value;
@@ -20989,7 +21014,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var moment1 = this._getValue(params[0]);
 				var moment2 = this._getValue(params[1]);
 
-				if (_moment2.default.isMoment(moment1) && _moment2.default.isMoment(moment2)) {
+				if (_moment3.default.isMoment(moment1) && _moment3.default.isMoment(moment2)) {
 					return moment1.isAfter(moment2);
 				}
 
@@ -25907,7 +25932,11 @@ return /******/ (function(modules) { // webpackBootstrap
 					/////////////
 
 					case ModelAttribute.Object:
-						return value instanceof _Observable2.default ? value.attributes : value;
+						var v = _.omit(value instanceof _Observable2.default ? value.attributes : value, function (foo, key) {
+							return (/^__/.test(key)
+							);
+						});
+						return v;
 
 					default:
 						return value;

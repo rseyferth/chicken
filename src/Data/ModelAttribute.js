@@ -151,7 +151,10 @@ class ModelAttribute {
 			/////////////
 
 			case ModelAttribute.Object:
-				return value instanceof Observable ? value.attributes : value;
+				let v = _.omit(value instanceof Observable ? value.attributes : value, (foo, key) => {
+					return /^__/.test(key)
+				});
+				return v;
 				
 
 			default:
