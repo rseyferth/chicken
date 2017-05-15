@@ -17124,7 +17124,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				else if (/[a-z0-9\-]+\./.test(source) || /^[a-zA-Z]+$/.test(source)) {
 
 						// Set translation prefix?
-						if (_this.constructor.name === 'View' && View.AutoTranslationPrefix) {
+						if (_this.constructor === View && View.AutoTranslationPrefix) {
 							_this.translationPrefix(source);
 						}
 
@@ -19953,6 +19953,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	}(_ObservableArray3.default);
 
 	Collection.fromArray = function (arr) {
+
+		// Empty?
+		if (arr.length === 0) return new Collection();
 
 		// Get class from first item
 		var item = _underscore2.default.first(arr);
@@ -25751,6 +25754,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
+	var _underscore = __webpack_require__(299);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
 	var _moment = __webpack_require__(304);
 
 	var _moment2 = _interopRequireDefault(_moment);
@@ -25932,7 +25939,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					/////////////
 
 					case ModelAttribute.Object:
-						var v = _.omit(value instanceof _Observable2.default ? value.attributes : value, function (foo, key) {
+						var v = _underscore2.default.omit(value instanceof _Observable2.default ? value.attributes : value, function (foo, key) {
 							return (/^__/.test(key)
 							);
 						});

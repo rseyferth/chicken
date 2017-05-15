@@ -275,6 +275,9 @@ class Collection extends ObservableArray
 
 Collection.fromArray = (arr) => {
 
+	// Empty?
+	if (arr.length === 0) return new Collection();
+
 	// Get class from first item
 	let item = _.first(arr);
 	if (!(ClassMap.isA(item, 'Model'))) throw new TypeError('The array needs to contain model instances');

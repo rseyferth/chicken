@@ -263,7 +263,7 @@ class View extends Observable
 		else if (/[a-z0-9\-]+\./.test(source) || /^[a-zA-Z]+$/.test(source)) {
 
 			// Set translation prefix?
-			if (this.constructor.name === 'View' && View.AutoTranslationPrefix) {
+			if (this.constructor === View && View.AutoTranslationPrefix) {
 				this.translationPrefix(source);
 			}
 

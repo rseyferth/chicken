@@ -1,3 +1,5 @@
+import _ from 'underscore';
+
 import moment from 'moment';
 import Observable from '~/Core/Observable';
 import ObservableArray from '~/Core/ObservableArray';
@@ -152,7 +154,7 @@ class ModelAttribute {
 
 			case ModelAttribute.Object:
 				let v = _.omit(value instanceof Observable ? value.attributes : value, (foo, key) => {
-					return /^__/.test(key)
+					return /^__/.test(key);
 				});
 				return v;
 				
