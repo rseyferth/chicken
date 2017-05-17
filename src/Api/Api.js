@@ -213,15 +213,15 @@ class Api {
 	 * 
 	 * @method one
 	 * @param  {string} modelName 
-	 * @param  {string} id        
+	 * @param  {string} idOrUri 
 	 * @return {Api.ApiCall}
 	 */
-	one(modelName, id) {
-
+	one(modelName, idOrUri = null) {
+		
 		// Get uri from model
 		let ModelClass = Model.registry.get(modelName);
 		if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
-		let uri = ModelClass.definition.getApiUri(id);
+		let uri = /^\//.test(idOrUri) ? idOrUri : ModelClass.definition.getApiUri(idOrUri);
 
 		// Make the call
 		let call = this.get(uri);
@@ -238,12 +238,12 @@ class Api {
 	 * @param  {string} modelName
 	 * @return {Api.ApiCall}
 	 */
-	all(modelName) {
+	all(modelName, uri = null) {
 
 		// Get uri from model
 		let ModelClass = Model.registry.get(modelName);
 		if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
-		let uri = ModelClass.definition.getApiUri();
+		if (!uri) uri = ModelClass.definition.getApiUri();
 
 		// Make the call
 		let call = this.get(uri);

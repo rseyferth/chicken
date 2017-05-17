@@ -20671,7 +20671,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				for (var q = 0; q < times; q++) {
 
 					var itemKey = 'repeat:' + repeatUid + ':' + q;
-					blocks.template.yieldItem(itemKey, [null, q]);
+					blocks.template.yieldItem(itemKey, [q, q]);
 				}
 			}
 
@@ -23947,18 +23947,20 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * 
 	   * @method one
 	   * @param  {string} modelName 
-	   * @param  {string} id        
+	   * @param  {string} idOrUri 
 	   * @return {Api.ApiCall}
 	   */
 
 		}, {
 			key: 'one',
-			value: function one(modelName, id) {
+			value: function one(modelName) {
+				var idOrUri = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
 
 				// Get uri from model
 				var ModelClass = _Model2.default.registry.get(modelName);
 				if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
-				var uri = ModelClass.definition.getApiUri(id);
+				var uri = /^\//.test(idOrUri) ? idOrUri : ModelClass.definition.getApiUri(idOrUri);
 
 				// Make the call
 				var call = this.get(uri);
@@ -23978,11 +23980,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'all',
 			value: function all(modelName) {
+				var uri = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
 
 				// Get uri from model
 				var ModelClass = _Model2.default.registry.get(modelName);
 				if (!ModelClass) throw new Error('There is no model registered with the name "' + modelName + '"');
-				var uri = ModelClass.definition.getApiUri();
+				if (!uri) uri = ModelClass.definition.getApiUri();
 
 				// Make the call
 				var call = this.get(uri);

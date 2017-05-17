@@ -167,7 +167,7 @@ class Helpers
 		for (let q = 0; q < times; q++) {
 
 			let itemKey = 'repeat:' + repeatUid + ':' + q;
-			blocks.template.yieldItem(itemKey, [null, q]);
+			blocks.template.yieldItem(itemKey, [q, q]);
 
 		}
 
