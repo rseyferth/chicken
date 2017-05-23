@@ -152,7 +152,6 @@ class JsonApi extends Api
 					data.attributes[inflection.underscore(key)] = value;
 				});
 			}
-
 			// Add model guid now, if it hasn't been added before
 			includedModelGuids.push(Utils.uidFor(model));
 

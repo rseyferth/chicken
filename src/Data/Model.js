@@ -427,7 +427,13 @@ class Model extends Observable
 				// Also add defined attributes that were not set in the model (by default value)
 				let missingKeys = _.difference(modelDefinition.getApiAttributeNames(), _.keys(attr));
 				_.each(missingKeys, (key) => {
+
+					// Is it a local relationship?
+					if (modelDefinition.getRelationshipByLocalKey(key) !== undefined) return;
+
+					// Add default value
 					attr[key] = this.getAttributeDefinition(key).getDefaultValue();
+
 				});
 				
 			}
