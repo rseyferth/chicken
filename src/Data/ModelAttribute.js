@@ -112,6 +112,7 @@ class ModelAttribute {
 		// Undefined and null will remain so
 		if (value === undefined || value === null) return value;
 
+		let v;
 		switch (this.type) {
 
 			////////////////
@@ -153,7 +154,7 @@ class ModelAttribute {
 			/////////////
 
 			case ModelAttribute.Object:
-				let v = _.omit(value instanceof Observable ? value.attributes : value, (foo, key) => {
+				v = _.omit(value instanceof Observable ? value.attributes : value, (foo, key) => {
 					return /^__/.test(key);
 				});
 				return v;

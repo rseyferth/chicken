@@ -80,6 +80,12 @@ class Model extends Observable
 		});
 
 
+
+		this.metaAttributes = new Observable({
+
+		});
+
+
 		/**
 		 * list of studied relationships
 		 * @type {Object}
@@ -116,6 +122,11 @@ class Model extends Observable
 	 */
 	getIs() {
 		return this.state;
+	}
+
+
+	getMeta() {
+		return this.metaAttributes;
 	}
 
 	/**
@@ -371,6 +382,8 @@ class Model extends Observable
 
 	}
 
+
+
 	/**
 	 * Get attribute values for use in the API.
 	 *
@@ -432,7 +445,8 @@ class Model extends Observable
 					if (modelDefinition.getRelationshipByLocalKey(key) !== undefined) return;
 
 					// Add default value
-					attr[key] = this.getAttributeDefinition(key).getDefaultValue();
+					let def = this.getAttributeDefinition(key);
+					attr[key] = def.uncast(def.getDefaultValue());
 
 				});
 				
@@ -486,6 +500,14 @@ class Model extends Observable
 		
 		delete attr.id;
 		return attr;
+
+	}
+
+
+	setMetaAttributes(attributes) {
+
+		this.metaAttributes.import(attributes);
+		return this;
 
 	}
 
@@ -1141,8 +1163,10 @@ class Model extends Observable
 			if (value instanceof ComputedProperty) return;
 
 			attr[key] = this.get(key);
-			if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
+			if (attr[key] instanceof Model) {
 				attr[key] = attr[key].clone(cacheMap);
+			} else if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
+				attr[key] = attr[key].clone();
 			}
 			
 		});
@@ -1159,6 +1183,46 @@ class Model extends Observable
 
 		return copy;
 	}
+
+
+	/**
+	 * Create a shallow clone of the current model, meaning only 
+	 * the attributes will be copied and the relationships will not be cloned, 
+	 * but just linked.
+	 * 
+	 * @method shallowClone
+	 * @return {Model} 
+	 */
+	shallowClone() {
+
+
+		// Get all attributes
+		let attr = {};
+		_.each(this.attributes, (value, key) => {
+
+			// Not computed?
+			if (value instanceof ComputedProperty) return;
+
+			attr[key] = this.get(key);
+			if (attr[key] instanceof Model) {
+				attr[key] = attr[key].shallowClone();
+			} else if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
+				attr[key] = attr[key].clone();
+			}
+			
+		});
+
+		//create copy
+		let c = this.constructor;
+		let copy = new c(attr);
+
+		// Relationships
+		copy.related = _.extend({}, this.related);
+
+		return copy;
+
+	}
+
   
 
 

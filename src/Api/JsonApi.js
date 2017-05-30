@@ -288,7 +288,7 @@ class JsonApi extends Api
 		_.each(data.attributes, (value, key) => {
 			attributes[inflection.camelize(key, true)] = value;
 		});
-		
+
 		// Check if the model is already in the store
 		let model = apiCall.getResponseModel(modelName, data.id);
 		if (!model) {
@@ -303,6 +303,11 @@ class JsonApi extends Api
 			// Set the attributes (not overwriting dirty ones)
 			model.setAttributesFromApi(attributes);
 	
+		}
+
+		// Meta?
+		if (data.meta) {
+			model.setMetaAttributes(data.meta);
 		}
 
 		// Also deserialize relationships?

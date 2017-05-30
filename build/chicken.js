@@ -8229,34 +8229,90 @@ return /******/ (function(modules) { // webpackBootstrap
 	        return doneResult();
 	      }
 
-	      context.method = method;
-	      context.arg = arg;
-
 	      while (true) {
 	        var delegate = context.delegate;
 	        if (delegate) {
-	          var delegateResult = maybeInvokeDelegate(delegate, context);
-	          if (delegateResult) {
-	            if (delegateResult === ContinueSentinel) continue;
-	            return delegateResult;
+	          if (method === "return" ||
+	              (method === "throw" && delegate.iterator[method] === undefined)) {
+	            // A return or throw (when the delegate iterator has no throw
+	            // method) always terminates the yield* loop.
+	            context.delegate = null;
+
+	            // If the delegate iterator has a return method, give it a
+	            // chance to clean up.
+	            var returnMethod = delegate.iterator["return"];
+	            if (returnMethod) {
+	              var record = tryCatch(returnMethod, delegate.iterator, arg);
+	              if (record.type === "throw") {
+	                // If the return method threw an exception, let that
+	                // exception prevail over the original return or throw.
+	                method = "throw";
+	                arg = record.arg;
+	                continue;
+	              }
+	            }
+
+	            if (method === "return") {
+	              // Continue with the outer return, now that the delegate
+	              // iterator has been terminated.
+	              continue;
+	            }
 	          }
+
+	          var record = tryCatch(
+	            delegate.iterator[method],
+	            delegate.iterator,
+	            arg
+	          );
+
+	          if (record.type === "throw") {
+	            context.delegate = null;
+
+	            // Like returning generator.throw(uncaught), but without the
+	            // overhead of an extra function call.
+	            method = "throw";
+	            arg = record.arg;
+	            continue;
+	          }
+
+	          // Delegate generator ran and handled its own exceptions so
+	          // regardless of what the method was, we continue as if it is
+	          // "next" with an undefined arg.
+	          method = "next";
+	          arg = undefined;
+
+	          var info = record.arg;
+	          if (info.done) {
+	            context[delegate.resultName] = info.value;
+	            context.next = delegate.nextLoc;
+	          } else {
+	            state = GenStateSuspendedYield;
+	            return info;
+	          }
+
+	          context.delegate = null;
 	        }
 
-	        if (context.method === "next") {
+	        if (method === "next") {
 	          // Setting context._sent for legacy support of Babel's
 	          // function.sent implementation.
-	          context.sent = context._sent = context.arg;
+	          context.sent = context._sent = arg;
 
-	        } else if (context.method === "throw") {
+	        } else if (method === "throw") {
 	          if (state === GenStateSuspendedStart) {
 	            state = GenStateCompleted;
-	            throw context.arg;
+	            throw arg;
 	          }
 
-	          context.dispatchException(context.arg);
+	          if (context.dispatchException(arg)) {
+	            // If the dispatched exception was caught by a catch block,
+	            // then let that catch block handle the exception normally.
+	            method = "next";
+	            arg = undefined;
+	          }
 
-	        } else if (context.method === "return") {
-	          context.abrupt("return", context.arg);
+	        } else if (method === "return") {
+	          context.abrupt("return", arg);
 	        }
 
 	        state = GenStateExecuting;
@@ -8269,106 +8325,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	            ? GenStateCompleted
 	            : GenStateSuspendedYield;
 
-	          if (record.arg === ContinueSentinel) {
-	            continue;
-	          }
-
-	          return {
+	          var info = {
 	            value: record.arg,
 	            done: context.done
 	          };
 
+	          if (record.arg === ContinueSentinel) {
+	            if (context.delegate && method === "next") {
+	              // Deliberately forget the last sent value so that we don't
+	              // accidentally pass it on to the delegate.
+	              arg = undefined;
+	            }
+	          } else {
+	            return info;
+	          }
+
 	        } else if (record.type === "throw") {
 	          state = GenStateCompleted;
 	          // Dispatch the exception by looping back around to the
-	          // context.dispatchException(context.arg) call above.
-	          context.method = "throw";
-	          context.arg = record.arg;
+	          // context.dispatchException(arg) call above.
+	          method = "throw";
+	          arg = record.arg;
 	        }
 	      }
 	    };
-	  }
-
-	  // Call delegate.iterator[context.method](context.arg) and handle the
-	  // result, either by returning a { value, done } result from the
-	  // delegate iterator, or by modifying context.method and context.arg,
-	  // setting context.delegate to null, and returning the ContinueSentinel.
-	  function maybeInvokeDelegate(delegate, context) {
-	    var method = delegate.iterator[context.method];
-	    if (method === undefined) {
-	      // A .throw or .return when the delegate iterator has no .throw
-	      // method always terminates the yield* loop.
-	      context.delegate = null;
-
-	      if (context.method === "throw") {
-	        if (delegate.iterator.return) {
-	          // If the delegate iterator has a return method, give it a
-	          // chance to clean up.
-	          context.method = "return";
-	          context.arg = undefined;
-	          maybeInvokeDelegate(delegate, context);
-
-	          if (context.method === "throw") {
-	            // If maybeInvokeDelegate(context) changed context.method from
-	            // "return" to "throw", let that override the TypeError below.
-	            return ContinueSentinel;
-	          }
-	        }
-
-	        context.method = "throw";
-	        context.arg = new TypeError(
-	          "The iterator does not provide a 'throw' method");
-	      }
-
-	      return ContinueSentinel;
-	    }
-
-	    var record = tryCatch(method, delegate.iterator, context.arg);
-
-	    if (record.type === "throw") {
-	      context.method = "throw";
-	      context.arg = record.arg;
-	      context.delegate = null;
-	      return ContinueSentinel;
-	    }
-
-	    var info = record.arg;
-
-	    if (! info) {
-	      context.method = "throw";
-	      context.arg = new TypeError("iterator result is not an object");
-	      context.delegate = null;
-	      return ContinueSentinel;
-	    }
-
-	    if (info.done) {
-	      // Assign the result of the finished delegate to the temporary
-	      // variable specified by delegate.resultName (see delegateYield).
-	      context[delegate.resultName] = info.value;
-
-	      // Resume execution at the desired location (see delegateYield).
-	      context.next = delegate.nextLoc;
-
-	      // If context.method was "throw" but the delegate handled the
-	      // exception, let the outer generator proceed normally. If
-	      // context.method was "next", forget context.arg since it has been
-	      // "consumed" by the delegate iterator. If context.method was
-	      // "return", allow the original .return call to continue in the
-	      // outer generator.
-	      if (context.method !== "return") {
-	        context.method = "next";
-	        context.arg = undefined;
-	      }
-
-	    } else {
-	      // Re-yield the result returned by the delegate method.
-	      return info;
-	    }
-
-	    // The delegate iterator is finished, so forget it and continue with
-	    // the outer generator.
-	    context.delegate = null;
-	    return ContinueSentinel;
 	  }
 
 	  // Define Generator.prototype.{next,throw,return} in terms of the
@@ -8491,9 +8471,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	      this.done = false;
 	      this.delegate = null;
 
-	      this.method = "next";
-	      this.arg = undefined;
-
 	      this.tryEntries.forEach(resetTryEntry);
 
 	      if (!skipTempReset) {
@@ -8530,15 +8507,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	        record.type = "throw";
 	        record.arg = exception;
 	        context.next = loc;
-
-	        if (caught) {
-	          // If the dispatched exception was caught by a catch block,
-	          // then let that catch block handle the exception normally.
-	          context.method = "next";
-	          context.arg = undefined;
-	        }
-
-	        return !! caught;
+	        return !!caught;
 	      }
 
 	      for (var i = this.tryEntries.length - 1; i >= 0; --i) {
@@ -8606,12 +8575,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	      record.arg = arg;
 
 	      if (finallyEntry) {
-	        this.method = "next";
 	        this.next = finallyEntry.finallyLoc;
-	        return ContinueSentinel;
+	      } else {
+	        this.complete(record);
 	      }
 
-	      return this.complete(record);
+	      return ContinueSentinel;
 	    },
 
 	    complete: function(record, afterLoc) {
@@ -8623,14 +8592,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	          record.type === "continue") {
 	        this.next = record.arg;
 	      } else if (record.type === "return") {
-	        this.rval = this.arg = record.arg;
-	        this.method = "return";
+	        this.rval = record.arg;
 	        this.next = "end";
 	      } else if (record.type === "normal" && afterLoc) {
 	        this.next = afterLoc;
 	      }
-
-	      return ContinueSentinel;
 	    },
 
 	    finish: function(finallyLoc) {
@@ -8668,12 +8634,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	        resultName: resultName,
 	        nextLoc: nextLoc
 	      };
-
-	      if (this.method === "next") {
-	        // Deliberately forget the last sent value so that we don't
-	        // accidentally pass it on to the delegate.
-	        this.arg = undefined;
-	      }
 
 	      return ContinueSentinel;
 	    }
@@ -10579,9 +10539,9 @@ return /******/ (function(modules) { // webpackBootstrap
 		switch (opts.arrayFormat) {
 			case 'index':
 				return function (key, value, accumulator) {
-					result = /\[(\d*)\]$/.exec(key);
+					result = /\[(\d*)]$/.exec(key);
 
-					key = key.replace(/\[\d*\]$/, '');
+					key = key.replace(/\[\d*]$/, '');
 
 					if (!result) {
 						accumulator[key] = value;
@@ -10597,9 +10557,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			case 'bracket':
 				return function (key, value, accumulator) {
-					result = /(\[\])$/.exec(key);
+					result = /(\[])$/.exec(key);
 
-					key = key.replace(/\[\]$/, '');
+					key = key.replace(/\[]$/, '');
 
 					if (!result || accumulator[key] === undefined) {
 						accumulator[key] = value;
@@ -10752,15 +10712,8 @@ return /******/ (function(modules) { // webpackBootstrap
 /* 307 */
 /***/ function(module, exports) {
 
-	/*
-	object-assign
-	(c) Sindre Sorhus
-	@license MIT
-	*/
-
 	'use strict';
 	/* eslint-disable no-unused-vars */
-	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
 	var hasOwnProperty = Object.prototype.hasOwnProperty;
 	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
 
@@ -10781,7 +10734,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			// Detect buggy property enumeration order in older V8 versions.
 
 			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+			var test1 = new String('abc');  // eslint-disable-line
 			test1[5] = 'de';
 			if (Object.getOwnPropertyNames(test1)[0] === '5') {
 				return false;
@@ -10810,7 +10763,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 
 			return true;
-		} catch (err) {
+		} catch (e) {
 			// We don't expect any of the above to throw, but better to be safe.
 			return false;
 		}
@@ -10830,8 +10783,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 			}
 
-			if (getOwnPropertySymbols) {
-				symbols = getOwnPropertySymbols(from);
+			if (Object.getOwnPropertySymbols) {
+				symbols = Object.getOwnPropertySymbols(from);
 				for (var i = 0; i < symbols.length; i++) {
 					if (propIsEnumerable.call(from, symbols[i])) {
 						to[symbols[i]] = from[symbols[i]];
@@ -10911,7 +10864,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	exports.__esModule = true;
 	exports.locationsAreEqual = exports.statesAreEqual = exports.createLocation = exports.createQuery = undefined;
 
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol ? "symbol" : typeof obj; };
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -10934,9 +10887,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var createLocation = exports.createLocation = function createLocation() {
-	  var input = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : '/';
-	  var action = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : _Actions.POP;
-	  var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+	  var input = arguments.length <= 0 || arguments[0] === undefined ? '/' : arguments[0];
+	  var action = arguments.length <= 1 || arguments[1] === undefined ? _Actions.POP : arguments[1];
+	  var key = arguments.length <= 2 || arguments[2] === undefined ? null : arguments[2];
 
 	  var object = typeof input === 'string' ? (0, _PathUtils.parsePath)(input) : input;
 
@@ -11141,10 +11094,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var addQueryStringValueToPath = exports.addQueryStringValueToPath = function addQueryStringValueToPath(path, key, value) {
-	  var _parsePath = parsePath(path),
-	      pathname = _parsePath.pathname,
-	      search = _parsePath.search,
-	      hash = _parsePath.hash;
+	  var _parsePath = parsePath(path);
+
+	  var pathname = _parsePath.pathname;
+	  var search = _parsePath.search;
+	  var hash = _parsePath.hash;
+
 
 	  return createPath({
 	    pathname: pathname,
@@ -11154,10 +11109,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var stripQueryStringValueFromPath = exports.stripQueryStringValueFromPath = function stripQueryStringValueFromPath(path, key) {
-	  var _parsePath2 = parsePath(path),
-	      pathname = _parsePath2.pathname,
-	      search = _parsePath2.search,
-	      hash = _parsePath2.hash;
+	  var _parsePath2 = parsePath(path);
+
+	  var pathname = _parsePath2.pathname;
+	  var search = _parsePath2.search;
+	  var hash = _parsePath2.hash;
+
 
 	  return createPath({
 	    pathname: pathname,
@@ -11169,8 +11126,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var getQueryStringValueFromPath = exports.getQueryStringValueFromPath = function getQueryStringValueFromPath(path, key) {
-	  var _parsePath3 = parsePath(path),
-	      search = _parsePath3.search;
+	  var _parsePath3 = parsePath(path);
+
+	  var search = _parsePath3.search;
 
 	  var match = search.match(new RegExp('[?&]' + key + '=([a-zA-Z0-9]+)'));
 	  return match && match[1];
@@ -11212,10 +11170,10 @@ return /******/ (function(modules) { // webpackBootstrap
 	var createPath = exports.createPath = function createPath(location) {
 	  if (location == null || typeof location === 'string') return location;
 
-	  var basename = location.basename,
-	      pathname = location.pathname,
-	      search = location.search,
-	      hash = location.hash;
+	  var basename = location.basename;
+	  var pathname = location.pathname;
+	  var search = location.search;
+	  var hash = location.hash;
 
 	  var path = (basename || '') + pathname;
 
@@ -11299,18 +11257,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	 * behavior using { forceRefresh: true } in options.
 	 */
 	var createBrowserHistory = function createBrowserHistory() {
-	  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 	  !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'Browser history needs a DOM') : (0, _invariant2.default)(false) : void 0;
 
 	  var useRefresh = options.forceRefresh || !(0, _DOMUtils.supportsHistory)();
 	  var Protocol = useRefresh ? RefreshProtocol : BrowserProtocol;
 
-	  var getUserConfirmation = Protocol.getUserConfirmation,
-	      getCurrentLocation = Protocol.getCurrentLocation,
-	      pushLocation = Protocol.pushLocation,
-	      replaceLocation = Protocol.replaceLocation,
-	      go = Protocol.go;
+	  var getUserConfirmation = Protocol.getUserConfirmation;
+	  var getCurrentLocation = Protocol.getCurrentLocation;
+	  var pushLocation = Protocol.pushLocation;
+	  var replaceLocation = Protocol.replaceLocation;
+	  var go = Protocol.go;
 
 
 	  var history = (0, _createHistory2.default)(_extends({
@@ -11416,9 +11374,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var startListener = exports.startListener = function startListener(listener) {
 	  var handlePopState = function handlePopState(event) {
-	    if ((0, _DOMUtils.isExtraneousPopstateEvent)(event)) // Ignore extraneous popstate events in WebKit
-	      return;
-	    listener(_createLocation(event.state));
+	    if (event.state !== undefined) // Ignore extraneous popstate events in WebKit
+	      listener(_createLocation(event.state));
 	  };
 
 	  (0, _DOMUtils.addEventListener)(window, PopStateEvent, handlePopState);
@@ -11441,8 +11398,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var updateLocation = function updateLocation(location, updateState) {
-	  var state = location.state,
-	      key = location.key;
+	  var state = location.state;
+	  var key = location.key;
 
 
 	  if (state !== undefined) (0, _DOMStateStorage.saveState)(key, state);
@@ -11509,15 +11466,6 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var supportsPopstateOnHashchange = exports.supportsPopstateOnHashchange = function supportsPopstateOnHashchange() {
 	  return window.navigator.userAgent.indexOf('Trident') === -1;
-	};
-
-	/**
-	 * Returns true if a given popstate event is an extraneous WebKit event.
-	 * Accounts for the fact that Chrome on iOS fires real popstate events
-	 * containing undefined state when pressing the back button.
-	 */
-	var isExtraneousPopstateEvent = exports.isExtraneousPopstateEvent = function isExtraneousPopstateEvent(event) {
-	  return event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1;
 	};
 
 /***/ },
@@ -11676,13 +11624,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	var createHistory = function createHistory() {
-	  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-	  var getCurrentLocation = options.getCurrentLocation,
-	      getUserConfirmation = options.getUserConfirmation,
-	      pushLocation = options.pushLocation,
-	      replaceLocation = options.replaceLocation,
-	      go = options.go,
-	      keyLength = options.keyLength;
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
+	  var getCurrentLocation = options.getCurrentLocation;
+	  var getUserConfirmation = options.getUserConfirmation;
+	  var pushLocation = options.pushLocation;
+	  var replaceLocation = options.replaceLocation;
+	  var go = options.go;
+	  var keyLength = options.keyLength;
 
 
 	  var currentLocation = void 0;
@@ -11811,7 +11759,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	  };
 
 	  var createLocation = function createLocation(location, action) {
-	    var key = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : createKey();
+	    var key = arguments.length <= 2 || arguments[2] === undefined ? createKey() : arguments[2];
 	    return (0, _LocationUtils.createLocation)(location, action, key);
 	  };
 
@@ -11986,12 +11934,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var createHashHistory = function createHashHistory() {
-	  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 	  !_ExecutionEnvironment.canUseDOM ? process.env.NODE_ENV !== 'production' ? (0, _invariant2.default)(false, 'Hash history needs a DOM') : (0, _invariant2.default)(false) : void 0;
 
-	  var queryKey = options.queryKey,
-	      hashType = options.hashType;
+	  var queryKey = options.queryKey;
+	  var hashType = options.hashType;
 
 
 	  process.env.NODE_ENV !== 'production' ? (0, _warning2.default)(queryKey !== false, 'Using { queryKey: false } no longer works. Instead, just don\'t ' + 'use location state if you don\'t want a key in your URL query string') : void 0;
@@ -12186,8 +12134,8 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var updateLocation = function updateLocation(location, pathCoder, queryKey, updateHash) {
-	  var state = location.state,
-	      key = location.key;
+	  var state = location.state;
+	  var key = location.key;
 
 
 	  var path = pathCoder.encodePath((0, _PathUtils.createPath)(location));
@@ -12259,7 +12207,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 	var createMemoryHistory = function createMemoryHistory() {
-	  var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 	  if (Array.isArray(options)) {
 	    options = { entries: options };
@@ -12326,9 +12274,9 @@ return /******/ (function(modules) { // webpackBootstrap
 	    go: go
 	  }));
 
-	  var _options = options,
-	      entries = _options.entries,
-	      current = _options.current;
+	  var _options = options;
+	  var entries = _options.entries;
+	  var current = _options.current;
 
 
 	  if (typeof entries === 'string') {
@@ -12385,7 +12333,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var useBasename = function useBasename(createHistory) {
 	  return function () {
-	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 	    var history = createHistory(options);
 	    var basename = options.basename;
@@ -12395,7 +12343,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	      if (!location) return location;
 
 	      if (basename && location.basename == null) {
-	        if (location.pathname.toLowerCase().indexOf(basename.toLowerCase()) === 0) {
+	        if (location.pathname.indexOf(basename) === 0) {
 	          location.pathname = location.pathname.substring(basename.length);
 	          location.basename = basename;
 
@@ -12597,11 +12545,11 @@ return /******/ (function(modules) { // webpackBootstrap
 	 */
 	var useQueries = function useQueries(createHistory) {
 	  return function () {
-	    var options = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	    var options = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 	    var history = createHistory(options);
-	    var stringifyQuery = options.stringifyQuery,
-	        parseQueryString = options.parseQueryString;
+	    var stringifyQuery = options.stringifyQuery;
+	    var parseQueryString = options.parseQueryString;
 
 
 	    if (typeof stringifyQuery !== 'function') stringifyQuery = defaultStringifyQuery;
@@ -14429,6 +14377,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	var _underscore = __webpack_require__(299);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
@@ -14770,16 +14720,25 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// No known component?
 				if (!definition) {
+					var fragment;
 
-					// Do the component fallback.
-					var element = renderer.dom.createElement(tagName);
-					_underscore2.default.each(attributeHash, function (value, key) {
-						element.setAttribute(key, renderer.hooks.getValue(value));
-					});
-					var fragment = _htmlbarsStandalone2.default.Runtime.render(options.default, renderer, scope, {}).fragment;
-					element.appendChild(fragment);
-					morph.setNode(element);
-					return;
+					var _ret = function () {
+
+						// Do the component fallback.
+						var element = renderer.dom.createElement(tagName);
+						_underscore2.default.each(attributeHash, function (value, key) {
+							element.setAttribute(key, renderer.hooks.getValue(value));
+						});
+						fragment = _htmlbarsStandalone2.default.Runtime.render(options.default, renderer, scope, {}).fragment;
+
+						element.appendChild(fragment);
+						morph.setNode(element);
+						return {
+							v: void 0
+						};
+					}();
+
+					if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 				}
 
 				// Create a new scope and use the component as self
@@ -15650,6 +15609,8 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'filter',
 			value: function filter() {
+				var _arguments = arguments;
+
 
 				// Parse arguments
 				if (arguments.length === 0) throw new Error('The filter method requires at least one argument.');
@@ -15661,14 +15622,16 @@ return /******/ (function(modules) { // webpackBootstrap
 					callback = arguments.length <= 0 ? undefined : arguments[0];
 					if (arguments.length > 1) returnObservableArray = arguments.length <= 1 ? undefined : arguments[1];
 				} else if (typeof (arguments.length <= 0 ? undefined : arguments[0]) === 'string') {
+					(function () {
 
-					// Create callback
-					var key = arguments.length <= 0 ? undefined : arguments[0];
-					var value = arguments.length <= 1 ? undefined : arguments[1];
-					callback = function callback(item) {
-						return item.get(key) == value;
-					};
-					if (arguments.length > 2) returnObservableArray = arguments.length <= 2 ? undefined : arguments[2];
+						// Create callback
+						var key = _arguments.length <= 0 ? undefined : _arguments[0];
+						var value = _arguments.length <= 1 ? undefined : _arguments[1];
+						callback = function callback(item) {
+							return item.get(key) == value;
+						};
+						if (_arguments.length > 2) returnObservableArray = _arguments.length <= 2 ? undefined : _arguments[2];
+					})();
 				}
 
 				// Do the filter
@@ -18418,6 +18381,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				_this._scheduleAttributeChanged('is');
 			});
 
+			_this.metaAttributes = new _Observable3.default({});
+
 			/**
 	   * list of studied relationships
 	   * @type {Object}
@@ -18456,6 +18421,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'getIs',
 			value: function getIs() {
 				return this.state;
+			}
+		}, {
+			key: 'getMeta',
+			value: function getMeta() {
+				return this.metaAttributes;
 			}
 
 			/**
@@ -18786,7 +18756,8 @@ return /******/ (function(modules) { // webpackBootstrap
 							if (modelDefinition.getRelationshipByLocalKey(key) !== undefined) return;
 
 							// Add default value
-							attr[key] = _this5.getAttributeDefinition(key).getDefaultValue();
+							var def = _this5.getAttributeDefinition(key);
+							attr[key] = def.uncast(def.getDefaultValue());
 						});
 					}
 
@@ -18795,41 +18766,50 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					return attr;
 				} else {
+					(function () {
 
-					// Loop attributes
-					var convertedAttr = {};
-					_underscore2.default.each(attr, function (value, key) {
+						// Loop attributes
+						var convertedAttr = {};
+						_underscore2.default.each(attr, function (value, key) {
 
-						// Is the value computed?
-						if (value instanceof _ComputedProperty2.default) return;
+							// Is the value computed?
+							if (value instanceof _ComputedProperty2.default) return;
 
-						// Get the actual value
-						value = _Utils2.default.getValue(value);
+							// Get the actual value
+							value = _Utils2.default.getValue(value);
 
-						// Is it a moment?
-						if (_moment2.default.isMoment(value)) {
+							// Is it a moment?
+							if (_moment2.default.isMoment(value)) {
 
-							// Make it ISO 8601
-							value = value.format('YYYY-MM-DD HH:mm:ss');
-						}
-
-						// Is it an array or model?
-						else if (value instanceof _ObservableArray2.default) {
-								value = JSON.stringify(value.toArray());
-							} else if (value instanceof Model) {
-								value = JSON.stringify(value.getAttributesForApi(onlyDirty));
+								// Make it ISO 8601
+								value = value.format('YYYY-MM-DD HH:mm:ss');
 							}
 
-						// Set it
-						convertedAttr[key] = value;
-					});
+							// Is it an array or model?
+							else if (value instanceof _ObservableArray2.default) {
+									value = JSON.stringify(value.toArray());
+								} else if (value instanceof Model) {
+									value = JSON.stringify(value.getAttributesForApi(onlyDirty));
+								}
 
-					// Switch
-					attr = convertedAttr;
+							// Set it
+							convertedAttr[key] = value;
+						});
+
+						// Switch
+						attr = convertedAttr;
+					})();
 				}
 
 				delete attr.id;
 				return attr;
+			}
+		}, {
+			key: 'setMetaAttributes',
+			value: function setMetaAttributes(attributes) {
+
+				this.metaAttributes.import(attributes);
+				return this;
 			}
 
 			/**
@@ -19516,8 +19496,10 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (value instanceof _ComputedProperty2.default) return;
 
 					attr[key] = _this15.get(key);
-					if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
+					if (attr[key] instanceof Model) {
 						attr[key] = attr[key].clone(cacheMap);
+					} else if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
+						attr[key] = attr[key].clone();
 					}
 				});
 
@@ -19528,6 +19510,45 @@ return /******/ (function(modules) { // webpackBootstrap
 				_underscore2.default.each(this.related, function (value, key) {
 					if (value) copy.related[key] = value.clone(cacheMap);
 				});
+
+				return copy;
+			}
+
+			/**
+	   * Create a shallow clone of the current model, meaning only 
+	   * the attributes will be copied and the relationships will not be cloned, 
+	   * but just linked.
+	   * 
+	   * @method shallowClone
+	   * @return {Model} 
+	   */
+
+		}, {
+			key: 'shallowClone',
+			value: function shallowClone() {
+				var _this16 = this;
+
+				// Get all attributes
+				var attr = {};
+				_underscore2.default.each(this.attributes, function (value, key) {
+
+					// Not computed?
+					if (value instanceof _ComputedProperty2.default) return;
+
+					attr[key] = _this16.get(key);
+					if (attr[key] instanceof Model) {
+						attr[key] = attr[key].shallowClone();
+					} else if (attr[key] instanceof Object && typeof attr[key].clone === 'function') {
+						attr[key] = attr[key].clone();
+					}
+				});
+
+				//create copy
+				var c = this.constructor;
+				var copy = new c(attr);
+
+				// Relationships
+				copy.related = _underscore2.default.extend({}, this.related);
 
 				return copy;
 			}
@@ -20258,30 +20279,36 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 			if (deep) {
+				var _ret = function () {
 
-				//init str
-				var propStrings = [],
-				    str = '';
+					//init str
+					var propStrings = [],
+					    str = '';
 
-				//convert to simple object
-				if (obj instanceof _Observable2.default) obj = obj.toObject();
+					//convert to simple object
+					if (obj instanceof _Observable2.default) obj = obj.toObject();
 
-				//base url
-				if (obj.baseUrl) str += obj.baseUrl + '?';
+					//base url
+					if (obj.baseUrl) str += obj.baseUrl + '?';
 
-				//add props
-				_underscore2.default.each(_underscore2.default.keys(obj), function (key) {
+					//add props
+					_underscore2.default.each(_underscore2.default.keys(obj), function (key) {
 
-					//skip baseUrl
-					if (key == 'baseUrl') return;
+						//skip baseUrl
+						if (key == 'baseUrl') return;
 
-					propStrings = _this._addPropString(propStrings, key, obj[key]);
-				});
+						propStrings = _this._addPropString(propStrings, key, obj[key]);
+					});
 
-				//add to querystring
-				str += propStrings.join('&');
+					//add to querystring
+					str += propStrings.join('&');
 
-				return str;
+					return {
+						v: str
+					};
+				}();
+
+				if ((typeof _ret === 'undefined' ? 'undefined' : _typeof(_ret)) === "object") return _ret.v;
 			} else {
 
 				return _queryString2.default.stringify(obj);
@@ -20332,48 +20359,54 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 			if (deep) {
+				var _ret2 = function () {
 
-				//init object
-				var props = void 0,
-				    resultObject = {};
+					//init object
+					var props = void 0,
+					    resultObject = {};
 
-				//get all properties
-				if (str.indexOf('?') !== -1) {
-					resultObject['baseUrl'] = str.split('?')[0];
-					props = str.split('?')[1].split('&');
-				} else {
-					props = str.split('&');
-				}
-
-				//convert each property to object
-				_underscore2.default.each(props, function (prop) {
-
-					//split value and key
-					prop = prop.split('=');
-					var key = prop[0];
-					var value = prop[1];
-
-					//value				
-					value = value.split(',');
-					value = value.length == 1 ? value[0] : value;
-
-					//key array
-					if (key.indexOf('[') !== -1 && key.indexOf(']') !== -1) {
-						key = key.split('[');
-						var baseKey = key[0];
-						var subKey = key[1].substring(0, key[1].length - 1);
-
-						if (!(resultObject[baseKey] instanceof Object)) {
-							resultObject[baseKey] = {};
-						}
-
-						resultObject[baseKey][subKey] = value;
+					//get all properties
+					if (str.indexOf('?') !== -1) {
+						resultObject['baseUrl'] = str.split('?')[0];
+						props = str.split('?')[1].split('&');
 					} else {
-						resultObject[key] = value;
+						props = str.split('&');
 					}
-				});
 
-				return resultObject;
+					//convert each property to object
+					_underscore2.default.each(props, function (prop) {
+
+						//split value and key
+						prop = prop.split('=');
+						var key = prop[0];
+						var value = prop[1];
+
+						//value				
+						value = value.split(',');
+						value = value.length == 1 ? value[0] : value;
+
+						//key array
+						if (key.indexOf('[') !== -1 && key.indexOf(']') !== -1) {
+							key = key.split('[');
+							var baseKey = key[0];
+							var subKey = key[1].substring(0, key[1].length - 1);
+
+							if (!(resultObject[baseKey] instanceof Object)) {
+								resultObject[baseKey] = {};
+							}
+
+							resultObject[baseKey][subKey] = value;
+						} else {
+							resultObject[key] = value;
+						}
+					});
+
+					return {
+						v: resultObject
+					};
+				}();
+
+				if ((typeof _ret2 === 'undefined' ? 'undefined' : _typeof(_ret2)) === "object") return _ret2.v;
 			} else {
 				return _queryString2.default.parse(str);
 			}
@@ -22109,39 +22142,41 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Not yet set?
 				if (this._regExp === undefined) {
+					(function () {
 
-					// Collect buildingBlocks (a regular expression pattern for each parameter)
-					var buildingBlocks = {};
+						// Collect buildingBlocks (a regular expression pattern for each parameter)
+						var buildingBlocks = {};
 
-					// Convert :params into regex with building blocks 
-					// (see XRegExp.build documentation)
-					var constraints = this.getAllParameterConstraints();
-					var exp = _xregexp2.default.replace(this.getFullPattern(), /(([\:\*])([a-zA-Z\-\_]+))/, function (match, complete, paramType, paramName) {
+						// Convert :params into regex with building blocks 
+						// (see XRegExp.build documentation)
+						var constraints = _this2.getAllParameterConstraints();
+						var exp = _xregexp2.default.replace(_this2.getFullPattern(), /(([\:\*])([a-zA-Z\-\_]+))/, function (match, complete, paramType, paramName) {
 
-						// Wildcard?
-						var paramRegex = void 0;
-						if (paramType === '*') {
+							// Wildcard?
+							var paramRegex = void 0;
+							if (paramType === '*') {
 
-							// Use wildcard
-							paramRegex = Route.ParameterType.Wildcard;
-						} else {
+								// Use wildcard
+								paramRegex = Route.ParameterType.Wildcard;
+							} else {
 
-							// Check if there is a constraint
-							paramRegex = constraints.has(paramName) ? constraints.get(paramName) : Route.ParameterType.Standard;
-						}
+								// Check if there is a constraint
+								paramRegex = constraints.has(paramName) ? constraints.get(paramName) : Route.ParameterType.Standard;
+							}
 
-						// Store as building block for regex
-						buildingBlocks[paramName] = paramRegex;
+							// Store as building block for regex
+							buildingBlocks[paramName] = paramRegex;
 
-						// Store parameter
-						_this2.parameters.push(paramName);
+							// Store parameter
+							_this2.parameters.push(paramName);
 
-						// Replace with a building block using named parameter
-						return '({{' + paramName + '}})';
-					}, 'all');
+							// Replace with a building block using named parameter
+							return '({{' + paramName + '}})';
+						}, 'all');
 
-					// Create it
-					this._regExp = _xregexp2.default.build('^' + exp + '$', buildingBlocks);
+						// Create it
+						_this2._regExp = _xregexp2.default.build('^' + exp + '$', buildingBlocks);
+					})();
 				}
 
 				// Return it
@@ -22872,19 +22907,21 @@ return /******/ (function(modules) { // webpackBootstrap
 					///////////////////////////
 
 					else if (result instanceof _View2.default) {
+							(function () {
 
-							// Render the view
-							var view = result;
-							view.render().then(function () {
+								// Render the view
+								var view = result;
+								view.render().then(function () {
 
-								// Add it
-								_this3.viewContainer.setAction(_this3);
-								view.addToContainer(_this3.viewContainer);
-								resolve(view);
-							}, function (error) {
+									// Add it
+									_this3.viewContainer.setAction(_this3);
+									view.addToContainer(_this3.viewContainer);
+									resolve(view);
+								}, function (error) {
 
-								_this3._handleError(error, resolve, reject);
-							});
+									_this3._handleError(error, resolve, reject);
+								});
+							})();
 						}
 
 						//////////////////////////////
@@ -24230,15 +24267,17 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Get attributes (non-dirty as well.)
 					var pivotAttributes = model.getPivot().getAttributesForApi(false);
 					if (_underscore2.default.size(pivotAttributes) > 0) {
+						(function () {
 
-						// Convert for API
-						var meta = {};
-						_underscore2.default.each(pivotAttributes, function (value, key) {
-							meta[_inflection2.default.underscore(key)] = value;
-						});
+							// Convert for API
+							var meta = {};
+							_underscore2.default.each(pivotAttributes, function (value, key) {
+								meta[_inflection2.default.underscore(key)] = value;
+							});
 
-						// Set as meta data
-						data.meta = meta;
+							// Set as meta data
+							data.meta = meta;
+						})();
 					}
 				}
 
@@ -24263,58 +24302,60 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Include related?
 					if (includeRelated) {
+						(function () {
 
-						// Loop through relationships
-						var relationships = {};
-						_underscore2.default.each(model.related, function (relatedData, key) {
+							// Loop through relationships
+							var relationships = {};
+							_underscore2.default.each(model.related, function (relatedData, key) {
 
-							// @ TEMP FIX
-							// skip belongsto relations as the api resrouceController does not support saving this relationType
-							var relationship = model.getRelationship(key);
-							if (relationship && relationship.type === 'BelongsTo') {
-								return;
+								// @ TEMP FIX
+								// skip belongsto relations as the api resrouceController does not support saving this relationType
+								var relationship = model.getRelationship(key);
+								if (relationship && relationship.type === 'BelongsTo') {
+									return;
+								}
+
+								// Is it a collection?
+								if (relatedData instanceof _Collection2.default) {
+
+									// Is dirty? or had dirty children
+									if (relatedData.isDirty() || relatedData.hasDirtyChildren()) {
+
+										// Add them all
+										relationships[key] = { data: _underscore2.default.map(relatedData.items, function (item) {
+
+												// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
+												if (includeRelatedData === false || !_underscore2.default.contains(includeRelatedData, key)) {
+													includedModelGuids.push(_Utils2.default.uidFor(item));
+												}
+
+												// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
+												return _this2.serialize(item, true, includeRelatedData, includedModelGuids);
+											}) };
+									}
+								} else if (relatedData instanceof _Model2.default) {
+
+									// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
+									if (includeRelatedData === false || _underscore2.default.indexOf(includeRelatedData, key) === -1) {
+										includedModelGuids.push(_Utils2.default.uidFor(relatedData));
+									}
+
+									// Is it dirty?
+									if (relatedData.isDirty()) {
+
+										// We always add the related model data
+										relationships[key] = { data: _this2.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
+									}
+								} else if (relatedData) {
+
+									// What is this
+									throw new TypeError('Unrecognized data found in model\'s relationship ' + key);
+								}
+							});
+							if (_underscore2.default.size(relationships) > 0) {
+								data.relationships = relationships;
 							}
-
-							// Is it a collection?
-							if (relatedData instanceof _Collection2.default) {
-
-								// Is dirty? or had dirty children
-								if (relatedData.isDirty() || relatedData.hasDirtyChildren()) {
-
-									// Add them all
-									relationships[key] = { data: _underscore2.default.map(relatedData.items, function (item) {
-
-											// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
-											if (includeRelatedData === false || !_underscore2.default.contains(includeRelatedData, key)) {
-												includedModelGuids.push(_Utils2.default.uidFor(item));
-											}
-
-											// Add that model, but only add relationships when this model has not been added to the resource before, to prevent nesting recursive loop
-											return _this2.serialize(item, true, includeRelatedData, includedModelGuids);
-										}) };
-								}
-							} else if (relatedData instanceof _Model2.default) {
-
-								// Store original model to prevent recursive loop (only when the attributes have not been added yet, but should be)
-								if (includeRelatedData === false || _underscore2.default.indexOf(includeRelatedData, key) === -1) {
-									includedModelGuids.push(_Utils2.default.uidFor(relatedData));
-								}
-
-								// Is it dirty?
-								if (relatedData.isDirty()) {
-
-									// We always add the related model data
-									relationships[key] = { data: _this2.serialize(relatedData, true, includeRelatedData, includedModelGuids) };
-								}
-							} else if (relatedData) {
-
-								// What is this
-								throw new TypeError('Unrecognized data found in model\'s relationship ' + key);
-							}
-						});
-						if (_underscore2.default.size(relationships) > 0) {
-							data.relationships = relationships;
-						}
+						})();
 					}
 				}
 
@@ -24399,6 +24440,11 @@ return /******/ (function(modules) { // webpackBootstrap
 					model.setAttributesFromApi(attributes);
 				}
 
+				// Meta?
+				if (data.meta) {
+					model.setMetaAttributes(data.meta);
+				}
+
 				// Also deserialize relationships?
 				if (deserializeRelationships) {
 
@@ -24464,58 +24510,64 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Is there data?
 						if (rel.data) {
+							(function () {
 
-							// Camelize
-							var modelRelName = _inflection2.default.camelize(relationshipName, true);
+								// Camelize
+								var modelRelName = _inflection2.default.camelize(relationshipName, true);
 
-							// Is it one record?
-							if (rel.data instanceof Array) {
+								// Is it one record?
+								if (rel.data instanceof Array) {
+									(function () {
 
-								// Find relationship
-								var relationship = model.getRelationship(modelRelName);
+										// Find relationship
+										var relationship = model.getRelationship(modelRelName);
 
-								// Loop and add
-								_underscore2.default.each(rel.data, function (relData) {
+										// Loop and add
+										_underscore2.default.each(rel.data, function (relData) {
 
-									// Get the model
-									var relatedModel = _this6._getRelatedModel(relData, apiCall);
+											// Get the model
+											var relatedModel = _this6._getRelatedModel(relData, apiCall);
+											if (relatedModel) {
+												(function () {
+
+													// Pivot data defined?
+													var pivotAttributes = null;
+													if (relData.meta && relationship.isPivot() && relationship.pivotModel) {
+
+														// Collect pivot attributes
+														pivotAttributes = {};
+														_underscore2.default.each(relData.meta, function (value, key) {
+															pivotAttributes[_inflection2.default.camelize(key, true)] = value;
+														});
+													}
+
+													// Add to collection
+													model.addRelatedModel(modelRelName, relatedModel, true, pivotAttributes);
+												})();
+											}
+										});
+
+										// Is the relationship sorted?						
+										if (relationship && relationship.sortCallback && model.related[modelRelName]) {
+
+											// Apply sorting
+											model.related[modelRelName].sortBy(relationship.sortCallback);
+										}
+									})();
+								} else if (rel.data instanceof Object) {
+
+									// Get the one
+									var relatedModel = _this6._getRelatedModel(rel.data, apiCall);
 									if (relatedModel) {
 
-										// Pivot data defined?
-										var pivotAttributes = null;
-										if (relData.meta && relationship.isPivot() && relationship.pivotModel) {
-
-											// Collect pivot attributes
-											pivotAttributes = {};
-											_underscore2.default.each(relData.meta, function (value, key) {
-												pivotAttributes[_inflection2.default.camelize(key, true)] = value;
-											});
-										}
-
-										// Add to collection
-										model.addRelatedModel(modelRelName, relatedModel, true, pivotAttributes);
+										// Set it
+										model.setRelatedModel(modelRelName, relatedModel);
 									}
-								});
+								} else {
 
-								// Is the relationship sorted?						
-								if (relationship && relationship.sortCallback && model.related[modelRelName]) {
-
-									// Apply sorting
-									model.related[modelRelName].sortBy(relationship.sortCallback);
+									throw new TypeError('Unrecognized relationship data received from Api');
 								}
-							} else if (rel.data instanceof Object) {
-
-								// Get the one
-								var relatedModel = _this6._getRelatedModel(rel.data, apiCall);
-								if (relatedModel) {
-
-									// Set it
-									model.setRelatedModel(modelRelName, relatedModel);
-								}
-							} else {
-
-								throw new TypeError('Unrecognized relationship data received from Api');
-							}
+							})();
 						}
 					});
 				}
@@ -24660,6 +24712,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _inflection = __webpack_require__(302);
@@ -24753,20 +24807,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Check relationship map
 				if (result.links) {
+					(function () {
 
-					var map = {};
-					_underscore2.default.each(result.links, function (info, key) {
+						var map = {};
+						_underscore2.default.each(result.links, function (info, key) {
 
-						// Check key (e.g. journeys.line)
-						var parts = key.split(/\./);
-						var localModel = parts[0];
-						var attribute = parts[1];
+							// Check key (e.g. journeys.line)
+							var parts = key.split(/\./);
+							var localModel = parts[0];
+							var attribute = parts[1];
 
-						// Store in map
-						map[localModel] = map[localModel] || {};
-						map[localModel][attribute] = info.type;
-					});
-					apiCall.relationshipMap = map;
+							// Store in map
+							map[localModel] = map[localModel] || {};
+							map[localModel][attribute] = info.type;
+						});
+						apiCall.relationshipMap = map;
+					})();
 				}
 
 				// Deduce root element
@@ -24846,11 +24902,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Also deserialize relationships?
 				if (deserializeRelationships) {
+					(function () {
 
-					var localKey = _underscore2.default.underscored(_inflection2.default.pluralize(modelName));
-					model.withoutNotifications(function () {
-						_this3._deserializeRelationships(data, apiCall, localKey, model);
-					});
+						var localKey = _underscore2.default.underscored(_inflection2.default.pluralize(modelName));
+						model.withoutNotifications(function () {
+							_this3._deserializeRelationships(data, apiCall, localKey, model);
+						});
+					})();
 				}
 
 				return model;
@@ -24896,52 +24954,62 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Is there data?
 						if (rel) {
+							var _ret3 = function () {
 
-							// __chicken variable?
-							if (relationshipName.match(/^__/)) return;
+								// __chicken variable?
+								if (relationshipName.match(/^__/)) return {
+										v: void 0
+									};
 
-							// Camelize
-							var modelRelName = _inflection2.default.camelize(relationshipName, true);
-							var resourceType = apiCall.relationshipMap[localModelKey][relationshipName];
+								// Camelize
+								var modelRelName = _inflection2.default.camelize(relationshipName, true);
+								var resourceType = apiCall.relationshipMap[localModelKey][relationshipName];
 
-							// Is it one record?
-							if (rel instanceof Array) {
+								// Is it one record?
+								if (rel instanceof Array) {
+									(function () {
 
-								// Find relationship
-								var relationship = model.getRelationship(modelRelName);
+										// Find relationship
+										var relationship = model.getRelationship(modelRelName);
 
-								// Loop and add
-								_underscore2.default.each(rel, function (relData) {
+										// Loop and add
+										_underscore2.default.each(rel, function (relData) {
 
-									// Get the model
-									var relatedModel = _this5._getRelatedModel(relData, resourceType, apiCall);
+											// Get the model
+											var relatedModel = _this5._getRelatedModel(relData, resourceType, apiCall);
+											if (relatedModel) {
+												(function () {
+
+													// Pivot data defined?
+													var pivotAttributes = null;
+													if (relData.meta && relationship.isPivot() && relationship.pivotModel) {
+
+														// Collect pivot attributes
+														pivotAttributes = {};
+														_underscore2.default.each(relData.meta, function (value, key) {
+															pivotAttributes[_inflection2.default.camelize(key, true)] = value;
+														});
+													}
+
+													// Add to collection
+													model.addRelatedModel(modelRelName, relatedModel, true, pivotAttributes);
+												})();
+											}
+										});
+									})();
+								} else {
+
+									// Get the one
+									var relatedModel = _this5._getRelatedModel(rel, resourceType, apiCall);
 									if (relatedModel) {
 
-										// Pivot data defined?
-										var pivotAttributes = null;
-										if (relData.meta && relationship.isPivot() && relationship.pivotModel) {
-
-											// Collect pivot attributes
-											pivotAttributes = {};
-											_underscore2.default.each(relData.meta, function (value, key) {
-												pivotAttributes[_inflection2.default.camelize(key, true)] = value;
-											});
-										}
-
-										// Add to collection
-										model.addRelatedModel(modelRelName, relatedModel, true, pivotAttributes);
+										// Set it
+										model.setRelatedModel(modelRelName, relatedModel);
 									}
-								});
-							} else {
-
-								// Get the one
-								var relatedModel = _this5._getRelatedModel(rel, resourceType, apiCall);
-								if (relatedModel) {
-
-									// Set it
-									model.setRelatedModel(modelRelName, relatedModel);
 								}
-							}
+							}();
+
+							if ((typeof _ret3 === 'undefined' ? 'undefined' : _typeof(_ret3)) === "object") return _ret3.v;
 						}
 					});
 				}
@@ -25901,6 +25969,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Undefined and null will remain so
 				if (value === undefined || value === null) return value;
 
+				var v = void 0;
 				switch (this.type) {
 
 					////////////////
@@ -25940,7 +26009,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					/////////////
 
 					case ModelAttribute.Object:
-						var v = _underscore2.default.omit(value instanceof _Observable2.default ? value.attributes : value, function (foo, key) {
+						v = _underscore2.default.omit(value instanceof _Observable2.default ? value.attributes : value, function (foo, key) {
 							return (/^__/.test(key)
 							);
 						});
