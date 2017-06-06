@@ -18101,6 +18101,17 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function page(pageNumber) {
 				var pageSize = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 
+
+				// Reset?
+				if (pageNumber === false) {
+
+					// Clear
+					delete this.queryParams['page[number]'];
+					delete this.queryParams['page[size]'];
+					return this;
+				}
+
+				// Set it
 				if (pageSize !== null) this.pageSize(pageSize);
 				return this.query('page[number]', pageNumber);
 			}
@@ -21118,6 +21129,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				var value = this._getValue(params[0]);
 				if (value === undefined) return '';
 				return value.toLocaleString(window.Chicken.app.i18n.language);
+			}
+		}, {
+			key: 'round',
+			value: function round(params) {
+				var value = this._getValue(params[0]);
+				var digits = params.length > 1 ? this._getValue(params[1]) : 0;
+				if (digits > 0) {
+					var pow = Math.pow(10, digits);
+					return Math.round(value * pow) / pow;
+				} else {
+					return Math.round(value);
+				}
 			}
 
 			///////////

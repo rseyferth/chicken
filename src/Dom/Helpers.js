@@ -536,6 +536,17 @@ class Helpers
 		return value.toLocaleString(window.Chicken.app.i18n.language);
 	}
 
+	round(params) {
+		let value = this._getValue(params[0]);
+		let digits = params.length > 1 ? this._getValue(params[1]) : 0;
+		if (digits > 0) {
+			let pow = Math.pow(10, digits);
+			return Math.round(value * pow) / pow;
+		} else {
+			return Math.round(value);
+		}
+	}
+
 
 	///////////
 	// Debug //

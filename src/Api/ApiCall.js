@@ -335,6 +335,18 @@ class ApiCall extends Obj {
 	 * @chainable
 	 */
 	page(pageNumber, pageSize = null) { 
+
+		// Reset?
+		if (pageNumber === false) {
+
+			// Clear
+			delete this.queryParams['page[number]'];
+			delete this.queryParams['page[size]'];
+			return this;
+
+		}
+
+		// Set it
 		if (pageSize !== null) this.pageSize(pageSize);
 		return this.query('page[number]', pageNumber);
 	}
