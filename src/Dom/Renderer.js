@@ -283,7 +283,7 @@ class Renderer
 				if (helperResult === undefined) {
 
 					// No result, then we don't want to return a value
-					helperValue = false;
+					helperValue = undefined;
 
 				} else {
 

@@ -64,7 +64,6 @@ class Component extends View
 			this.attributes[inflection.camelize(key.split('-').join('_'), true)] = value;
 		});
 
-
 		/**
 		 * The HTMLBars visitor that was used to initialize this component
 		 *
@@ -109,7 +108,7 @@ class Component extends View
 		this.element = null;
 
 
-			/**
+		/**
 		 * The component instance that wrap this component, if any.
 		 * 
 		 * @property parentComponent
@@ -121,7 +120,7 @@ class Component extends View
 		// Do I have a parent?
 		if (this.parentComponent) {
 			this.parentComponent.components[this.getId()] = this;
-			this.set('_', this.parentComponent);
+			this.attributes._ = this.parentComponent;
 		}
 
 
@@ -129,12 +128,12 @@ class Component extends View
 		/**
 		 * @property view
 		 * @type {Dom.View}
-		 */
+		 */ 
 		this.view = this.scope.view;
 		if (this.view) {
 			this.view.components[this.getId()] = this;
 			if (!this.parentComponent) this.set('_', this.view);
-			this.set('$', this.view);
+			this.attributes.$ = this.view;
 		}
 		
 		/**

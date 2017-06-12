@@ -14683,7 +14683,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (helperResult === undefined) {
 
 					// No result, then we don't want to return a value
-					helperValue = false;
+					helperValue = undefined;
 				} else {
 
 					// A value was returned, meaning this helper is used as a value getter, and might need
@@ -16451,18 +16451,18 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.element = null;
 
 			/**
-	  * The component instance that wrap this component, if any.
-	  * 
-	  * @property parentComponent
-	  * @type {Dom.Component}
-	  */
+	   * The component instance that wrap this component, if any.
+	   * 
+	   * @property parentComponent
+	   * @type {Dom.Component}
+	   */
 			_this.parentComponent = _this.scope.component;
 			_this.setSilently('parent', _this.parentComponent);
 
 			// Do I have a parent?
 			if (_this.parentComponent) {
 				_this.parentComponent.components[_this.getId()] = _this;
-				_this.set('_', _this.parentComponent);
+				_this.attributes._ = _this.parentComponent;
 			}
 
 			/**
@@ -16473,7 +16473,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			if (_this.view) {
 				_this.view.components[_this.getId()] = _this;
 				if (!_this.parentComponent) _this.set('_', _this.view);
-				_this.set('$', _this.view);
+				_this.attributes.$ = _this.view;
 			}
 
 			/**
