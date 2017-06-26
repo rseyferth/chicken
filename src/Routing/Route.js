@@ -101,7 +101,8 @@ class Route extends Obj
 			abstract: actions === null,
 			as: null,
 			viewContainer: 'main',
-			middleware: []
+			middleware: [],
+			services: []
 		});
 
 
@@ -475,6 +476,13 @@ class Route extends Obj
 	middleware(...keys) {
 
 		this.options.middleware = _.unique(_.flatten([this.options.middleware, keys]));
+		return this;
+
+	}
+
+	services(...keys) {
+
+		this.options.services = _.unique(_.flatten([this.options.services, keys]));
 		return this;
 
 	}

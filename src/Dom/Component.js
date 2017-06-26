@@ -61,7 +61,17 @@ class Component extends View
 		 */
 		this.attributes = {};
 		_.each(attributeHash, (value, key) => {
+			
+			// Autocast
+			if (value === 'true') {
+				value = true;
+			} else if (value === 'false') {
+				value = false;
+			}
+
+			// Set it.
 			this.attributes[inflection.camelize(key.split('-').join('_'), true)] = value;
+			
 		});
 
 		/**

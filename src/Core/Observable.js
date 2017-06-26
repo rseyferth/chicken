@@ -331,6 +331,17 @@ class Observable extends Obj {
 
 	}
 
+	setIfChanged(key, value) {
+
+		// Original
+		let originalValue = this.get(key);
+		if (originalValue == value) return this;
+
+		return this.set(key, value);
+
+
+	}
+
 
 	_set(key, value) {
 

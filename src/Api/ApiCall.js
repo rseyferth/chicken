@@ -111,6 +111,13 @@ class ApiCall extends Obj {
 
 
 		/**
+		 * @property deserializeResult
+		 * @type {Boolean}
+		 */
+		this.deserializeResult = true;
+
+
+		/**
 		 * when true, the call will resolve with a null value on error. This can be set
 		 * by using the allowFailure method
 		 * 
@@ -196,6 +203,7 @@ class ApiCall extends Obj {
 					}
 
 					//non Resource response type
+					//@DEPRECATED! Use doNotDeserialize() instead
 					if (result && result.responseType == 'nonResource') {
 						resolve(result);
 						return;
@@ -203,20 +211,30 @@ class ApiCall extends Obj {
 
 
 					// Deserialize it
-					let response = this.api.deserialize(result, this);
+					let response;
+					if (this.deserializeResult) {
+						
+						// Deserialize
+						response = this.api.deserialize(result, this);
 
-					// Do we expect a single model?
-					if (this.expectModel && response instanceof Collection) {
-						response = response.first();
-					
-					// Or a collection
-					} else if (this.expectCollection && response instanceof Model) {
+						// Do we expect a single model?
+						if (this.expectModel && response instanceof Collection) {
+							response = response.first();
+						
+						// Or a collection
+						} else if (this.expectCollection && response instanceof Model) {
 
-						// Make a collection of it
-						let coll = new Collection();
-						coll.add(response);
-						response = coll;
+							// Make a collection of it
+							let coll = new Collection();
+							coll.add(response);
+							response = coll;
 
+						}
+						
+					} else {
+
+						// Use as is
+						response = result;
 					}
 
 					// Do hook
@@ -383,6 +401,18 @@ class ApiCall extends Obj {
 	 */
 	doNotExecute(doNotExecuteInView = true) {
 		this.doNotExecuteInView = doNotExecuteInView;
+		return this;
+	}
+
+	/**
+	 * Do not deserialize the response but return the literal
+	 * response instead.
+	 * 	
+	 * @param  {Boolean} doNotDeserialize 
+	 * @chainable
+	 */
+	doNotDeserialize(doNotDeserialize = true) {
+		this.deserializeResult = !doNotDeserialize;
 		return this;
 	}
 

@@ -485,8 +485,20 @@ class Renderer
 					let actionCallback = renderer.hooks.getAction(scope, params[0]);
 					if (!actionCallback) {
 
-						// Undefined action.
-						throw new Error('Could not find action "' + params[0] + '" within the scope');
+						// Lazy action?
+						if (attributeHash.lazy === true) {
+
+							// Use current scope so send action lazily
+							actionCallback = (...args) => {
+								scope.self.sendAction(params[0], args);
+							};
+
+						} else {
+
+							// Undefined action.
+							throw new Error(`Could not find action "${params[0]}" within the scope`);
+
+						}
 
 					}
 

@@ -168,13 +168,6 @@ class JsonApi extends Api
 				let relationships = {};
 				_.each(model.related, (relatedData, key) => {
 				
-					// @ TEMP FIX
-					// skip belongsto relations as the api resrouceController does not support saving this relationType
-					let relationship = model.getRelationship(key);
-					if (relationship && relationship.type === 'BelongsTo') {
-						return;
-					}
-
 					// Is it a collection?
 					if (relatedData instanceof Collection) {
 
@@ -270,7 +263,7 @@ class JsonApi extends Api
 	}
 
 	deserializeModel(data, apiCall, deserializeRelationships = true) {
-
+		
 		// Look for the type of model
 		let resourceType = data.type;
 		let modelClass = Model;

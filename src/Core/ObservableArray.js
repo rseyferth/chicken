@@ -650,8 +650,14 @@ class ObservableArray extends Obj
 	}
 
 	contains(item) {
-
 		return _.contains(this.items, item);
+	}
+
+	sum(callback) {
+		let values = _.map(this.items, callback);
+		return _.reduce(values, (memo, num) => {
+			return memo + num;
+		}, 0);		
 	}
 
 

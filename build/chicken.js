@@ -13006,6 +13006,16 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this;
 			}
 		}, {
+			key: 'setIfChanged',
+			value: function setIfChanged(key, value) {
+
+				// Original
+				var originalValue = this.get(key);
+				if (originalValue == value) return this;
+
+				return this.set(key, value);
+			}
+		}, {
 			key: '_set',
 			value: function _set(key, value) {
 
@@ -14859,8 +14869,22 @@ return /******/ (function(modules) { // webpackBootstrap
 					var actionCallback = renderer.hooks.getAction(scope, params[0]);
 					if (!actionCallback) {
 
-						// Undefined action.
-						throw new Error('Could not find action "' + params[0] + '" within the scope');
+						// Lazy action?
+						if (attributeHash.lazy === true) {
+
+							// Use current scope so send action lazily
+							actionCallback = function actionCallback() {
+								for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+									args[_key] = arguments[_key];
+								}
+
+								scope.self.sendAction(params[0], args);
+							};
+						} else {
+
+							// Undefined action.
+							throw new Error('Could not find action "' + params[0] + '" within the scope');
+						}
 					}
 
 					// Get action
@@ -15591,8 +15615,15 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'contains',
 			value: function contains(item) {
-
 				return _underscore2.default.contains(this.items, item);
+			}
+		}, {
+			key: 'sum',
+			value: function sum(callback) {
+				var values = _underscore2.default.map(this.items, callback);
+				return _underscore2.default.reduce(values, function (memo, num) {
+					return memo + num;
+				}, 0);
 			}
 		}, {
 			key: 'map',
@@ -16406,6 +16437,15 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.attributes = {};
 			_underscore2.default.each(attributeHash, function (value, key) {
+
+				// Autocast
+				if (value === 'true') {
+					value = true;
+				} else if (value === 'false') {
+					value = false;
+				}
+
+				// Set it.
 				_this.attributes[_inflection2.default.camelize(key.split('-').join('_'), true)] = value;
 			});
 
@@ -17872,6 +17912,12 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.expectCollection = false;
 
 			/**
+	   * @property deserializeResult
+	   * @type {Boolean}
+	   */
+			_this.deserializeResult = true;
+
+			/**
 	   * when true, the call will resolve with a null value on error. This can be set
 	   * by using the allowFailure method
 	   * 
@@ -17963,25 +18009,35 @@ return /******/ (function(modules) { // webpackBootstrap
 						}
 
 						//non Resource response type
+						//@DEPRECATED! Use doNotDeserialize() instead
 						if (result && result.responseType == 'nonResource') {
 							resolve(result);
 							return;
 						}
 
 						// Deserialize it
-						var response = _this3.api.deserialize(result, _this3);
+						var response = void 0;
+						if (_this3.deserializeResult) {
 
-						// Do we expect a single model?
-						if (_this3.expectModel && response instanceof _Collection2.default) {
-							response = response.first();
+							// Deserialize
+							response = _this3.api.deserialize(result, _this3);
 
-							// Or a collection
-						} else if (_this3.expectCollection && response instanceof _Model2.default) {
+							// Do we expect a single model?
+							if (_this3.expectModel && response instanceof _Collection2.default) {
+								response = response.first();
 
-							// Make a collection of it
-							var coll = new _Collection2.default();
-							coll.add(response);
-							response = coll;
+								// Or a collection
+							} else if (_this3.expectCollection && response instanceof _Model2.default) {
+
+								// Make a collection of it
+								var coll = new _Collection2.default();
+								coll.add(response);
+								response = coll;
+							}
+						} else {
+
+							// Use as is
+							response = result;
 						}
 
 						// Do hook
@@ -18159,6 +18215,23 @@ return /******/ (function(modules) { // webpackBootstrap
 				var doNotExecuteInView = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
 				this.doNotExecuteInView = doNotExecuteInView;
+				return this;
+			}
+
+			/**
+	   * Do not deserialize the response but return the literal
+	   * response instead.
+	   * 	
+	   * @param  {Boolean} doNotDeserialize 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'doNotDeserialize',
+			value: function doNotDeserialize() {
+				var _doNotDeserialize = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+				this.deserializeResult = !_doNotDeserialize;
 				return this;
 			}
 		}]);
@@ -21891,7 +21964,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				abstract: actions === null,
 				as: null,
 				viewContainer: 'main',
-				middleware: []
+				middleware: [],
+				services: []
 			});
 
 			/**
@@ -22271,6 +22345,16 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				this.options.middleware = _underscore2.default.unique(_underscore2.default.flatten([this.options.middleware, keys]));
+				return this;
+			}
+		}, {
+			key: 'services',
+			value: function services() {
+				for (var _len3 = arguments.length, keys = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+					keys[_key3] = arguments[_key3];
+				}
+
+				this.options.services = _underscore2.default.unique(_underscore2.default.flatten([this.options.services, keys]));
 				return this;
 			}
 
@@ -24330,13 +24414,6 @@ return /******/ (function(modules) { // webpackBootstrap
 							// Loop through relationships
 							var relationships = {};
 							_underscore2.default.each(model.related, function (relatedData, key) {
-
-								// @ TEMP FIX
-								// skip belongsto relations as the api resrouceController does not support saving this relationType
-								var relationship = model.getRelationship(key);
-								if (relationship && relationship.type === 'BelongsTo') {
-									return;
-								}
 
 								// Is it a collection?
 								if (relatedData instanceof _Collection2.default) {
