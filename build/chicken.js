@@ -720,7 +720,37 @@ return /******/ (function(modules) { // webpackBootstrap
 			return _Application2.default.getInstance().i18n.translate(key, attributes);
 		},
 
-		debugging: 'console'
+		debugging: 'console',
+
+		/////////////
+		// Filters //
+		/////////////
+
+		isNullFilter: '@Q' + JSON.stringify({ 'operator': 'IS NULL' }),
+		isNotNullFilter: '@Q' + JSON.stringify({ 'operator': 'IS NULL' }),
+		makeFilter: function makeFilter(operator, value) {
+			var addWildcards = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+			if (addWildcards === null) addWildcards = operator === 'LIKE';
+			if (addWildcards) value = '%' + value + '%';
+			return '@Q' + JSON.stringify({
+				value: value,
+				operator: operator
+			});
+		},
+		multiFilter: function multiFilter() {
+			for (var _len5 = arguments.length, filters = Array(_len5), _key5 = 0; _key5 < _len5; _key5++) {
+				filters[_key5] = arguments[_key5];
+			}
+
+			// Collect strings
+			var objects = _underscore2.default.map(filters, function (f) {
+				return JSON.parse(f.replace(/^@Q/, ''));
+			});
+
+			// Put 'em together
+			return '@Q' + JSON.stringify(objects);
+		}
 
 	};
 
@@ -10063,16 +10093,22 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _instance = undefined;
 
+	/**
+	 * The main Application class, used to create a Chicken application.
+	 *
+	 * @param {JQuery} $app - The target jQuery element to create application in
+	 * @param {Object} settings - Application settings object
+	 * @param {string} [settings.baseUrl=/] - The root uri of the application
+	 * @param {History} [history] Optional browser history instance. Will be created for you if you leave it null.
+	 * 
+	 */
+
 	var Application = function (_Observable) {
 		_inherits(Application, _Observable);
 
-		/**
-	  * The Application class is 
-	  *
-	  * @class Application
-	  * @extends Core.Observable
-	  */
-		function Application($app, settings, history) {
+		function Application($app, settings) {
+			var history = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
 			_classCallCheck(this, Application);
 
 			var _this = _possibleConstructorReturn(this, (Application.__proto__ || Object.getPrototypeOf(Application)).call(this));
@@ -15230,11 +15266,21 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function _delete() {
 				var _this6 = this;
 
+				// Is the last value a boolean?
+				var doNotNotify = false;
+
 				for (var _len2 = arguments.length, values = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
 					values[_key2] = arguments[_key2];
 				}
 
-				this.items = _underscore2.default.difference(this.items, values);
+				if (values.length > 1 && typeof values[values.length - 1] === 'boolean') {
+					doNotNotify = values.pop();
+				}
+
+				// Add items
+				_underscore2.default.each(values, function (value) {
+					_this6._delete(value);
+				});
 
 				// Studying?
 				if (this.isStudyingChildren) {
@@ -15245,10 +15291,18 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				// Trigger events
-				this.trigger('change');
-				this.trigger('delete', values);
+				if (!doNotNotify) {
+					this.trigger(ObservableArray.Events.Change);
+					this.trigger(ObservableArray.Events.Delete, values);
+				}
 
 				return this;
+			}
+		}, {
+			key: '_delete',
+			value: function _delete(value) {
+
+				this.items = _underscore2.default.without(this.items, value);
 			}
 
 			/**
@@ -17806,21 +17860,17 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
 	/**
-	 * @module Api
+	 * An ApiCall is a once-executing call to the configured API
+	 * 
+	 * @param  {Api.Api} api 	The Api instance this call originates from
+	 * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+	 * @param  {string} uri			The uri to call
+	 * @param  {Object} data        
+	 * @param  {Object} ajaxOptions 	 
 	 */
 	var ApiCall = function (_Obj) {
 		_inherits(ApiCall, _Obj);
 
-		/**
-	  * @class Api.ApiCall 
-	  * 
-	  * @constructor 
-	  * @param  {Api.Api} api 	The Api instance this call originates from
-	  * @param  {string} method      The HTTP method to use (get, post, put, etc.)
-	  * @param  {string} uri			The uri to call
-	  * @param  {Object} data        
-	  * @param  {Object} ajaxOptions 	 
-	  */
 		function ApiCall(api, method, uri) {
 			var data = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 			var ajaxOptions = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : {};
@@ -19308,16 +19358,21 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Get the relationship itself
 				var relationship = this.getRelationship(relationshipName);
 				if (!relationship) throw new Error('Error trying to set related model; there is no relationship defined on "' + this.getModelName() + '" by the name "' + relationshipName + '"');
-				if (relationship.isStoredOnLocalModel()) {
 
-					// Get the remote key's value and set it on the local key
-					this.set(relationship.localKey, relatedModel.get(relationship.remoteKey));
-				} else if (relationship.isStoredOnRemoteModel()) {
+				// Is there a model?
+				if (relatedModel) {
 
-					// Get the local key's value and set it on the remote key
-					relatedModel.set(relationship.remoteKey, this.get(relationship.localKey));
+					// Check where the key is stored and set it
+					if (relationship.isStoredOnLocalModel()) {
+
+						// Get the remote key's value and set it on the local key
+						this.set(relationship.localKey, relatedModel.get(relationship.remoteKey));
+					} else if (relationship.isStoredOnRemoteModel()) {
+
+						// Get the local key's value and set it on the remote key
+						relatedModel.set(relationship.remoteKey, this.get(relationship.localKey));
+					}
 				}
-
 				this.related[relationshipName] = relatedModel;
 
 				// Trigger
@@ -19937,6 +19992,29 @@ return /******/ (function(modules) { // webpackBootstrap
 						this.itemsById[modelId] = value;
 					}
 				}
+
+				return this;
+			}
+		}, {
+			key: '_delete',
+			value: function _delete(value) {
+
+				// Is value an id?
+				if (typeof value === 'number' || typeof value === 'string') {
+					value = this.itemsById[value];
+					if (!value) return this;
+				}
+
+				// Is value a model?
+				if (!_ClassMap2.default.isA(value, 'Model')) {
+					throw new TypeError('You cannot delete non-Model values to a Collection');
+				}
+
+				// Basics
+				_get(Collection.prototype.__proto__ || Object.getPrototypeOf(Collection.prototype), '_delete', this).call(this, value);
+
+				// And from keyed array
+				delete this.itemsById[value.get('id')];
 
 				return this;
 			}
@@ -21045,6 +21123,16 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return value ? value : defaultValue;
 			}
+		}, {
+			key: 'fallback',
+			value: function fallback(params) {
+
+				// Loop to find first non-null value
+				for (var i in params) {
+					var v = this._getValue(params[i]);
+					if (v) return v;
+				}
+			}
 
 			/////////////
 			// Methods //
@@ -22130,7 +22218,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * Get the action definitions for this Route, and any parent routes that it may have.
 	   *
 	   * @method getFullActions
-	   * @return {object} [description]
+	   * @return {object} 
 	   */
 
 		}, {
@@ -23863,7 +23951,13 @@ return /******/ (function(modules) { // webpackBootstrap
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 	/**
-	 * @module Api
+	 * An Api instance can be used to make contact with one specific
+	 * API. 
+	 *
+	 * @param {Object} options - Configuration for the Api
+	 * @param {string} [options.baseUrl=/api] Base url to prepend to all API calls
+	 * @param {boolean} [options.queueAjaxCalls=false] Whether to execute the API calls one by one (true), or simultaneously (false)
+	 * 
 	 */
 	var Api = function () {
 

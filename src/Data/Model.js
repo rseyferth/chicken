@@ -895,18 +895,24 @@ class Model extends Observable
 		// Get the relationship itself
 		let relationship = this.getRelationship(relationshipName);
 		if (!relationship) throw new Error('Error trying to set related model; there is no relationship defined on "' + this.getModelName() + '" by the name "' + relationshipName + '"');
-		if (relationship.isStoredOnLocalModel()) {
-			
-			// Get the remote key's value and set it on the local key
-			this.set(relationship.localKey, relatedModel.get(relationship.remoteKey));
-
-		} else if (relationship.isStoredOnRemoteModel()) {
-
-			// Get the local key's value and set it on the remote key
-			relatedModel.set(relationship.remoteKey, this.get(relationship.localKey));
-
-		}
 		
+		// Is there a model?
+		if (relatedModel) {
+
+			// Check where the key is stored and set it
+			if (relationship.isStoredOnLocalModel()) {
+				
+				// Get the remote key's value and set it on the local key
+				this.set(relationship.localKey, relatedModel.get(relationship.remoteKey));
+
+			} else if (relationship.isStoredOnRemoteModel()) {
+
+				// Get the local key's value and set it on the remote key
+				relatedModel.set(relationship.remoteKey, this.get(relationship.localKey));
+
+			}
+			
+		}
 		this.related[relationshipName] = relatedModel;
 	
 		// Trigger

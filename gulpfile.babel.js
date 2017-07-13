@@ -11,6 +11,7 @@ import watch from 'gulp-watch';
 import gutil from 'gulp-util';
 import connect from 'gulp-connect';
 import eslint from 'gulp-eslint';
+import documentation from 'gulp-documentation';
 
 import browserSync from 'browser-sync';
 import historyApiFallback from 'connect-history-api-fallback';
@@ -136,31 +137,45 @@ gulp.task('lint', [], () => {
 
 });
 
-//////////////////////////
-// Yuidoc documentation //
-//////////////////////////
-
-gulp.task('watch:docs', [], () => {
-
-	// Setup simple server for docs
-	connect.server({
-		port: 9009,
-		root: './docs',
-		liveReload: true
-	});
-	return watch(sourceGlob, () => {
-		gulp.start('docs');
-		connect.reload();
-	});
-	
-
-});
+////////////////////////////////////
+// Documentation.js documentation //
+////////////////////////////////////
 
 gulp.task('docs', [], () => {
 
-	return gulp.src(sourceGlob)
-		.pipe(yuidoc())
-		.pipe(gulp.dest('./docs'));
+	gutil.log(gutil.colors.bold.green('*'.repeat(50)));		
+	gutil.log(gutil.colors.green('** Creating HTML documentation'));
+	
+	gulp.src('src/main.js')
+		.pipe(documentation('html', {
+
+		}))
+		.pipe(gulp.dest('docs'));
+
+	gutil.log(gutil.colors.green('** Documentation generated'));
+	gutil.log(gutil.colors.bold.green('*'.repeat(50)));		
+});
+
+gulp.task('docs:watch', ['docs'], () => {
+
+	// Start server
+	browserSync({
+		notify: false,
+		port: 4000,
+		open: true,
+		logLevel: 'warn',
+		https: false,
+		server: {
+			baseDir: ['docs/']
+		}
+	});
+
+	gulp.watch(['src/**/*.js'], ['docs']);
+
+	// Watch for changes to reload
+	gulp.watch([
+		'docs/index.html'
+	]).on('change', browserSync.reload);
 
 });
 
@@ -185,6 +200,7 @@ gulp.task('watch', [], () => {
 		gulp.start('lint');
 	//	gulp.start('mocha');
 		gulp.start('webpack');
+		gulp.start('docs');
 
 	});
 

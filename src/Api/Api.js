@@ -6,7 +6,13 @@ import ApiCall from '~/Api/ApiCall';
 import App from '~/Helpers/App';
 
 /**
- * @module Api
+ * An Api instance can be used to make contact with one specific
+ * API. 
+ *
+ * @param {Object} options - Configuration for the Api
+ * @param {string} [options.baseUrl=/api] Base url to prepend to all API calls
+ * @param {boolean} [options.queueAjaxCalls=false] Whether to execute the API calls one by one (true), or simultaneously (false)
+ * 
  */
 class Api {
 

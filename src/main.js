@@ -456,7 +456,37 @@ var Chicken = {
 		return Application.getInstance().i18n.translate(key, attributes);
 	},
 
-	debugging: 'console'
+	debugging: 'console',
+
+
+	/////////////
+	// Filters //
+	/////////////
+
+	isNullFilter: '@Q' + JSON.stringify({ 'operator': 'IS NULL' }),
+	isNotNullFilter: '@Q' + JSON.stringify({ 'operator': 'IS NULL' }),
+	makeFilter: (operator, value, addWildcards = null) => {
+		if (addWildcards === null) addWildcards = operator === 'LIKE';
+		if (addWildcards) value = '%' + value + '%';
+			return '@Q' + JSON.stringify({
+				value: value,
+				operator: operator
+		});
+	},
+	multiFilter: (...filters) => {
+		
+		// Collect strings
+		let objects = _.map(filters, (f) => {
+			return JSON.parse(f.replace(/^@Q/, ''));
+		});
+
+		// Put 'em together
+		return '@Q' + JSON.stringify(objects);
+
+	}
+
+
+
 
 };
 

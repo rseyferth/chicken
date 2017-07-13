@@ -27,15 +27,18 @@ import I18n from '~/Localization/I18n';
 
 var _instance = undefined;
 
+/**
+ * The main Application class, used to create a Chicken application.
+ *
+ * @param {JQuery} $app - The target jQuery element to create application in
+ * @param {Object} settings - Application settings object
+ * @param {string} [settings.baseUrl=/] - The root uri of the application
+ * @param {History} [history] Optional browser history instance. Will be created for you if you leave it null.
+ * 
+ */
 class Application extends Observable {
 
-	/**
-	 * The Application class is 
-	 *
-	 * @class Application
-	 * @extends Core.Observable
-	 */
-	constructor($app, settings, history) {
+	constructor($app, settings, history = null) {
 
 		// Basics
 		super();

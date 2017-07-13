@@ -282,7 +282,16 @@ class ObservableArray extends Obj
 	 */
 	delete(...values) {
 
-		this.items = _.difference(this.items, values);
+		// Is the last value a boolean?
+		let doNotNotify = false;
+		if (values.length > 1 && typeof values[values.length - 1] === 'boolean') {
+			doNotNotify = values.pop();
+		}
+
+		// Add items
+		_.each(values, (value) => {
+			this._delete(value);
+		});
 
 		// Studying?
 		if (this.isStudyingChildren) {
@@ -295,10 +304,19 @@ class ObservableArray extends Obj
 		}
 
 		// Trigger events
-		this.trigger('change');
-		this.trigger('delete', values);
+		if (!doNotNotify) {
+			this.trigger(ObservableArray.Events.Change);
+			this.trigger(ObservableArray.Events.Delete, values);
+		}
 
 		return this;
+
+	}
+
+
+	_delete(value) {
+
+		this.items = _.without(this.items, value);
 
 	}
 

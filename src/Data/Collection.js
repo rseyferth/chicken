@@ -112,6 +112,29 @@ class Collection extends ObservableArray
 
 	}
 
+	_delete(value) {
+		
+		// Is value an id?
+		if (typeof value === 'number' || typeof value === 'string') {
+			value = this.itemsById[value];
+			if (!value) return this;
+		}
+
+		// Is value a model?
+		if (!ClassMap.isA(value, 'Model')) {
+			throw new TypeError('You cannot delete non-Model values to a Collection');
+		}
+
+		// Basics
+		super._delete(value);
+
+		// And from keyed array
+		delete this.itemsById[value.get('id')];
+
+		return this;
+
+	}
+
 
 	isDirty() {
 

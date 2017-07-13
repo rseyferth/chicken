@@ -8,20 +8,17 @@ import Model from '~/Data/Model';
 import Collection from '~/Data/Collection';
 
 /**
- * @module Api
+ * An ApiCall is a once-executing call to the configured API
+ * 
+ * @param  {Api.Api} api 	The Api instance this call originates from
+ * @param  {string} method      The HTTP method to use (get, post, put, etc.)
+ * @param  {string} uri			The uri to call
+ * @param  {Object} data        
+ * @param  {Object} ajaxOptions 	 
  */
 class ApiCall extends Obj {
 
-	/**
-	 * @class Api.ApiCall 
-	 * 
-	 * @constructor 
-	 * @param  {Api.Api} api 	The Api instance this call originates from
-	 * @param  {string} method      The HTTP method to use (get, post, put, etc.)
-	 * @param  {string} uri			The uri to call
-	 * @param  {Object} data        
-	 * @param  {Object} ajaxOptions 	 
-	 */
+	
 	constructor(api, method, uri, data = {}, ajaxOptions = {}) {
 
 		super();

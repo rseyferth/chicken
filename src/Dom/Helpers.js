@@ -385,6 +385,16 @@ class Helpers
 		return (value) ? value : defaultValue;
 	}
 
+	fallback(params) {
+
+		// Loop to find first non-null value
+		for (let i in params) {
+			let v = this._getValue(params[i]);
+			if (v) return v;
+		}
+
+	}
+
 
 	/////////////
 	// Methods //

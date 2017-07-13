@@ -1,6 +1,6 @@
 {
   "name": "chickenjs",
-  "version": "0.0.1",
+  "version": "0.2.25",
   "description": "Chicken Javascript Webapp Framework",
   "main": "build/chicken.js",
   "repository": {
@@ -23,6 +23,7 @@
     "eslint": "^3.3.1",
     "gulp": "^3.9.1",
     "gulp-connect": "^5.0.0",
+    "gulp-documentation": "^3.2.0",
     "gulp-eslint": "^3.0.1",
     "gulp-mocha": "^3.0.1",
     "gulp-util": "^3.0.7",

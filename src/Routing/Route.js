@@ -268,7 +268,7 @@ class Route extends Obj
 	 * Get the action definitions for this Route, and any parent routes that it may have.
 	 *
 	 * @method getFullActions
-	 * @return {object} [description]
+	 * @return {object} 
 	 */
 	getFullActions() {
 
