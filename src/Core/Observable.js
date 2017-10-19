@@ -401,6 +401,36 @@ class Observable extends Obj {
 
 	}
 
+	fill(obj) {
+
+		// Loop through object
+		_.each(obj, (value, key) => {
+
+			// Get existing value
+			if (this.has(key)) {
+
+				// Get value
+				let curValue = this.get(key);
+
+				// Observable?
+				if (curValue instanceof Observable) {
+					curValue.fill(value);
+				} else {
+					this.set(key, value, true);
+				}
+
+			} else {
+
+				// Just set it.
+				this.set(key, value, true);
+
+			}
+
+		});
+		return this;
+
+	}
+
 
 	/**
 	 * Increment given attribute's numeric value
