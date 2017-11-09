@@ -446,7 +446,8 @@ class Model extends Observable
 
 					// Add default value
 					let def = this.getAttributeDefinition(key);
-					attr[key] = def.uncast(def.getDefaultValue());
+					let defaultValue = def.getDefaultValue();
+					if (defaultValue) attr[key] = def.uncast(def.getDefaultValue());
 
 				});
 				
