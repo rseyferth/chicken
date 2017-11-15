@@ -178,8 +178,6 @@ class Router extends Obj
 	 */
 	handle(request) {
 
-		this.trigger('navigate', request);
-
 		/////////////////
 		// Match route //
 		/////////////////
@@ -219,6 +217,11 @@ class Router extends Obj
 			return;
 
 		}
+
+		// Going.
+		this.trigger('navigate', request);
+		
+				
 
 		// Store it on app
 		this.application.currentRoute = routeMatch;

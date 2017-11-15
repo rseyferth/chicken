@@ -10,11 +10,7 @@ module.exports = {
     },
     "rules": {
         "indent": [
-            "error",
-            "tab",
-            { 
-                "SwitchCase": 1
-            }
+            "warn"
         ],
         "linebreak-style": [
             "error",

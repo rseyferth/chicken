@@ -330,6 +330,10 @@ class Helpers
 		return !this.equal(params);
 	}
 
+	not(params) {
+		return !this._getValue(params[0]);
+	}
+
 	isNull(params) {
 		return this._getValue(params[0]) === null;
 	}

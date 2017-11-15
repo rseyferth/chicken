@@ -21949,6 +21949,11 @@ return /******/ (function(modules) { // webpackBootstrap
 				return !this.equal(params);
 			}
 		}, {
+			key: 'not',
+			value: function not(params) {
+				return !this._getValue(params[0]);
+			}
+		}, {
 			key: 'isNull',
 			value: function isNull(params) {
 				return this._getValue(params[0]) === null;
@@ -22502,8 +22507,6 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function handle(request) {
 				var _this2 = this;
 
-				this.trigger('navigate', request);
-
 				/////////////////
 				// Match route //
 				/////////////////
@@ -22539,6 +22542,9 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 					return;
 				}
+
+				// Going.
+				this.trigger('navigate', request);
 
 				// Store it on app
 				this.application.currentRoute = routeMatch;
