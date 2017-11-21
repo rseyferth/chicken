@@ -639,11 +639,40 @@ class View extends Observable
 		if (!continueRendering) return this;
 
 		// Render it
-		this.renderResult = this.getTemplate().render(this, this.renderer);
+		try {
 		
-		// Localize and be done!
-		this.documentFragment = this.renderResult.fragment;
-		this.resolvePromise('render', this.documentFragment);
+			this.renderResult = this.getTemplate().render(this, this.renderer);
+		
+			// Localize and be done!
+			this.documentFragment = this.renderResult.fragment;
+			this.resolvePromise('render', this.documentFragment);
+		
+		} catch (error) {
+
+			// Enrich error with element-path
+			let path = [];
+			if (this.renderer.currentMorph.element) {
+				let $el = $(this.renderer.currentMorph.element);
+				$el.parents().addBack().not('html').each(function() {
+					let entry = this.tagName.toLowerCase();
+						if (this.className) {
+						entry += "." + this.className.replace(/ /g, '.');
+						}
+						path.push(entry);
+				});
+				path = path . join( ' > ');
+			} else {
+				path = 'unknown';
+			}
+
+			// Get template source
+			let source = this.source;
+			error = `Error in template "${source}" at "${path}":\n\t${error}\n`;
+
+			this.rejectPromise('ready', error);
+			return this;
+			
+		}
 
 
 

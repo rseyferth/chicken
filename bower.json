@@ -12,7 +12,8 @@
     "htmlbars-standalone": "0.0.*",
     "moment": "^2.15.0",
     "underscore.string": "^3.3.4",
-    "jquery.ajaxq": "^0.5.2"
+    "jquery.ajaxq": "^0.5.2",
+    "query-string": "^5.0.1"
   },
   "license": "ISC",
   "homepage": "https://github.com/rseyferth/chicken",

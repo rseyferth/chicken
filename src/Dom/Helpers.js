@@ -96,7 +96,7 @@ class Helpers
 			if (!curName) throw new Error('The current route does not have a name, so relative links are not possible from here');
 
 			// ..? (Level up)
-			if (/^\.\./.test(name)) {
+			while (/^\.\./.test(name)) {
 
 				// Remove last part
 				let parts = curName.split(/\./);
@@ -124,6 +124,27 @@ class Helpers
 		});
 		let uri = route.makeUrl(attributes);
 
+		// Query?
+		if (attributeHash.query) {
+
+			// Try to decode as JSON
+			let query = attributeHash.query;
+			try {
+				
+				// Parse JSON
+				query = JSON.parse(query);
+
+				// Convert to querystring
+				query = QueryString.stringify(query);
+				
+			} catch (e) {
+				// Ok, then we use it as it is
+			}
+
+			// Add to URL
+			uri = `${uri}?${query}`;
+
+		}
 		
 		// Make the link
 		return this.link([uri], attributeHash, block);
@@ -411,6 +432,9 @@ class Helpers
 		let obj = params.shift(params);
 		let key = params.shift(params);
 
+		// No method
+		if (!obj[key]) throw new Error(`Problem in 'method'-helper: there is no method '${key}' on the object`);
+
 		// Do it.
 		return obj[key].apply(obj, params);
 
@@ -571,7 +595,7 @@ class Helpers
 	}
 
 	'query-params'(params, attributeHash /*, blocks, morph, renderer, scope, visitor*/) {
-		return QueryString.stringify(this._getHashValues(attributeHash));		
+		return QueryString.stringify(this._getHashValues(attributeHash));
 	}
 
 

@@ -270,6 +270,24 @@ class Component extends View
 			this.documentFragment = this.renderResult.fragment;
 
 		} catch (error) {
+
+			// Enrich error with element-path
+			let path = [];
+			let $el = $(this.renderer.currentMorph.element);
+			$el.parents().addBack().not('html').each(function() {
+				let entry = this.tagName.toLowerCase();
+			  	if (this.className) {
+					entry += "." + this.className.replace(/ /g, '.');
+			  	}
+			  	path.push(entry);
+			});
+			path = path . join( ' > ');
+
+			// Get template source
+			let source = this.source;
+			if (this.view) source = `${this.name} in ${this.view.source}`;
+			error = `Error in template "${source}" at "${path}":\n\t${error}\n`;
+
 			this.rejectPromise('ready', error);
 			return;
 		}

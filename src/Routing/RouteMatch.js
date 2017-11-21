@@ -1,4 +1,5 @@
 import _ from 'underscore';
+import QueryString from 'query-string';
 
 import Action from '~/Routing/Action';
 import Utils from '~/Helpers/Utils';
@@ -67,6 +68,13 @@ class RouteMatch
 		this.parameters = new Map();
 
 
+		/**
+		 * Parameters given in the URL (?a=b)
+		 * 
+		 * @property query
+		 * @type {Object}
+		 */
+		this.query = QueryString.parse(window.location.search);
 
 		////////////////////
 		// Create actions //

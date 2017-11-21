@@ -131,7 +131,7 @@ class Route extends Obj
 		 */
 		this.acceptsFlash = false;
 
-
+		
 
 		// Add me to parent route
 		if (parent) {

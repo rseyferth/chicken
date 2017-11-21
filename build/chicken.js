@@ -17588,6 +17588,24 @@ return /******/ (function(modules) { // webpackBootstrap
 					});
 					this.documentFragment = this.renderResult.fragment;
 				} catch (error) {
+
+					// Enrich error with element-path
+					var path = [];
+					var $el = (0, _jquery2.default)(this.renderer.currentMorph.element);
+					$el.parents().addBack().not('html').each(function () {
+						var entry = this.tagName.toLowerCase();
+						if (this.className) {
+							entry += "." + this.className.replace(/ /g, '.');
+						}
+						path.push(entry);
+					});
+					path = path.join(' > ');
+
+					// Get template source
+					var source = this.source;
+					if (this.view) source = this.name + ' in ' + this.view.source;
+					error = 'Error in template "' + source + '" at "' + path + '":\n\t' + error + '\n';
+
 					this.rejectPromise('ready', error);
 					return;
 				}
@@ -18486,11 +18504,38 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (!continueRendering) return this;
 
 				// Render it
-				this.renderResult = this.getTemplate().render(this, this.renderer);
+				try {
 
-				// Localize and be done!
-				this.documentFragment = this.renderResult.fragment;
-				this.resolvePromise('render', this.documentFragment);
+					this.renderResult = this.getTemplate().render(this, this.renderer);
+
+					// Localize and be done!
+					this.documentFragment = this.renderResult.fragment;
+					this.resolvePromise('render', this.documentFragment);
+				} catch (error) {
+
+					// Enrich error with element-path
+					var path = [];
+					if (this.renderer.currentMorph.element) {
+						var $el = (0, _jquery2.default)(this.renderer.currentMorph.element);
+						$el.parents().addBack().not('html').each(function () {
+							var entry = this.tagName.toLowerCase();
+							if (this.className) {
+								entry += "." + this.className.replace(/ /g, '.');
+							}
+							path.push(entry);
+						});
+						path = path.join(' > ');
+					} else {
+						path = 'unknown';
+					}
+
+					// Get template source
+					var source = this.source;
+					error = 'Error in template "' + source + '" at "' + path + '":\n\t' + error + '\n';
+
+					this.rejectPromise('ready', error);
+					return this;
+				}
 
 				return this;
 			}
@@ -21714,7 +21759,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					if (!curName) throw new Error('The current route does not have a name, so relative links are not possible from here');
 
 					// ..? (Level up)
-					if (/^\.\./.test(name)) {
+					while (/^\.\./.test(name)) {
 
 						// Remove last part
 						var parts = curName.split(/\./);
@@ -21739,6 +21784,26 @@ return /******/ (function(modules) { // webpackBootstrap
 					return _this2._getValue(value);
 				});
 				var uri = route.makeUrl(attributes);
+
+				// Query?
+				if (attributeHash.query) {
+
+					// Try to decode as JSON
+					var query = attributeHash.query;
+					try {
+
+						// Parse JSON
+						query = JSON.parse(query);
+
+						// Convert to querystring
+						query = _queryString2.default.stringify(query);
+					} catch (e) {}
+					// Ok, then we use it as it is
+
+
+					// Add to URL
+					uri = uri + '?' + query;
+				}
 
 				// Make the link
 				return this.link([uri], attributeHash, block);
@@ -22038,6 +22103,9 @@ return /******/ (function(modules) { // webpackBootstrap
 				params = this._getValues(params);
 				var obj = params.shift(params);
 				var key = params.shift(params);
+
+				// No method
+				if (!obj[key]) throw new Error('Problem in \'method\'-helper: there is no method \'' + key + '\' on the object');
 
 				// Do it.
 				return obj[key].apply(obj, params);
@@ -23396,6 +23464,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
+	var _queryString = __webpack_require__(333);
+
+	var _queryString2 = _interopRequireDefault(_queryString);
+
 	var _Action = __webpack_require__(389);
 
 	var _Action2 = _interopRequireDefault(_Action);
@@ -23471,6 +23543,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @type {Map}
 	   */
 			this.parameters = new Map();
+
+			/**
+	   * Parameters given in the URL (?a=b)
+	   * 
+	   * @property query
+	   * @type {Object}
+	   */
+			this.query = _queryString2.default.parse(window.location.search);
 
 			////////////////////
 			// Create actions //
@@ -24518,6 +24598,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
 	var _jquery = __webpack_require__(326);
@@ -24764,7 +24846,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						var attr = _underscore2.default.mapObject(attributes, function (value) {
 
 							// Get value?
-							if (typeof value.getValue === 'function') {
+							if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.getValue === 'function') {
 								value = value.getValue();
 							}
 							return value;
