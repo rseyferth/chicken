@@ -27141,7 +27141,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD') : value;
 
 					case ModelAttribute.DateTime:
-						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD HH:mm:ss') : value;
+						return _moment2.default.isMoment(value) ? value.toISOString() : value;
 
 					/////////////
 					// Objects //
