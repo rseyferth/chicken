@@ -122,7 +122,7 @@ class Route extends Obj
 		 * @property acceptsQuery
 		 * @type {Boolean}
 		 */
-		this.acceptsQuery = false;
+		this.acceptsQuery = true;
 
 
 		/**

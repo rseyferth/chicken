@@ -141,6 +141,13 @@ class Application extends Observable {
 		this.history = history ? history : createHistory();
 
 
+		/**
+		 * Used to tweak history without navigating away from the page
+		 * 
+		 * @property navigationDisabledOnce
+		 * @type {Boolean}
+		 */
+		this.navigationDisabledOnce = false;
 
 
 	}
@@ -329,7 +336,7 @@ class Application extends Observable {
 
 	}
 
-	goto(uri, query = null, flash = {}) {
+	goto(uri, query = null, flash = {}, doNotNavigate = false) {
 
 		// Query in the uri?
 		let search = QueryString.extract(uri);
@@ -366,6 +373,14 @@ class Application extends Observable {
 			return this;
 		}
 
+		// No navigating? Just add the state to history?
+		if (doNotNavigate) {
+			
+			// Disable navigation
+			this.navigationDisabledOnce = true;			
+
+		}
+		
 		// Change the history state
 		this.history.push({
 			pathname: uri,
@@ -375,6 +390,7 @@ class Application extends Observable {
 			}
 		});
 
+		
 		return this;
 
 	}

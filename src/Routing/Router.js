@@ -238,6 +238,23 @@ class Router extends Obj
 			let actionPromises = [];
 			routeMatch.actions.forEach((action, vcName) => {
 
+				// Disabled navigation for this request?
+				if (this.application.navigationDisabledOnce) {
+
+					// Just set the action on the viewcontainer, but don't actually do anything
+					let vc = this.application.getViewContainer(vcName);
+					if (vc) {
+						vc.setAction(action);
+					}
+
+					// Done.
+					numberOfActionsStarted++;
+					return new Promise((resolve) => {
+						resolve();
+					});
+
+				}
+
 				// Get depends on promises
 				let dependsOnPromises = _.map(action.dependsOn, (dependsOnAction) => {
 					return dependsOnAction.getPromise('complete');
@@ -302,6 +319,9 @@ class Router extends Obj
 				this.trigger('complete', [routeMatch]);
 
 			});
+
+			// Reset navigation disabled
+			this.application.navigationDisabledOnce = false;
 
 		};
 

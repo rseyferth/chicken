@@ -10883,6 +10883,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	   */
 			_this.history = history ? history : (0, _history.createHistory)();
 
+			/**
+	   * Used to tweak history without navigating away from the page
+	   * 
+	   * @property navigationDisabledOnce
+	   * @type {Boolean}
+	   */
+			_this.navigationDisabledOnce = false;
+
 			return _this;
 		}
 
@@ -11079,6 +11087,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			value: function goto(uri) {
 				var query = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
 				var flash = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var doNotNavigate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
 
 
 				// Query in the uri?
@@ -11112,6 +11121,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				if (uri.match(/^(http(s)?\:)?\/\//)) {
 					window.location = uri + (query || '');
 					return this;
+				}
+
+				// No navigating? Just add the state to history?
+				if (doNotNavigate) {
+
+					// Disable navigation
+					this.navigationDisabledOnce = true;
 				}
 
 				// Change the history state
@@ -22628,6 +22644,22 @@ return /******/ (function(modules) { // webpackBootstrap
 					var actionPromises = [];
 					routeMatch.actions.forEach(function (action, vcName) {
 
+						// Disabled navigation for this request?
+						if (_this2.application.navigationDisabledOnce) {
+
+							// Just set the action on the viewcontainer, but don't actually do anything
+							var vc = _this2.application.getViewContainer(vcName);
+							if (vc) {
+								vc.setAction(action);
+							}
+
+							// Done.
+							numberOfActionsStarted++;
+							return new Promise(function (resolve) {
+								resolve();
+							});
+						}
+
 						// Get depends on promises
 						var dependsOnPromises = _underscore2.default.map(action.dependsOn, function (dependsOnAction) {
 							return dependsOnAction.getPromise('complete');
@@ -22684,6 +22716,9 @@ return /******/ (function(modules) { // webpackBootstrap
 						//@TODO What to do?
 						_this2.trigger('complete', [routeMatch]);
 					});
+
+					// Reset navigation disabled
+					_this2.application.navigationDisabledOnce = false;
 				};
 
 				//////////////////////
@@ -23032,7 +23067,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property acceptsQuery
 	   * @type {Boolean}
 	   */
-			_this.acceptsQuery = false;
+			_this.acceptsQuery = true;
 
 			/**
 	   * When true, the route's action(s) will refresh when the Request flash-data changes
