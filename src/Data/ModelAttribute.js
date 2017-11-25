@@ -146,7 +146,7 @@ class ModelAttribute {
 				return moment.isMoment(value) ? value.format('YYYY-MM-DD') : value;
 
 			case ModelAttribute.DateTime:
-				return moment.isMoment(value) ? value.toISOString() : value;
+				return moment.isMoment(value) ? value.format('YYYY-MM-DD HH:mm:ss') : value;
 
 
 			/////////////

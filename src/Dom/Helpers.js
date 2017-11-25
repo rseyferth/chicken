@@ -584,6 +584,16 @@ class Helpers
 			return Math.round(value);
 		}
 	}
+	
+	max(params) {
+		let values = this._getValues(params);
+		return _.max(values);
+	}
+	
+	min(params) {
+		let values = this._getValues(params);
+		return _.min(values);
+	}
 
 
 	///////////

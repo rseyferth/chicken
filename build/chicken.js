@@ -22279,6 +22279,18 @@ return /******/ (function(modules) { // webpackBootstrap
 					return Math.round(value);
 				}
 			}
+		}, {
+			key: 'max',
+			value: function max(params) {
+				var values = this._getValues(params);
+				return _underscore2.default.max(values);
+			}
+		}, {
+			key: 'min',
+			value: function min(params) {
+				var values = this._getValues(params);
+				return _underscore2.default.min(values);
+			}
 
 			///////////
 			// Debug //
@@ -23410,6 +23422,13 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'as',
 			value: function as(name) {
+
+				// Does the name start with a .?
+				if (/^\./.test(name) && this.parentRoute && this.parentRoute.name) {
+
+					// Relative name. Add parent name as prefix
+					name = '' + this.parentRoute.name + name;
+				}
 
 				// Store name
 				this.name = name;
@@ -24881,7 +24900,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						var attr = _underscore2.default.mapObject(attributes, function (value) {
 
 							// Get value?
-							if ((typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.getValue === 'function') {
+							if (value !== null && value !== undefined && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.getValue === 'function') {
 								value = value.getValue();
 							}
 							return value;
@@ -27176,7 +27195,7 @@ return /******/ (function(modules) { // webpackBootstrap
 						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD') : value;
 
 					case ModelAttribute.DateTime:
-						return _moment2.default.isMoment(value) ? value.toISOString() : value;
+						return _moment2.default.isMoment(value) ? value.format('YYYY-MM-DD HH:mm:ss') : value;
 
 					/////////////
 					// Objects //

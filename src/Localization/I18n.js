@@ -203,7 +203,7 @@ class I18n extends Obj {
 				let attr = _.mapObject(attributes, (value) => {
 				
 					// Get value?
-					if (typeof value === 'object' && typeof value.getValue === 'function') {
+					if (value !== null && value !== undefined && typeof value === 'object' && typeof value.getValue === 'function') {
 						value = value.getValue();
 					}
 					return value;

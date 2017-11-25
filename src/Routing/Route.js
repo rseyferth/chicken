@@ -462,6 +462,14 @@ class Route extends Obj
 	 */
 	as(name) {
 
+		// Does the name start with a .?
+		if (/^\./.test(name) && this.parentRoute && this.parentRoute.name) {
+
+			// Relative name. Add parent name as prefix
+			name = `${this.parentRoute.name}${name}`;
+
+		}
+
 		// Store name
 		this.name = name;
 
