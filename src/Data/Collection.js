@@ -293,6 +293,20 @@ class Collection extends ObservableArray
 	}
 
 
+	filter(...args) {
+
+		// Do the basics
+		args.push(false);
+		let items = super.filter.apply(this, args);
+
+		// Make collection
+		let collectionResult = new Collection(this.modelClass);
+		collectionResult.items = items;
+		return collectionResult;
+
+	}
+
+
 
 }
 
@@ -310,6 +324,19 @@ Collection.fromArray = (arr) => {
 	coll.items = arr;
 	return coll;
 
+
+};
+
+Collection.merge = (...collections) => {
+
+	// Get all items
+	collections = _.flatten(collections);
+	let items = _.flatten(_.pluck(collections, 'items'));
+
+	// Create new collection
+	let result = new Collection();
+	result.import(items, false);
+	return result;
 
 };
 

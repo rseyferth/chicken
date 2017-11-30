@@ -297,6 +297,8 @@ class Helpers
 
 	}
 
+	
+
 
 	////////////
 	// Values //
@@ -506,6 +508,12 @@ class Helpers
 		}
 		return value.length;
 
+	}
+
+	contains(params) {
+		let list = this._getValue(params[0]);
+		let value = this._getValue(params[1]);
+		return _.contains(list, value);
 	}
 
 	/////////////////////

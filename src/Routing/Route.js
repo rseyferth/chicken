@@ -122,7 +122,7 @@ class Route extends Obj
 		 * @property acceptsQuery
 		 * @type {Boolean}
 		 */
-		this.acceptsQuery = true;
+		this.acceptsQuery = false;
 
 
 		/**
@@ -465,8 +465,15 @@ class Route extends Obj
 		// Does the name start with a .?
 		if (/^\./.test(name) && this.parentRoute && this.parentRoute.name) {
 
+			// Strip off a part for each ..
+			let parts = this.parentRoute.name.split(/\./);
+			while (/^\.\./.test(name)) {
+				parts.pop();
+				name = name.substr(1);
+			}
+
 			// Relative name. Add parent name as prefix
-			name = `${this.parentRoute.name}${name}`;
+			name = `${parts.join('.')}${name}`;
 
 		}
 

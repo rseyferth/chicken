@@ -17582,7 +17582,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				var params = _underscore2.default.flatten([_underscore2.default.map(args, function (value) {
 					return _this2.renderer.hooks.getValue(value);
 				}), this, actionScope]);
-				callback.apply(actionScope instanceof _View3.default ? actionScope : this, params);
+				return callback.apply(actionScope instanceof _View3.default ? actionScope : this, params);
 			}
 		}, {
 			key: 'renderSync',
@@ -21130,6 +21130,22 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 				return collectionResult;
 			}
+		}, {
+			key: 'filter',
+			value: function filter() {
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
+				}
+
+				// Do the basics
+				args.push(false);
+				var items = _get(Collection.prototype.__proto__ || Object.getPrototypeOf(Collection.prototype), 'filter', this).apply(this, args);
+
+				// Make collection
+				var collectionResult = new Collection(this.modelClass);
+				collectionResult.items = items;
+				return collectionResult;
+			}
 		}]);
 
 		return Collection;
@@ -21150,9 +21166,24 @@ return /******/ (function(modules) { // webpackBootstrap
 		return coll;
 	};
 
+	Collection.merge = function () {
+		for (var _len2 = arguments.length, collections = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+			collections[_key2] = arguments[_key2];
+		}
+
+		// Get all items
+		collections = _underscore2.default.flatten(collections);
+		var items = _underscore2.default.flatten(_underscore2.default.pluck(collections, 'items'));
+
+		// Create new collection
+		var result = new Collection();
+		result.import(items, false);
+		return result;
+	};
+
 	Collection.combine = function () {
-		for (var _len = arguments.length, collections = Array(_len), _key = 0; _key < _len; _key++) {
-			collections[_key] = arguments[_key];
+		for (var _len3 = arguments.length, collections = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+			collections[_key3] = arguments[_key3];
 		}
 
 		// Combine items by id
@@ -22195,6 +22226,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 				return value.length;
 			}
+		}, {
+			key: 'contains',
+			value: function contains(params) {
+				var list = this._getValue(params[0]);
+				var value = this._getValue(params[1]);
+				return _underscore2.default.contains(list, value);
+			}
 
 			/////////////////////
 			// Dates and times //
@@ -23079,7 +23117,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	   * @property acceptsQuery
 	   * @type {Boolean}
 	   */
-			_this.acceptsQuery = true;
+			_this.acceptsQuery = false;
 
 			/**
 	   * When true, the route's action(s) will refresh when the Request flash-data changes
@@ -23426,8 +23464,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Does the name start with a .?
 				if (/^\./.test(name) && this.parentRoute && this.parentRoute.name) {
 
+					// Strip off a part for each ..
+					var parts = this.parentRoute.name.split(/\./);
+					while (/^\.\./.test(name)) {
+						parts.pop();
+						name = name.substr(1);
+					}
+
 					// Relative name. Add parent name as prefix
-					name = '' + this.parentRoute.name + name;
+					name = '' + parts.join('.') + name;
 				}
 
 				// Store name

@@ -246,8 +246,7 @@ class Component extends View
 			this,	
 			actionScope
 		]);
-		callback.apply(actionScope instanceof View ? actionScope : this, params);
-
+		return callback.apply(actionScope instanceof View ? actionScope : this, params);
 
 	}
 
