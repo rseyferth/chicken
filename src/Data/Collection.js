@@ -296,8 +296,8 @@ class Collection extends ObservableArray
 	filter(...args) {
 
 		// Do the basics
-		args.push(false);
 		let items = super.filter.apply(this, args);
+		if (items instanceof ObservableArray) items = items.items;
 
 		// Make collection
 		let collectionResult = new Collection(this.modelClass);

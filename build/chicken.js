@@ -21138,8 +21138,8 @@ return /******/ (function(modules) { // webpackBootstrap
 				}
 
 				// Do the basics
-				args.push(false);
 				var items = _get(Collection.prototype.__proto__ || Object.getPrototypeOf(Collection.prototype), 'filter', this).apply(this, args);
+				if (items instanceof _ObservableArray3.default) items = items.items;
 
 				// Make collection
 				var collectionResult = new Collection(this.modelClass);
