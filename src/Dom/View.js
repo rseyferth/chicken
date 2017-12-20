@@ -656,7 +656,7 @@ class View extends Observable
 				$el.parents().addBack().not('html').each(function() {
 					let entry = this.tagName.toLowerCase();
 						if (this.className) {
-						entry += "." + this.className.replace(/ /g, '.');
+							entry += '.' + this.className.replace(/ /g, '.');
 						}
 						path.push(entry);
 				});
@@ -667,9 +667,9 @@ class View extends Observable
 
 			// Get template source
 			let source = this.source;
-			error = `Error in template "${source}" at "${path}":\n\t${error}\n`;
+			let msg = `Error in template "${source}" at "${path}":\n\t${error}\n`;
 
-			this.rejectPromise('ready', error);
+			this.rejectPromise('ready', msg);
 			return this;
 			
 		}

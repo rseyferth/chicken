@@ -297,12 +297,67 @@ class Collection extends ObservableArray
 
 		// Do the basics
 		let items = super.filter.apply(this, args);
-		if (items instanceof ObservableArray) items = items.items;
+		
+		// Did we receive an ObservableArray?
+		if (items instanceof ObservableArray) {
+			
+			// Make collection
+			let collectionResult = new Collection(this.modelClass);
+			collectionResult.items = items.items;
+			return collectionResult;
 
-		// Make collection
-		let collectionResult = new Collection(this.modelClass);
-		collectionResult.items = items;
-		return collectionResult;
+		} else {
+
+			// Return items as they are
+			return items;
+
+		}
+		
+
+
+	}
+
+
+	saveAll(saveOptions = {}, breakOnError = true, saveOnlyDirtyModels = true) {
+
+		// Create promise
+		return new Promise((resolve, reject) => {
+
+			// Prepare queue
+			let queue = _.filter(this.items, (item) => {
+				return saveOnlyDirtyModels ? item.isDirty() : true;
+			});
+
+			// Next
+			let saveNext = () => {
+
+				// Queue empty?
+				if (queue.length === 0) {
+					resolve();
+					return;
+				}
+
+				// Save next
+				let model = queue.shift();
+				model.save(saveOptions).then(() => {
+					saveNext();
+				}, (error) => {
+
+					// Break?
+					if (breakOnError) {
+						reject(error);
+					} else {
+						saveNext();
+					}
+
+				});
+				
+			};
+			
+			// GO!
+			saveNext();
+			
+		});
 
 	}
 

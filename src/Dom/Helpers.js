@@ -603,6 +603,15 @@ class Helpers
 		return _.min(values);
 	}
 
+	multiply(params) {
+		let values = this._getValues(params);
+		let result = 1;
+		_.each(values, (v) => {
+			result *= parseFloat(v);
+		});
+		return result;
+	}
+
 
 	///////////
 	// Debug //
