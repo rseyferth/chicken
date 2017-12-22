@@ -15759,6 +15759,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}, {
 			key: 'sum',
 			value: function sum(callback) {
+				if (typeof callback === 'string') {
+					var key = callback;
+					callback = function callback(i) {
+						return i.get(key);
+					};
+				}
 				var values = _underscore2.default.map(this.items, callback);
 				return _underscore2.default.reduce(values, function (memo, num) {
 					return memo + num;
@@ -20348,7 +20354,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Save next
 						var model = queue.shift();
-						model.save().then(function () {
+						model.save(saveOptions).then(function () {
 							saveNext();
 						}, function (error) {
 

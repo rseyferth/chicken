@@ -672,6 +672,12 @@ class ObservableArray extends Obj
 	}
 
 	sum(callback) {
+		if (typeof callback === 'string') {
+			let key = callback;
+			callback = (i) => {
+				return i.get(key);
+			};
+		}
 		let values = _.map(this.items, callback);
 		return _.reduce(values, (memo, num) => {
 			return memo + num;
