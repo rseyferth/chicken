@@ -129,16 +129,20 @@ class Helpers
 
 			// Try to decode as JSON
 			let query = attributeHash.query;
-			try {
-				
-				// Parse JSON
-				query = JSON.parse(query);
+			if (typeof query === 'string') {
+				try {
+					
+					// Parse JSON
+					query = JSON.parse(query);
 
-				// Convert to querystring
+				} catch (e) {
+					// Ok, then we use it as it is
+				}
+			}
+
+			// Convert to querystring
+			if (typeof query === 'object') {
 				query = QueryString.stringify(query);
-				
-			} catch (e) {
-				// Ok, then we use it as it is
 			}
 
 			// Add to URL
@@ -313,6 +317,18 @@ class Helpers
 
 	}
 
+	object(params, attributeHash) {
+
+		// Convert attributes to object
+		let obj = {};
+		_.each(attributeHash, (value, key) => {
+			obj[key] = this._getValue(value);
+		});
+		
+		return obj;
+
+	}
+
 	get(params) {
 
 		// Get params
@@ -354,7 +370,9 @@ class Helpers
 	}
 
 	not(params) {
-		return !this._getValue(params[0]);
+		let v = this._getValue(params[0]);
+		if (v instanceof ObservableArray) v = v.length;
+		return !v;
 	}
 
 	isNull(params) {
@@ -495,6 +513,7 @@ class Helpers
 		return _[method].apply(this, args);
 
 	}
+	
 
 	////////////
 	// Arrays //
