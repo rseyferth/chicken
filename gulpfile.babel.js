@@ -200,7 +200,7 @@ gulp.task('watch', [], () => {
 		gulp.start('lint');
 	//	gulp.start('mocha');
 		gulp.start('webpack');
-		gulp.start('docs');
+//		gulp.start('docs');
 
 	});
 

@@ -31,7 +31,9 @@ class Api {
 
 			auth: false,
 
-			beforeSend: false
+			beforeSend: false,
+
+			useGlobalStore: true
 
 		}, options);
 

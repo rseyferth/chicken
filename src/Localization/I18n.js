@@ -64,7 +64,6 @@ class I18n extends Obj {
 		// Convert language placeholders
 		if (!language) language = this.language;
 		url = url.replace(/:language/, this.language);
-
 		return new Promise((resolve, reject) => {
 
 			// Do we have it in cache?
@@ -75,7 +74,9 @@ class I18n extends Obj {
 			}
 
 			// Load it.
-			$.ajax(url).then((result) => {
+			$.ajax(url, {
+				
+			}).then((result) => {
 				resolve(result);
 			}).fail((error) => {
 				reject(error);
@@ -118,6 +119,11 @@ class I18n extends Obj {
 			// Parse yaml
 			if (window.YAML === undefined) throw new Error('The YAML library was not loaded, so the language file cannot be read. Add the bower component yamljs to your application.');
 			result = window.YAML.parse(result);
+
+		} else if (extension === 'json') {
+
+			// Parse json
+			if (typeof result === 'string') result = JSON.parse(string);
 
 		}
 

@@ -1,5 +1,6 @@
 import Obj from '~/Core/Obj';
 import Element from '~/Dom/Element';
+import Transition from '~/Dom/Transition';
 
 /**
  * @module Dom
@@ -51,6 +52,31 @@ class ViewContainer extends Element
 		this.currentAction = null;
 
 
+		/**
+		 * The default transition to use for this ViewContainer
+		 * 
+		 * @property defaultTransition
+		 * @type {string}
+		 */
+		this.defaultTransition = $element.attr('transition');
+
+
+		/**
+		 * @property transitionsDisabled
+		 * @type {boolean}
+		 */
+		this.transitionsDisabled = false;
+
+
+		/**
+		 * Currently active content 
+		 * 
+		 * @property $currentContent
+		 * @type {jQuery}
+		 */
+		this.$currentContent = null;
+
+
 		this.currentView = null;
 
 
@@ -76,18 +102,86 @@ class ViewContainer extends Element
 	 */
 	setContent(content, setLoadingFalse = true) {
 
-		// Set HTML
-		super.setContent(content);
+		// Transition?
+		let transition = this.currentAction.transition;
+		if (!transition && transition !== false) {
 
-		// Apply hooks
-		ViewContainer.any.trigger('render', this);
+			// Use my default transition
+			transition = this.defaultTransition;
+
+		}
 
 		// No longer loading
 		if (setLoadingFalse) this.setLoading(false);
 
+		// Use transition?
+		this.transitionContent(content, transition).then(() => {
+			
+			// Apply hooks
+			ViewContainer.any.trigger('render', this);
+	
+
+		});
+
 		return this;
 
 	}
+
+	
+	transitionContent(newContent, transitionName) {
+
+		return new Promise((resolve) => {
+
+			// Put content into container
+			let $newContent = $('<div class="view-container-element" />').html(newContent);
+			
+			// No transition?
+			if (!transitionName || transitionName === 'none' || this.transitionsDisabled) {
+				
+				// Set content now
+				this._fireHooks('beforeRender');
+				this.$element.append($newContent);
+				
+				// Remove old content
+				if (this.$currentContent) {
+					this.$currentContent.remove();
+				}
+				
+				// Switch!
+				this.$currentContent = $newContent;
+				this.trigger('content', newContent);
+				this._fireHooks('afterRender');
+				
+				
+				return resolve();
+				
+			}
+
+			// Create transition
+			let transition = new Transition(this.$element, this.$currentContent, $newContent, transitionName);
+			this._fireHooks('beforeRender');				
+			transition.play().then(() => {
+
+				
+				// Remove old content
+				if (this.$currentContent) {
+					this.$currentContent.remove();
+				}
+				
+				// Switch!
+				this.$currentContent = $newContent;
+				this.trigger('content', newContent);
+				this._fireHooks('afterRender');
+
+				// Done!
+				resolve();
+
+			});
+			
+			
+		});
+	}
+
 
 	setView(view) {
 

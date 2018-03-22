@@ -80,9 +80,9 @@ class ModelAttribute {
 			case ModelAttribute.String:
 				return value instanceof String ? value : '' + value;
 
-			//Array
+			// Array
 			case ModelAttribute.Array: 
-				return value instanceof String ? JSON.parse(value) : value;
+				return typeof value === 'string' ? JSON.parse(value) : value;
 
 			///////////
 			// Dates //

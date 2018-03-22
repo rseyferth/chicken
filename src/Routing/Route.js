@@ -22,7 +22,7 @@ class Route extends Obj
 	 * @param {Routing.Router} 	router 				The application's Router instance
 	 * @param {Routing.Route} 	parent 				The route that the route you are creating is to be child of. Use `null` when there is no parent.
 	 * @param {string} 			pattern 			The route's pattern, not including the parent's pattern
-	 * @param {object|string}	[actions=null]		An action string o object containing one or more actions, keyed by the target ViewContainer. 
+	 * @param {object|string}	[actions=null]		An action string or object containing one or more actions, keyed by the target ViewContainer. 
 	 *                                        		If you don't define actions this route will be made abstract.
 	 * @param {object}			[options={}]		An object containing one or more configuration options
 	 */
@@ -159,7 +159,7 @@ class Route extends Obj
 	 *  	this.route('/animals', 'Animal@index')                            // /animals
 	 *  		.nest(function() {
 	 *  			this.route('/dog', 'Animal@dog')                          // /animals/dog
-	 *  				.nest({ viewContainer: 'dogs'}, function() {
+	 *  				.nest({ viewContainer: 'dogs' }, function() {
 	 *      				this.route('/:dogName', 'Animal@dogDetails');     // /animals/dog/:dogName
 	 *      				this.route('/about-dogs', 'Animal@aboutDogs');    // /animals/dog/about-dogs
 	 *  				});  				

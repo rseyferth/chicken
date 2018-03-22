@@ -526,19 +526,22 @@ class ObservableArray extends Obj
 	 * value for given key.
 	 *
 	 * @method groupBy
-	 * @param  {string} key  The attribute key. You can also use dot-notation in this key.
+	 * @param  {string} keyOrCallback  The attribute key. You can also use dot-notation in this key.
 	 * @param  {string} [defaultGroup=default] The key under which to put items that have no value for given key
 	 * @param  {boolean} [makeObservable=false] 
 	 * @return {Object}
 	 */
-	groupBy(key, defaultGroup = 'default', makeObservable = false) {
+	groupBy(keyOrCallback, defaultGroup = 'default', makeObservable = false) {
 
+		// Get called class
+		let MyClass = this.constructor;
+		
 		// Loop it
 		let result = makeObservable ? ClassMap.create('Observable', []) : {};
 		_.each(this.items, (item) => {
 
 			// Get value
-			let keyValue = item.get(key);
+			let keyValue = typeof keyOrCallback === 'function' ? keyOrCallback(item) : item.get(keyOrCallback);
 
 			// Nothing?
 			if (!keyValue) keyValue = defaultGroup;
@@ -547,7 +550,7 @@ class ObservableArray extends Obj
 			if (makeObservable) {
 
 				// Group known?
-				if (!result.get(keyValue)) result.set(keyValue, new ObservableArray);
+				if (!result.get(keyValue)) result.set(keyValue, new MyClass);
 
 				// Add it
 				result.get(keyValue).add(item);
@@ -555,7 +558,7 @@ class ObservableArray extends Obj
 			} else {
 
 				// Group known?
-				if (!result[keyValue]) result[keyValue] = new ObservableArray;
+				if (!result[keyValue]) result[keyValue] = new MyClass;
 
 				// Add it
 				result[keyValue].add(item);
@@ -768,7 +771,17 @@ class ObservableArray extends Obj
 		return this.items.length;
 	}
 
-	count() {
+	count(callback = null) {
+		if (callback) {
+
+			// Count only those
+			let c = 0;
+			_.each(this.items, (item) => {
+				if (callback(item) === true) c++;
+			});
+			return c;
+
+		}
 		return this.length;
 	}
 	size() {

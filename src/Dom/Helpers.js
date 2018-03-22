@@ -55,33 +55,41 @@ class Helpers
 	// Routing //
 	/////////////
 
+
 	link(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-	
+
+		// Check the event
+		let eventName = attributeHash.event ? this._getValue(attributeHash.event) : 'click';
+		
 		// Add listener
 		if (blocks.element) {
 
-			// Add click listener
+			// Get element(s)
 			let $el = $(blocks.element);
+
+			// Add href and event
 			$el.each((index, el) => {
 
 				// Set href for easy debuggin' and statusbar info
 				$(el).attr('href', this._getValue(params[0]));
 
-			}).on('click', (e) => {
+			}).on(eventName, (e) => {
 				e.preventDefault();
 
 				// Get uri value
 				let uri = this._getValue(params[0]);
 
+				// Transition
+				let transition = attributeHash.transition ? this._getValue(attributeHash.transition) : null;
+
 				// Go there.
-				App().goto(uri);
+				App().goto(uri, null, {}, false, transition);
 
 			});
 			
 			
 		}
 	}
-
 
 	linkTo(params, attributeHash, block) {
 
@@ -155,6 +163,27 @@ class Helpers
 		
 
 	}
+
+
+	touchLink(params, attributeHash, block, morph, renderer, scope, visitor) {
+
+		// Add hammertime
+		attributeHash.hammerTime = true;
+		if (!attributeHash.event) attributeHash.event = 'tap';
+		return this.link(params, attributeHash, block, morph, renderer, scope, visitor);
+
+	}
+
+
+	touchLinkTo(params, attributeHash, block, morph, renderer, scope, visitor) {
+
+		// Add hammertime
+		attributeHash.hammerTime = true;
+		if (!attributeHash.event) attributeHash.event = 'tap';
+		return this.linkTo(params, attributeHash, block, morph, renderer, scope, visitor);
+
+	}
+
 
 
 	////////////////////////
@@ -458,6 +487,27 @@ class Helpers
 		// Do it.
 		return obj[key].apply(obj, params);
 
+
+	}
+
+
+	////////////
+	// Models //
+	////////////
+
+	isDirty(params) {
+
+		// Get params
+		let model = this._getValue(params[0]);
+		let attributes = [];
+		for (let q = 1; q < params.length; q++) {
+			attributes.push(this._getValue(params[q]));
+		}
+	
+		// Any of those dirty?
+		return !!_.find(attributes, (attr) => {
+			return model.isDirty(attr);
+		});
 
 	}
 

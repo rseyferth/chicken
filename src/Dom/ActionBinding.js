@@ -75,7 +75,7 @@ class ActionBinding
 		 * @type {string}
 		 */
 		this.eventName = options.on ? options.on : ActionBinding.getDefaultEventName(morph.element);
-
+		
 		/**
 		 * Indicator whether the binding is applied
 		 * to the element

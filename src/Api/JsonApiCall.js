@@ -1,5 +1,5 @@
 import inflection from 'inflection';
-
+import moment from 'moment';
 import ApiCall from '~/Api/ApiCall';
 
 /**
@@ -37,7 +37,15 @@ class JsonApiCall extends ApiCall {
 
 
 	filter(key, value) {
+
+		// Value a moment?
+		if (moment.isMoment(value)) value = value.format('YYYY-MM-DD');
+
 		return this.query('filter[' + inflection.underscore(key) + ']', value);
+	}
+
+	enrich(keys) {
+		return this.query('enrich', keys);
 	}
 
 	sort(key, direction = 'ascending') {

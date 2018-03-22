@@ -145,6 +145,7 @@ class View extends Observable
 		 * @type {string}
 		 */
 		this.translationKeyPrefix = null;
+		this.tkp = null;
 
 
 		/**
@@ -513,6 +514,7 @@ class View extends Observable
 		// Store prefix
 		if (key === false) key = this.source;
 		this.translationKeyPrefix = key;
+		this.tkp = key; // Shorthand
 
 		// Register the 'l' helper
 		if (this.helpers.l === undefined) {
@@ -651,7 +653,7 @@ class View extends Observable
 
 			// Enrich error with element-path
 			let path = [];
-			if (this.renderer.currentMorph.element) {
+			if (this.renderer.currentMorph && this.renderer.currentMorph.element) {
 				let $el = $(this.renderer.currentMorph.element);
 				$el.parents().addBack().not('html').each(function() {
 					let entry = this.tagName.toLowerCase();

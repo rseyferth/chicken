@@ -10,11 +10,12 @@ import _ from 'underscore';
 import s from 'underscore.string';
 import XRegExp from 'xregexp';
 import inflection from 'inflection';
-
+import QueryString from 'query-string';
 
 ///////////////////////////////////////
 // Make sure dependencies are loaded //
 ///////////////////////////////////////
+
 if ($ === undefined || typeof $ !== 'function') throw new Error('Error while initializing Chicken: could not find global jQuery ($). Was jQuery not loaded?');
 if (_ === undefined || typeof _ !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore (_). Was Underscore not loaded?');
 if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
@@ -69,6 +70,7 @@ import ComponentDefinition from '~/Dom/ComponentDefinition';
 import Element from '~/Dom/Element';
 import Helpers from '~/Dom/Helpers';
 import Renderer from '~/Dom/Renderer';
+import Transition from '~/Dom/Transition';
 import View from '~/Dom/View';
 import ViewContainer from '~/Dom/ViewContainer';
 
@@ -152,6 +154,7 @@ var Chicken = {
 		Element: Element,
 		Helpers: Helpers,
 		Renderer: Renderer,
+		Transition: Transition,
 		View: View,
 		ViewContainer: ViewContainer
 	},
@@ -456,6 +459,8 @@ var Chicken = {
 		return Application.getInstance().i18n.translate(key, attributes);
 	},
 
+	queryString: QueryString,
+
 	debugging: 'console',
 
 
@@ -464,7 +469,7 @@ var Chicken = {
 	/////////////
 
 	isNullFilter: '@Q' + JSON.stringify({ 'operator': 'IS NULL' }),
-	isNotNullFilter: '@Q' + JSON.stringify({ 'operator': 'IS NULL' }),
+	isNotNullFilter: '@Q' + JSON.stringify({ 'operator': 'IS NOT NULL' }),
 	makeFilter: (operator, value, addWildcards = null) => {
 		if (addWildcards === null) addWildcards = operator === 'LIKE';
 		if (addWildcards) value = '%' + value + '%';

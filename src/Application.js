@@ -4,7 +4,7 @@
 
 import moment from 'moment';
 import QueryString from 'query-string';
-import { createHistory } from 'history';		// https://www.npmjs.com/package/history
+import { createBrowserHistory, createMemoryHistory, createHashHistory } from 'history';		// https://www.npmjs.com/package/history
 import $ from 'jquery';
 import _ from 'underscore';
 
@@ -109,6 +109,7 @@ class Application extends Observable {
 		 * @type {Core.SettingsObject}
 		 */
 		this.settings = SettingsObject.create({
+			
 			baseUrl: '/',
 			
 			language: $('html').attr('lang'),
@@ -118,9 +119,11 @@ class Application extends Observable {
 
 			elementLinkAttribute: 'link-to',
 
-			renderer: settings.renderer === undefined ? new Renderer() : null
+			renderer: settings.renderer === undefined ? new Renderer() : null,
 
-		}, [ 'baseUrl', 'viewPath', 'viewExtension', 'renderer', 'elementLinkAttribute' ]).apply(settings);
+			isCordovaApp: false		// For use with Cordova
+
+		}, [ 'baseUrl', 'viewPath', 'viewExtension', 'renderer', 'elementLinkAttribute', 'isCordovaApp' ]).apply(settings);
 
 
 
@@ -138,8 +141,34 @@ class Application extends Observable {
 		 * @property history
 		 * @type {History}
 		 */
-		this.history = history ? history : createHistory();
+		this.history = history;
+		if (!this.history) {
 
+			// Cordova app?
+			if (this.settings.get('isCordovaApp')) {
+
+				// Running actual app or previewing in browser?
+				if (document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1) {
+					 
+					// Create a history in memory
+					this.history = createMemoryHistory();
+					
+				} else {
+
+					// Create a history using #
+					this.history = createHashHistory();
+
+				}
+
+
+
+			} else {
+
+				// Create a browser history
+				this.history = createBrowserHistory();
+			}
+
+		}	
 
 		/**
 		 * Used to tweak history without navigating away from the page
@@ -312,19 +341,17 @@ class Application extends Observable {
 			this.history.listen((location) => {
 				this.router.handle(location);
 			});
-
+			
 			// Start with current location
-			this.router.handle(this.history.getCurrentLocation());
-
-
-
+			this.router.handle(this.history.location);
+			
 		});
 
 		return this;
 
 	}
 
-	gotoNamed(name, attributes = {}, query = null, flash = {}) {
+	gotoNamed(name, attributes = {}, query = null, flash = {}, transition = null) {
 
 		// Find route
 		let route = this.router.namedRoutes.get(name);
@@ -332,11 +359,19 @@ class Application extends Observable {
 
 		// Make uri
 		let uri = route.makeUrl(attributes);
-		return this.goto(uri, query, flash);
+		return this.goto(uri, query, flash, false, transition);
 
 	}
 
-	goto(uri, query = null, flash = {}, doNotNavigate = false) {
+	transitionToNamed(name, attributes = {}, transition) {
+		return this.gotoNamed(name, attributes, null, {}, transition);
+	}
+	transitionTo(uri, transition) {
+		return this.goto(uri, null, {}, false, transition);
+	}
+
+
+	goto(uri, query = null, flash = {}, doNotNavigate = false, transition = null) {
 
 		// Query in the uri?
 		let search = QueryString.extract(uri);
@@ -386,8 +421,9 @@ class Application extends Observable {
 			pathname: uri,
 			search: query,
 			state: {
-				flash: flash
-			}
+				flash: flash,
+				transition: transition
+			},
 		});
 
 		
@@ -405,13 +441,13 @@ class Application extends Observable {
 		});
 
 		// Start with current location
-		this.router.handle(this.history.getCurrentLocation());
+		this.router.handle(this.history.location);
 
 	}
 
 	getCurrentUri() {
 
-		return this.history.getCurrentLocation().pathname;
+		return this.history.location.pathname;
 
 	}
 
@@ -440,8 +476,10 @@ class Application extends Observable {
 
 	uri(...args) {
 
-		// Add baseUrl
-		args.unshift(this.settings.get('baseUrl') === '/' ? '' : this.settings.get('baseUrl'));
+		// Add baseUrl (except for cordova app)
+		if (!this.settings.get('isCordovaApp')) {
+			args.unshift(this.settings.get('baseUrl') === '/' ? '' : this.settings.get('baseUrl'));
+		}
 		var url = args.join('/');
 
 		// Was the last one an extension?

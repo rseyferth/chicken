@@ -300,7 +300,11 @@ class JsonApi extends Api
 
 		// Meta?
 		if (data.meta) {
-			model.setMetaAttributes(data.meta);
+			let metaAttributes = {};
+			_.each(data.meta, (value, key) => {
+				metaAttributes[inflection.camelize(key, true)] = value;
+			});
+			model.setMetaAttributes(metaAttributes);
 		}
 
 		// Also deserialize relationships?

@@ -42,7 +42,8 @@ class JWTAuth extends Auth
 			autoRefreshToken: true,
 			autoRefreshInterval: 7200,	// 2 hours
 
-			localStorageKey: 'ChickenJWTAuthToken'
+			localStorageKey: 'ChickenJWTAuthToken',
+			storeCredentialsLocally: false
 
 		}, options);
 		super(options);
@@ -65,16 +66,46 @@ class JWTAuth extends Auth
 
 		// Get token from localstorage
 		try {
-			this.token = JSON.parse(localStorage.getItem(this.settings.localStorageKey));
+			this.token = JSON.parse(localStorage.getItem(`${this.settings.localStorageKey}.token`));
 		} catch (err) {
 			this.token = null;
 		}
 
-		// Validate the tkoen
+		// Do we have a non-expired token?
+		let hasToken = false
+		if (this.token && this.token.receivedAt) {
+
+			// More than 30 minutes old?
+			let minTime = moment().unix() - this.settings.tokenValidForMinutes * 60;
+			hasToken = this.token.receivedAt > minTime;
+
+		}
+
+		// No token?
+		if (!hasToken) {
+			
+			// Credentials stored locally?
+			if (this.settings.storeCredentialsLocally) {
+				try {
+					
+					// Retrieve credentials
+					let credentials = JSON.parse(localStorage.getItem(`${this.settings.localStorageKey}.credentials`));
+					return this.authenticate(credentials.identifier, credentials.password);
+
+				} catch (err) {
+					
+					// Continue...
+
+				}
+			}
+		
+		}
+
+		// Validate the token
 		return new Promise((resolve) => {
 			
 			// No token?
-			if (!this.token) {
+			if (!hasToken) {
 				resolve(false);
 				return;
 			}
@@ -122,6 +153,14 @@ class JWTAuth extends Auth
 				// Store it.
 				this.setToken(result.token);
 
+				// Store credentials
+				if (this.settings.storeCredentialsLocally) {
+					localStorage.setItem(`${this.settings.localStorageKey}.credentials`, JSON.stringify({
+						identifier: identifier,
+						password: password
+					}));
+				}
+
 				// Handle user events
 				this.doCallback('onAuthenticated', []).then(() => {
 					this.set('isAuthenticated', true);
@@ -155,7 +194,7 @@ class JWTAuth extends Auth
 
 			// Remove token
 			this.token = false;
-			localStorage.removeItem(this.settings.localStorageKey);
+			localStorage.removeItem(`${this.settings.localStorageKey}.token`);
 			this.set('isAuthenticated', false);
 			
 			this.doCallback('onInvalidated', []);
@@ -233,7 +272,7 @@ class JWTAuth extends Auth
 		}
 
 		// Remember it.
-		localStorage.setItem(this.settings.localStorageKey, JSON.stringify(this.token));
+		localStorage.setItem(`${this.settings.localStorageKey}.token`, JSON.stringify(this.token));
 
 		// We are logged in
 		this.validateToken();
@@ -242,7 +281,11 @@ class JWTAuth extends Auth
 
 	clearToken() {
 		this.token = null;
-		localStorage.removeItem(this.settings.localStorageKey);
+		localStorage.removeItem(`${this.settings.localStorageKey}.token`);		
+	}
+	
+	forgetCredentials() {
+		localStorage.removeItem(`${this.settings.localStorageKey}.credentials`);		
 	}
 
 

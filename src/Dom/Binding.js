@@ -188,14 +188,14 @@ Binding.TwoWay = {
 		match: (morph) => {
 			return morph.element && /^INPUT$/.test(morph.element.tagName) 
 				&& morph.attrName === 'value'
-				&& /^text|search|date|time|password|number|email$/.test(morph.element.type);
+				&& /^text|search|date|time|password|number|range|email$/.test(morph.element.type);
 		},
 		bind: (binding, morph) => {
 
 			// Listen to key up, etc
 			var $element = $(morph.element);
 			var lastValue = $element.val();
-			$element.on('keyup change paste', () => {
+			$element.on('input keyup change paste', () => {
 				var v = $element.val();
 				if (v !== lastValue) {
 					binding.setValue(v, morph);

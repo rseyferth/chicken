@@ -221,8 +221,7 @@ class Router extends Obj
 		// Going.
 		this.trigger('navigate', request);
 		
-				
-
+		
 		// Store it on app
 		this.application.currentRoute = routeMatch;
 		
@@ -238,11 +237,13 @@ class Router extends Obj
 			let actionPromises = [];
 			routeMatch.actions.forEach((action, vcName) => {
 
+				// Get the ViewContainer
+				let vc = this.application.getViewContainer(vcName);
+
 				// Disabled navigation for this request?
 				if (this.application.navigationDisabledOnce) {
 
 					// Just set the action on the viewcontainer, but don't actually do anything
-					let vc = this.application.getViewContainer(vcName);
 					if (vc) {
 						vc.setAction(action);
 					}
@@ -253,6 +254,11 @@ class Router extends Obj
 						resolve();
 					});
 
+				}
+				
+				// Add transition
+				if (request.transition && !vc.transitionsDisabled) {
+					action.transition = request.transition;
 				}
 
 				// Get depends on promises

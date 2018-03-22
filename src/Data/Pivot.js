@@ -31,6 +31,11 @@ Pivot.createFor = (model, pivotAttributes) => {
 					return pivot;
 				};
 			}
+			if (property === 'getModel') {
+				return () => {
+					return model;
+				}
+			}
 			if (property === 'pivot') {
 				return pivot;
 			}

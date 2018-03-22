@@ -199,6 +199,25 @@ class Component extends View
 	}
 
 
+	findParentComponent(key) {
+
+		// My parent?
+		if (this.parentComponent) {
+
+			// Am I the one you're looking for?
+			if (this.parentComponent.name === key) return this.parentComponent;
+
+			// Look higher up
+			return this.parentComponent.findParentComponent(key);
+
+		} else {
+
+			// No dice.
+			return false;
+
+		}
+	}
+
 
 	getId() {
 

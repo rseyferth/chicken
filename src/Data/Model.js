@@ -656,6 +656,7 @@ class Model extends Observable
 			this.state.set('busy', false);
 			this.state.set('saving', false);
 			this.state.set('deleted', true);
+			this.trigger('delete');
 
 			//remove model from the store
 			Model.deleteFromStore(this.getModelName(), this.get('id'));
@@ -674,6 +675,9 @@ class Model extends Observable
 		return apiCall.execute();
 		
 	}
+
+
+
 
 
 	///////////////////
@@ -797,8 +801,8 @@ class Model extends Observable
 			// Is it new?
 			if (newValue !== undefined && oldValue === undefined) return true;
 
-			//uncast newValue for comparison with original value
-			newValue = this.uncastValue(key, newValue);
+			// Cast original value for comparison with new value
+			oldValue = this.castValue(key, oldValue);
 
 			// Has it changed
 			return !Utils.areEqual(oldValue, newValue);
@@ -968,7 +972,7 @@ class Model extends Observable
 		if (fromApi) {
 			coll.addFromApi(relatedModel);
 		} else {
-			coll.add(relatedModel);			
+			coll.add(relatedModel);
 		}
 
 		// Set the inverse?

@@ -84,8 +84,8 @@ class ApiCall extends Obj {
 		 * @property useGlobalStore
 		 * @type {Boolean}
 		 */
-		this.useGlobalStore = true;
-
+		this.useGlobalStore = api.settings.useGlobalStore;
+		
 		/**
 		 * Local model store, used when useGlobalStore is false.
 		 * 
@@ -342,6 +342,11 @@ class ApiCall extends Obj {
 
 	}
 	
+	select(value) {
+		return this.query('select', value);
+	}
+
+
 	/**
 	 * Add given pagination page to the queryParams
 	 *

@@ -54,7 +54,7 @@ class Collection extends ObservableArray
 	get(key) {
 
 		// Page info?
-		if (this.page && /^page\.(currentPage|pageCount|size|recordCount)$/.test(key)) {
+		if (this.page && /^page\.(currentPage|pageCount|size|recordCount|through)$/.test(key)) {
 			let [, k] = key.split(/\./);
 			return this.page[k];
 		}
@@ -131,6 +131,19 @@ class Collection extends ObservableArray
 		// And from keyed array
 		delete this.itemsById[value.get('id')];
 
+		return this;
+
+	}
+
+
+	empty() {
+
+		// Do the basics
+		super.empty();
+
+		// Clear ids
+		this.itemsById = {};
+		
 		return this;
 
 	}

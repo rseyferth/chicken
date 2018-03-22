@@ -232,6 +232,17 @@ class Observable extends Obj {
 	 */
 	set(key, value, convertToObservables = false) {	
 
+		// Object given?
+		if (typeof key === 'object') {
+
+			// Loop and set each
+			_.each(key, (v, k) => {
+				this.set(k, v, convertToObservables);				
+			});
+			return this;
+
+		}
+
 		// Convert?
 		if (convertToObservables === true && typeof value === 'object' && value !== null) {
 			if (value.constructor === Object) {

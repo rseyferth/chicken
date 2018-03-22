@@ -50,6 +50,13 @@ class Request
 		 */
 		this.flash = location.state ? location.state.flash : {};
 
+
+		/**
+		 * @property transition
+		 * @type {string|null}
+		 */
+		this.transition = location.state ? location.state.transition : null;
+
 	}
 
 

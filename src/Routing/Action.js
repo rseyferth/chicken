@@ -110,6 +110,16 @@ class Action extends Obj
 
 
 		/**
+		 * The name of the transition animation to use to get from 
+		 * previous View to new View
+		 * 
+		 * @property transition
+		 * @type {string}
+		 */
+		this.transition = null;
+
+
+		/**
 		 * A map of request parameters that are supplied to this action.
 		 * 
 		 * @property parameters
@@ -150,6 +160,7 @@ class Action extends Obj
 		 * @type {mixed}
 		 */
 		this.result = false;
+
 
 
 
@@ -368,7 +379,7 @@ class Action extends Obj
 
 				// Add it
 				this.viewContainer.setAction(this);
-				view.addToContainer(this.viewContainer);
+				view.addToContainer(this.viewContainer);				
 				resolve(view);
 
 			}, (error) => {
