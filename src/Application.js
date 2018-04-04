@@ -345,6 +345,10 @@ class Application extends Observable {
 			// Start with current location
 			this.router.handle(this.history.location);
 			
+		}, (error) => {
+			
+			throw error;
+
 		});
 
 		return this;

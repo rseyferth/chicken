@@ -131,7 +131,7 @@ class ActionBinding
 				this, 
 				this.view
 			]);
-			this.actionHandler.apply(this.view, params);
+			this.actionHandler.apply(this.view, params, e);
 
 		});
 

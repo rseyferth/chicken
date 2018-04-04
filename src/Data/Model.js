@@ -787,20 +787,19 @@ class Model extends Observable
 
 		// Specific key?
 		if (key) {
-
 			// Get value
 			let newValue = this.attributes[key];
 			let oldValue = this.originalValues[key];
-
+			
 			// None at all?
 			if (newValue === undefined) return false;
-
+			
 			// Is the value computed?
 			if (newValue instanceof ComputedProperty) return false;
-
+			
 			// Is it new?
 			if (newValue !== undefined && oldValue === undefined) return true;
-
+			
 			// Cast original value for comparison with new value
 			oldValue = this.castValue(key, oldValue);
 

@@ -90,7 +90,24 @@ class JWTAuth extends Auth
 					
 					// Retrieve credentials
 					let credentials = JSON.parse(localStorage.getItem(`${this.settings.localStorageKey}.credentials`));
-					return this.authenticate(credentials.identifier, credentials.password);
+					if (credentials) {
+						return new Promise((resolve) => {
+
+							// Try to authenticate using stored creds
+							this.authenticate(credentials.identifier, credentials.password).then(() => {
+								
+								// Auth Successful!
+								resolve(true);
+								
+							}, () => {
+
+								// Auth failed
+								resolve(false);
+
+							});
+							
+						});
+					}
 
 				} catch (err) {
 					

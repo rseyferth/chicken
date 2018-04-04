@@ -759,6 +759,7 @@ class View extends Observable
 	 * @chainable
 	 */
 	revalidate() {
+		this.trigger('beforeRevalidate');
 		if (this.renderResult) this.renderResult.revalidate();
 		this.trigger('revalidate');
 		this.revalidateTimeout = false;
