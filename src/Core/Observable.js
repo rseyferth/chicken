@@ -316,7 +316,7 @@ class Observable extends Obj {
 
 		// Is the value observable?
 		if (Observable.isObservable(value)) {
-
+			
 			// Study the object
 			value.study(() => {
 				this._scheduleAttributeChanged(key);
@@ -325,14 +325,14 @@ class Observable extends Obj {
 		}
 
 		// Is the value a reference?
-		if (value instanceof Reference) {
+		else if (value instanceof Reference) {
 
 			// Study the object
 			value.watch(() => {
 				this._scheduleAttributeChanged(key);
 			});
 
-		}
+		} 
 
 		// Update attribute
 		this._scheduleAttributeChanged(key);
@@ -619,6 +619,7 @@ class Observable extends Obj {
 				return obj.observe(objKey, callback);
 
 			}
+			
 			throw new Error('Cannot observe property of non-existing object: ' + key);
 			
 		}

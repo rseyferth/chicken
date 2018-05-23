@@ -420,7 +420,7 @@ class Model extends Observable
 				return true;
 
 			});
-
+			
 			// Now uncast the values
 			attr = _.mapObject(modelAttr, (value, key) => {
 
@@ -597,6 +597,7 @@ class Model extends Observable
 
 			// No longer dirty!
 			this.state.set('dirty', false);
+			this.resetDirty();
 			
 			// No longer busy
 			this.state.set('busy', false);
@@ -908,6 +909,14 @@ class Model extends Observable
 				
 				// Get the remote key's value and set it on the local key
 				this.set(relationship.localKey, relatedModel.get(relationship.remoteKey));
+
+				// Morph too?
+				if (relationship.morphModelKey) {
+
+					// Add model type
+					this.set(relationship.morphModelKey, relationship.getMorphModelValue(relatedModel));
+
+				}
 
 			} else if (relationship.isStoredOnRemoteModel()) {
 

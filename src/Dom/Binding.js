@@ -74,7 +74,11 @@ class Binding
 
 		// Now listen to the object
 		if (this.path) {
-			this.observable.observe(path, this.changeCallback);
+			try {
+				this.observable.observe(path, this.changeCallback);
+			} catch (ex) {
+				
+			}
 		} else {
 			this.observable.study(this.changeCallback);
 		}

@@ -21,6 +21,7 @@ class Relationship {
 		this.remoteKey = null;
 
 		this.morphModelKey = null;
+		this.morphModelValuePrefix = null;
 
 		this.pivotModel = null;
 
@@ -121,7 +122,7 @@ class Relationship {
 	// Morph relationships //
 	/////////////////////////
 
-	belongsToMorph(morphModelKey, localKey, remoteKey = 'id') {
+	belongsToMorph(morphModelKey, localKey, remoteKey = 'id', morphModelValuePrefix = 'App\\') {
 
 		// Basics
 		this.type = Relationship.BelongsToMorph;
@@ -131,13 +132,43 @@ class Relationship {
 		this.localKey = localKey;
 		this.remoteKey = remoteKey;
 		this.morphModelKey = morphModelKey;
+		this.morphModelValuePrefix = morphModelValuePrefix;
 
 		return this;
 
 	}
 
+	hasManyMorph(remoteModel, morphModelKey, localKey = null, remoteKey = 'id', morphModelValuePrefix = 'App\\') {
+
+		// Basics
+		this.type = Relationship.HasManyMorph;
+		this.remoteModel = remoteModel;
+		
+		// Guest/store the keys
+		this.morphModelKey = morphModelKey
+		if (localKey || !this.localKey) {
+			this.localKey = localKey || this.morphModelKey.replace(/Type$/, 'Id');
+		}
+		if (!this.remoteKey) this.remoteKey = remoteKey;
+		this.morphModelValuePrefix = morphModelValuePrefix;
+
+		return this;
+
+	}
+
+	getMorphModelValue(remoteModel) {
+
+		// Check prefix
+		let name = remoteModel.getModelName();
+		if (this.morphModelValuePrefix) {
+			name = `${this.morphModelValuePrefix}${name}`;
+		}
+		return name;
+
+	}
+
 	usesCollection() {
-		return (this.type == Relationship.BelongsToMany || this.type == Relationship.HasMany || this.type == Relationship.HasManyThrough);
+		return (this.type == Relationship.BelongsToMany || this.type == Relationship.HasMany || this.type == Relationship.HasManyThrough || this.type == Relationship.HasManyMorph);
 	}
 
 
@@ -177,16 +208,24 @@ class Relationship {
 	 * For other keys manually define them in the model.
 	 * 
 	 * @param {ModelDefinition} modelDefinition the definition to at the attribute to
-	 * @return {Relationsship} chainable
+	 * @return {Relationship} chainable
 	 */
 	addLocalKeyToModelDefinitionAttributes(modelDefinition) {
 
-		//skip if `id` or already exists
+		// Add morph type
+		if (this.morphModelKey) {
+			modelDefinition.string(this.morphModelKey);
+		}
+
+		// Skip if `id` or already exists
 		if (this.localKey == 'id' || modelDefinition.hasAttribute(this.localKey)) return this;
 		
-		//add key as integer 		
-		if (this.localKey.indexOf('Id') !== -1) modelDefinition.integer(this.localKey);
-		if (this.localKey.indexOf('Key') !== -1) modelDefinition.string(this.localKey);
+		// Add key as string
+		if (/Key$/.test(this.localKey)) {
+			modelDefinition.string(this.localKey);
+		} else {
+			modelDefinition.integer(this.localKey);
+		} 
 		return this;
 
 	}
@@ -215,13 +254,13 @@ class Relationship {
 
 	isStoredOnLocalModel() {
 
-		return this.type === Relationship.BelongsTo;
+		return this.type === Relationship.BelongsTo || this.type == Relationship.BelongsToMorph;
 
 	}
 
 	isStoredOnRemoteModel() {
 
-		return this.type === Relationship.HasOne || this.type === Relationship.HasMany;
+		return this.type === Relationship.HasOne || this.type === Relationship.HasMany || this.type == Relationship.HasManyMorph;
 
 	}
 
@@ -233,6 +272,7 @@ class Relationship {
 
 			case Relationship.HasMany:
 			case Relationship.HasManyThrough:
+			case Relationship.HasManyMorph:
 				return new Collection(Model.registry.get(this.remoteModel));
 
 			case Relationship.BelongsToMany:
@@ -278,7 +318,7 @@ Relationship.HasManyThrough = 'HasManyThrough';
 Relationship.BelongsToMany = 'BelongsToMany';
 
 Relationship.BelongsToMorph = 'BelongsToMorph';
-
+Relationship.HasManyMorph = 'HasManyMorph';
 
 
 
