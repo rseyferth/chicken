@@ -43,6 +43,7 @@ class ObservableArray extends Obj
 
 
 		this.isStudyingChildren = false;
+		this.allowStudyChildren = true;
 		this.childStudyCallback = () => {
 
 			// Trigger on.
@@ -257,7 +258,7 @@ class ObservableArray extends Obj
 		this.items.push(value);
 
 		// Studying?
-		if (this.isStudyingChildren) {
+		if (this.isStudyingChildren && this.allowStudyChildren) {
 			if (ObservableArray.isObservable(value)) value.study(this.childStudyCallback); 			
 		}
 
@@ -407,14 +408,13 @@ class ObservableArray extends Obj
 	study(callback) {
 
 		// Already studying?
-		if (!this.isStudyingChildren) {
+		if (!this.isStudyingChildren && this.allowStudyChildren) {
 
 			// Set
 			this.isStudyingChildren = true;
 
 			// Watch all current children
-			_.each(this.items, (item) => {
-				
+			_.each(this.items, (item) => {				
 				if (ObservableArray.isObservable(item)) item.study(this.childStudyCallback);				
 			});
 

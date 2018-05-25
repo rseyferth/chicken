@@ -788,6 +788,7 @@ class Model extends Observable
 
 		// Specific key?
 		if (key) {
+			
 			// Get value
 			let newValue = this.attributes[key];
 			let oldValue = this.originalValues[key];
@@ -803,7 +804,7 @@ class Model extends Observable
 			
 			// Cast original value for comparison with new value
 			oldValue = this.castValue(key, oldValue);
-
+						
 			// Has it changed
 			return !Utils.areEqual(oldValue, newValue);
 
@@ -925,6 +926,16 @@ class Model extends Observable
 
 			}
 			
+		} else if (relatedModel === null) {
+
+			// Unset it
+			if (relationship.isStoredOnLocalModel()) {
+				
+				// Unset the local key
+				this.set(relationship.localKey, null);
+
+			}
+
 		}
 		this.related[relationshipName] = relatedModel;
 	

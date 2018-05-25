@@ -15980,6 +15980,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			_this.notificationsDisabled = false;
 
 			_this.isStudyingChildren = false;
+			_this.allowStudyChildren = true;
 			_this.childStudyCallback = function () {
 
 				// Trigger on.
@@ -16184,7 +16185,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.items.push(value);
 
 				// Studying?
-				if (this.isStudyingChildren) {
+				if (this.isStudyingChildren && this.allowStudyChildren) {
 					if (ObservableArray.isObservable(value)) value.study(this.childStudyCallback);
 				}
 
@@ -16346,14 +16347,13 @@ return /******/ (function(modules) { // webpackBootstrap
 				var _this8 = this;
 
 				// Already studying?
-				if (!this.isStudyingChildren) {
+				if (!this.isStudyingChildren && this.allowStudyChildren) {
 
 					// Set
 					this.isStudyingChildren = true;
 
 					// Watch all current children
 					_underscore2.default.each(this.items, function (item) {
-
 						if (ObservableArray.isObservable(item)) item.study(_this8.childStudyCallback);
 					});
 				}
@@ -20274,6 +20274,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Specific key?
 				if (key) {
+
 					// Get value
 					var newValue = this.attributes[key];
 					var oldValue = this.originalValues[key];
@@ -20412,6 +20413,14 @@ return /******/ (function(modules) { // webpackBootstrap
 
 						// Get the local key's value and set it on the remote key
 						relatedModel.set(relationship.remoteKey, this.get(relationship.localKey));
+					}
+				} else if (relatedModel === null) {
+
+					// Unset it
+					if (relationship.isStoredOnLocalModel()) {
+
+						// Unset the local key
+						this.set(relationship.localKey, null);
 					}
 				}
 				this.related[relationshipName] = relatedModel;

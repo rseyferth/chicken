@@ -60,7 +60,7 @@ class Binding
 
 		// What to do when value changes
 		this.changeCallback = () => {
-
+			
 			// Trigger updates for all morphs
 			this.morphs.forEach((morph) => {
 
@@ -75,7 +75,7 @@ class Binding
 		// Now listen to the object
 		if (this.path) {
 			try {
-				this.observable.observe(path, this.changeCallback);
+				this.observable.observe(path, this.changeCallback);				
 			} catch (ex) {
 				
 			}
