@@ -17241,8 +17241,8 @@ return /******/ (function(modules) { // webpackBootstrap
 					// Call the handler
 					var params = _underscore2.default.flatten([_underscore2.default.map(_this.parameters, function (value) {
 						return _this.renderer.hooks.getValue(value);
-					}), _this, _this.view]);
-					_this.actionHandler.apply(_this.view, params, e);
+					}), _this, _this.view, e]);
+					_this.actionHandler.apply(_this.view, params);
 				});
 
 				return this;
@@ -21456,6 +21456,31 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 			return _underscore2.default.each(obj, callback, context);
 		},
+		/**
+	  * @method reverseEach
+	  * @static
+	  * 
+	  * @param  {Object}   obj      
+	  * @param  {Function} callback 
+	  * @param  {Object}   context  
+	  */
+		reverseEach: function reverseEach(obj, callback, context) {
+
+			// Map?
+			if (obj instanceof Map) {
+				obj.forEach(function (value, key) {
+					callback.apply(context, [value, key]);
+				});
+				return;
+			} else if (obj instanceof _Observable2.default) {
+				obj = obj.attributes;
+			} else if (obj instanceof _ObservableArray2.default) {
+				obj = obj.items;
+			}
+			for (var i = obj.length - 1; i >= 0; i--) {
+				callback.apply(context, [obj[i]]);
+			}
+		},
 
 		/**
 	  * @method map
@@ -22064,6 +22089,30 @@ return /******/ (function(modules) { // webpackBootstrap
 				// Get the value
 				var list = this._getValue(params[0]);
 				_Utils2.default.each(list, function (item, i) {
+
+					// Get a unique id for the item.
+					var uid = _Utils2.default.uidFor(item);
+					var itemKey = 'each:' + eachUid + ':' + i + ':' + uid;
+
+					// Render item
+					blocks.template.yieldItem(itemKey, [item, i]);
+				});
+			}
+
+			/**
+	   * @method reverseEach
+	   */
+
+		}, {
+			key: 'reverseEach',
+			value: function reverseEach(params, attributeHash, blocks, morph /*, renderer, scope, visitor*/) {
+
+				// Check uid for this each-block
+				var eachUid = _Utils2.default.uidFor(morph);
+
+				// Get the value
+				var list = this._getValue(params[0]);
+				_Utils2.default.reverseEach(list, function (item, i) {
 
 					// Get a unique id for the item.
 					var uid = _Utils2.default.uidFor(item);

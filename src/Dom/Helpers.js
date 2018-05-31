@@ -214,6 +214,29 @@ class Helpers
 		
 	}
 
+	/**
+	 * @method reverseEach
+	 */
+	reverseEach(params, attributeHash, blocks, morph /*, renderer, scope, visitor*/) {
+
+		// Check uid for this each-block
+		var eachUid = Utils.uidFor(morph);
+		
+		// Get the value
+		let list = this._getValue(params[0]);
+		Utils.reverseEach(list, (item, i) => {
+
+			// Get a unique id for the item.
+			let uid = Utils.uidFor(item);
+			let itemKey = 'each:' + eachUid + ':' + i + ':' + uid;
+			
+			// Render item
+			blocks.template.yieldItem(itemKey, [item, i]);
+
+		});
+		
+	}
+
 	repeat(params, attributeHash, blocks, morph) {
 
 		let repeatUid = Utils.uidFor(morph);

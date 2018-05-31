@@ -61,6 +61,33 @@ let Utils = {
 		return _.each(obj, callback, context);
 
 	},
+	/**
+	 * @method reverseEach
+	 * @static
+	 * 
+	 * @param  {Object}   obj      
+	 * @param  {Function} callback 
+	 * @param  {Object}   context  
+	 */
+	reverseEach: (obj, callback, context) => {
+		
+		// Map?
+		if (obj instanceof Map) {
+			obj.forEach((value, key) => {
+				callback.apply(context, [value, key]);
+			});
+			return;
+
+		} else if (obj instanceof Observable) {
+			obj = obj.attributes;
+		} else if (obj instanceof ObservableArray) {
+			obj = obj.items;
+		}
+		for (let i = obj.length - 1; i >= 0; i--) {
+			callback.apply(context, [obj[i]]);
+		}
+
+	},
 
 
 

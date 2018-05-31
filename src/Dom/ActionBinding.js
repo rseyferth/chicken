@@ -129,9 +129,10 @@ class ActionBinding
 					return this.renderer.hooks.getValue(value);
 				}), 
 				this, 
-				this.view
+				this.view,
+				e
 			]);
-			this.actionHandler.apply(this.view, params, e);
+			this.actionHandler.apply(this.view, params);
 
 		});
 
