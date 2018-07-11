@@ -1071,6 +1071,10 @@ class Model extends Observable
 		return this.constructor.definition;
 	}
 
+	getPrimaryKey() {
+		return this.get(this.getDefinition().primaryKey);
+	}
+
 	/**
 	 * Get the definition for given attribute key. 
 	 * Can be undefined for non-defined Models, or if the

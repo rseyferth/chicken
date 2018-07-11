@@ -131,6 +131,12 @@ class ApiCall extends Obj {
 
 	}
 
+	serialize() {
+
+		return JSON.stringify(_.pick(this, ['uri', 'method', 'data', 'queryParams']));
+
+	}
+
 	reset() {
 		this.resetPromise('complete');
 	}

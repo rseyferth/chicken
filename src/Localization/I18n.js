@@ -123,7 +123,7 @@ class I18n extends Obj {
 		} else if (extension === 'json') {
 
 			// Parse json
-			if (typeof result === 'string') result = JSON.parse(string);
+			if (typeof result === 'string') result = JSON.parse(result);
 
 		}
 
@@ -196,36 +196,76 @@ class I18n extends Obj {
 			obj = obj[part];
 		}
 
-		// String?
+		return this.processValue(obj, attributes);
+		
+
+	}
+
+	processValue(obj, attributes) {
+
+		// What type?
 		if (typeof obj === 'string') {
 
-			/////////////////
-			// Templating? //
-			/////////////////
+			// Process string
+			obj = this.processString(obj, attributes);
+
+		} else if ($.isArray(obj)) {
+
+			// Mapped processing
+			obj = _.map(obj, (v) => {
+				return this.processValue(v, attributes);
+			});
 			
-			if (obj.match(/<%/)) {
 
-				// Convert attributes into real values
-				let attr = _.mapObject(attributes, (value) => {
-				
-					// Get value?
-					if (value !== null && value !== undefined && typeof value === 'object' && typeof value.getValue === 'function') {
-						value = value.getValue();
-					}
-					return value;
+		} else if (typeof obj === 'object') {
 
-				});
-				
-				// Make a template and run it
-				let template = _.template(obj);
+			let result = {};
+			_.each(obj, (value, key) => {
+				result[key] = this.processValue(value, attributes);
+			});
+			obj = result;
+
+		}
+		return obj;
+
+	}
+
+	processString(obj, attributes) {
+
+		// Double escaping
+		obj = obj.split(/\\n/).join('\n').split(/\\t/).join('\t');
+
+		/////////////////
+		// Templating? //
+		/////////////////
+		
+		if (obj.match(/<%/)) {
+
+			// Convert attributes into real values
+			let attr = _.mapObject(attributes, (value) => {
+			
+				// Get value?
+				if (value !== null && value !== undefined && typeof value === 'object' && typeof value.getValue === 'function') {
+					value = value.getValue();
+				}
+				return value;
+
+			});
+			
+			// Make a template and run it
+			let template = _.template(obj);
+			try {
 				obj = template(attr);
-
+			} catch (error) {
+				
+				//
+				//console.warn(error);
+				
 			}
 
 		}
 
 		return obj;
-		
 
 	}
 

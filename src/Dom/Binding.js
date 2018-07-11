@@ -77,7 +77,7 @@ class Binding
 			try {
 				this.observable.observe(path, this.changeCallback);				
 			} catch (ex) {
-				
+				//...
 			}
 		} else {
 			this.observable.study(this.changeCallback);

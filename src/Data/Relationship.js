@@ -145,7 +145,7 @@ class Relationship {
 		this.remoteModel = remoteModel;
 		
 		// Guest/store the keys
-		this.morphModelKey = morphModelKey
+		this.morphModelKey = morphModelKey;
 		if (localKey || !this.localKey) {
 			this.localKey = localKey || this.morphModelKey.replace(/Type$/, 'Id');
 		}

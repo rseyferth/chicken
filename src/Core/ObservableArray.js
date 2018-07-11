@@ -618,6 +618,15 @@ class ObservableArray extends Obj
 
 	}
 
+	reverseEach(callback) {
+
+		for (let q = this.items.length - 1; q >= 0; q--) {
+			callback.apply(null, [this.items[q]]);
+		}
+		return this;
+
+	}
+
 
 	find(idOrAttributeOrCallback, value = undefined) {
 

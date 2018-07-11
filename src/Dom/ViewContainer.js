@@ -1,6 +1,7 @@
 import Obj from '~/Core/Obj';
 import Element from '~/Dom/Element';
 import Transition from '~/Dom/Transition';
+import $ from 'jquery';
 
 /**
  * @module Dom

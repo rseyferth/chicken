@@ -72,7 +72,7 @@ class JWTAuth extends Auth
 		}
 
 		// Do we have a non-expired token?
-		let hasToken = false
+		let hasToken = false;
 		if (this.token && this.token.receivedAt) {
 
 			// More than 30 minutes old?
@@ -129,7 +129,14 @@ class JWTAuth extends Auth
 			
 			// Wheter we are or are not authenticated, we resolve, because initializion is complete
 			this.validateToken().then(() => {
+				
+				// Authenticated
+				this.doCallback('onAuthenticated', []).then(() => {
+					this.set('isAuthenticated', true);					
+				});
+					
 				resolve(true);
+
 			}, () => {
 				resolve(false);
 			});
@@ -307,7 +314,7 @@ class JWTAuth extends Auth
 
 
 	validateToken() {
-
+		
 		return new Promise((resolve, reject) => {
 
 			// Any token?
@@ -363,11 +370,9 @@ class JWTAuth extends Auth
 
 					}, (timesOutAt - now) * 1000);
 
-					// It is valid!
-					this.doCallback('onAuthenticated', []).then(() => {
-						this.set('isAuthenticated', true);					
-						resolve();
-					});
+					
+					// Done!
+					resolve();
 
 				} else {
 

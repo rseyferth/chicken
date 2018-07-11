@@ -149,7 +149,7 @@ class Application extends Observable {
 
 				// Running actual app or previewing in browser?
 				if (document.URL.indexOf( 'http://' ) === -1 && document.URL.indexOf( 'https://' ) === -1) {
-					 
+					
 					// Create a history in memory
 					this.history = createMemoryHistory();
 					

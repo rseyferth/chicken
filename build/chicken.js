@@ -14766,6 +14766,10 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _Transition2 = _interopRequireDefault(_Transition);
 
+	var _jquery = __webpack_require__(327);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -14908,7 +14912,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				return new Promise(function (resolve) {
 
 					// Put content into container
-					var $newContent = $('<div class="view-container-element" />').html(newContent);
+					var $newContent = (0, _jquery2.default)('<div class="view-container-element" />').html(newContent);
 
 					// No transition?
 					if (!transitionName || transitionName === 'none' || _this3.transitionsDisabled) {
@@ -16562,6 +16566,15 @@ return /******/ (function(modules) { // webpackBootstrap
 				return this;
 			}
 		}, {
+			key: 'reverseEach',
+			value: function reverseEach(callback) {
+
+				for (var q = this.items.length - 1; q >= 0; q--) {
+					callback.apply(null, [this.items[q]]);
+				}
+				return this;
+			}
+		}, {
 			key: 'find',
 			value: function find(idOrAttributeOrCallback) {
 				var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
@@ -16919,7 +16932,9 @@ return /******/ (function(modules) { // webpackBootstrap
 			if (this.path) {
 				try {
 					this.observable.observe(path, this.changeCallback);
-				} catch (ex) {}
+				} catch (ex) {
+					//...
+				}
 			} else {
 				this.observable.study(this.changeCallback);
 			}
@@ -17710,7 +17725,7 @@ return /******/ (function(modules) { // webpackBootstrap
 					}
 
 					// Is it a useful value?
-					if (key !== 'title' && (typeof value === 'string' || typeof value === 'number')) {
+					if (key !== 'title' && (typeof value === 'string' || typeof value === 'number') && value.length < 64) {
 						var attrKey = _inflection2.default.underscore(key).split('_').join('-');
 						_this3.element.setAttribute(attrKey, value);
 					}
@@ -18698,6 +18713,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				this.trigger('beforeRevalidate');
 				if (this.renderResult) this.renderResult.revalidate();
 				this.trigger('revalidate');
+				View.any.trigger('revalidate', this);
 				this.revalidateTimeout = false;
 				return this;
 			}
@@ -19015,6 +19031,12 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 		_createClass(ApiCall, [{
+			key: 'serialize',
+			value: function serialize() {
+
+				return JSON.stringify(_underscore2.default.pick(this, ['uri', 'method', 'data', 'queryParams']));
+			}
+		}, {
 			key: 'reset',
 			value: function reset() {
 				this.resetPromise('complete');
@@ -20557,6 +20579,11 @@ return /******/ (function(modules) { // webpackBootstrap
 			key: 'getDefinition',
 			value: function getDefinition() {
 				return this.constructor.definition;
+			}
+		}, {
+			key: 'getPrimaryKey',
+			value: function getPrimaryKey() {
+				return this.get(this.getDefinition().primaryKey);
 			}
 
 			/**
@@ -25159,7 +25186,7 @@ return /******/ (function(modules) { // webpackBootstrap
 				} else if (extension === 'json') {
 
 					// Parse json
-					if (typeof result === 'string') result = JSON.parse(string);
+					if (typeof result === 'string') result = JSON.parse(result);
 				}
 
 				return result;
@@ -25241,28 +25268,66 @@ return /******/ (function(modules) { // webpackBootstrap
 					obj = obj[part];
 				}
 
-				// String?
+				return this.processValue(obj, attributes);
+			}
+		}, {
+			key: 'processValue',
+			value: function processValue(obj, attributes) {
+				var _this4 = this;
+
+				// What type?
 				if (typeof obj === 'string') {
 
-					/////////////////
-					// Templating? //
-					/////////////////
+					// Process string
+					obj = this.processString(obj, attributes);
+				} else if (_jquery2.default.isArray(obj)) {
 
-					if (obj.match(/<%/)) {
+					// Mapped processing
+					obj = _underscore2.default.map(obj, function (v) {
+						return _this4.processValue(v, attributes);
+					});
+				} else if ((typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object') {
 
-						// Convert attributes into real values
-						var attr = _underscore2.default.mapObject(attributes, function (value) {
+					var result = {};
+					_underscore2.default.each(obj, function (value, key) {
+						result[key] = _this4.processValue(value, attributes);
+					});
+					obj = result;
+				}
+				return obj;
+			}
+		}, {
+			key: 'processString',
+			value: function processString(obj, attributes) {
 
-							// Get value?
-							if (value !== null && value !== undefined && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.getValue === 'function') {
-								value = value.getValue();
-							}
-							return value;
-						});
+				// Double escaping
+				obj = obj.split(/\\n/).join('\n').split(/\\t/).join('\t');
 
-						// Make a template and run it
-						var template = _underscore2.default.template(obj);
+				/////////////////
+				// Templating? //
+				/////////////////
+
+				if (obj.match(/<%/)) {
+
+					// Convert attributes into real values
+					var attr = _underscore2.default.mapObject(attributes, function (value) {
+
+						// Get value?
+						if (value !== null && value !== undefined && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.getValue === 'function') {
+							value = value.getValue();
+						}
+						return value;
+					});
+
+					// Make a template and run it
+					var template = _underscore2.default.template(obj);
+					try {
 						obj = template(attr);
+					} catch (error) {
+
+						//
+						//console.warn(error);
+
 					}
 				}
 
@@ -27087,6 +27152,12 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Wheter we are or are not authenticated, we resolve, because initializion is complete
 					_this2.validateToken().then(function () {
+
+						// Authenticated
+						_this2.doCallback('onAuthenticated', []).then(function () {
+							_this2.set('isAuthenticated', true);
+						});
+
 						resolve(true);
 					}, function () {
 						resolve(false);
@@ -27313,11 +27384,8 @@ return /******/ (function(modules) { // webpackBootstrap
 								if (_this6.autoRefreshTimeout) clearTimeout(_this6.autoRefreshTimeout);
 							}, (timesOutAt - now) * 1000);
 
-							// It is valid!
-							_this6.doCallback('onAuthenticated', []).then(function () {
-								_this6.set('isAuthenticated', true);
-								resolve();
-							});
+							// Done!
+							resolve();
 						} else {
 
 							// Not valid
@@ -27782,6 +27850,8 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			this.searchFields = null;
 
+			this.primaryKey = 'id';
+
 			callback.apply(this, [this]);
 
 			_underscore2.default.each(this.relationships, function (rel) {
@@ -27809,6 +27879,14 @@ return /******/ (function(modules) { // webpackBootstrap
 				var isDynamic = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
 
 				this.isDynamic = isDynamic;
+				return this;
+			}
+		}, {
+			key: 'setPrimaryKey',
+			value: function setPrimaryKey() {
+				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 'id';
+
+				this.primaryKey = key;
 				return this;
 			}
 		}, {

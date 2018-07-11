@@ -39,6 +39,8 @@ class ModelDefinition
 
 		this.searchFields = null;
 
+		this.primaryKey = 'id';
+
 		callback.apply(this, [this]);
 
 		_.each(this.relationships, (rel) => {
@@ -65,6 +67,11 @@ class ModelDefinition
 		return this;
 	}
 
+
+	setPrimaryKey(key = 'id') {
+		this.primaryKey = key;
+		return this;
+	}
 
 	getRelationshipsByLocalKey() {
 

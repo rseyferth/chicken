@@ -93,7 +93,7 @@ class Auth extends Observable
 				App().goto(callback);
 				resolve();
 			}
-
+			
 			// Get the result from the callback
 			let result = callback.apply(this, params);
 
