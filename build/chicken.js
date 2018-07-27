@@ -19681,7 +19681,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				// Is there a setter?
 				var methodName = 'set' + _inflection2.default.camelize(key);
-				if (this[methodName] && typeof this[methodName] === 'function' && !(value instanceof _ComputedProperty2.default)) {
+				if (methodName !== 'setRelatedModel' && this[methodName] && typeof this[methodName] === 'function' && !(value instanceof _ComputedProperty2.default)) {
 					return this[methodName].apply(this, [value]);
 				}
 
@@ -27156,9 +27156,8 @@ return /******/ (function(modules) { // webpackBootstrap
 						// Authenticated
 						_this2.doCallback('onAuthenticated', []).then(function () {
 							_this2.set('isAuthenticated', true);
+							resolve(true);
 						});
-
-						resolve(true);
 					}, function () {
 						resolve(false);
 					});
