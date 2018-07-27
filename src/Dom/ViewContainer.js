@@ -139,14 +139,12 @@ class ViewContainer extends Element
 			// No transition?
 			if (!transitionName || transitionName === 'none' || this.transitionsDisabled) {
 				
-				// Set content now
-				this._fireHooks('beforeRender');
-				this.$element.append($newContent);
-				
 				// Remove old content
-				if (this.$currentContent) {
-					this.$currentContent.remove();
-				}
+				this._fireHooks('beforeRender');
+				this.$element.find('.view-container-element').remove();
+				
+				// Set content now
+				this.$element.append($newContent);
 				
 				// Switch!
 				this.$currentContent = $newContent;

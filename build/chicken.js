@@ -14917,14 +14917,12 @@ return /******/ (function(modules) { // webpackBootstrap
 					// No transition?
 					if (!transitionName || transitionName === 'none' || _this3.transitionsDisabled) {
 
-						// Set content now
-						_this3._fireHooks('beforeRender');
-						_this3.$element.append($newContent);
-
 						// Remove old content
-						if (_this3.$currentContent) {
-							_this3.$currentContent.remove();
-						}
+						_this3._fireHooks('beforeRender');
+						_this3.$element.find('.view-container-element').remove();
+
+						// Set content now
+						_this3.$element.append($newContent);
 
 						// Switch!
 						_this3.$currentContent = $newContent;
