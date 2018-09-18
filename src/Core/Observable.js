@@ -111,6 +111,10 @@ class Observable extends Obj {
 		this.withoutNotifications(() => {
 			this.import(initValues, convertToObservables);			
 		});
+
+
+		// Properties for internal use
+		this._bindings = {};
 		
 	}
 
@@ -701,6 +705,7 @@ class Observable extends Obj {
 		return obj;
 
 	}
+
 
 	/**
 	 * Apply given callback for each attribute defined in this observable

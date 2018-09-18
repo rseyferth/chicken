@@ -19,7 +19,7 @@ Pivot.createFor = (model, pivotAttributes) => {
 
 	// The pivot itself is a model too
 	let pivot = new Pivot(pivotAttributes);
-
+	
 	// Make it
 	let proxy = new Proxy(model, {
 

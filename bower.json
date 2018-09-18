@@ -14,7 +14,7 @@
     "underscore.string": "^3.3.4",
     "jquery.ajaxq": "^0.5.2",
     "query-string": "^5.0.1",
-    "velocity": "^2.0.1"
+    "proxy-polyfill": "^0.3.0"
   },
   "license": "ISC",
   "homepage": "https://github.com/rseyferth/chicken",

@@ -11,7 +11,7 @@ import Reference from '~/Core/Reference';
 import ClassMap from '~/Helpers/ClassMap';
 
 let uid = 0;
-let UniqueIdKey = '___chicken_' + (+ new Date());
+
 
 
 
@@ -178,8 +178,13 @@ let Utils = {
 	 */
 	uidFor: (obj) => {
 
+		// Chicken model?
+		if (obj.__getUid && typeof obj.__getUid === 'function') {
+			return obj.__getUid();
+		}
+		
 		// Already set for this object?
-		if (obj && obj[UniqueIdKey] !== undefined) return obj[UniqueIdKey];
+		if (obj && obj.__chickenUID !== undefined) return obj.__chickenUID;
 
 		// Non-existing things?
 		if (obj === undefined) return '(undefined)';
@@ -204,7 +209,7 @@ let Utils = {
 
 		// Store the id on the obj
 		let uid = Utils.uid();
-		obj[UniqueIdKey] = uid;
+		obj.__chickenUID = uid;
 		return uid;
 
 

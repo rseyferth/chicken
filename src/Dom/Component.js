@@ -306,6 +306,11 @@ class Component extends View
 			if (this.view) source = `${this.name} in ${this.view.source}`;
 			let msg = `Error in template "${source}" at "${path}":\n\t${error}\n`;
 
+			// Add error stack			
+			/* eslint-disable no-console */
+			console.warn(error.stack);
+			/* eslint-enable no-console */
+			
 			this.rejectPromise('ready', msg);
 			return;
 		}

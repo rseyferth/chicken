@@ -667,10 +667,14 @@ class View extends Observable
 				path = 'unknown';
 			}
 
+			// Add error stack			
+			/* eslint-disable no-console */
+			console.warn(error.stack);
+			/* eslint-enable no-console */
+			
 			// Get template source
 			let source = this.source;
 			let msg = `Error in template "${source}" at "${path}":\n\t${error}\n`;
-
 			this.rejectPromise('ready', msg);
 			return this;
 			

@@ -2,6 +2,8 @@ import _ from 'underscore';
 
 var promiseCount = 0;
 
+var objectCount = 0;
+
 /**
  * @module Core
  */
@@ -19,6 +21,12 @@ class Obj {
 		this._listeners = new Map();
 		this._promises = new Map();
 
+		this.__chickenUid_Obj = `**Obj${++objectCount}**`;
+	
+	}
+
+	__getUid() {
+		return this.__chickenUid_Obj;
 	}
 
 	////////////////////
@@ -86,7 +94,7 @@ class Obj {
 		// Collect promises
 		var promises = [];
 		_.each(args, (arg) => {
-			promises.push(this._getPromiseInfo(arg).promise);
+			promises.push(this._getPromiseInfo(arg).promise);			
 		});
 
 		// One?
