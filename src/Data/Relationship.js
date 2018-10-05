@@ -1,9 +1,9 @@
 import _ from 'underscore';
 import inflection from 'inflection';
 
-import Model from '~/Data/Model';
-import Collection from '~/Data/Collection';
-import PivotCollection from '~/Data/PivotCollection';
+import Model from '../Data/Model';
+import Collection from '../Data/Collection';
+import PivotCollection from '../Data/PivotCollection';
 
 class Relationship {
 

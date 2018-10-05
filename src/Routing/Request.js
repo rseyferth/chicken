@@ -1,6 +1,6 @@
 import QueryString from 'query-string';
 
-import ClassMap from '~/Helpers/ClassMap';
+import ClassMap from '../Helpers/ClassMap';
 
 /**
  * @module Routing

@@ -1,8 +1,8 @@
 import _ from 'underscore';
-import Obj from '~/Core/Obj';
-import Reference from '~/Core/Reference';
-import ClassMap from '~/Helpers/ClassMap';
-import ComputedProperty from '~/Core/ComputedProperty';
+import Obj from '../Core/Obj';
+import Reference from '../Core/Reference';
+import ClassMap from '../Helpers/ClassMap';
+import ComputedProperty from '../Core/ComputedProperty';
 
 /**
  * @module Core

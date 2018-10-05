@@ -1,8 +1,8 @@
 import $ from 'jquery';
 import moment from 'moment';
 
-import Auth from '~/Auth/Auth';
-import AuthError from '~/Auth/AuthError';
+import Auth from '../Auth/Auth';
+import AuthError from '../Auth/AuthError';
 
 /**
  * @module Auth

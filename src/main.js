@@ -4,7 +4,6 @@
 // Vendor libraries //
 //////////////////////
 
-//import 'babel-polyfill';
 import $ from 'jquery';
 import _ from 'underscore';
 import s from 'underscore.string';
@@ -28,72 +27,72 @@ _.mixin(s.exports());
 // Chicken Classes //
 /////////////////////
 
-import Application from '~/Application';
+import Application from './Application';
 
 // Api
-import Api from '~/Api/Api';
-import ApiCall from '~/Api/ApiCall';
-import ApiError from '~/Api/ApiError';
-import JsonApi from '~/Api/JsonApi';
-import JsonApiCall from '~/Api/JsonApiCall';
-import PrimitiveJsonApi from '~/Api/PrimitiveJsonApi';
-import PrimitiveJsonApiCall from '~/Api/PrimitiveJsonApiCall';
+import Api from './Api/Api';
+import ApiCall from './Api/ApiCall';
+import ApiError from './Api/ApiError';
+import JsonApi from './Api/JsonApi';
+import JsonApiCall from './Api/JsonApiCall';
+import PrimitiveJsonApi from './Api/PrimitiveJsonApi';
+import PrimitiveJsonApiCall from './Api/PrimitiveJsonApiCall';
 
 // Auth
-import Auth from '~/Auth/Auth';
-import JWTAuth from '~/Auth/JWTAuth';
+import Auth from './Auth/Auth';
+import JWTAuth from './Auth/JWTAuth';
 
 // Core
-import ComputedProperty from '~/Core/ComputedProperty';
-import Obj from '~/Core/Obj';
-import Observable from '~/Core/Observable';
-import ObservableArray from '~/Core/ObservableArray';
-import Reference from '~/Core/Reference';
-import SettingsObject from '~/Core/SettingsObject';
+import ComputedProperty from './Core/ComputedProperty';
+import Obj from './Core/Obj';
+import Observable from './Core/Observable';
+import ObservableArray from './Core/ObservableArray';
+import Reference from './Core/Reference';
+import SettingsObject from './Core/SettingsObject';
 
 
 // Data
-import Collection from '~/Data/Collection';
-import Model from '~/Data/Model';
-import ModelAttribute from '~/Data/ModelAttribute';
-import ModelDefinition from '~/Data/ModelDefinition';
-import ModelStore from '~/Data/ModelStore';
-import Pivot from '~/Data/Pivot';
-import Relationship from '~/Data/Relationship';
-import Service from '~/Data/Service';
+import Collection from './Data/Collection';
+import Model from './Data/Model';
+import ModelAttribute from './Data/ModelAttribute';
+import ModelDefinition from './Data/ModelDefinition';
+import ModelStore from './Data/ModelStore';
+import Pivot from './Data/Pivot';
+import Relationship from './Data/Relationship';
+import Service from './Data/Service';
 
 // Dom
-import ActionBinding from '~/Dom/ActionBinding';
-import Binding from '~/Dom/Binding';
-import Component from '~/Dom/Component';
-import ComponentDefinition from '~/Dom/ComponentDefinition';
-import Element from '~/Dom/Element';
-import Helpers from '~/Dom/Helpers';
-import Renderer from '~/Dom/Renderer';
-import Transition from '~/Dom/Transition';
-import View from '~/Dom/View';
-import ViewContainer from '~/Dom/ViewContainer';
+import ActionBinding from './Dom/ActionBinding';
+import Binding from './Dom/Binding';
+import Component from './Dom/Component';
+import ComponentDefinition from './Dom/ComponentDefinition';
+import Element from './Dom/Element';
+import Helpers from './Dom/Helpers';
+import Renderer from './Dom/Renderer';
+import Transition from './Dom/Transition';
+import View from './Dom/View';
+import ViewContainer from './Dom/ViewContainer';
 
 // Helpers
-import App from '~/Helpers/App';
-import Chainable from '~/Helpers/Chainable';
-import ClassMap from '~/Helpers/ClassMap';
-import Utils from '~/Helpers/Utils';
+import App from './Helpers/App';
+import Chainable from './Helpers/Chainable';
+import ClassMap from './Helpers/ClassMap';
+import Utils from './Helpers/Utils';
 
 // Localization
-import I18n from '~/Localization/I18n';
+import I18n from './Localization/I18n';
 
 // Routing
-import Action from '~/Routing/Action';
-import Controller from '~/Routing/Controller';
-import FakeHistory from '~/Routing/FakeHistory';
-import Middleware from '~/Routing/Middleware';
-import Redirect from '~/Routing/Redirect';
-import Request from '~/Routing/Request';
-import Route from '~/Routing/Route';
-import RouteMatch from '~/Routing/RouteMatch';
-import Router from '~/Routing/Router';
-import RoutingError from '~/Routing/RoutingError';
+import Action from './Routing/Action';
+import Controller from './Routing/Controller';
+import FakeHistory from './Routing/FakeHistory';
+import Middleware from './Routing/Middleware';
+import Redirect from './Routing/Redirect';
+import Request from './Routing/Request';
+import Route from './Routing/Route';
+import RouteMatch from './Routing/RouteMatch';
+import Router from './Routing/Router';
+import RoutingError from './Routing/RoutingError';
 
 
 
@@ -494,6 +493,6 @@ var Chicken = {
 
 
 };
-
+window.Chicken = Chicken;
 
 module.exports = Chicken;

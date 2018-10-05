@@ -1,16 +1,16 @@
 import _ from 'underscore';
 import HTMLBars from 'htmlbars-standalone';
 
-import Observable from '~/Core/Observable';
-import ObservableArray from '~/Core/ObservableArray';
-import Binding from '~/Dom/Binding';
-import ActionBinding from '~/Dom/ActionBinding';
-import Component from '~/Dom/Component';
-import ComponentDefinition from '~/Dom/ComponentDefinition';
-import HelperProxy from '~/Dom/HelperProxy';
-import Helpers from '~/Dom/Helpers';
-import View from '~/Dom/View';
-import Utils from '~/Helpers/Utils';
+import Observable from '../Core/Observable';
+import ObservableArray from '../Core/ObservableArray';
+import Binding from '../Dom/Binding';
+import ActionBinding from '../Dom/ActionBinding';
+import Component from '../Dom/Component';
+import ComponentDefinition from '../Dom/ComponentDefinition';
+import HelperProxy from '../Dom/HelperProxy';
+import Helpers from '../Dom/Helpers';
+import View from '../Dom/View';
+import Utils from '../Helpers/Utils';
 
 /**
  * @module Dom
@@ -331,6 +331,7 @@ class Renderer
 					_.each(attributeHash, (value, key) => {
 						element.setAttribute(key, renderer.hooks.getValue(value));
 					});
+					
 					var fragment = HTMLBars.Runtime.render(options.default, renderer, scope, {}).fragment;
 					element.appendChild(fragment);
 					morph.setNode(element);

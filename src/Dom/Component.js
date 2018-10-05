@@ -3,8 +3,8 @@ import _ from 'underscore';
 import HTMLBars from 'htmlbars-standalone';
 import inflection from 'inflection';
 
-import Obj from '~/Core/Obj';
-import View from '~/Dom/View';
+import Obj from '../Core/Obj';
+import View from '../Dom/View';
 
 /**
  * @module Dom
@@ -308,7 +308,9 @@ class Component extends View
 
 			// Add error stack			
 			/* eslint-disable no-console */
-			console.warn(error.stack);
+			try {
+				console.warn(error.stack);
+			} catch (e) { /* Nothing */}
 			/* eslint-enable no-console */
 			
 			this.rejectPromise('ready', msg);

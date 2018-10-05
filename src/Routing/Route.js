@@ -1,9 +1,9 @@
 import _ from 'underscore';
 import XRegExp from 'xregexp';
 
-import Obj from '~/Core/Obj';
-import RouteMatch from '~/Routing/RouteMatch';
-import Model from '~/Data/Model';
+import Obj from '../Core/Obj';
+import RouteMatch from '../Routing/RouteMatch';
+import Model from '../Data/Model';
 
 /**
  * @module Routing

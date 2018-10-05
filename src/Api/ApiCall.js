@@ -2,10 +2,10 @@ import $ from 'jquery';
 import QueryString from 'query-string';
 import _ from 'underscore';
 
-import ApiError from '~/Api/ApiError';
-import Obj from '~/Core/Obj';
-import Model from '~/Data/Model';
-import Collection from '~/Data/Collection';
+import ApiError from '../Api/ApiError';
+import Obj from '../Core/Obj';
+import Model from '../Data/Model';
+import Collection from '../Data/Collection';
 
 /**
  * An ApiCall is a once-executing call to the configured API

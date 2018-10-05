@@ -1,5 +1,5 @@
-import Collection from '~/Data/Collection';
-import Pivot from '~/Data/Pivot';
+import Collection from '../Data/Collection';
+import Pivot from '../Data/Pivot';
 
 /**
  * @module Data

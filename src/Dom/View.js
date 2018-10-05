@@ -2,14 +2,14 @@ import _ from 'underscore';
 import $ from 'jquery';
 import HTMLBars from 'htmlbars-standalone';
 
-import App from '~/Helpers/App';
-import Observable from '~/Core/Observable';
-import Binding from '~/Dom/Binding';
-import ApiCall from '~/Api/ApiCall';
-import Obj from '~/Core/Obj';
-import Model from '~/Data/Model';
-import Collection from '~/Data/Collection';
-import Utils from '~/Helpers/Utils';
+import App from '../Helpers/App';
+import Observable from '../Core/Observable';
+import Binding from '../Dom/Binding';
+import ApiCall from '../Api/ApiCall';
+import Obj from '../Core/Obj';
+import Model from '../Data/Model';
+import Collection from '../Data/Collection';
+import Utils from '../Helpers/Utils';
 
 /**
  * @module Dom
@@ -669,8 +669,11 @@ class View extends Observable
 
 			// Add error stack			
 			/* eslint-disable no-console */
-			console.warn(error.stack);
+			try {
+				console.warn(error.stack);
+			} catch (e) { /* Nothing */}
 			/* eslint-enable no-console */
+			
 			
 			// Get template source
 			let source = this.source;

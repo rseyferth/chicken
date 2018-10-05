@@ -3,14 +3,14 @@ import _ from 'underscore';
 import $ from 'jquery';
 import moment from 'moment';
 
-import App from '~/Helpers/App';
-import Observable from '~/Core/Observable';
-import ObservableArray from '~/Core/ObservableArray';
-import ModelStore from '~/Data/ModelStore';
-import Collection from '~/Data/Collection';
-import ClassMap from '~/Helpers/ClassMap';
-import Utils from '~/Helpers/Utils';
-import ComputedProperty from '~/Core/ComputedProperty';
+import App from '../Helpers/App';
+import Observable from '../Core/Observable';
+import ObservableArray from '../Core/ObservableArray';
+import ModelStore from '../Data/ModelStore';
+import Collection from '../Data/Collection';
+import ClassMap from '../Helpers/ClassMap';
+import Utils from '../Helpers/Utils';
+import ComputedProperty from '../Core/ComputedProperty';
 
 /**
  * @module Data

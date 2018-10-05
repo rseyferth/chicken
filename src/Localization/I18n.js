@@ -1,7 +1,7 @@
 import $ from 'jquery';
 import _ from 'underscore';
 
-import Obj from '~/Core/Obj';
+import Obj from '../Core/Obj';
 /**
  * @module Localization
  */
@@ -50,6 +50,25 @@ class I18n extends Obj {
 		return this;
 
 	}
+
+	setBundle(data, key = null, language = null) {
+		
+		// Default language
+		if (!language) language = this.language;
+
+		// Is there a key?
+		if (key) {
+			let r = {};
+			r[key] = data;
+			data = r;
+		}
+
+		// Extend
+		$.extend(this.data[language], data);
+
+		
+	}
+
 
 	/**
 	 * Manually load a bundle into I18n

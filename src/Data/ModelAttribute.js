@@ -1,8 +1,8 @@
 import _ from 'underscore';
 
 import moment from 'moment';
-import Observable from '~/Core/Observable';
-import ObservableArray from '~/Core/ObservableArray';
+import Observable from '../Core/Observable';
+import ObservableArray from '../Core/ObservableArray';
 
 class ModelAttribute {
 

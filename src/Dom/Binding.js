@@ -1,6 +1,6 @@
 import $ from 'jquery';
 
-import Reference from '~/Core/Reference';
+import Reference from '../Core/Reference';
 
 /**
  * @module Dom

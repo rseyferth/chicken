@@ -12,14 +12,14 @@ import _ from 'underscore';
 // Chicken classes //
 /////////////////////
 
-import Observable from '~/Core/Observable';
-import SettingsObject from '~/Core/SettingsObject';
-import ViewContainer from '~/Dom/ViewContainer';
-import Renderer from '~/Dom/Renderer';
-import ClassMap from '~/Helpers/ClassMap';
-import Router from '~/Routing/Router';
-import Element from '~/Dom/Element';
-import I18n from '~/Localization/I18n';
+import Observable from './Core/Observable';
+import SettingsObject from './Core/SettingsObject';
+import ViewContainer from './Dom/ViewContainer';
+import Renderer from './Dom/Renderer';
+import ClassMap from './Helpers/ClassMap';
+import Router from './Routing/Router';
+import Element from './Dom/Element';
+import I18n from './Localization/I18n';
 
 //////////////////////
 // Class definitino //

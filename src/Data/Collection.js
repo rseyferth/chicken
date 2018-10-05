@@ -1,7 +1,7 @@
 import _ from 'underscore';
 
-import ObservableArray from '~/Core/ObservableArray';
-import ClassMap from '~/Helpers/ClassMap';
+import ObservableArray from '../Core/ObservableArray';
+import ClassMap from '../Helpers/ClassMap';
 
 class Collection extends ObservableArray
 {

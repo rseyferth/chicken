@@ -1,9 +1,9 @@
 import inflection from 'inflection';
 import _ from 'underscore';
 
-import ModelAttribute from '~/Data/ModelAttribute';
-import Relationship from '~/Data/Relationship';
-import ComputedProperty from '~/Core/ComputedProperty';
+import ModelAttribute from '../Data/ModelAttribute';
+import Relationship from '../Data/Relationship';
+import ComputedProperty from '../Core/ComputedProperty';
 
 /**
  * @module Data

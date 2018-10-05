@@ -1,5 +1,5 @@
-import ClassMap from '~/Helpers/ClassMap';
-import Model from '~/Data/Model';
+import ClassMap from '../Helpers/ClassMap';
+import Model from '../Data/Model';
 
 /**
  * @module Data

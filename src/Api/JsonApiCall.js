@@ -1,6 +1,6 @@
 import inflection from 'inflection';
 import moment from 'moment';
-import ApiCall from '~/Api/ApiCall';
+import ApiCall from '../Api/ApiCall';
 
 /**
  * @module Api

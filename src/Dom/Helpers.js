@@ -7,11 +7,11 @@ import inflection from 'inflection';
 import moment from 'moment';
 import filesize from 'filesize.js';
 
-import ActionBinding from '~/Dom/ActionBinding';
-import Utils from '~/Helpers/Utils';
-import App from '~/Helpers/App';
-import Observable from '~/Core/Observable';
-import ObservableArray from '~/Core/ObservableArray';
+import ActionBinding from '../Dom/ActionBinding';
+import Utils from '../Helpers/Utils';
+import App from '../Helpers/App';
+import Observable from '../Core/Observable';
+import ObservableArray from '../Core/ObservableArray';
 
 /**
  * @module Dom

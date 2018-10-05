@@ -1,4 +1,4 @@
-import Observable from '~/Core/Observable';
+import Observable from '../Core/Observable';
 
 class Service extends Observable
 {

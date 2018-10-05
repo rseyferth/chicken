@@ -2,16 +2,16 @@
 
 import _ from 'underscore';
 
-import ApiError from '~/Api/ApiError';
-import Obj from '~/Core/Obj';
-import SettingsObject from '~/Core/SettingsObject';
-import Route from '~/Routing/Route';
-import RouteMatch from '~/Routing/RouteMatch';
-import Request from '~/Routing/Request';
-import Middleware from '~/Routing/Middleware';
-import Service from '~/Data/Service';
-import RoutingError from '~/Routing/RoutingError';
-import Redirect from '~/Routing/Redirect';
+import ApiError from '../Api/ApiError';
+import Obj from '../Core/Obj';
+import SettingsObject from '../Core/SettingsObject';
+import Route from '../Routing/Route';
+import RouteMatch from '../Routing/RouteMatch';
+import Request from '../Routing/Request';
+import Middleware from '../Routing/Middleware';
+import Service from '../Data/Service';
+import RoutingError from '../Routing/RoutingError';
+import Redirect from '../Routing/Redirect';
 
 /**
  * @module Routing

@@ -1,6 +1,6 @@
 import _ from 'underscore';
-import Obj from '~/Core/Obj';
-import ClassMap from '~/Helpers/ClassMap';
+import Obj from '../Core/Obj';
+import ClassMap from '../Helpers/ClassMap';
 
 /**
  * @module Core

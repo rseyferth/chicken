@@ -1,10 +1,10 @@
 import inflection from 'inflection';
 import _ from 'underscore';
 
-import Api from '~/Api/Api';
-import PrimitiveJsonApiCall from '~/Api/PrimitiveJsonApiCall';
-import Model from '~/Data/Model';
-import Collection from '~/Data/Collection';
+import Api from '../Api/Api';
+import PrimitiveJsonApiCall from '../Api/PrimitiveJsonApiCall';
+import Model from '../Data/Model';
+import Collection from '../Data/Collection';
 
 /**
  * @module Api

@@ -1,9 +1,9 @@
 import _ from 'underscore';
 import $ from 'jquery';
 
-import Observable from '~/Core/Observable';
-import Middleware from '~/Routing/Middleware';
-import App from '~/Helpers/App';
+import Observable from '../Core/Observable';
+import Middleware from '../Routing/Middleware';
+import App from '../Helpers/App';
 
 /**
  * @module Auth

@@ -1,4 +1,4 @@
-import Obj from '~/Core/Obj';
+import Obj from '../Core/Obj';
 
 class ModelStore extends Obj
 {

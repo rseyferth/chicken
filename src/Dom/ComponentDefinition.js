@@ -1,4 +1,4 @@
-import App from '~/Helpers/App';
+import App from '../Helpers/App';
 
 /**
  * @module Dom

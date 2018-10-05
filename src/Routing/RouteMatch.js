@@ -1,8 +1,8 @@
 import _ from 'underscore';
 import QueryString from 'query-string';
 
-import Action from '~/Routing/Action';
-import Utils from '~/Helpers/Utils';
+import Action from '../Routing/Action';
+import Utils from '../Helpers/Utils';
 
 /**
  * @module Routing

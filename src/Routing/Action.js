@@ -1,13 +1,13 @@
 import XRegExp from 'xregexp';
 import _ from 'underscore';
 
-import App from '~/Helpers/App';
-import Obj from '~/Core/Obj';
-import Redirect from '~/Routing/Redirect';
-import Controller from '~/Routing/Controller';
-import RoutingError from '~/Routing/RoutingError';
-import View from '~/Dom/View';
-import Utils from '~/Helpers/Utils';
+import App from '../Helpers/App';
+import Obj from '../Core/Obj';
+import Redirect from '../Routing/Redirect';
+import Controller from '../Routing/Controller';
+import RoutingError from '../Routing/RoutingError';
+import View from '../Dom/View';
+import Utils from '../Helpers/Utils';
 
 /**
  * @module Routing

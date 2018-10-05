@@ -1,9 +1,9 @@
 import $ from 'jquery';
 import _ from 'underscore';
 
-import Model from '~/Data/Model';
-import ApiCall from '~/Api/ApiCall';
-import App from '~/Helpers/App';
+import Model from '../Data/Model';
+import ApiCall from '../Api/ApiCall';
+import App from '../Helpers/App';
 
 /**
  * An Api instance can be used to make contact with one specific

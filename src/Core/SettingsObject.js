@@ -1,7 +1,7 @@
 import _ from 'underscore';
 
-import Observable from '~/Core/Observable';
-import Chainable from '~/Helpers/Chainable';
+import Observable from '../Core/Observable';
+import Chainable from '../Helpers/Chainable';
 
 /**
  * @module Core

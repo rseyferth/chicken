@@ -1,5 +1,5 @@
 import _ from 'underscore';
-import Obj from '~/Core/Obj';
+import Obj from '../Core/Obj';
 
 /**
  * @module Dom
