@@ -20,9 +20,6 @@ if (_ === undefined || typeof _ !== 'function') throw new Error('Error while ini
 if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
 if (s === undefined || typeof s !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore.string (s). Was Underscore.string not loaded?');
 
-// Mixin underscore string
-_.mixin(s.exports());
-
 /////////////////////
 // Chicken Classes //
 /////////////////////
@@ -237,7 +234,7 @@ var Chicken = {
 
 	},
 
-	component: (name, source, initCallback, methods = {}, renderer = null, overwrite = false) => {
+	component: function(name, source, initCallback, methods = {}, renderer = null, overwrite = true) {
 
 		// Create definition
 		var def = new ComponentDefinition(name, source, initCallback, methods, renderer);
