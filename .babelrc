@@ -1,7 +1,5 @@
 {
   "presets": [
-    "babel-preset-env"
-  ],
-  "plugins": [],
-  "sourceMaps": true
+      "@babel/preset-env"
+  ]
 }

@@ -1,13 +1,13 @@
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory(require("$"), require("_"), require("s"), require("XRegExp"), require("moment"), require("HTMLBars"));
+		module.exports = factory(require("moment"), require("$"), require("_"), require("HTMLBars"), require("XRegExp"));
 	else if(typeof define === 'function' && define.amd)
-		define(["$", "_", "s", "XRegExp", "moment", "HTMLBars"], factory);
+		define(["moment", "$", "_", "HTMLBars", "XRegExp"], factory);
 	else if(typeof exports === 'object')
-		exports["Chicken"] = factory(require("$"), require("_"), require("s"), require("XRegExp"), require("moment"), require("HTMLBars"));
+		exports["Chicken"] = factory(require("moment"), require("$"), require("_"), require("HTMLBars"), require("XRegExp"));
 	else
-		root["Chicken"] = factory(root["$"], root["_"], root["s"], root["XRegExp"], root["moment"], root["HTMLBars"]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_1__, __WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_3__, __WEBPACK_EXTERNAL_MODULE_4__, __WEBPACK_EXTERNAL_MODULE_10__, __WEBPACK_EXTERNAL_MODULE_35__) {
+		root["Chicken"] = factory(root["moment"], root["$"], root["_"], root["HTMLBars"], root["XRegExp"]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_2__, __WEBPACK_EXTERNAL_MODULE_19__, __WEBPACK_EXTERNAL_MODULE_20__, __WEBPACK_EXTERNAL_MODULE_32__, __WEBPACK_EXTERNAL_MODULE_53__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -56,223 +56,199 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	'use strict';
 
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _underscore3 = __webpack_require__(3);
-
-	var _underscore4 = _interopRequireDefault(_underscore3);
-
-	var _xregexp = __webpack_require__(4);
-
-	var _xregexp2 = _interopRequireDefault(_xregexp);
-
-	var _inflection = __webpack_require__(5);
-
-	var _inflection2 = _interopRequireDefault(_inflection);
-
-	var _queryString = __webpack_require__(6);
-
-	var _queryString2 = _interopRequireDefault(_queryString);
-
-	var _Application = __webpack_require__(9);
+	var _Application = __webpack_require__(1);
 
 	var _Application2 = _interopRequireDefault(_Application);
 
-	var _Api = __webpack_require__(64);
+	var _Api = __webpack_require__(63);
 
 	var _Api2 = _interopRequireDefault(_Api);
 
-	var _ApiCall = __webpack_require__(43);
+	var _ApiCall = __webpack_require__(41);
 
 	var _ApiCall2 = _interopRequireDefault(_ApiCall);
 
-	var _ApiError = __webpack_require__(44);
+	var _ApiError = __webpack_require__(42);
 
 	var _ApiError2 = _interopRequireDefault(_ApiError);
 
-	var _JsonApi = __webpack_require__(65);
+	var _JsonApi = __webpack_require__(64);
 
 	var _JsonApi2 = _interopRequireDefault(_JsonApi);
 
-	var _JsonApiCall = __webpack_require__(66);
+	var _JsonApiCall = __webpack_require__(65);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _PrimitiveJsonApi = __webpack_require__(67);
+	var _PrimitiveJsonApi = __webpack_require__(66);
 
 	var _PrimitiveJsonApi2 = _interopRequireDefault(_PrimitiveJsonApi);
 
-	var _PrimitiveJsonApiCall = __webpack_require__(68);
+	var _PrimitiveJsonApiCall = __webpack_require__(67);
 
 	var _PrimitiveJsonApiCall2 = _interopRequireDefault(_PrimitiveJsonApiCall);
 
-	var _Auth = __webpack_require__(69);
+	var _Auth = __webpack_require__(68);
 
 	var _Auth2 = _interopRequireDefault(_Auth);
 
-	var _JWTAuth = __webpack_require__(70);
+	var _JWTAuth = __webpack_require__(69);
 
 	var _JWTAuth2 = _interopRequireDefault(_JWTAuth);
 
-	var _ComputedProperty = __webpack_require__(28);
+	var _ComputedProperty = __webpack_require__(25);
 
 	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
 
-	var _Obj = __webpack_require__(25);
+	var _Obj = __webpack_require__(22);
 
 	var _Obj2 = _interopRequireDefault(_Obj);
 
-	var _Observable = __webpack_require__(24);
+	var _Observable = __webpack_require__(21);
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(36);
+	var _ObservableArray = __webpack_require__(33);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
-	var _Reference = __webpack_require__(26);
+	var _Reference = __webpack_require__(23);
 
 	var _Reference2 = _interopRequireDefault(_Reference);
 
-	var _SettingsObject = __webpack_require__(29);
+	var _SettingsObject = __webpack_require__(26);
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Collection = __webpack_require__(47);
+	var _Collection = __webpack_require__(45);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _Model2 = __webpack_require__(45);
+	var _Model2 = __webpack_require__(43);
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
-	var _ModelAttribute = __webpack_require__(72);
+	var _ModelAttribute = __webpack_require__(71);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _ModelDefinition = __webpack_require__(73);
+	var _ModelDefinition = __webpack_require__(72);
 
 	var _ModelDefinition2 = _interopRequireDefault(_ModelDefinition);
 
-	var _ModelStore = __webpack_require__(46);
+	var _ModelStore = __webpack_require__(44);
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
-	var _Pivot = __webpack_require__(76);
+	var _Pivot = __webpack_require__(75);
 
 	var _Pivot2 = _interopRequireDefault(_Pivot);
 
-	var _Relationship = __webpack_require__(74);
+	var _Relationship = __webpack_require__(73);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
-	var _Service2 = __webpack_require__(62);
+	var _Service2 = __webpack_require__(61);
 
 	var _Service3 = _interopRequireDefault(_Service2);
 
-	var _ActionBinding = __webpack_require__(38);
+	var _ActionBinding = __webpack_require__(35);
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Binding = __webpack_require__(37);
+	var _Binding = __webpack_require__(34);
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
-	var _Component = __webpack_require__(40);
+	var _Component = __webpack_require__(37);
 
 	var _Component2 = _interopRequireDefault(_Component);
 
-	var _ComponentDefinition = __webpack_require__(50);
+	var _ComponentDefinition = __webpack_require__(48);
 
 	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
 
-	var _Element = __webpack_require__(32);
+	var _Element = __webpack_require__(29);
 
 	var _Element2 = _interopRequireDefault(_Element);
 
-	var _Helpers = __webpack_require__(51);
+	var _Helpers = __webpack_require__(49);
 
 	var _Helpers2 = _interopRequireDefault(_Helpers);
 
-	var _Renderer = __webpack_require__(34);
+	var _Renderer = __webpack_require__(31);
 
 	var _Renderer2 = _interopRequireDefault(_Renderer);
 
-	var _Transition = __webpack_require__(33);
+	var _Transition = __webpack_require__(30);
 
 	var _Transition2 = _interopRequireDefault(_Transition);
 
-	var _View = __webpack_require__(41);
+	var _View = __webpack_require__(39);
 
 	var _View2 = _interopRequireDefault(_View);
 
-	var _ViewContainer = __webpack_require__(31);
+	var _ViewContainer = __webpack_require__(28);
 
 	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
 
-	var _App = __webpack_require__(42);
+	var _App = __webpack_require__(40);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Chainable = __webpack_require__(30);
+	var _Chainable = __webpack_require__(27);
 
 	var _Chainable2 = _interopRequireDefault(_Chainable);
 
-	var _ClassMap = __webpack_require__(27);
+	var _ClassMap = __webpack_require__(24);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Utils = __webpack_require__(48);
+	var _Utils = __webpack_require__(46);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
-	var _I18n = __webpack_require__(63);
+	var _I18n = __webpack_require__(62);
 
 	var _I18n2 = _interopRequireDefault(_I18n);
 
-	var _Action = __webpack_require__(56);
+	var _Action = __webpack_require__(55);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
-	var _Controller2 = __webpack_require__(58);
+	var _Controller2 = __webpack_require__(57);
 
 	var _Controller3 = _interopRequireDefault(_Controller2);
 
-	var _FakeHistory = __webpack_require__(77);
+	var _FakeHistory = __webpack_require__(76);
 
 	var _FakeHistory2 = _interopRequireDefault(_FakeHistory);
 
-	var _Middleware = __webpack_require__(61);
+	var _Middleware = __webpack_require__(60);
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
 
-	var _Redirect = __webpack_require__(57);
+	var _Redirect = __webpack_require__(56);
 
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 
-	var _Request = __webpack_require__(60);
+	var _Request = __webpack_require__(59);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
-	var _Route = __webpack_require__(54);
+	var _Route = __webpack_require__(52);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _RouteMatch = __webpack_require__(55);
+	var _RouteMatch = __webpack_require__(54);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
-	var _Router = __webpack_require__(53);
+	var _Router = __webpack_require__(51);
 
 	var _Router2 = _interopRequireDefault(_Router);
 
-	var _RoutingError = __webpack_require__(59);
+	var _RoutingError = __webpack_require__(58);
 
 	var _RoutingError2 = _interopRequireDefault(_RoutingError);
 
@@ -282,26 +258,38 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
 
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } /* eslint no-console: "off" */
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/* eslint no-console: "off" */
 
 	//////////////////////
 	// Vendor libraries //
 	//////////////////////
 
-	//import 'babel-polyfill';
-
+	// import $ from 'jquery';
+	// import _ from 'underscore';
+	// import s from 'underscore.string';
+	// import XRegExp from 'xregexp';
+	// import inflection from 'inflection';
+	// import QueryString from 'query-string';
 
 	///////////////////////////////////////
 	// Make sure dependencies are loaded //
 	///////////////////////////////////////
 
-	if (_jquery2.default === undefined || typeof _jquery2.default !== 'function') throw new Error('Error while initializing Chicken: could not find global jQuery ($). Was jQuery not loaded?');
-	if (_underscore2.default === undefined || typeof _underscore2.default !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore (_). Was Underscore not loaded?');
-	if (_xregexp2.default === undefined || typeof _xregexp2.default !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
-	if (_underscore4.default === undefined || typeof _underscore4.default !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore.string (s). Was Underscore.string not loaded?');
+	var _window = window,
+	    $ = _window.$,
+	    _ = _window._,
+	    s = _window.s,
+	    XRegExp = _window.XRegExp,
+	    inflection = _window.inflection,
+	    QueryString = _window.QueryString;
 
-	// Mixin underscore string
-	_underscore2.default.mixin(_underscore4.default.exports());
+
+	if ($ === undefined || typeof $ !== 'function') throw new Error('Error while initializing Chicken: could not find global jQuery ($). Was jQuery not loaded?');
+	if (_ === undefined || typeof _ !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore (_). Was Underscore not loaded?');
+	if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
+	if (s === undefined || typeof s !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore.string (s). Was Underscore.string not loaded?');
 
 	/////////////////////
 	// Chicken Classes //
@@ -416,7 +404,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			RoutingError: _RoutingError2.default
 		},
 
-		inflection: _inflection2.default,
+		inflection: inflection,
 
 		/////////////////
 		// Application //
@@ -468,7 +456,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 				return ChickenController;
 			}(_Controller3.default);
-			_jquery2.default.extend(ChickenController.prototype, actions);
+			$.extend(ChickenController.prototype, actions);
 
 			// Store it
 			_Controller3.default.registry.set(name, ChickenController);
@@ -479,7 +467,7 @@ return /******/ (function(modules) { // webpackBootstrap
 		component: function component(name, source, initCallback) {
 			var methods = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
 			var renderer = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-			var overwrite = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : false;
+			var overwrite = arguments.length > 5 && arguments[5] !== undefined ? arguments[5] : true;
 
 
 			// Create definition
@@ -537,7 +525,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			// Add given methods to prototype
 			if (methods) {
-				_jquery2.default.extend(ChickenModel.prototype, methods);
+				$.extend(ChickenModel.prototype, methods);
 			}
 
 			// Configure it.
@@ -567,7 +555,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 			// Add given methods to prototype
 			if (methods) {
-				_jquery2.default.extend(ChickenModel.prototype, methods);
+				$.extend(ChickenModel.prototype, methods);
 			}
 
 			// Apply config callback
@@ -599,7 +587,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			}(_Service3.default);
 
 			// Add given methods to prototype
-			_jquery2.default.extend(ChickenService.prototype, methods);
+			$.extend(ChickenService.prototype, methods);
 
 			// Configure it.
 			ChickenService.serviceName = name;
@@ -731,7 +719,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			return _Application2.default.getInstance().i18n.translate(key, attributes);
 		},
 
-		queryString: _queryString2.default,
+		queryString: QueryString,
 
 		debugging: 'console',
 
@@ -757,7 +745,7 @@ return /******/ (function(modules) { // webpackBootstrap
 			}
 
 			// Collect strings
-			var objects = _underscore2.default.map(filters, function (f) {
+			var objects = _.map(filters, function (f) {
 				return JSON.parse(f.replace(/^@Q/, ''));
 			});
 
@@ -766,14 +754,575 @@ return /******/ (function(modules) { // webpackBootstrap
 		}
 
 	};
+	window.Chicken = Chicken;
 
 	module.exports = Chicken;
 
 /***/ }),
 /* 1 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_1__;
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _moment = __webpack_require__(2);
+
+	var _moment2 = _interopRequireDefault(_moment);
+
+	var _queryString = __webpack_require__(3);
+
+	var _queryString2 = _interopRequireDefault(_queryString);
+
+	var _history = __webpack_require__(6);
+
+	var _jquery = __webpack_require__(19);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Observable2 = __webpack_require__(21);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	var _SettingsObject = __webpack_require__(26);
+
+	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
+
+	var _ViewContainer = __webpack_require__(28);
+
+	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
+
+	var _Renderer = __webpack_require__(31);
+
+	var _Renderer2 = _interopRequireDefault(_Renderer);
+
+	var _ClassMap = __webpack_require__(24);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	var _Router = __webpack_require__(51);
+
+	var _Router2 = _interopRequireDefault(_Router);
+
+	var _Element = __webpack_require__(29);
+
+	var _Element2 = _interopRequireDefault(_Element);
+
+	var _I18n = __webpack_require__(62);
+
+	var _I18n2 = _interopRequireDefault(_I18n);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //////////////////////
+	// Vendor libraries //
+	//////////////////////
+
+	// https://www.npmjs.com/package/history
+
+
+	/////////////////////
+	// Chicken classes //
+	/////////////////////
+
+	//////////////////////
+	// Class definitino //
+	//////////////////////
+
+	var _instance = undefined;
+
+	/**
+	 * The main Application class, used to create a Chicken application.
+	 *
+	 * @param {JQuery} $app - The target jQuery element to create application in
+	 * @param {Object} settings - Application settings object
+	 * @param {string} [settings.baseUrl=/] - The root uri of the application
+	 * @param {History} [history] Optional browser history instance. Will be created for you if you leave it null.
+	 * 
+	 */
+
+	var Application = function (_Observable) {
+		_inherits(Application, _Observable);
+
+		function Application($app, settings) {
+			var history = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+			_classCallCheck(this, Application);
+
+			var _this = _possibleConstructorReturn(this, (Application.__proto__ || Object.getPrototypeOf(Application)).call(this));
+
+			// Basics
+
+
+			_instance = _this;
+
+			////////////////
+			// Properties //
+			////////////////
+
+			/**
+	   * The jQuery element that is the Application
+	   * 
+	   * @property $app
+	   * @type {jQuery}
+	   */
+			_this.$app = $app ? $app : (0, _jquery2.default)('#application');
+
+			/**
+	   * All ViewContainers in the application. This is automatically
+	   * kept up to date to contain all and only still existing containers.
+	   *
+	   * @property viewContainers
+	   * @type {Object}
+	   */
+			_this.viewContainers = {};
+
+			/**
+	   * @property router
+	   * @type {Routing.Router}
+	   */
+			_this.router = new _Router2.default(_this);
+
+			/**
+	   * One or more Api.Api instances
+	   * 
+	   * @property apis
+	   * @type {Object}
+	   */
+			_this.apis = {};
+
+			/**
+	   * One or more Auth.Auth instances
+	   *
+	   * @property auths
+	   * @type {Object}
+	   */
+			_this.auths = {};
+
+			/**
+	   * Array of promises to fulfill before the application
+	   * can start.
+	   * 
+	   * @property loadPromises
+	   * @type {Array}
+	   */
+			_this.loadPromises = [];
+
+			/**
+	   * @property settings
+	   * @type {Core.SettingsObject}
+	   */
+			_this.settings = _SettingsObject2.default.create({
+
+				baseUrl: '/',
+
+				language: (0, _jquery2.default)('html').attr('lang'),
+
+				viewPath: 'views',
+				viewExtension: 'hbs',
+
+				elementLinkAttribute: 'link-to',
+
+				renderer: settings.renderer === undefined ? new _Renderer2.default() : null,
+
+				isCordovaApp: false // For use with Cordova
+
+			}, ['baseUrl', 'viewPath', 'viewExtension', 'renderer', 'elementLinkAttribute', 'isCordovaApp']).apply(settings);
+
+			/**
+	   * @property i18n
+	   * @type {Localization.I18n}
+	   */
+			_this.i18n = new _I18n2.default(_this.settings.get('language'));
+
+			/**
+	   * @property history
+	   * @type {History}
+	   */
+			_this.history = history;
+			if (!_this.history) {
+
+				// Cordova app?
+				if (_this.settings.get('isCordovaApp')) {
+
+					// Running actual app or previewing in browser?
+					if (document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1) {
+
+						// Create a history in memory
+						_this.history = (0, _history.createMemoryHistory)();
+					} else {
+
+						// Create a history using #
+						_this.history = (0, _history.createHashHistory)();
+					}
+				} else {
+
+					// Create a browser history
+					_this.history = (0, _history.createBrowserHistory)();
+				}
+			}
+
+			/**
+	   * Used to tweak history without navigating away from the page
+	   * 
+	   * @property navigationDisabledOnce
+	   * @type {Boolean}
+	   */
+			_this.navigationDisabledOnce = false;
+
+			return _this;
+		}
+
+		_createClass(Application, [{
+			key: 'findViewContainers',
+			value: function findViewContainers() {
+				var _this2 = this;
+
+				var $element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+
+				// No element to look in?
+				if (!$element) $element = this.$app;
+
+				// Find view containers
+				$element.find(_ViewContainer2.default.ElementSelector).each(function (index, el) {
+
+					// Create view container
+					var vc = new _ViewContainer2.default((0, _jquery2.default)(el), _this2);
+
+					// Already known?
+					if (_this2.viewContainers[vc.name]) {
+						throw new Error('There is already a view named "' + vc.name + '". It is not possible to have two views with the same name at the same time.');
+					}
+
+					// Store it.
+					_this2.viewContainers[vc.name] = vc;
+
+					// Initialize
+					vc.initialize();
+				});
+
+				return this;
+			}
+		}, {
+			key: 'updateViewContainers',
+			value: function updateViewContainers() {
+				var _this3 = this;
+
+				var $lookForNewOnesIn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+
+				// Check if all old ones are still there
+				_underscore2.default.each(this.viewContainers, function (vc, key) {
+
+					// Removed?
+					if (!vc.isInDom()) {
+						delete _this3.viewContainers[key];
+					}
+				});
+
+				// Look for new ones
+				if ($lookForNewOnesIn) this.findViewContainers($lookForNewOnesIn);
+
+				return this;
+			}
+		}, {
+			key: 'getViewContainer',
+			value: function getViewContainer(key) {
+				return this.viewContainers[key];
+			}
+		}, {
+			key: 'routes',
+			value: function routes(callback) {
+
+				// Run callback with router
+				callback.apply(this.router, []);
+				return this;
+			}
+		}, {
+			key: 'api',
+			value: function api() {
+				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+				var apiInstance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				// Get?
+				if (apiInstance === null) {
+					if (key === null) key = _underscore2.default.first(_underscore2.default.keys(this.apis));
+					return this.apis[key];
+				}
+
+				// Set
+				this.apis[key] = apiInstance;
+
+				return this;
+			}
+		}, {
+			key: 'auth',
+			value: function auth() {
+				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+				var authInstance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				// Get?
+				if (authInstance === null) {
+					if (key === null) key = _underscore2.default.first(_underscore2.default.keys(this.auths));
+					return this.auths[key];
+				}
+
+				// Set
+				this.auths[key] = authInstance;
+
+				return this;
+			}
+		}, {
+			key: 'translations',
+			value: function translations(callback) {
+
+				callback.apply(this.i18n, [this.i18n]);
+				return this;
+			}
+		}, {
+			key: 'start',
+			value: function start() {
+				var _this4 = this;
+
+				// Enable momentJS
+				_moment2.default.locale(this.settings.get('language'));
+
+				// Add i18n to promises
+				this.loadPromises.unshift(this.i18n.load());
+
+				// Do auth initialization
+				_underscore2.default.each(this.auths, function (auth) {
+					_this4.loadPromises.unshift(auth.initialize());
+				});
+
+				// When all is done.
+				Promise.all(this.loadPromises).then(function () {
+
+					// Find initial view containers
+					_this4.findViewContainers();
+
+					// Update view containers whenever element contents are set.
+					_Element2.default.registerHook(function ($element) {
+
+						// Update view containers
+						_this4.updateViewContainers($element);
+
+						// Find links
+						$element.find('[' + _this4.settings.get('elementLinkAttribute') + ']').on('click', function (e) {
+
+							// Open the uri!
+							e.preventDefault();
+							var uri = (0, _jquery2.default)(e.target).attr('href');
+							_this4.goto(uri);
+						}).each(function (index, el) {
+
+							// Get uri
+							var $el = (0, _jquery2.default)(el);
+							var uri = $el.attr(_this4.settings.get('elementLinkAttribute'));
+							if (uri) {
+
+								// Store in href for easy visilbility, and remove link-to, so it won't be found again by this script
+								$el.removeAttr(_this4.settings.get('elementLinkAttribute'));
+								$el.attr('href', uri);
+							}
+						});
+					});
+
+					// Done!
+					_this4.resolvePromise('ready');
+
+					// Listen to browser's address bar
+					_this4.history.listen(function (location) {
+						_this4.router.handle(location);
+					});
+
+					// Start with current location
+					_this4.router.handle(_this4.history.location);
+				}, function (error) {
+
+					throw error;
+				});
+
+				return this;
+			}
+		}, {
+			key: 'gotoNamed',
+			value: function gotoNamed(name) {
+				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+				var query = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+				var flash = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
+				var transition = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+
+
+				// Find route
+				var route = this.router.namedRoutes.get(name);
+				if (!route) throw new Error('There is no route defined with the name "' + name + '"');
+
+				// Make uri
+				var uri = route.makeUrl(attributes);
+				return this.goto(uri, query, flash, false, transition);
+			}
+		}, {
+			key: 'transitionToNamed',
+			value: function transitionToNamed(name) {
+				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+				var transition = arguments[2];
+
+				return this.gotoNamed(name, attributes, null, {}, transition);
+			}
+		}, {
+			key: 'transitionTo',
+			value: function transitionTo(uri, transition) {
+				return this.goto(uri, null, {}, false, transition);
+			}
+		}, {
+			key: 'goto',
+			value: function goto(uri) {
+				var query = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var flash = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
+				var doNotNavigate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
+				var transition = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
+
+
+				// Query in the uri?
+				var search = _queryString2.default.extract(uri);
+				var params = {};
+				if (search.length > 0) {
+
+					// Parse objects
+					params = _queryString2.default.parse(search);
+
+					// Remove from uri
+					uri = uri.substr(0, uri.length - search.length - 1);
+				}
+
+				// Check the query
+				if (query) {
+
+					// Combine into params
+					if (typeof query === 'string') {
+						params = _jquery2.default.extend(params, _queryString2.default.parse(query));
+					} else {
+						params = _jquery2.default.extend(params, query);
+					}
+				}
+
+				// Stringify query
+				query = _queryString2.default.stringify(params);
+				if (query) query = '?' + query;
+
+				// External?		
+				if (uri.match(/^(http(s)?\:)?\/\//)) {
+					window.location = uri + (query || '');
+					return this;
+				}
+
+				// No navigating? Just add the state to history?
+				if (doNotNavigate) {
+
+					// Disable navigation
+					this.navigationDisabledOnce = true;
+				}
+
+				// Change the history state
+				this.history.push({
+					pathname: uri,
+					search: query,
+					state: {
+						flash: flash,
+						transition: transition
+					}
+				});
+
+				return this;
+			}
+		}, {
+			key: 'refresh',
+			value: function refresh() {
+				var _this5 = this;
+
+				var viewContainerKeys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+
+				viewContainerKeys = viewContainerKeys || _underscore2.default.keys(this.viewContainers);
+
+				//clear the currentAction of all viewContainer
+				_underscore2.default.each(viewContainerKeys, function (viewContainerKey) {
+					_this5.viewContainers[viewContainerKey].currentAction = null;
+				});
+
+				// Start with current location
+				this.router.handle(this.history.location);
+			}
+		}, {
+			key: 'getCurrentUri',
+			value: function getCurrentUri() {
+
+				return this.history.location.pathname;
+			}
+		}, {
+			key: 'config',
+			value: function config() {
+
+				// Get all?
+				if (arguments.length === 0) {
+					return this.settings;
+				}
+
+				// Get one?
+				else if (arguments.length === 1) {
+						return this.settings.get(arguments.length <= 0 ? undefined : arguments[0]);
+					}
+
+					// Set?
+					else {
+							return this.settings.set(arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1]);
+						}
+			}
+		}, {
+			key: 'uri',
+			value: function uri() {
+				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+					args[_key] = arguments[_key];
+				}
+
+				// Add baseUrl (except for cordova app)
+				if (!this.settings.get('isCordovaApp')) {
+					args.unshift(this.settings.get('baseUrl') === '/' ? '' : this.settings.get('baseUrl'));
+				}
+				var url = args.join('/');
+
+				// Was the last one an extension?
+				if (/^\.[a-z]+$/.test(_underscore2.default.last(args))) {
+
+					// Replace last slash
+					url = url.replace(/\/\.[a-z]+$/, _underscore2.default.last(args));
+				}
+				return url;
+			}
+		}]);
+
+		return Application;
+	}(_Observable3.default);
+
+	Application.getInstance = function () {
+		return _instance;
+	};
+
+	_ClassMap2.default.register('Application', Application);
+
+	module.exports = Application;
 
 /***/ }),
 /* 2 */
@@ -783,18 +1332,6668 @@ return /******/ (function(modules) { // webpackBootstrap
 
 /***/ }),
 /* 3 */
-/***/ (function(module, exports) {
+/***/ (function(module, exports, __webpack_require__) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_3__;
+	'use strict';
+	var strictUriEncode = __webpack_require__(4);
+	var objectAssign = __webpack_require__(5);
+
+	function encoderForArrayFormat(opts) {
+		switch (opts.arrayFormat) {
+			case 'index':
+				return function (key, value, index) {
+					return value === null ? [
+						encode(key, opts),
+						'[',
+						index,
+						']'
+					].join('') : [
+						encode(key, opts),
+						'[',
+						encode(index, opts),
+						']=',
+						encode(value, opts)
+					].join('');
+				};
+
+			case 'bracket':
+				return function (key, value) {
+					return value === null ? encode(key, opts) : [
+						encode(key, opts),
+						'[]=',
+						encode(value, opts)
+					].join('');
+				};
+
+			default:
+				return function (key, value) {
+					return value === null ? encode(key, opts) : [
+						encode(key, opts),
+						'=',
+						encode(value, opts)
+					].join('');
+				};
+		}
+	}
+
+	function parserForArrayFormat(opts) {
+		var result;
+
+		switch (opts.arrayFormat) {
+			case 'index':
+				return function (key, value, accumulator) {
+					result = /\[(\d*)\]$/.exec(key);
+
+					key = key.replace(/\[\d*\]$/, '');
+
+					if (!result) {
+						accumulator[key] = value;
+						return;
+					}
+
+					if (accumulator[key] === undefined) {
+						accumulator[key] = {};
+					}
+
+					accumulator[key][result[1]] = value;
+				};
+
+			case 'bracket':
+				return function (key, value, accumulator) {
+					result = /(\[\])$/.exec(key);
+					key = key.replace(/\[\]$/, '');
+
+					if (!result) {
+						accumulator[key] = value;
+						return;
+					} else if (accumulator[key] === undefined) {
+						accumulator[key] = [value];
+						return;
+					}
+
+					accumulator[key] = [].concat(accumulator[key], value);
+				};
+
+			default:
+				return function (key, value, accumulator) {
+					if (accumulator[key] === undefined) {
+						accumulator[key] = value;
+						return;
+					}
+
+					accumulator[key] = [].concat(accumulator[key], value);
+				};
+		}
+	}
+
+	function encode(value, opts) {
+		if (opts.encode) {
+			return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
+		}
+
+		return value;
+	}
+
+	function keysSorter(input) {
+		if (Array.isArray(input)) {
+			return input.sort();
+		} else if (typeof input === 'object') {
+			return keysSorter(Object.keys(input)).sort(function (a, b) {
+				return Number(a) - Number(b);
+			}).map(function (key) {
+				return input[key];
+			});
+		}
+
+		return input;
+	}
+
+	exports.extract = function (str) {
+		return str.split('?')[1] || '';
+	};
+
+	exports.parse = function (str, opts) {
+		opts = objectAssign({arrayFormat: 'none'}, opts);
+
+		var formatter = parserForArrayFormat(opts);
+
+		// Create an object with no prototype
+		// https://github.com/sindresorhus/query-string/issues/47
+		var ret = Object.create(null);
+
+		if (typeof str !== 'string') {
+			return ret;
+		}
+
+		str = str.trim().replace(/^(\?|#|&)/, '');
+
+		if (!str) {
+			return ret;
+		}
+
+		str.split('&').forEach(function (param) {
+			var parts = param.replace(/\+/g, ' ').split('=');
+			// Firefox (pre 40) decodes `%3D` to `=`
+			// https://github.com/sindresorhus/query-string/pull/37
+			var key = parts.shift();
+			var val = parts.length > 0 ? parts.join('=') : undefined;
+
+			// missing `=` should be `null`:
+			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
+			val = val === undefined ? null : decodeURIComponent(val);
+
+			formatter(decodeURIComponent(key), val, ret);
+		});
+
+		return Object.keys(ret).sort().reduce(function (result, key) {
+			var val = ret[key];
+			if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
+				// Sort object keys, not values
+				result[key] = keysSorter(val);
+			} else {
+				result[key] = val;
+			}
+
+			return result;
+		}, Object.create(null));
+	};
+
+	exports.stringify = function (obj, opts) {
+		var defaults = {
+			encode: true,
+			strict: true,
+			arrayFormat: 'none'
+		};
+
+		opts = objectAssign(defaults, opts);
+
+		var formatter = encoderForArrayFormat(opts);
+
+		return obj ? Object.keys(obj).sort().map(function (key) {
+			var val = obj[key];
+
+			if (val === undefined) {
+				return '';
+			}
+
+			if (val === null) {
+				return encode(key, opts);
+			}
+
+			if (Array.isArray(val)) {
+				var result = [];
+
+				val.slice().forEach(function (val2) {
+					if (val2 === undefined) {
+						return;
+					}
+
+					result.push(formatter(key, val2, result.length));
+				});
+
+				return result.join('&');
+			}
+
+			return encode(key, opts) + '=' + encode(val, opts);
+		}).filter(function (x) {
+			return x.length > 0;
+		}).join('&') : '';
+	};
+
 
 /***/ }),
 /* 4 */
 /***/ (function(module, exports) {
 
-	module.exports = __WEBPACK_EXTERNAL_MODULE_4__;
+	'use strict';
+	module.exports = function (str) {
+		return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
+			return '%' + c.charCodeAt(0).toString(16).toUpperCase();
+		});
+	};
+
 
 /***/ }),
 /* 5 */
+/***/ (function(module, exports) {
+
+	/*
+	object-assign
+	(c) Sindre Sorhus
+	@license MIT
+	*/
+
+	'use strict';
+	/* eslint-disable no-unused-vars */
+	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
+	var hasOwnProperty = Object.prototype.hasOwnProperty;
+	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
+
+	function toObject(val) {
+		if (val === null || val === undefined) {
+			throw new TypeError('Object.assign cannot be called with null or undefined');
+		}
+
+		return Object(val);
+	}
+
+	function shouldUseNative() {
+		try {
+			if (!Object.assign) {
+				return false;
+			}
+
+			// Detect buggy property enumeration order in older V8 versions.
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
+			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
+			test1[5] = 'de';
+			if (Object.getOwnPropertyNames(test1)[0] === '5') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test2 = {};
+			for (var i = 0; i < 10; i++) {
+				test2['_' + String.fromCharCode(i)] = i;
+			}
+			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
+				return test2[n];
+			});
+			if (order2.join('') !== '0123456789') {
+				return false;
+			}
+
+			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
+			var test3 = {};
+			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
+				test3[letter] = letter;
+			});
+			if (Object.keys(Object.assign({}, test3)).join('') !==
+					'abcdefghijklmnopqrst') {
+				return false;
+			}
+
+			return true;
+		} catch (err) {
+			// We don't expect any of the above to throw, but better to be safe.
+			return false;
+		}
+	}
+
+	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
+		var from;
+		var to = toObject(target);
+		var symbols;
+
+		for (var s = 1; s < arguments.length; s++) {
+			from = Object(arguments[s]);
+
+			for (var key in from) {
+				if (hasOwnProperty.call(from, key)) {
+					to[key] = from[key];
+				}
+			}
+
+			if (getOwnPropertySymbols) {
+				symbols = getOwnPropertySymbols(from);
+				for (var i = 0; i < symbols.length; i++) {
+					if (propIsEnumerable.call(from, symbols[i])) {
+						to[symbols[i]] = from[symbols[i]];
+					}
+				}
+			}
+		}
+
+		return to;
+	};
+
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+	exports.createPath = exports.parsePath = exports.locationsAreEqual = exports.createLocation = exports.createMemoryHistory = exports.createHashHistory = exports.createBrowserHistory = undefined;
+
+	var _LocationUtils = __webpack_require__(7);
+
+	Object.defineProperty(exports, 'createLocation', {
+	  enumerable: true,
+	  get: function get() {
+	    return _LocationUtils.createLocation;
+	  }
+	});
+	Object.defineProperty(exports, 'locationsAreEqual', {
+	  enumerable: true,
+	  get: function get() {
+	    return _LocationUtils.locationsAreEqual;
+	  }
+	});
+
+	var _PathUtils = __webpack_require__(10);
+
+	Object.defineProperty(exports, 'parsePath', {
+	  enumerable: true,
+	  get: function get() {
+	    return _PathUtils.parsePath;
+	  }
+	});
+	Object.defineProperty(exports, 'createPath', {
+	  enumerable: true,
+	  get: function get() {
+	    return _PathUtils.createPath;
+	  }
+	});
+
+	var _createBrowserHistory2 = __webpack_require__(11);
+
+	var _createBrowserHistory3 = _interopRequireDefault(_createBrowserHistory2);
+
+	var _createHashHistory2 = __webpack_require__(17);
+
+	var _createHashHistory3 = _interopRequireDefault(_createHashHistory2);
+
+	var _createMemoryHistory2 = __webpack_require__(18);
+
+	var _createMemoryHistory3 = _interopRequireDefault(_createMemoryHistory2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	exports.createBrowserHistory = _createBrowserHistory3.default;
+	exports.createHashHistory = _createHashHistory3.default;
+	exports.createMemoryHistory = _createMemoryHistory3.default;
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+	exports.locationsAreEqual = exports.createLocation = undefined;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _resolvePathname = __webpack_require__(8);
+
+	var _resolvePathname2 = _interopRequireDefault(_resolvePathname);
+
+	var _valueEqual = __webpack_require__(9);
+
+	var _valueEqual2 = _interopRequireDefault(_valueEqual);
+
+	var _PathUtils = __webpack_require__(10);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var createLocation = exports.createLocation = function createLocation(path, state, key, currentLocation) {
+	  var location = void 0;
+	  if (typeof path === 'string') {
+	    // Two-arg form: push(path, state)
+	    location = (0, _PathUtils.parsePath)(path);
+	    location.state = state;
+	  } else {
+	    // One-arg form: push(location)
+	    location = _extends({}, path);
+
+	    if (location.pathname === undefined) location.pathname = '';
+
+	    if (location.search) {
+	      if (location.search.charAt(0) !== '?') location.search = '?' + location.search;
+	    } else {
+	      location.search = '';
+	    }
+
+	    if (location.hash) {
+	      if (location.hash.charAt(0) !== '#') location.hash = '#' + location.hash;
+	    } else {
+	      location.hash = '';
+	    }
+
+	    if (state !== undefined && location.state === undefined) location.state = state;
+	  }
+
+	  try {
+	    location.pathname = decodeURI(location.pathname);
+	  } catch (e) {
+	    if (e instanceof URIError) {
+	      throw new URIError('Pathname "' + location.pathname + '" could not be decoded. ' + 'This is likely caused by an invalid percent-encoding.');
+	    } else {
+	      throw e;
+	    }
+	  }
+
+	  if (key) location.key = key;
+
+	  if (currentLocation) {
+	    // Resolve incomplete/relative pathname relative to current location.
+	    if (!location.pathname) {
+	      location.pathname = currentLocation.pathname;
+	    } else if (location.pathname.charAt(0) !== '/') {
+	      location.pathname = (0, _resolvePathname2.default)(location.pathname, currentLocation.pathname);
+	    }
+	  } else {
+	    // When there is no prior location and pathname is empty, set it to /
+	    if (!location.pathname) {
+	      location.pathname = '/';
+	    }
+	  }
+
+	  return location;
+	};
+
+	var locationsAreEqual = exports.locationsAreEqual = function locationsAreEqual(a, b) {
+	  return a.pathname === b.pathname && a.search === b.search && a.hash === b.hash && a.key === b.key && (0, _valueEqual2.default)(a.state, b.state);
+	};
+
+/***/ }),
+/* 8 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	exports.__esModule = true;
+	function isAbsolute(pathname) {
+	  return pathname.charAt(0) === '/';
+	}
+
+	// About 1.5x faster than the two-arg version of Array#splice()
+	function spliceOne(list, index) {
+	  for (var i = index, k = i + 1, n = list.length; k < n; i += 1, k += 1) {
+	    list[i] = list[k];
+	  }
+
+	  list.pop();
+	}
+
+	// This implementation is based heavily on node's url.parse
+	function resolvePathname(to) {
+	  var from = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
+
+	  var toParts = to && to.split('/') || [];
+	  var fromParts = from && from.split('/') || [];
+
+	  var isToAbs = to && isAbsolute(to);
+	  var isFromAbs = from && isAbsolute(from);
+	  var mustEndAbs = isToAbs || isFromAbs;
+
+	  if (to && isAbsolute(to)) {
+	    // to is absolute
+	    fromParts = toParts;
+	  } else if (toParts.length) {
+	    // to is relative, drop the filename
+	    fromParts.pop();
+	    fromParts = fromParts.concat(toParts);
+	  }
+
+	  if (!fromParts.length) return '/';
+
+	  var hasTrailingSlash = void 0;
+	  if (fromParts.length) {
+	    var last = fromParts[fromParts.length - 1];
+	    hasTrailingSlash = last === '.' || last === '..' || last === '';
+	  } else {
+	    hasTrailingSlash = false;
+	  }
+
+	  var up = 0;
+	  for (var i = fromParts.length; i >= 0; i--) {
+	    var part = fromParts[i];
+
+	    if (part === '.') {
+	      spliceOne(fromParts, i);
+	    } else if (part === '..') {
+	      spliceOne(fromParts, i);
+	      up++;
+	    } else if (up) {
+	      spliceOne(fromParts, i);
+	      up--;
+	    }
+	  }
+
+	  if (!mustEndAbs) for (; up--; up) {
+	    fromParts.unshift('..');
+	  }if (mustEndAbs && fromParts[0] !== '' && (!fromParts[0] || !isAbsolute(fromParts[0]))) fromParts.unshift('');
+
+	  var result = fromParts.join('/');
+
+	  if (hasTrailingSlash && result.substr(-1) !== '/') result += '/';
+
+	  return result;
+	}
+
+	exports.default = resolvePathname;
+	module.exports = exports['default'];
+
+/***/ }),
+/* 9 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	function valueEqual(a, b) {
+	  if (a === b) return true;
+
+	  if (a == null || b == null) return false;
+
+	  if (Array.isArray(a)) {
+	    return Array.isArray(b) && a.length === b.length && a.every(function (item, index) {
+	      return valueEqual(item, b[index]);
+	    });
+	  }
+
+	  var aType = typeof a === 'undefined' ? 'undefined' : _typeof(a);
+	  var bType = typeof b === 'undefined' ? 'undefined' : _typeof(b);
+
+	  if (aType !== bType) return false;
+
+	  if (aType === 'object') {
+	    var aValue = a.valueOf();
+	    var bValue = b.valueOf();
+
+	    if (aValue !== a || bValue !== b) return valueEqual(aValue, bValue);
+
+	    var aKeys = Object.keys(a);
+	    var bKeys = Object.keys(b);
+
+	    if (aKeys.length !== bKeys.length) return false;
+
+	    return aKeys.every(function (key) {
+	      return valueEqual(a[key], b[key]);
+	    });
+	  }
+
+	  return false;
+	}
+
+	exports.default = valueEqual;
+	module.exports = exports['default'];
+
+/***/ }),
+/* 10 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	exports.__esModule = true;
+	var addLeadingSlash = exports.addLeadingSlash = function addLeadingSlash(path) {
+	  return path.charAt(0) === '/' ? path : '/' + path;
+	};
+
+	var stripLeadingSlash = exports.stripLeadingSlash = function stripLeadingSlash(path) {
+	  return path.charAt(0) === '/' ? path.substr(1) : path;
+	};
+
+	var hasBasename = exports.hasBasename = function hasBasename(path, prefix) {
+	  return new RegExp('^' + prefix + '(\\/|\\?|#|$)', 'i').test(path);
+	};
+
+	var stripBasename = exports.stripBasename = function stripBasename(path, prefix) {
+	  return hasBasename(path, prefix) ? path.substr(prefix.length) : path;
+	};
+
+	var stripTrailingSlash = exports.stripTrailingSlash = function stripTrailingSlash(path) {
+	  return path.charAt(path.length - 1) === '/' ? path.slice(0, -1) : path;
+	};
+
+	var parsePath = exports.parsePath = function parsePath(path) {
+	  var pathname = path || '/';
+	  var search = '';
+	  var hash = '';
+
+	  var hashIndex = pathname.indexOf('#');
+	  if (hashIndex !== -1) {
+	    hash = pathname.substr(hashIndex);
+	    pathname = pathname.substr(0, hashIndex);
+	  }
+
+	  var searchIndex = pathname.indexOf('?');
+	  if (searchIndex !== -1) {
+	    search = pathname.substr(searchIndex);
+	    pathname = pathname.substr(0, searchIndex);
+	  }
+
+	  return {
+	    pathname: pathname,
+	    search: search === '?' ? '' : search,
+	    hash: hash === '#' ? '' : hash
+	  };
+	};
+
+	var createPath = exports.createPath = function createPath(location) {
+	  var pathname = location.pathname,
+	      search = location.search,
+	      hash = location.hash;
+
+
+	  var path = pathname || '/';
+
+	  if (search && search !== '?') path += search.charAt(0) === '?' ? search : '?' + search;
+
+	  if (hash && hash !== '#') path += hash.charAt(0) === '#' ? hash : '#' + hash;
+
+	  return path;
+	};
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _warning = __webpack_require__(12);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _invariant = __webpack_require__(14);
+
+	var _invariant2 = _interopRequireDefault(_invariant);
+
+	var _LocationUtils = __webpack_require__(7);
+
+	var _PathUtils = __webpack_require__(10);
+
+	var _createTransitionManager = __webpack_require__(15);
+
+	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
+
+	var _DOMUtils = __webpack_require__(16);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var PopStateEvent = 'popstate';
+	var HashChangeEvent = 'hashchange';
+
+	var getHistoryState = function getHistoryState() {
+	  try {
+	    return window.history.state || {};
+	  } catch (e) {
+	    // IE 11 sometimes throws when accessing window.history.state
+	    // See https://github.com/ReactTraining/history/pull/289
+	    return {};
+	  }
+	};
+
+	/**
+	 * Creates a history object that uses the HTML5 history API including
+	 * pushState, replaceState, and the popstate event.
+	 */
+	var createBrowserHistory = function createBrowserHistory() {
+	  var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	  (0, _invariant2.default)(_DOMUtils.canUseDOM, 'Browser history needs a DOM');
+
+	  var globalHistory = window.history;
+	  var canUseHistory = (0, _DOMUtils.supportsHistory)();
+	  var needsHashChangeListener = !(0, _DOMUtils.supportsPopStateOnHashChange)();
+
+	  var _props$forceRefresh = props.forceRefresh,
+	      forceRefresh = _props$forceRefresh === undefined ? false : _props$forceRefresh,
+	      _props$getUserConfirm = props.getUserConfirmation,
+	      getUserConfirmation = _props$getUserConfirm === undefined ? _DOMUtils.getConfirmation : _props$getUserConfirm,
+	      _props$keyLength = props.keyLength,
+	      keyLength = _props$keyLength === undefined ? 6 : _props$keyLength;
+
+	  var basename = props.basename ? (0, _PathUtils.stripTrailingSlash)((0, _PathUtils.addLeadingSlash)(props.basename)) : '';
+
+	  var getDOMLocation = function getDOMLocation(historyState) {
+	    var _ref = historyState || {},
+	        key = _ref.key,
+	        state = _ref.state;
+
+	    var _window$location = window.location,
+	        pathname = _window$location.pathname,
+	        search = _window$location.search,
+	        hash = _window$location.hash;
+
+
+	    var path = pathname + search + hash;
+
+	    (0, _warning2.default)(!basename || (0, _PathUtils.hasBasename)(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".');
+
+	    if (basename) path = (0, _PathUtils.stripBasename)(path, basename);
+
+	    return (0, _LocationUtils.createLocation)(path, state, key);
+	  };
+
+	  var createKey = function createKey() {
+	    return Math.random().toString(36).substr(2, keyLength);
+	  };
+
+	  var transitionManager = (0, _createTransitionManager2.default)();
+
+	  var setState = function setState(nextState) {
+	    _extends(history, nextState);
+
+	    history.length = globalHistory.length;
+
+	    transitionManager.notifyListeners(history.location, history.action);
+	  };
+
+	  var handlePopState = function handlePopState(event) {
+	    // Ignore extraneous popstate events in WebKit.
+	    if ((0, _DOMUtils.isExtraneousPopstateEvent)(event)) return;
+
+	    handlePop(getDOMLocation(event.state));
+	  };
+
+	  var handleHashChange = function handleHashChange() {
+	    handlePop(getDOMLocation(getHistoryState()));
+	  };
+
+	  var forceNextPop = false;
+
+	  var handlePop = function handlePop(location) {
+	    if (forceNextPop) {
+	      forceNextPop = false;
+	      setState();
+	    } else {
+	      var action = 'POP';
+
+	      transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+	        if (ok) {
+	          setState({ action: action, location: location });
+	        } else {
+	          revertPop(location);
+	        }
+	      });
+	    }
+	  };
+
+	  var revertPop = function revertPop(fromLocation) {
+	    var toLocation = history.location;
+
+	    // TODO: We could probably make this more reliable by
+	    // keeping a list of keys we've seen in sessionStorage.
+	    // Instead, we just default to 0 for keys we don't know.
+
+	    var toIndex = allKeys.indexOf(toLocation.key);
+
+	    if (toIndex === -1) toIndex = 0;
+
+	    var fromIndex = allKeys.indexOf(fromLocation.key);
+
+	    if (fromIndex === -1) fromIndex = 0;
+
+	    var delta = toIndex - fromIndex;
+
+	    if (delta) {
+	      forceNextPop = true;
+	      go(delta);
+	    }
+	  };
+
+	  var initialLocation = getDOMLocation(getHistoryState());
+	  var allKeys = [initialLocation.key];
+
+	  // Public interface
+
+	  var createHref = function createHref(location) {
+	    return basename + (0, _PathUtils.createPath)(location);
+	  };
+
+	  var push = function push(path, state) {
+	    (0, _warning2.default)(!((typeof path === 'undefined' ? 'undefined' : _typeof(path)) === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored');
+
+	    var action = 'PUSH';
+	    var location = (0, _LocationUtils.createLocation)(path, state, createKey(), history.location);
+
+	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+	      if (!ok) return;
+
+	      var href = createHref(location);
+	      var key = location.key,
+	          state = location.state;
+
+
+	      if (canUseHistory) {
+	        globalHistory.pushState({ key: key, state: state }, null, href);
+
+	        if (forceRefresh) {
+	          window.location.href = href;
+	        } else {
+	          var prevIndex = allKeys.indexOf(history.location.key);
+	          var nextKeys = allKeys.slice(0, prevIndex === -1 ? 0 : prevIndex + 1);
+
+	          nextKeys.push(location.key);
+	          allKeys = nextKeys;
+
+	          setState({ action: action, location: location });
+	        }
+	      } else {
+	        (0, _warning2.default)(state === undefined, 'Browser history cannot push state in browsers that do not support HTML5 history');
+
+	        window.location.href = href;
+	      }
+	    });
+	  };
+
+	  var replace = function replace(path, state) {
+	    (0, _warning2.default)(!((typeof path === 'undefined' ? 'undefined' : _typeof(path)) === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored');
+
+	    var action = 'REPLACE';
+	    var location = (0, _LocationUtils.createLocation)(path, state, createKey(), history.location);
+
+	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+	      if (!ok) return;
+
+	      var href = createHref(location);
+	      var key = location.key,
+	          state = location.state;
+
+
+	      if (canUseHistory) {
+	        globalHistory.replaceState({ key: key, state: state }, null, href);
+
+	        if (forceRefresh) {
+	          window.location.replace(href);
+	        } else {
+	          var prevIndex = allKeys.indexOf(history.location.key);
+
+	          if (prevIndex !== -1) allKeys[prevIndex] = location.key;
+
+	          setState({ action: action, location: location });
+	        }
+	      } else {
+	        (0, _warning2.default)(state === undefined, 'Browser history cannot replace state in browsers that do not support HTML5 history');
+
+	        window.location.replace(href);
+	      }
+	    });
+	  };
+
+	  var go = function go(n) {
+	    globalHistory.go(n);
+	  };
+
+	  var goBack = function goBack() {
+	    return go(-1);
+	  };
+
+	  var goForward = function goForward() {
+	    return go(1);
+	  };
+
+	  var listenerCount = 0;
+
+	  var checkDOMListeners = function checkDOMListeners(delta) {
+	    listenerCount += delta;
+
+	    if (listenerCount === 1) {
+	      (0, _DOMUtils.addEventListener)(window, PopStateEvent, handlePopState);
+
+	      if (needsHashChangeListener) (0, _DOMUtils.addEventListener)(window, HashChangeEvent, handleHashChange);
+	    } else if (listenerCount === 0) {
+	      (0, _DOMUtils.removeEventListener)(window, PopStateEvent, handlePopState);
+
+	      if (needsHashChangeListener) (0, _DOMUtils.removeEventListener)(window, HashChangeEvent, handleHashChange);
+	    }
+	  };
+
+	  var isBlocked = false;
+
+	  var block = function block() {
+	    var prompt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	    var unblock = transitionManager.setPrompt(prompt);
+
+	    if (!isBlocked) {
+	      checkDOMListeners(1);
+	      isBlocked = true;
+	    }
+
+	    return function () {
+	      if (isBlocked) {
+	        isBlocked = false;
+	        checkDOMListeners(-1);
+	      }
+
+	      return unblock();
+	    };
+	  };
+
+	  var listen = function listen(listener) {
+	    var unlisten = transitionManager.appendListener(listener);
+	    checkDOMListeners(1);
+
+	    return function () {
+	      checkDOMListeners(-1);
+	      unlisten();
+	    };
+	  };
+
+	  var history = {
+	    length: globalHistory.length,
+	    action: 'POP',
+	    location: initialLocation,
+	    createHref: createHref,
+	    push: push,
+	    replace: replace,
+	    go: go,
+	    goBack: goBack,
+	    goForward: goForward,
+	    block: block,
+	    listen: listen
+	  };
+
+	  return history;
+	};
+
+	exports.default = createBrowserHistory;
+
+/***/ }),
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright 2014-2015, Facebook, Inc.
+	 * All rights reserved.
+	 *
+	 * This source code is licensed under the BSD-style license found in the
+	 * LICENSE file in the root directory of this source tree. An additional grant
+	 * of patent rights can be found in the PATENTS file in the same directory.
+	 */
+
+	'use strict';
+
+	/**
+	 * Similar to invariant but only logs a warning if the condition is not met.
+	 * This can be used to log issues in development environments in critical
+	 * paths. Removing the logging code for production environments will keep the
+	 * same logic and follow the same code paths.
+	 */
+
+	var warning = function() {};
+
+	if (process.env.NODE_ENV !== 'production') {
+	  warning = function(condition, format, args) {
+	    var len = arguments.length;
+	    args = new Array(len > 2 ? len - 2 : 0);
+	    for (var key = 2; key < len; key++) {
+	      args[key - 2] = arguments[key];
+	    }
+	    if (format === undefined) {
+	      throw new Error(
+	        '`warning(condition, format, ...args)` requires a warning ' +
+	        'message argument'
+	      );
+	    }
+
+	    if (format.length < 10 || (/^[s\W]*$/).test(format)) {
+	      throw new Error(
+	        'The warning format should be able to uniquely identify this ' +
+	        'warning. Please, use a more descriptive format than: ' + format
+	      );
+	    }
+
+	    if (!condition) {
+	      var argIndex = 0;
+	      var message = 'Warning: ' +
+	        format.replace(/%s/g, function() {
+	          return args[argIndex++];
+	        });
+	      if (typeof console !== 'undefined') {
+	        console.error(message);
+	      }
+	      try {
+	        // This error was thrown as a convenience so that you can use this stack
+	        // to find the callsite that caused this warning to fire.
+	        throw new Error(message);
+	      } catch(x) {}
+	    }
+	  };
+	}
+
+	module.exports = warning;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
+
+/***/ }),
+/* 13 */
+/***/ (function(module, exports) {
+
+	// shim for using process in browser
+	var process = module.exports = {};
+
+	// cached from whatever global is present so that test runners that stub it
+	// don't break things.  But we need to wrap it in a try catch in case it is
+	// wrapped in strict mode code which doesn't define any globals.  It's inside a
+	// function because try/catches deoptimize in certain engines.
+
+	var cachedSetTimeout;
+	var cachedClearTimeout;
+
+	function defaultSetTimout() {
+	    throw new Error('setTimeout has not been defined');
+	}
+	function defaultClearTimeout () {
+	    throw new Error('clearTimeout has not been defined');
+	}
+	(function () {
+	    try {
+	        if (typeof setTimeout === 'function') {
+	            cachedSetTimeout = setTimeout;
+	        } else {
+	            cachedSetTimeout = defaultSetTimout;
+	        }
+	    } catch (e) {
+	        cachedSetTimeout = defaultSetTimout;
+	    }
+	    try {
+	        if (typeof clearTimeout === 'function') {
+	            cachedClearTimeout = clearTimeout;
+	        } else {
+	            cachedClearTimeout = defaultClearTimeout;
+	        }
+	    } catch (e) {
+	        cachedClearTimeout = defaultClearTimeout;
+	    }
+	} ())
+	function runTimeout(fun) {
+	    if (cachedSetTimeout === setTimeout) {
+	        //normal enviroments in sane situations
+	        return setTimeout(fun, 0);
+	    }
+	    // if setTimeout wasn't available but was latter defined
+	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
+	        cachedSetTimeout = setTimeout;
+	        return setTimeout(fun, 0);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedSetTimeout(fun, 0);
+	    } catch(e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
+	            return cachedSetTimeout.call(null, fun, 0);
+	        } catch(e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
+	            return cachedSetTimeout.call(this, fun, 0);
+	        }
+	    }
+
+
+	}
+	function runClearTimeout(marker) {
+	    if (cachedClearTimeout === clearTimeout) {
+	        //normal enviroments in sane situations
+	        return clearTimeout(marker);
+	    }
+	    // if clearTimeout wasn't available but was latter defined
+	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
+	        cachedClearTimeout = clearTimeout;
+	        return clearTimeout(marker);
+	    }
+	    try {
+	        // when when somebody has screwed with setTimeout but no I.E. maddness
+	        return cachedClearTimeout(marker);
+	    } catch (e){
+	        try {
+	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
+	            return cachedClearTimeout.call(null, marker);
+	        } catch (e){
+	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
+	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
+	            return cachedClearTimeout.call(this, marker);
+	        }
+	    }
+
+
+
+	}
+	var queue = [];
+	var draining = false;
+	var currentQueue;
+	var queueIndex = -1;
+
+	function cleanUpNextTick() {
+	    if (!draining || !currentQueue) {
+	        return;
+	    }
+	    draining = false;
+	    if (currentQueue.length) {
+	        queue = currentQueue.concat(queue);
+	    } else {
+	        queueIndex = -1;
+	    }
+	    if (queue.length) {
+	        drainQueue();
+	    }
+	}
+
+	function drainQueue() {
+	    if (draining) {
+	        return;
+	    }
+	    var timeout = runTimeout(cleanUpNextTick);
+	    draining = true;
+
+	    var len = queue.length;
+	    while(len) {
+	        currentQueue = queue;
+	        queue = [];
+	        while (++queueIndex < len) {
+	            if (currentQueue) {
+	                currentQueue[queueIndex].run();
+	            }
+	        }
+	        queueIndex = -1;
+	        len = queue.length;
+	    }
+	    currentQueue = null;
+	    draining = false;
+	    runClearTimeout(timeout);
+	}
+
+	process.nextTick = function (fun) {
+	    var args = new Array(arguments.length - 1);
+	    if (arguments.length > 1) {
+	        for (var i = 1; i < arguments.length; i++) {
+	            args[i - 1] = arguments[i];
+	        }
+	    }
+	    queue.push(new Item(fun, args));
+	    if (queue.length === 1 && !draining) {
+	        runTimeout(drainQueue);
+	    }
+	};
+
+	// v8 likes predictible objects
+	function Item(fun, array) {
+	    this.fun = fun;
+	    this.array = array;
+	}
+	Item.prototype.run = function () {
+	    this.fun.apply(null, this.array);
+	};
+	process.title = 'browser';
+	process.browser = true;
+	process.env = {};
+	process.argv = [];
+	process.version = ''; // empty string to avoid regexp issues
+	process.versions = {};
+
+	function noop() {}
+
+	process.on = noop;
+	process.addListener = noop;
+	process.once = noop;
+	process.off = noop;
+	process.removeListener = noop;
+	process.removeAllListeners = noop;
+	process.emit = noop;
+	process.prependListener = noop;
+	process.prependOnceListener = noop;
+
+	process.listeners = function (name) { return [] }
+
+	process.binding = function (name) {
+	    throw new Error('process.binding is not supported');
+	};
+
+	process.cwd = function () { return '/' };
+	process.chdir = function (dir) {
+	    throw new Error('process.chdir is not supported');
+	};
+	process.umask = function() { return 0; };
+
+
+/***/ }),
+/* 14 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	/* WEBPACK VAR INJECTION */(function(process) {/**
+	 * Copyright (c) 2013-present, Facebook, Inc.
+	 *
+	 * This source code is licensed under the MIT license found in the
+	 * LICENSE file in the root directory of this source tree.
+	 */
+
+	'use strict';
+
+	/**
+	 * Use invariant() to assert state which your program assumes to be true.
+	 *
+	 * Provide sprintf-style format (only %s is supported) and arguments
+	 * to provide information about what broke and what you were
+	 * expecting.
+	 *
+	 * The invariant message will be stripped in production, but the invariant
+	 * will remain to ensure logic does not differ in production.
+	 */
+
+	var invariant = function(condition, format, a, b, c, d, e, f) {
+	  if (process.env.NODE_ENV !== 'production') {
+	    if (format === undefined) {
+	      throw new Error('invariant requires an error message argument');
+	    }
+	  }
+
+	  if (!condition) {
+	    var error;
+	    if (format === undefined) {
+	      error = new Error(
+	        'Minified exception occurred; use the non-minified dev environment ' +
+	        'for the full error message and additional helpful warnings.'
+	      );
+	    } else {
+	      var args = [a, b, c, d, e, f];
+	      var argIndex = 0;
+	      error = new Error(
+	        format.replace(/%s/g, function() { return args[argIndex++]; })
+	      );
+	      error.name = 'Invariant Violation';
+	    }
+
+	    error.framesToPop = 1; // we don't care about invariant's own frame
+	    throw error;
+	  }
+	};
+
+	module.exports = invariant;
+
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13)))
+
+/***/ }),
+/* 15 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	var _warning = __webpack_require__(12);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var createTransitionManager = function createTransitionManager() {
+	  var prompt = null;
+
+	  var setPrompt = function setPrompt(nextPrompt) {
+	    (0, _warning2.default)(prompt == null, 'A history supports only one prompt at a time');
+
+	    prompt = nextPrompt;
+
+	    return function () {
+	      if (prompt === nextPrompt) prompt = null;
+	    };
+	  };
+
+	  var confirmTransitionTo = function confirmTransitionTo(location, action, getUserConfirmation, callback) {
+	    // TODO: If another transition starts while we're still confirming
+	    // the previous one, we may end up in a weird state. Figure out the
+	    // best way to handle this.
+	    if (prompt != null) {
+	      var result = typeof prompt === 'function' ? prompt(location, action) : prompt;
+
+	      if (typeof result === 'string') {
+	        if (typeof getUserConfirmation === 'function') {
+	          getUserConfirmation(result, callback);
+	        } else {
+	          (0, _warning2.default)(false, 'A history needs a getUserConfirmation function in order to use a prompt message');
+
+	          callback(true);
+	        }
+	      } else {
+	        // Return false from a transition hook to cancel the transition.
+	        callback(result !== false);
+	      }
+	    } else {
+	      callback(true);
+	    }
+	  };
+
+	  var listeners = [];
+
+	  var appendListener = function appendListener(fn) {
+	    var isActive = true;
+
+	    var listener = function listener() {
+	      if (isActive) fn.apply(undefined, arguments);
+	    };
+
+	    listeners.push(listener);
+
+	    return function () {
+	      isActive = false;
+	      listeners = listeners.filter(function (item) {
+	        return item !== listener;
+	      });
+	    };
+	  };
+
+	  var notifyListeners = function notifyListeners() {
+	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+	      args[_key] = arguments[_key];
+	    }
+
+	    listeners.forEach(function (listener) {
+	      return listener.apply(undefined, args);
+	    });
+	  };
+
+	  return {
+	    setPrompt: setPrompt,
+	    confirmTransitionTo: confirmTransitionTo,
+	    appendListener: appendListener,
+	    notifyListeners: notifyListeners
+	  };
+	};
+
+	exports.default = createTransitionManager;
+
+/***/ }),
+/* 16 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	exports.__esModule = true;
+	var canUseDOM = exports.canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
+
+	var addEventListener = exports.addEventListener = function addEventListener(node, event, listener) {
+	  return node.addEventListener ? node.addEventListener(event, listener, false) : node.attachEvent('on' + event, listener);
+	};
+
+	var removeEventListener = exports.removeEventListener = function removeEventListener(node, event, listener) {
+	  return node.removeEventListener ? node.removeEventListener(event, listener, false) : node.detachEvent('on' + event, listener);
+	};
+
+	var getConfirmation = exports.getConfirmation = function getConfirmation(message, callback) {
+	  return callback(window.confirm(message));
+	}; // eslint-disable-line no-alert
+
+	/**
+	 * Returns true if the HTML5 history API is supported. Taken from Modernizr.
+	 *
+	 * https://github.com/Modernizr/Modernizr/blob/master/LICENSE
+	 * https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
+	 * changed to avoid false negatives for Windows Phones: https://github.com/reactjs/react-router/issues/586
+	 */
+	var supportsHistory = exports.supportsHistory = function supportsHistory() {
+	  var ua = window.navigator.userAgent;
+
+	  if ((ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) && ua.indexOf('Mobile Safari') !== -1 && ua.indexOf('Chrome') === -1 && ua.indexOf('Windows Phone') === -1) return false;
+
+	  return window.history && 'pushState' in window.history;
+	};
+
+	/**
+	 * Returns true if browser fires popstate on hash change.
+	 * IE10 and IE11 do not.
+	 */
+	var supportsPopStateOnHashChange = exports.supportsPopStateOnHashChange = function supportsPopStateOnHashChange() {
+	  return window.navigator.userAgent.indexOf('Trident') === -1;
+	};
+
+	/**
+	 * Returns false if using go(n) with hash history causes a full page reload.
+	 */
+	var supportsGoWithoutReloadUsingHash = exports.supportsGoWithoutReloadUsingHash = function supportsGoWithoutReloadUsingHash() {
+	  return window.navigator.userAgent.indexOf('Firefox') === -1;
+	};
+
+	/**
+	 * Returns true if a given popstate event is an extraneous WebKit event.
+	 * Accounts for the fact that Chrome on iOS fires real popstate events
+	 * containing undefined state when pressing the back button.
+	 */
+	var isExtraneousPopstateEvent = exports.isExtraneousPopstateEvent = function isExtraneousPopstateEvent(event) {
+	  return event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1;
+	};
+
+/***/ }),
+/* 17 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _warning = __webpack_require__(12);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _invariant = __webpack_require__(14);
+
+	var _invariant2 = _interopRequireDefault(_invariant);
+
+	var _LocationUtils = __webpack_require__(7);
+
+	var _PathUtils = __webpack_require__(10);
+
+	var _createTransitionManager = __webpack_require__(15);
+
+	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
+
+	var _DOMUtils = __webpack_require__(16);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var HashChangeEvent = 'hashchange';
+
+	var HashPathCoders = {
+	  hashbang: {
+	    encodePath: function encodePath(path) {
+	      return path.charAt(0) === '!' ? path : '!/' + (0, _PathUtils.stripLeadingSlash)(path);
+	    },
+	    decodePath: function decodePath(path) {
+	      return path.charAt(0) === '!' ? path.substr(1) : path;
+	    }
+	  },
+	  noslash: {
+	    encodePath: _PathUtils.stripLeadingSlash,
+	    decodePath: _PathUtils.addLeadingSlash
+	  },
+	  slash: {
+	    encodePath: _PathUtils.addLeadingSlash,
+	    decodePath: _PathUtils.addLeadingSlash
+	  }
+	};
+
+	var getHashPath = function getHashPath() {
+	  // We can't use window.location.hash here because it's not
+	  // consistent across browsers - Firefox will pre-decode it!
+	  var href = window.location.href;
+	  var hashIndex = href.indexOf('#');
+	  return hashIndex === -1 ? '' : href.substring(hashIndex + 1);
+	};
+
+	var pushHashPath = function pushHashPath(path) {
+	  return window.location.hash = path;
+	};
+
+	var replaceHashPath = function replaceHashPath(path) {
+	  var hashIndex = window.location.href.indexOf('#');
+
+	  window.location.replace(window.location.href.slice(0, hashIndex >= 0 ? hashIndex : 0) + '#' + path);
+	};
+
+	var createHashHistory = function createHashHistory() {
+	  var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+
+	  (0, _invariant2.default)(_DOMUtils.canUseDOM, 'Hash history needs a DOM');
+
+	  var globalHistory = window.history;
+	  var canGoWithoutReload = (0, _DOMUtils.supportsGoWithoutReloadUsingHash)();
+
+	  var _props$getUserConfirm = props.getUserConfirmation,
+	      getUserConfirmation = _props$getUserConfirm === undefined ? _DOMUtils.getConfirmation : _props$getUserConfirm,
+	      _props$hashType = props.hashType,
+	      hashType = _props$hashType === undefined ? 'slash' : _props$hashType;
+
+	  var basename = props.basename ? (0, _PathUtils.stripTrailingSlash)((0, _PathUtils.addLeadingSlash)(props.basename)) : '';
+
+	  var _HashPathCoders$hashT = HashPathCoders[hashType],
+	      encodePath = _HashPathCoders$hashT.encodePath,
+	      decodePath = _HashPathCoders$hashT.decodePath;
+
+
+	  var getDOMLocation = function getDOMLocation() {
+	    var path = decodePath(getHashPath());
+
+	    (0, _warning2.default)(!basename || (0, _PathUtils.hasBasename)(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".');
+
+	    if (basename) path = (0, _PathUtils.stripBasename)(path, basename);
+
+	    return (0, _LocationUtils.createLocation)(path);
+	  };
+
+	  var transitionManager = (0, _createTransitionManager2.default)();
+
+	  var setState = function setState(nextState) {
+	    _extends(history, nextState);
+
+	    history.length = globalHistory.length;
+
+	    transitionManager.notifyListeners(history.location, history.action);
+	  };
+
+	  var forceNextPop = false;
+	  var ignorePath = null;
+
+	  var handleHashChange = function handleHashChange() {
+	    var path = getHashPath();
+	    var encodedPath = encodePath(path);
+
+	    if (path !== encodedPath) {
+	      // Ensure we always have a properly-encoded hash.
+	      replaceHashPath(encodedPath);
+	    } else {
+	      var location = getDOMLocation();
+	      var prevLocation = history.location;
+
+	      if (!forceNextPop && (0, _LocationUtils.locationsAreEqual)(prevLocation, location)) return; // A hashchange doesn't always == location change.
+
+	      if (ignorePath === (0, _PathUtils.createPath)(location)) return; // Ignore this change; we already setState in push/replace.
+
+	      ignorePath = null;
+
+	      handlePop(location);
+	    }
+	  };
+
+	  var handlePop = function handlePop(location) {
+	    if (forceNextPop) {
+	      forceNextPop = false;
+	      setState();
+	    } else {
+	      var action = 'POP';
+
+	      transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+	        if (ok) {
+	          setState({ action: action, location: location });
+	        } else {
+	          revertPop(location);
+	        }
+	      });
+	    }
+	  };
+
+	  var revertPop = function revertPop(fromLocation) {
+	    var toLocation = history.location;
+
+	    // TODO: We could probably make this more reliable by
+	    // keeping a list of paths we've seen in sessionStorage.
+	    // Instead, we just default to 0 for paths we don't know.
+
+	    var toIndex = allPaths.lastIndexOf((0, _PathUtils.createPath)(toLocation));
+
+	    if (toIndex === -1) toIndex = 0;
+
+	    var fromIndex = allPaths.lastIndexOf((0, _PathUtils.createPath)(fromLocation));
+
+	    if (fromIndex === -1) fromIndex = 0;
+
+	    var delta = toIndex - fromIndex;
+
+	    if (delta) {
+	      forceNextPop = true;
+	      go(delta);
+	    }
+	  };
+
+	  // Ensure the hash is encoded properly before doing anything else.
+	  var path = getHashPath();
+	  var encodedPath = encodePath(path);
+
+	  if (path !== encodedPath) replaceHashPath(encodedPath);
+
+	  var initialLocation = getDOMLocation();
+	  var allPaths = [(0, _PathUtils.createPath)(initialLocation)];
+
+	  // Public interface
+
+	  var createHref = function createHref(location) {
+	    return '#' + encodePath(basename + (0, _PathUtils.createPath)(location));
+	  };
+
+	  var push = function push(path, state) {
+	    (0, _warning2.default)(state === undefined, 'Hash history cannot push state; it is ignored');
+
+	    var action = 'PUSH';
+	    var location = (0, _LocationUtils.createLocation)(path, undefined, undefined, history.location);
+
+	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+	      if (!ok) return;
+
+	      var path = (0, _PathUtils.createPath)(location);
+	      var encodedPath = encodePath(basename + path);
+	      var hashChanged = getHashPath() !== encodedPath;
+
+	      if (hashChanged) {
+	        // We cannot tell if a hashchange was caused by a PUSH, so we'd
+	        // rather setState here and ignore the hashchange. The caveat here
+	        // is that other hash histories in the page will consider it a POP.
+	        ignorePath = path;
+	        pushHashPath(encodedPath);
+
+	        var prevIndex = allPaths.lastIndexOf((0, _PathUtils.createPath)(history.location));
+	        var nextPaths = allPaths.slice(0, prevIndex === -1 ? 0 : prevIndex + 1);
+
+	        nextPaths.push(path);
+	        allPaths = nextPaths;
+
+	        setState({ action: action, location: location });
+	      } else {
+	        (0, _warning2.default)(false, 'Hash history cannot PUSH the same path; a new entry will not be added to the history stack');
+
+	        setState();
+	      }
+	    });
+	  };
+
+	  var replace = function replace(path, state) {
+	    (0, _warning2.default)(state === undefined, 'Hash history cannot replace state; it is ignored');
+
+	    var action = 'REPLACE';
+	    var location = (0, _LocationUtils.createLocation)(path, undefined, undefined, history.location);
+
+	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+	      if (!ok) return;
+
+	      var path = (0, _PathUtils.createPath)(location);
+	      var encodedPath = encodePath(basename + path);
+	      var hashChanged = getHashPath() !== encodedPath;
+
+	      if (hashChanged) {
+	        // We cannot tell if a hashchange was caused by a REPLACE, so we'd
+	        // rather setState here and ignore the hashchange. The caveat here
+	        // is that other hash histories in the page will consider it a POP.
+	        ignorePath = path;
+	        replaceHashPath(encodedPath);
+	      }
+
+	      var prevIndex = allPaths.indexOf((0, _PathUtils.createPath)(history.location));
+
+	      if (prevIndex !== -1) allPaths[prevIndex] = path;
+
+	      setState({ action: action, location: location });
+	    });
+	  };
+
+	  var go = function go(n) {
+	    (0, _warning2.default)(canGoWithoutReload, 'Hash history go(n) causes a full page reload in this browser');
+
+	    globalHistory.go(n);
+	  };
+
+	  var goBack = function goBack() {
+	    return go(-1);
+	  };
+
+	  var goForward = function goForward() {
+	    return go(1);
+	  };
+
+	  var listenerCount = 0;
+
+	  var checkDOMListeners = function checkDOMListeners(delta) {
+	    listenerCount += delta;
+
+	    if (listenerCount === 1) {
+	      (0, _DOMUtils.addEventListener)(window, HashChangeEvent, handleHashChange);
+	    } else if (listenerCount === 0) {
+	      (0, _DOMUtils.removeEventListener)(window, HashChangeEvent, handleHashChange);
+	    }
+	  };
+
+	  var isBlocked = false;
+
+	  var block = function block() {
+	    var prompt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+	    var unblock = transitionManager.setPrompt(prompt);
+
+	    if (!isBlocked) {
+	      checkDOMListeners(1);
+	      isBlocked = true;
+	    }
+
+	    return function () {
+	      if (isBlocked) {
+	        isBlocked = false;
+	        checkDOMListeners(-1);
+	      }
+
+	      return unblock();
+	    };
+	  };
+
+	  var listen = function listen(listener) {
+	    var unlisten = transitionManager.appendListener(listener);
+	    checkDOMListeners(1);
+
+	    return function () {
+	      checkDOMListeners(-1);
+	      unlisten();
+	    };
+	  };
+
+	  var history = {
+	    length: globalHistory.length,
+	    action: 'POP',
+	    location: initialLocation,
+	    createHref: createHref,
+	    push: push,
+	    replace: replace,
+	    go: go,
+	    goBack: goBack,
+	    goForward: goForward,
+	    block: block,
+	    listen: listen
+	  };
+
+	  return history;
+	};
+
+	exports.default = createHashHistory;
+
+/***/ }),
+/* 18 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	exports.__esModule = true;
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
+
+	var _warning = __webpack_require__(12);
+
+	var _warning2 = _interopRequireDefault(_warning);
+
+	var _PathUtils = __webpack_require__(10);
+
+	var _LocationUtils = __webpack_require__(7);
+
+	var _createTransitionManager = __webpack_require__(15);
+
+	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	var clamp = function clamp(n, lowerBound, upperBound) {
+	  return Math.min(Math.max(n, lowerBound), upperBound);
+	};
+
+	/**
+	 * Creates a history object that stores locations in memory.
+	 */
+	var createMemoryHistory = function createMemoryHistory() {
+	  var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+	  var getUserConfirmation = props.getUserConfirmation,
+	      _props$initialEntries = props.initialEntries,
+	      initialEntries = _props$initialEntries === undefined ? ['/'] : _props$initialEntries,
+	      _props$initialIndex = props.initialIndex,
+	      initialIndex = _props$initialIndex === undefined ? 0 : _props$initialIndex,
+	      _props$keyLength = props.keyLength,
+	      keyLength = _props$keyLength === undefined ? 6 : _props$keyLength;
+
+
+	  var transitionManager = (0, _createTransitionManager2.default)();
+
+	  var setState = function setState(nextState) {
+	    _extends(history, nextState);
+
+	    history.length = history.entries.length;
+
+	    transitionManager.notifyListeners(history.location, history.action);
+	  };
+
+	  var createKey = function createKey() {
+	    return Math.random().toString(36).substr(2, keyLength);
+	  };
+
+	  var index = clamp(initialIndex, 0, initialEntries.length - 1);
+	  var entries = initialEntries.map(function (entry) {
+	    return typeof entry === 'string' ? (0, _LocationUtils.createLocation)(entry, undefined, createKey()) : (0, _LocationUtils.createLocation)(entry, undefined, entry.key || createKey());
+	  });
+
+	  // Public interface
+
+	  var createHref = _PathUtils.createPath;
+
+	  var push = function push(path, state) {
+	    (0, _warning2.default)(!((typeof path === 'undefined' ? 'undefined' : _typeof(path)) === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored');
+
+	    var action = 'PUSH';
+	    var location = (0, _LocationUtils.createLocation)(path, state, createKey(), history.location);
+
+	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+	      if (!ok) return;
+
+	      var prevIndex = history.index;
+	      var nextIndex = prevIndex + 1;
+
+	      var nextEntries = history.entries.slice(0);
+	      if (nextEntries.length > nextIndex) {
+	        nextEntries.splice(nextIndex, nextEntries.length - nextIndex, location);
+	      } else {
+	        nextEntries.push(location);
+	      }
+
+	      setState({
+	        action: action,
+	        location: location,
+	        index: nextIndex,
+	        entries: nextEntries
+	      });
+	    });
+	  };
+
+	  var replace = function replace(path, state) {
+	    (0, _warning2.default)(!((typeof path === 'undefined' ? 'undefined' : _typeof(path)) === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored');
+
+	    var action = 'REPLACE';
+	    var location = (0, _LocationUtils.createLocation)(path, state, createKey(), history.location);
+
+	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+	      if (!ok) return;
+
+	      history.entries[history.index] = location;
+
+	      setState({ action: action, location: location });
+	    });
+	  };
+
+	  var go = function go(n) {
+	    var nextIndex = clamp(history.index + n, 0, history.entries.length - 1);
+
+	    var action = 'POP';
+	    var location = history.entries[nextIndex];
+
+	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
+	      if (ok) {
+	        setState({
+	          action: action,
+	          location: location,
+	          index: nextIndex
+	        });
+	      } else {
+	        // Mimic the behavior of DOM histories by
+	        // causing a render after a cancelled POP.
+	        setState();
+	      }
+	    });
+	  };
+
+	  var goBack = function goBack() {
+	    return go(-1);
+	  };
+
+	  var goForward = function goForward() {
+	    return go(1);
+	  };
+
+	  var canGo = function canGo(n) {
+	    var nextIndex = history.index + n;
+	    return nextIndex >= 0 && nextIndex < history.entries.length;
+	  };
+
+	  var block = function block() {
+	    var prompt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+	    return transitionManager.setPrompt(prompt);
+	  };
+
+	  var listen = function listen(listener) {
+	    return transitionManager.appendListener(listener);
+	  };
+
+	  var history = {
+	    length: entries.length,
+	    action: 'POP',
+	    location: entries[index],
+	    index: index,
+	    entries: entries,
+	    createHref: createHref,
+	    push: push,
+	    replace: replace,
+	    go: go,
+	    goBack: goBack,
+	    goForward: goForward,
+	    canGo: canGo,
+	    block: block,
+	    listen: listen
+	  };
+
+	  return history;
+	};
+
+	exports.default = createMemoryHistory;
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
+
+/***/ }),
+/* 20 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_20__;
+
+/***/ }),
+/* 21 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Obj2 = __webpack_require__(22);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	var _Reference = __webpack_require__(23);
+
+	var _Reference2 = _interopRequireDefault(_Reference);
+
+	var _ClassMap = __webpack_require__(24);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	var _ComputedProperty = __webpack_require__(25);
+
+	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Core
+	 */
+	var Observable = function (_Obj) {
+		_inherits(Observable, _Obj);
+
+		/**
+	  * The basic object class that notifies **observers** and **students** about 
+	  * changes in its attributes. 
+	  *
+	  * ## Observers
+	  * An observer is an object (in actuality a callback) that watches for changes on 
+	  * a certain attribute or it's child attributes, in case of nested Observables. 
+	  * An observer can {{#crossLink "Core.Observable/disregard"}}{{/crossLink}} the attribute to stop watching.
+	  *
+	  * 	// Initialize object and watch for changes
+	  * 	var obj = new Chicken.Core.Observable();
+	  * 	obj.set('foo', 'bar');
+	  * 	var callback = () => {
+	  * 		alert('Changed: ' + obj.get('foo'));
+	  * 	};
+	  * 	obj.observe('foo', callback);
+	  * 	
+	  * 	// Change
+	  * 	obj.set('foo', 'boo'); // Will alert 'Changed: boo'
+	  * 	
+	  * 	// Stop watching
+	  * 	obj.disregard('foo', callback);
+	  * 	obj.set('foo', 'back-to-bar'); // Will not alert anthing
+	  *
+	  * ## Students
+	  * A student is an object (in actuality a callback) that watches for changes in
+	  * **any attribute** or any **child attribute**, in case of nested Observables.
+	  * An observer can **neglect** their study to stop wachting.
+	  *
+	  * 	// Initialize object
+	  * 	var obj = new Chicken.Core.Observable();
+	  * 	obj.set('foo', 'bar');
+	  * 	var childObj = new Chicken.Core.Observable();
+	  * 	childObj.set('free', 'willy');
+	  * 	obj.set('child', childObj);
+	  *
+	  * 	// Listen
+	  * 	var callback = (changedAttributes) {
+	  * 		console.log(changedAttributes);
+	  * 	};
+	  * 	obj.study(callback);
+	  *
+	  * 	// Update attributes
+	  *	obj.set('foo', 'boo');                  // Will log ['foo']
+	  *	obj.get('child').set('free', 'tibet');  // Will log ['child']
+	  * 	childObj.set('foo', 'bee');             // Will log ['child']
+	  *
+	  * 	// Neglect my study
+	  * 	obj.neglect(callback);
+	  * 	obj.set('foo', 'back to bar');          // Will not log anything
+	  *
+	  * @class Core.Observable
+	  * @extends Core.Object
+	  *
+	  * @constructor
+	  * @param  {Object}  [initValues={}]       			 A hash of key-value pairs to initialize the object with
+	  * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
+	  **/
+		function Observable() {
+			var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+			var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+			_classCallCheck(this, Observable);
+
+			////////////////
+			// Properties //
+			////////////////
+
+			/**
+	   * @property observers
+	   * @type {Map}
+	   */
+			var _this = _possibleConstructorReturn(this, (Observable.__proto__ || Object.getPrototypeOf(Observable)).call(this));
+
+			// Basics
+
+
+			_this.observers = new Map();
+
+			/**
+	   * @attribute attributes
+	   * @type {object}
+	   */
+			_this.attributes = {};
+
+			/**
+	   * Whenever this property is true, no notifications will be triggered
+	   * 
+	   * @attribute notificationsDisabled
+	   * @type {Boolean}
+	   */
+			_this.notificationsDisabled = false;
+
+			// Scheduling
+			_this._scheduleAttributesChangedTimeout = false;
+			_this._scheduleAttributesChangedAttributes = null;
+
+			////////////////////
+			// Initialization //
+			////////////////////
+
+			// Initialize values
+			_this.withoutNotifications(function () {
+				_this.import(initValues, convertToObservables);
+			});
+
+			// Properties for internal use
+			_this._bindings = {};
+
+			return _this;
+		}
+
+		////////////////////
+		// Public methods //
+		////////////////////
+
+		/**
+	  * Check if attribute is defined
+	  *
+	  * @method has
+	  * @param  {string}  key The name of the key to check
+	  * @return {Boolean}     True when the attribute has been defined
+	  */
+
+
+		_createClass(Observable, [{
+			key: 'has',
+			value: function has(key) {
+
+				// Split
+				var parts = Number.isInteger(key) ? [key] : key.split(/\./);
+				var currentPart = parts.shift();
+
+				// No deep shit?
+				if (parts.length === 0) return this._has(currentPart) !== undefined;
+
+				// Look deeper
+				var value = this._get(currentPart);
+
+				// No value
+				if (value === undefined) {
+					return false;
+				}
+
+				// Check if the value is also an observable
+				if (Observable.isObservable(value)) {
+
+					// Pass the rest along to go a level deeper
+					return value.has(parts.join('.'));
+				} else {
+
+					return false;
+				}
+			}
+		}, {
+			key: '_has',
+			value: function _has(key) {
+				return this.attributes[key] !== undefined;
+			}
+
+			/**
+	   * Get attribute from object
+	   *
+	   * @method get
+	   * @param  {string} key The name of the key to retrieve the value of. You can use dot-notation to use deep-getting
+	   * @return The value or undefined when the key is not set
+	   */
+
+		}, {
+			key: 'get',
+			value: function get(key) {
+
+				// Split
+				if (key === undefined) throw new TypeError('There was no key provided');
+				var parts = key;
+				if (typeof key === 'string') parts = key.split(/\./);
+				var currentPart = parts.shift();
+
+				// Get value
+				var value = this._get(currentPart);
+
+				// Nothing?
+				if (value === undefined) return;
+
+				// Is it a reference?
+				if (value instanceof _Reference2.default) {
+					value = value.getValue();
+				}
+
+				// Value found?
+				if (parts.length === 0) {
+
+					// Is it computed?
+					if (value instanceof _ComputedProperty2.default) {
+						return value.getValue();
+					}
+
+					// Return the value as is.
+					return value;
+				}
+
+				// Check if the value is also an observable
+				if (Observable.isObservable(value)) {
+
+					// Pass the rest along to go a level deeper
+					return value.get(parts.join('.'));
+				} else {
+
+					// Nothing to be retrieved
+					return;
+					//throw new Error('The found value for ' + currentPart + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value));
+				}
+			}
+		}, {
+			key: '_get',
+			value: function _get(key) {
+				return this.attributes[key];
+			}
+
+			/**
+	   * Set attribute on object. When you set a attribute on Observable, all
+	   * *observers* and *students* will be notified of the change.
+	   *
+	   * @method set
+	   * @param {string/array} key   	The name of the key to store the value of. You can use dot-notation to use deep-setting
+	   * @param {mixed} value 		The value to store
+	   * @param {boolean} [convertToObservables=false]
+	   *        						Whether to convert standard object values into Observable instances
+	   * @chainable
+	   */
+
+		}, {
+			key: 'set',
+			value: function set(key, value) {
+				var _this2 = this;
+
+				var convertToObservables = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+
+				// Object given?
+				if ((typeof key === 'undefined' ? 'undefined' : _typeof(key)) === 'object') {
+
+					// Loop and set each
+					_underscore2.default.each(key, function (v, k) {
+						_this2.set(k, v, convertToObservables);
+					});
+					return this;
+				}
+
+				// Convert?
+				if (convertToObservables === true && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value !== null) {
+					if (value.constructor === Object) {
+						value = new Observable(value);
+					} else if (Array.isArray(value)) {
+						value = _ClassMap2.default.create('ObservableArray', [value]);
+					}
+				}
+
+				// Is it a computed attribute
+				if (value instanceof _ComputedProperty2.default) {
+					value.initialize(key, this);
+				}
+
+				// Is there a dot in there?
+				if (typeof key === 'string' && key.match(/\.[\w]/)) {
+
+					////////////////////////
+					// Split and deep set //
+					////////////////////////
+
+					var parts = key.split(/\./);
+					var currentPart = parts.shift();
+
+					// Does the first key not exist?
+					if (this.attributes[currentPart] === undefined) {
+
+						// Should it be an array?
+						var newValue = void 0;
+						if (Number.isInteger(parts[0]) || typeof parts[0] === 'string' && parts[0].match(/^\d+$/)) {
+
+							// Create list (using classmap to prevent circular dependencies)
+							newValue = _ClassMap2.default.create('ObservableArray');
+						} else {
+
+							// Create it
+							newValue = new Observable();
+						}
+
+						// Store it
+						this.attributes[currentPart] = newValue;
+					}
+
+					// Do deep setting
+					this.get(currentPart).set(parts.join('.'), value);
+
+					return this;
+				}
+
+				// Now set the attribute
+				this.setAttribute(key, value, convertToObservables);
+
+				return this;
+			}
+		}, {
+			key: 'setAttribute',
+			value: function setAttribute(key, value) {
+				var _this3 = this;
+
+				// Is the value identical?
+				if (_ClassMap2.default.get('Utils').areEqual(value, this.get(key))) {
+					return this;
+				}
+
+				// Set it
+				this._set(key, value);
+
+				// Is the value observable?
+				if (Observable.isObservable(value)) {
+
+					// Study the object
+					value.study(function () {
+						_this3._scheduleAttributeChanged(key);
+					});
+				}
+
+				// Is the value a reference?
+				else if (value instanceof _Reference2.default) {
+
+						// Study the object
+						value.watch(function () {
+							_this3._scheduleAttributeChanged(key);
+						});
+					}
+
+				// Update attribute
+				this._scheduleAttributeChanged(key);
+
+				return this;
+			}
+		}, {
+			key: 'setIfChanged',
+			value: function setIfChanged(key, value) {
+
+				// Original
+				var originalValue = this.get(key);
+				if (originalValue == value) return this;
+
+				return this.set(key, value);
+			}
+		}, {
+			key: '_set',
+			value: function _set(key, value) {
+
+				// Is there a current value that is a reference?
+				if (this.attributes[key] instanceof _Reference2.default && !(value instanceof _Reference2.default)) {
+
+					// Write the referenced value
+					this.attributes[key].setValue(value);
+				} else {
+
+					// Store the value
+					this.attributes[key] = value;
+				}
+				return this;
+			}
+		}, {
+			key: 'setSilently',
+			value: function setSilently(key, value) {
+				var _this4 = this;
+
+				var convertToObservables = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+				return this.withoutNotifications(function () {
+					_this4.set(key, value, convertToObservables);
+				});
+			}
+		}, {
+			key: 'unset',
+			value: function unset(key) {
+
+				this._unset(key);
+
+				// Update attribute
+				this._scheduleAttributeChanged(key);
+
+				return this;
+			}
+		}, {
+			key: '_unset',
+			value: function _unset(key) {
+				delete this.attributes[key];
+			}
+		}, {
+			key: 'import',
+			value: function _import(obj) {
+				var _this5 = this;
+
+				var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+
+				// Import all items in hash
+				this.withoutNotifications(function () {
+					_underscore2.default.each(obj, function (value, key) {
+						_this5.set(key, value, convertToObservables);
+					});
+				});
+
+				// Notify!
+				if (!this.notificationsDisabled) this.trigger(Observable.Events.Import);
+
+				return this;
+			}
+		}, {
+			key: 'fill',
+			value: function fill(obj) {
+				var _this6 = this;
+
+				// Loop through object
+				_underscore2.default.each(obj, function (value, key) {
+
+					// Get existing value
+					if (_this6.has(key)) {
+
+						// Get value
+						var curValue = _this6.get(key);
+
+						// Observable?
+						if (curValue instanceof Observable) {
+							curValue.fill(value);
+						} else {
+							_this6.set(key, value, true);
+						}
+					} else {
+
+						// Just set it.
+						_this6.set(key, value, true);
+					}
+				});
+				return this;
+			}
+
+			/**
+	   * Increment given attribute's numeric value
+	   *
+	   * @method increment
+	   * @param  {string} key          
+	   * @param  {Number} by           (Default = 1)
+	   * @param  {Number} defaultValue (Default = 0)
+	   * @chainable
+	   */
+
+		}, {
+			key: 'increment',
+			value: function increment(key) {
+				var by = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+				var defaultValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+
+				var v = this.get(key);
+				if (v === undefined || typeof v !== 'number') v = defaultValue;
+				v += by;
+				this.set(key, v);
+				return this;
+			}
+
+			/**
+	   * Decrement given attribute's numeric value
+	   *
+	   * @method increment
+	   * @param  {string} key          
+	   * @param  {Number} by           (Default = 1)
+	   * @param  {Number} defaultValue (Default = 0)
+	   * @chainable
+	   */
+
+		}, {
+			key: 'decrement',
+			value: function decrement(key) {
+				var by = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
+				var defaultValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
+
+				var v = this.get(key);
+				if (v === undefined || typeof v !== 'number') v = defaultValue;
+				v -= by;
+				this.set(key, v);
+				return this;
+			}
+
+			/**
+	   * Toggle the given attribute's boolean value
+	   *
+	   * @method toggle
+	   * @param  {string}  key                
+	   * @param  {Boolean} valueWhenUndefined  (Default = true) What value to set when the attribute does not have a value yet
+	   * @chainable
+	   */
+
+		}, {
+			key: 'toggle',
+			value: function toggle(key) {
+				var valueWhenUndefined = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+
+				var v = this.get(key);
+				if (v === undefined || typeof v !== 'boolean') {
+					v = valueWhenUndefined;
+				} else {
+					v = !v;
+				}
+				this.set(key, v);
+				return this;
+			}
+
+			/**
+	   * Listen for any changes in any of the object's attributes. 
+	   * The callback will receive an array containing the names of
+	   * all updates attributes. 
+	   *
+	   * Note: This is an alias of the 'change' event, so calling
+	   * ```this.on('change', callback)``` will achieve the same result.
+	   *
+	   * @example
+	   * 	// Initialize object
+	   * 	var obj = new Chicken.Core.Observable();
+	   * 	obj.set('foo', 'bar');
+	   * 	var childObj = new Chicken.Core.Observable();
+	   * 	childObj.set('free', 'willy');
+	   * 	obj.set('child', childObj);
+	   *
+	   * 	// Listen
+	   * 	obj.study((changedAttributes) {
+	   * 		console.log(changedAttributes);
+	   * 	});
+	   *
+	   * 	// Update attributes
+	   *	obj.set('foo', 'boo');                  // Will log ['foo']
+	   *	obj.get('child').set('free', 'tibet');  // Will log ['child']
+	   * 	childObj.set('foo', 'bee');             // Will log ['child']
+	   *
+	   * @method study
+	   * @param  {Function} callback
+	   * @chainable
+	   */
+
+		}, {
+			key: 'study',
+			value: function study(callback) {
+
+				// This is an alias of the 'change' event
+				return this.on(Observable.Events.Change, callback);
+			}
+
+			/**
+	   * Stop listening for changes on the object's attributes.
+	   *
+	   * Note: This is an alias of the 'change' event, so calling
+	   * ```this.off('change', callback)``` will achieve the same result.
+	   *
+	   * @example
+	   * 
+	   * 
+	   * @method neglect
+	   * @param  {Function} callback 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'neglect',
+			value: function neglect(callback) {
+
+				// This is an alias of the 'change' event
+				return this.off(Observable.Events.Change, callback);
+			}
+
+			/**
+	   * Observe the attribute with given key, so that callback is called
+	   * whenever the attribute or it's child attributes change.
+	   *
+	   * 	// Initialize object and watch for changes
+	   * 	var obj = new Chicken.Core.Observable();
+	   * 	obj.set('foo', 'bar');
+	   * 	var callback = () => {
+	   * 		alert('Changed: ' + obj.get('foo'));
+	   * 	};
+	   * 	obj.observe('foo', callback);
+	   * 	
+	   * 	// Change
+	   * 	obj.set('foo', 'boo'); // Will alert 'Changed: boo'
+	   * 	
+	   * @method observe
+	   * @param  {string|array}   key      The name of the attribute to observe
+	   * @param  {Function} callback 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'observe',
+			value: function observe(keyOrKeys, callback) {
+				var _this7 = this;
+
+				////////////////////
+				// More than one? //
+				////////////////////
+
+				if (Array.isArray(keyOrKeys)) {
+					_underscore2.default.each(keyOrKeys, function (key) {
+						_this7.observe(key, callback);
+					});
+					return this;
+				}
+				var key = keyOrKeys;
+
+				//////////////////////////////
+				// Does the key have a dot? //
+				//////////////////////////////
+
+				var parts = key.split(/\./);
+				if (parts.length > 1) {
+
+					// Get the object concerned
+					var attrKey = parts.shift();
+					var obj = this.get(attrKey);
+					var objKey = parts.join('.');
+
+					// Is it an observable?
+					if (Observable.isObservable(obj) && obj.observe) {
+
+						// Observe this observable itself
+						this.observe(attrKey, callback);
+
+						// Go deeper
+						return obj.observe(objKey, callback);
+					}
+
+					throw new Error('Cannot observe property of non-existing object: ' + key);
+				}
+
+				//////////////////
+				// Add observer //
+				//////////////////
+
+				if (!this.observers.has(key)) {
+					this.observers.set(key, new Set());
+				}
+				var observers = this.observers.get(key);
+
+				// Add callback
+				observers.add(callback);
+
+				return this;
+			}
+
+			/**
+	   * Stop observing the attribute with given key, or any of it's
+	   * child attributes.
+	   *
+	   * @method disregard
+	   * @param  {string}   key      The name of the attribute to disregard
+	   * @param  {Function} callback 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'disregard',
+			value: function disregard(key, callback) {
+
+				// Get the observers
+				var observers = this.observers.get(key);
+				if (observers === undefined) return this;
+
+				// Remove callback
+				observers.delete(callback);
+
+				return this;
+			}
+
+			/**
+	   * Get the Observable including all its children
+	   * as a native object.
+	   *
+	   * @method toObject
+	   * @return {object}
+	   */
+
+		}, {
+			key: 'toObject',
+			value: function toObject() {
+				var includedUids = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+
+				var obj = {};
+				_underscore2.default.each(this.attributes, function (item, key) {
+
+					// Observable?
+					if (Observable.isObservable(item)) {
+
+						// Already included?
+						var guid = _ClassMap2.default.get('Utils').uidFor(item);
+						if (_underscore2.default.indexOf(includedUids, guid) !== -1) {
+							obj[key] = '...recursive(' + guid + ')...';
+							return;
+						}
+						includedUids.push(guid);
+
+						// Array?
+						if (item instanceof Observable) {
+							item = item.toObject(includedUids);
+						} else {
+							item = item.toArray(includedUids);
+						}
+					}
+
+					obj[key] = item;
+				});
+
+				return obj;
+			}
+
+			/**
+	   * Apply given callback for each attribute defined in this observable
+	   *
+	   * @method each
+	   * @param  {Function} callback
+	   * @chainable
+	   */
+
+		}, {
+			key: 'each',
+			value: function each(callback) {
+				var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				_underscore2.default.each(this.attributes, callback, context);
+				return this;
+			}
+
+			/**
+	   * Execute given callback without triggering change notifications.
+	   * 
+	   * @method withoutNotifications
+	   * @param  {Function} callback 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'withoutNotifications',
+			value: function withoutNotifications(callback) {
+
+				var wasDisabled = this.notificationsDisabled;
+				this.notificationsDisabled = true;
+
+				callback();
+
+				this.notificationsDisabled = wasDisabled;
+
+				return this;
+			}
+		}, {
+			key: 'clone',
+			value: function clone() {
+				var convertToObservables = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+
+				// Make copy!
+				var c = this.constructor;
+				var copy = new c(this.toObject(), convertToObservables);
+				return copy;
+			}
+
+			/////////////////////
+			// Private methods //
+			/////////////////////
+
+		}, {
+			key: '_scheduleAttributeChanged',
+			value: function _scheduleAttributeChanged(key) {
+				var _this8 = this;
+
+				// Notifications disabled?
+				if (this.notificationsDisabled) return;
+
+				// Already something scheduled?
+				if (!this._scheduleAttributesChangedTimeout) {
+
+					// Schedule it
+					this._scheduleAttributesChangedAttributes = [];
+					this._scheduleAttributesChangedTimeout = setTimeout(function () {
+
+						// Trigger it now!
+						_this8._scheduleAttributesChangedTimeout = false;
+						_this8._triggerAttributesChanged();
+					}, Observable.AttributeChangedDelay);
+				}
+
+				// Add attribute to the set
+				this._scheduleAttributesChangedAttributes.push(key);
+			}
+		}, {
+			key: '_triggerAttributesChanged',
+			value: function _triggerAttributesChanged() {
+				var _this9 = this;
+
+				// Notifications disabled?
+				if (this.notificationsDisabled) return;
+
+				// Clear for next time.
+				if (this._scheduleAttributesChangedTimeout) clearTimeout(this._scheduleAttributesChangedTimeout);
+				this._scheduleAttributesChangedTimeout = false;
+
+				// Check my attributes
+				var attrs = _underscore2.default.unique(this._scheduleAttributesChangedAttributes);
+				if (attrs) {
+
+					// Collect the observers, using a Set to make sure the same observer can't be called twice
+					var combinedObservers = new Set();
+					_underscore2.default.each(attrs, function (attr) {
+
+						// Get observers
+						var attrObservers = _this9.observers.get(attr);
+						if (attrObservers) {
+							attrObservers.forEach(function (observer) {
+
+								// Add it.
+								combinedObservers.add(observer);
+							});
+						}
+					});
+
+					// Did we have any observers?
+					combinedObservers.forEach(function (observer) {
+
+						// Now call it.
+						observer.apply(_this9);
+					});
+
+					// Students as well.
+					this.trigger(Observable.Events.Change, attrs);
+				}
+			}
+		}, {
+			key: 'isObservable',
+			value: function isObservable() {
+				return true;
+			}
+		}]);
+
+		return Observable;
+	}(_Obj3.default);
+
+	////////////
+	// Events //
+	////////////
+
+	Observable.Events = {
+
+		/**
+	  * This event is fired whenever anything changes in the array
+	  * of one of its observable items.
+	  * 
+	  * @event change
+	  */
+		Change: 'change',
+
+		/**
+	  * This event is fired whenever an import is completed
+	  *
+	  * @event import
+	  */
+		Import: 'import'
+
+	};
+
+	Observable.isObservable = function (obj) {
+
+		return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
+	};
+
+	Observable.AttributeChangedDelay = 1;
+
+	_ClassMap2.default.register('Observable', Observable);
+
+	module.exports = Observable;
+
+/***/ }),
+/* 22 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var promiseCount = 0;
+
+	var objectCount = 0;
+
+	/**
+	 * @module Core
+	 */
+
+	var Obj = function () {
+
+		/**
+	  * Basic object that can trigger events
+	  *
+	  * @class Core.Obj
+	  * @constructor
+	  */
+		function Obj() {
+			_classCallCheck(this, Obj);
+
+			// Init values
+			this._listeners = new Map();
+			this._promises = new Map();
+
+			this.__chickenUid_Obj = '**Obj' + ++objectCount + '**';
+		}
+
+		_createClass(Obj, [{
+			key: '__getUid',
+			value: function __getUid() {
+				return this.__chickenUid_Obj;
+			}
+
+			////////////////////
+			// Public methods //
+			////////////////////
+
+		}, {
+			key: 'promise',
+			value: function promise(key, callback) {
+
+				// Do the callback
+				var promise = this._getPromiseInfo(key);
+				callback.apply(null, [promise.resolve, promise.reject]);
+				return promise.promise;
+			}
+		}, {
+			key: 'resolvePromise',
+			value: function resolvePromise(key) {
+				for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+					args[_key - 1] = arguments[_key];
+				}
+
+				this._getPromiseInfo(key).resolve.apply(this, args);
+				return this;
+			}
+		}, {
+			key: 'rejectPromise',
+			value: function rejectPromise(key) {
+				for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
+					args[_key2 - 1] = arguments[_key2];
+				}
+
+				this._getPromiseInfo(key).reject.apply(this, args);
+				return this;
+			}
+		}, {
+			key: 'getPromise',
+			value: function getPromise(key) {
+				return this._getPromiseInfo(key).promise;
+			}
+		}, {
+			key: 'resetPromise',
+			value: function resetPromise(key) {
+				this._promises.delete(key);
+			}
+		}, {
+			key: '_getPromiseInfo',
+			value: function _getPromiseInfo(key) {
+
+				// Was the promise already defined
+				if (!this._promises.has(key)) {
+
+					// Store it
+					var p = {};
+					p.promise = new Promise(function (resolve, reject) {
+						p.resolve = resolve;
+						p.reject = reject;
+						p.id = promiseCount++;
+					});
+					this._promises.set(key, p);
+				}
+				return this._promises.get(key);
+			}
+		}, {
+			key: 'when',
+			value: function when() {
+				var _this = this;
+
+				for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
+					args[_key3] = arguments[_key3];
+				}
+
+				// The last one should be a callback
+				var successCallback = args.pop();
+				var failCallback = function failCallback(error) {
+					for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
+						args[_key4 - 1] = arguments[_key4];
+					}
+
+					throw new Error('Uncaught promise failure for ' + args.join(', ') + ': ' + error);
+				};
+				if (args.length > 1 && typeof _underscore2.default.last(args) === 'function') {
+					failCallback = successCallback;
+					successCallback = args.pop();
+				}
+
+				// Collect promises
+				var promises = [];
+				_underscore2.default.each(args, function (arg) {
+					promises.push(_this._getPromiseInfo(arg).promise);
+				});
+
+				// One?
+				if (promises.length === 1) {
+
+					// Simple.
+					promises[0].then(successCallback, failCallback);
+				} else {
+
+					// When all are done
+					Promise.all(promises).then(successCallback, failCallback);
+				}
+
+				return this;
+			}
+
+			/**
+	   * Add listener for chosen event
+	   *
+	   * @method on
+	   * @param  {string}   eventName The event name to listen for.
+	   * @param  {Function} callback  The function to call when the event occurs. Depending on the event, this 
+	   *                              callback can receive 0 or more arguments when called.
+	   * @example
+	   * 		obj.on('message', function(message) {
+	   * 			console.log(message);
+	   * 		});
+	   * @chainable
+	   */
+
+		}, {
+			key: 'on',
+			value: function on(eventName, callback) {
+
+				// Get the set
+				if (!this._listeners.has(eventName)) {
+					this._listeners.set(eventName, new Set());
+				}
+				var events = this._listeners.get(eventName);
+
+				// Add callback
+				events.add(callback);
+
+				// Chain
+				return this;
+			}
+
+			/**
+	   * Remove a previously added listener for chosen event
+	   *
+	   * @method off
+	   * @param  {string}   eventName The event name to remove listener for
+	   * @param  {Function} callback  The previously added callback to remove from listeners
+	   * @chainable
+	   */
+
+		}, {
+			key: 'off',
+			value: function off(eventName, callback) {
+
+				// Get the callbacks
+				var callbacks = this._listeners.get(eventName);
+				if (callbacks === undefined) return this;
+
+				// Remove callback
+				callbacks.delete(callback);
+
+				return this;
+			}
+
+			/**
+	   * Trigger calling of all registered callbacks for given event
+	   * with given arguments.
+	   *
+	   * @method trigger
+	   * @param  {string}    eventName The event name to trigger callbacks for
+	   * @param  {...mixed}  args      Zero or more arguments to pass along to each callback
+	   * @chainable
+	   */
+
+		}, {
+			key: 'trigger',
+			value: function trigger(eventName) {
+				var _this2 = this;
+
+				for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
+					args[_key5 - 1] = arguments[_key5];
+				}
+
+				// Get the callbacks
+				var callbacks = this._listeners.get(eventName);
+				if (callbacks === undefined) return this;
+
+				// Loop and call
+				callbacks.forEach(function (cb) {
+					cb.apply(_this2, args);
+				});
+
+				return this;
+			}
+
+			/////////////////////
+			// Private methods //
+			/////////////////////
+
+
+		}]);
+
+		return Obj;
+	}();
+
+	module.exports = Obj;
+
+/***/ }),
+/* 23 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	var Reference = function () {
+		function Reference(observable, path) {
+			_classCallCheck(this, Reference);
+
+			this.observable = observable;
+			this.path = path;
+		}
+
+		_createClass(Reference, [{
+			key: "getValue",
+			value: function getValue() {
+				return this.observable.get(this.path);
+			}
+		}, {
+			key: "setValue",
+			value: function setValue(value) {
+				this.observable.set(this.path, value);
+				return this;
+			}
+		}, {
+			key: "watch",
+			value: function watch(callback) {
+				this.observable.observe(this.path, callback);
+			}
+		}]);
+
+		return Reference;
+	}();
+
+	module.exports = Reference;
+
+/***/ }),
+/* 24 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
+	/**
+	 * @module Helpers
+	 */
+
+	var ClassMap = {
+
+		classes: new Map(),
+
+		get: function get(className) {
+			return this.classes.get(className);
+		},
+		register: function register(className, c) {
+			this.classes.set(className, c);
+			return this;
+		},
+		create: function create(className) {
+			var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+			var c = ClassMap.get(className);
+			if (c === undefined) throw new Error('The ' + className + ' class is not registered in the ClassMap');
+			return new (Function.prototype.bind.apply(c, [null].concat(_toConsumableArray(args))))();
+		},
+		isA: function isA(obj, className) {
+			var c = ClassMap.get(className);
+			if (c === undefined) throw new Error('The ' + className + ' class is not registered in the ClassMap');
+			return obj instanceof c;
+		}
+	};
+
+	module.exports = ClassMap;
+
+/***/ }),
+/* 25 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Core
+	 */
+	var ComputedProperty = function () {
+
+		/**
+	  * @class Core.ComputedProperty
+	  * 
+	  * @constructor
+	  * @param  {Array}   			dependencies 
+	  * @param  {Function} 			callback     	 
+	  */
+		function ComputedProperty(dependencies, callback) {
+			_classCallCheck(this, ComputedProperty);
+
+			/**
+	   * The Observable instance that this computed attribute is
+	   * a part of.
+	   * 
+	   * @property observable
+	   * @type {Core.Observable}
+	   */
+			this.observable = null;
+
+			/**
+	   * The attribute name within the Observable that this ComputedProperty
+	   * represents.
+	   * 
+	   * @property name
+	   * @type {string}
+	   */
+			this.name = null;
+
+			/**
+	   * The names of the attributes that this compution depends on. These
+	   * attributes will also be injected into the callback.
+	   *
+	   * @property dependencies
+	   * @type {array}
+	   */
+			this.dependencies = dependencies;
+
+			/**
+	   * The compution function that is called when the value is requested.
+	   *
+	   * @property callback
+	   * @type {Function}
+	   */
+			this.callback = callback;
+		}
+
+		/**
+	  * Get the current computed value 
+	  *
+	  * @method getValue
+	  * @return {mixed}
+	  */
+
+
+		_createClass(ComputedProperty, [{
+			key: 'getValue',
+			value: function getValue() {
+				var _this = this;
+
+				// Get dependency values
+				var args = [];
+				_underscore2.default.each(this.dependencies, function (dep) {
+					args.push(_this.observable.get(dep));
+				});
+
+				// Do the callback
+				return this.callback.apply(this.observable, args);
+			}
+
+			/**
+	   * Alias of `getValue`
+	   * 
+	   * @method toString
+	   * @return {mixed}
+	   */
+
+		}, {
+			key: 'toString',
+			value: function toString() {
+				return this.getValue();
+			}
+
+			/**
+	   * Make this property part of an Observable object, and 
+	   * start watching for changes.
+	   * 
+	   * @method initialize
+	   * @param {string} name 					The name op the property
+	   * @param {Core.Observable} observable 		The observable instance this property is a part of
+	   * @chainable
+	   */
+
+		}, {
+			key: 'initialize',
+			value: function initialize(name, observable) {
+				var _this2 = this;
+
+				// Localize
+				this.name = name;
+				this.observable = observable;
+
+				// Watch the properties
+				this.observable.observe(this.dependencies, function () {
+					_this2.observable._scheduleAttributeChanged(_this2.name);
+				});
+
+				return this;
+			}
+		}]);
+
+		return ComputedProperty;
+	}();
+
+	module.exports = ComputedProperty;
+
+/***/ }),
+/* 26 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Observable2 = __webpack_require__(21);
+
+	var _Observable3 = _interopRequireDefault(_Observable2);
+
+	var _Chainable = __webpack_require__(27);
+
+	var _Chainable2 = _interopRequireDefault(_Chainable);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Core
+	 */
+	var SettingsObject = function (_Observable) {
+		_inherits(SettingsObject, _Observable);
+
+		/**
+	  * @class Core.SettingsObject
+	  * @extends Core.Observable
+	  *
+	  * @constructor
+	  * @param {object}  defaultSettings  	Initialize with these default settings
+	  * @param {array}   [allowedKeys] 		Optional array of allowed keys. By default all keys are allowed	 
+	  */
+		function SettingsObject() {
+			var defaultSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
+			var allowedKeys = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
+
+			_classCallCheck(this, SettingsObject);
+
+			/**
+	   * @property allowedKeys
+	   * @type Array
+	   */
+			var _this = _possibleConstructorReturn(this, (SettingsObject.__proto__ || Object.getPrototypeOf(SettingsObject)).call(this, defaultSettings));
+
+			// Instantiate with default settings
+
+
+			_this.allowedKeys = allowedKeys;
+
+			_this.notificationsDisabled = true;
+
+			return _this;
+		}
+
+		/**
+	  * Apply given settings
+	  *
+	  * @method apply
+	  * @param {object} 	settings	A hash-object with keys and values
+	  * @chainable
+	  */
+
+
+		_createClass(SettingsObject, [{
+			key: 'apply',
+			value: function apply(settings) {
+				var _this2 = this;
+
+				// Apply each key individually
+				_underscore2.default.each(settings, function (value, key) {
+					_this2.set(key, value);
+				});
+
+				return this;
+			}
+
+			// Extra check for allowedKeys.
+
+		}, {
+			key: 'set',
+			value: function set(key, value) {
+
+				// Is it allowed?
+				if (this.allowedKeys && this.allowedKeys.length > 0 && !_underscore2.default.contains(this.allowedKeys, key)) {
+					throw new Error('This SettingsObject does not have a setting for "' + key + '". The allowed settings are: ' + this.allowedKeys.join(', '));
+				}
+
+				// Do it.
+				return _get(SettingsObject.prototype.__proto__ || Object.getPrototypeOf(SettingsObject.prototype), 'set', this).call(this, key, value);
+			}
+		}]);
+
+		return SettingsObject;
+	}(_Observable3.default);
+
+	module.exports = (0, _Chainable2.default)(SettingsObject);
+
+/***/ }),
+/* 27 */
+/***/ (function(module, exports) {
+
+	"use strict";
+
+	module.exports = function (cls) {
+
+		cls.create = function () {
+			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+				args[_key] = arguments[_key];
+			}
+
+			return new (Function.prototype.bind.apply(cls, [null].concat(args)))();
+		};
+
+		return cls;
+	};
+
+/***/ }),
+/* 28 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _Obj = __webpack_require__(22);
+
+	var _Obj2 = _interopRequireDefault(_Obj);
+
+	var _Element2 = __webpack_require__(29);
+
+	var _Element3 = _interopRequireDefault(_Element2);
+
+	var _Transition = __webpack_require__(30);
+
+	var _Transition2 = _interopRequireDefault(_Transition);
+
+	var _jquery = __webpack_require__(19);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Dom
+	 */
+	var ViewContainer = function (_Element) {
+		_inherits(ViewContainer, _Element);
+
+		/**
+	  * A ViewContainer is en DomElement in your application that
+	  * can contain a rendered View. Each ViewContainer needs a 
+	  * unique name, and the main ViewContainer for the application
+	  * is always called 'main'.
+	  * 
+	  * @class Dom.ViewContainer 
+	  * @extends Core.Object
+	  *
+	  * @constructor
+	  * @param {jQuery} $element
+	  * @param {Application} application
+	  */
+		function ViewContainer($element, application) {
+			_classCallCheck(this, ViewContainer);
+
+			// Private props
+			var _this = _possibleConstructorReturn(this, (ViewContainer.__proto__ || Object.getPrototypeOf(ViewContainer)).call(this, $element, application));
+
+			_this._isLoading = false;
+
+			////////////////
+			// Properties //
+			////////////////
+
+			/**
+	   * The unique name you can use in your routes to target this
+	   * ViewContainer.
+	   * 
+	   * @property name
+	   * @type {string}
+	   */
+			_this.name = ViewContainer.getViewName($element);
+
+			/**
+	   * The Routing.Action that rendered the content that is currently
+	   * in this ViewContainer
+	   * 
+	   * @property currentAction
+	   * @type {Routing.Action}
+	   */
+			_this.currentAction = null;
+
+			/**
+	   * The default transition to use for this ViewContainer
+	   * 
+	   * @property defaultTransition
+	   * @type {string}
+	   */
+			_this.defaultTransition = $element.attr('transition');
+
+			/**
+	   * @property transitionsDisabled
+	   * @type {boolean}
+	   */
+			_this.transitionsDisabled = false;
+
+			/**
+	   * Currently active content 
+	   * 
+	   * @property $currentContent
+	   * @type {jQuery}
+	   */
+			_this.$currentContent = null;
+
+			_this.currentView = null;
+
+			return _this;
+		}
+
+		/**
+	  * Initialize the ViewContainer. 
+	  *
+	  * @method initialize
+	  * @chainable
+	  */
+
+
+		_createClass(ViewContainer, [{
+			key: 'initialize',
+			value: function initialize() {
+				this.$element.addClass(ViewContainer.Classes.Initialized);
+				return this;
+			}
+
+			/**
+	   * @method setActionContent
+	   * @param {string} 				content 			The (HTML) content to render
+	   * @param {boolean}				setLoadingFalse		Whether to set the loading-state to false
+	   * @chainable
+	   */
+
+		}, {
+			key: 'setContent',
+			value: function setContent(content) {
+				var _this2 = this;
+
+				var setLoadingFalse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+
+				// Transition?
+				var transition = this.currentAction.transition;
+				if (!transition && transition !== false) {
+
+					// Use my default transition
+					transition = this.defaultTransition;
+				}
+
+				// No longer loading
+				if (setLoadingFalse) this.setLoading(false);
+
+				// Use transition?
+				this.transitionContent(content, transition).then(function () {
+
+					// Apply hooks
+					ViewContainer.any.trigger('render', _this2);
+				});
+
+				return this;
+			}
+		}, {
+			key: 'transitionContent',
+			value: function transitionContent(newContent, transitionName) {
+				var _this3 = this;
+
+				return new Promise(function (resolve) {
+
+					// Put content into container
+					var $newContent = (0, _jquery2.default)('<div class="view-container-element" />').html(newContent);
+
+					// No transition?
+					if (!transitionName || transitionName === 'none' || _this3.transitionsDisabled) {
+
+						// Remove old content
+						_this3._fireHooks('beforeRender');
+						_this3.$element.find('.view-container-element').remove();
+
+						// Set content now
+						_this3.$element.append($newContent);
+
+						// Switch!
+						_this3.$currentContent = $newContent;
+						_this3.trigger('content', newContent);
+						_this3._fireHooks('afterRender');
+
+						return resolve();
+					}
+
+					// Create transition
+					var transition = new _Transition2.default(_this3.$element, _this3.$currentContent, $newContent, transitionName);
+					_this3._fireHooks('beforeRender');
+					transition.play().then(function () {
+
+						// Remove old content
+						if (_this3.$currentContent) {
+							_this3.$currentContent.remove();
+						}
+
+						// Switch!
+						_this3.$currentContent = $newContent;
+						_this3.trigger('content', newContent);
+						_this3._fireHooks('afterRender');
+
+						// Done!
+						resolve();
+					});
+				});
+			}
+		}, {
+			key: 'setView',
+			value: function setView(view) {
+
+				this.currentView = view;
+				return this;
+			}
+		}, {
+			key: 'setAction',
+			value: function setAction(action) {
+				this.currentAction = action;
+				return this;
+			}
+		}, {
+			key: 'setLoading',
+			value: function setLoading() {
+				var loading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
+
+				this._isLoading = loading;
+				this.$element.toggleClass(ViewContainer.Classes.Loading, loading);
+				return this;
+			}
+		}, {
+			key: 'isLoading',
+			value: function isLoading() {
+				return this._isLoading;
+			}
+		}, {
+			key: 'isInDom',
+			value: function isInDom() {
+
+				return this.$element.closest(document.documentElement).length > 0;
+			}
+		}]);
+
+		return ViewContainer;
+	}(_Element3.default);
+
+	ViewContainer.Classes = {
+		Initialized: 'initialized',
+		Loading: 'loading'
+	};
+	ViewContainer.ElementSelector = 'view-container:not(.initialized),[view-container]:not(.initialized)';
+	ViewContainer.DefaultName = 'main';
+
+	ViewContainer.getViewName = function ($element) {
+
+		// Get it either from the name-attr or view-attr
+		var name = $element.is('view-container') ? $element.attr('name') : $element.attr('view-container');
+
+		// No?
+		if (!name) name = ViewContainer.DefaultName;
+
+		return name;
+	};
+
+	ViewContainer.any = new _Obj2.default();
+
+	module.exports = ViewContainer;
+
+/***/ }),
+/* 29 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Obj2 = __webpack_require__(22);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Dom
+	 */
+	var Element = function (_Obj) {
+		_inherits(Element, _Obj);
+
+		/**
+	  * @class Dom.Element
+	  * @extends Core.Obj
+	  *
+	  * @constructor
+	  * @param {jQuery} $element
+	  * @param {Application} [application]
+	  */
+		function Element($element) {
+			_classCallCheck(this, Element);
+
+			/**
+	   * The jQuery element that is the ViewContainer
+	   * 
+	   * @property $element
+	   * @type {jQuery}
+	   */
+			var _this = _possibleConstructorReturn(this, (Element.__proto__ || Object.getPrototypeOf(Element)).call(this));
+
+			_this.$element = $element;
+
+			return _this;
+		}
+
+		_createClass(Element, [{
+			key: 'setContent',
+			value: function setContent(content) {
+
+				// Fire the before hooks.
+				this._fireHooks('beforeRender');
+
+				// Set it
+				this.$element.html(content);
+				this.trigger('content', content);
+
+				// Fire the after hooks
+				this._fireHooks('afterRender');
+			}
+		}, {
+			key: '_fireHooks',
+			value: function _fireHooks(type) {
+				var _this2 = this;
+
+				_underscore2.default.each(Element.Hooks[type], function (callback) {
+
+					// Fire it.
+					callback.apply(_this2, [_this2.$element, _this2]);
+				});
+			}
+		}]);
+
+		return Element;
+	}(_Obj3.default);
+
+	Element.registerHook = function (callback) {
+		var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'afterRender';
+
+		Element.Hooks[type].push(callback);
+		return true;
+	};
+
+	Element.Hooks = {
+		beforeRender: [],
+		afterRender: []
+	};
+
+	module.exports = Element;
+
+/***/ }),
+/* 30 */
+/***/ (function(module, exports) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/** 
+	 * @module Dom
+	 */
+	var Transition = function () {
+	    function Transition($container, $fromContent, $toContent, name) {
+	        _classCallCheck(this, Transition);
+
+	        /**
+	         * @property $container
+	         * @type {jQuery}
+	         */
+	        this.$container = $container;
+
+	        this.$from = $fromContent;
+
+	        this.$to = $toContent;
+
+	        this.name = name;
+
+	        this.viewWidth = false;
+	        this.viewHeight = false;
+
+	        this.duration = null;
+
+	        // Existing?
+	        if (Transition[name] === undefined) {
+	            throw new Error('There is no Transition registered under the key "' + name + '"');
+	        }
+	    }
+
+	    _createClass(Transition, [{
+	        key: 'play',
+	        value: function play() {
+	            var _this = this;
+
+	            // Get obj
+	            var obj = Transition[this.name];
+
+	            // Generic preparation
+	            this._prepare();
+
+	            // Position content
+	            var newContentPosition = obj.newContentPosition || 'right';
+	            switch (newContentPosition) {
+
+	                case 'default':
+	                    this.$to.css({
+	                        left: 0,
+	                        top: 0
+	                    });
+	                    break;
+
+	                case 'transparent':
+	                    this.$to.css({
+	                        left: 0,
+	                        top: 0,
+	                        opacity: 0
+	                    });
+	                    break;
+
+	                case 'right':
+	                    this.$to.css({
+	                        left: this.viewWidth,
+	                        top: 0
+	                    });
+	                    break;
+
+	                case 'left':
+	                    this.$to.css({
+	                        left: -this.viewWidth,
+	                        top: 0
+	                    });
+	                    break;
+
+	                default:
+	                    throw new Error('Unknown newContentPosition: ' + newContentPosition);
+
+	            }
+
+	            // Add the new content
+	            this.$container.append(this.$to);
+
+	            // Now play it
+	            var result = obj.play(this, this.$from, this.$to);
+	            if (!result || !(result instanceof Promise)) throw new Error('Transition.' + this.name + '.play($from, $to) should return a Promise');
+	            result.then(function () {
+
+	                // Reset 
+	                _this._finish();
+	            });
+	            return result;
+	        }
+	    }, {
+	        key: '_prepare',
+	        value: function _prepare() {
+
+	            // Get width
+	            this.viewWidth = this.$container.width();
+	            this.viewHeight = this.$container.height();
+
+	            // Style container
+	            this.$container.css({
+	                position: 'relative',
+	                width: this.viewWidth,
+	                height: this.viewHeight,
+	                overflow: 'hidden'
+	            });
+
+	            // Set style to content
+	            if (this.$from) {
+	                this.$from.css({
+	                    position: 'absolute',
+	                    width: this.viewWidth,
+	                    height: this.viewHeight,
+	                    zIndex: 10
+	                });
+	            }
+	            this.$to.css({
+	                position: 'absolute',
+	                width: this.viewWidth,
+	                height: this.viewHeight,
+	                zIndex: 20
+	            });
+	        }
+	    }, {
+	        key: '_finish',
+	        value: function _finish() {
+
+	            this.$container.css({
+	                width: '',
+	                height: ''
+	            });
+	            this.$to.css({
+	                width: '',
+	                height: ''
+	            });
+	        }
+	    }]);
+
+	    return Transition;
+	}();
+
+	// ███████╗██╗     ██╗██████╗ ███████╗    ██╗     ███████╗███████╗████████╗
+	// ██╔════╝██║     ██║██╔══██╗██╔════╝    ██║     ██╔════╝██╔════╝╚══██╔══╝
+	// ███████╗██║     ██║██║  ██║█████╗      ██║     █████╗  █████╗     ██║   
+	// ╚════██║██║     ██║██║  ██║██╔══╝      ██║     ██╔══╝  ██╔══╝     ██║   
+	// ███████║███████╗██║██████╔╝███████╗    ███████╗███████╗██║        ██║   
+	// ╚══════╝╚══════╝╚═╝╚═════╝ ╚══════╝    ╚══════╝╚══════╝╚═╝        ╚═╝   
+	//                                                                         
+
+	Transition.slideLeft = {
+
+	    newContentPosition: 'right',
+	    play: function play(transition, $from, $to) {
+
+	        // Promise
+	        return new Promise(function (resolve) {
+
+	            // Options
+	            var options = {
+	                duration: transition.duration || 250
+	            };
+
+	            // Move out the old
+	            if ($from) {
+	                $from.animate({
+	                    left: -transition.viewWidth
+	                }, options);
+	            }
+
+	            // Move in the new
+	            options.complete = function () {
+	                resolve();
+	            };
+	            $to.animate({
+	                left: 0
+	            }, options);
+	        });
+	    }
+
+	};
+
+	// ███████╗██╗     ██╗██████╗ ███████╗    ██████╗ ██╗ ██████╗ ██╗  ██╗████████╗
+	// ██╔════╝██║     ██║██╔══██╗██╔════╝    ██╔══██╗██║██╔════╝ ██║  ██║╚══██╔══╝
+	// ███████╗██║     ██║██║  ██║█████╗      ██████╔╝██║██║  ███╗███████║   ██║   
+	// ╚════██║██║     ██║██║  ██║██╔══╝      ██╔══██╗██║██║   ██║██╔══██║   ██║   
+	// ███████║███████╗██║██████╔╝███████╗    ██║  ██║██║╚██████╔╝██║  ██║   ██║   
+	// ╚══════╝╚══════╝╚═╝╚═════╝ ╚══════╝    ╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
+	//                                                                             
+	Transition.slideRight = {
+
+	    newContentPosition: 'left',
+	    play: function play(transition, $from, $to) {
+
+	        // Promise
+	        return new Promise(function (resolve) {
+
+	            // Options
+	            var options = {
+	                duration: transition.duration || 250
+	            };
+
+	            // Move out the old
+	            if ($from) {
+	                $from.animate({
+	                    left: transition.viewWidth
+	                }, options);
+	            }
+
+	            // Move in the new
+	            options.complete = function () {
+	                resolve();
+	            };
+	            $to.animate({
+	                left: 0
+	            }, options);
+	        });
+	    }
+
+	};
+
+	// ███████╗ █████╗ ██████╗ ███████╗
+	// ██╔════╝██╔══██╗██╔══██╗██╔════╝
+	// █████╗  ███████║██║  ██║█████╗  
+	// ██╔══╝  ██╔══██║██║  ██║██╔══╝  
+	// ██║     ██║  ██║██████╔╝███████╗
+	// ╚═╝     ╚═╝  ╚═╝╚═════╝ ╚══════╝
+	//                                 
+	Transition.fade = {
+
+	    newContentPosition: 'transparent',
+	    play: function play(transition, $from, $to) {
+
+	        // Promise
+	        return new Promise(function (resolve) {
+
+	            // Options
+	            var options = {
+	                duration: transition.duration || 250
+	            };
+
+	            // Move in the new
+	            options.complete = function () {
+	                resolve();
+	            };
+	            $to.animate({
+	                opacity: 1
+	            }, options);
+	        });
+	    }
+
+	};
+
+	module.exports = Transition;
+
+/***/ }),
+/* 31 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _htmlbarsStandalone = __webpack_require__(32);
+
+	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
+
+	var _Observable = __webpack_require__(21);
+
+	var _Observable2 = _interopRequireDefault(_Observable);
+
+	var _ObservableArray = __webpack_require__(33);
+
+	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
+
+	var _Binding = __webpack_require__(34);
+
+	var _Binding2 = _interopRequireDefault(_Binding);
+
+	var _ActionBinding = __webpack_require__(35);
+
+	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
+
+	var _Component = __webpack_require__(37);
+
+	var _Component2 = _interopRequireDefault(_Component);
+
+	var _ComponentDefinition = __webpack_require__(48);
+
+	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
+
+	var _HelperProxy = __webpack_require__(47);
+
+	var _HelperProxy2 = _interopRequireDefault(_HelperProxy);
+
+	var _Helpers = __webpack_require__(49);
+
+	var _Helpers2 = _interopRequireDefault(_Helpers);
+
+	var _View = __webpack_require__(39);
+
+	var _View2 = _interopRequireDefault(_View);
+
+	var _Utils = __webpack_require__(46);
+
+	var _Utils2 = _interopRequireDefault(_Utils);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Dom
+	 */
+	var Renderer =
+
+	/**
+	 * @class Dom.Renderer
+	 * 
+	 * @constructor
+	 */
+	function Renderer() {
+		var _this = this;
+
+		_classCallCheck(this, Renderer);
+
+		/**
+	  * @property dom
+	  * @type {HTMLBars.DOMHelper}
+	  */
+		this.dom = new _htmlbarsStandalone2.default.DOMHelper();
+
+		/**
+	  * Hooks are the way to configure the way HTMLBars renders your
+	  * templates. Renderer comes pre-configured with hooks that allow you
+	  * to bind to Observables (models) and ObservableArrays (collections).
+	  * 
+	  * @property hooks
+	  * @type {object}
+	  */
+		this.hooks = _underscore2.default.defaults({
+
+			/**
+	   * The `get` hook is responsible for retrieving Bindings from the data store.
+	   * 
+	   * @method hooks.get
+	   * @param  {Renderer} 	renderer   	The Renderer instance (this)
+	   * @param  {Scope} 		scope 		The Scope in which the `get` was called, 
+	   *                           		containing the data that is available in this Scope
+	   * @param  {string} 	path 		The path (key) of the variable to retrieve 		
+	   * @return {mixed}     	The retrieved value
+	   */
+			get: function get(renderer, scope, path) {
+
+				// Get first part
+				var keys = path.split(/\./);
+
+				// Look into local data
+				var appliedScope = scope.self;
+				if (scope.localPresent[keys[0]]) {
+					appliedScope = scope.locals[keys[0]];
+					keys.shift();
+					path = keys.join('.');
+				}
+				// Is data an observable?
+				if (appliedScope instanceof _Observable2.default && path.length > 0 || appliedScope instanceof _ObservableArray2.default) {
+
+					// Already a binding?
+					if (appliedScope._bindings === undefined) appliedScope._bindings = {};
+					if (appliedScope._bindings[path]) {
+
+						// Return existing binding
+						return appliedScope._bindings[path];
+					}
+
+					// Create a binding
+					var binding = new _Binding2.default(_this, appliedScope, path);
+
+					// Store it
+					appliedScope._bindings[path] = binding;
+
+					// Get the value
+					return binding;
+				} else if (path === '') {
+
+					// Return the scope itself
+					return appliedScope;
+				} else {
+
+					// Do native thing (deep-get)
+					var value = appliedScope;
+					for (var q = 0; q < keys.length; q++) {
+						if (value === undefined || value === null) return value;
+						value = value[keys[q]];
+					}
+				}
+
+				return value;
+			},
+
+			/**
+	   * Get value from reference (Binding)
+	   *
+	   * @method hooks.getValue
+	   * @param  {Binding} reference 
+	   * @return {mixed}           
+	   */
+			getValue: function getValue(reference) {
+
+				// Is it a binding?
+				if (reference instanceof _Binding2.default) return reference.getValue();
+
+				// A helper?
+				if (reference instanceof _HelperProxy2.default) return reference.invoke();
+
+				// Just a value
+				return reference;
+			},
+
+			/**
+	   * Link a morph to one or more values (in our case Bindings)
+	   *
+	   * @method hooks.linksRenderNode
+	   * @param  {HTMLBarsMorph} morph    
+	   * @param  {Dom.Renderer} renderer 
+	   * @param  {Scope} scope    
+	   * @param  {string} type   				Values can be `@range`, `@attribute`, or helper names
+	   * @param  {array} values     			Array of values that have been linked to the morph. The should be Binding instances
+	   * @return 
+	   */
+			linkRenderNode: function linkRenderNode(morph, renderer, scope, type, values) {
+
+				// Add this morph to all involved bindings
+				_underscore2.default.each(values, function (binding) {
+
+					// Is it a binding?
+					if (binding instanceof _Binding2.default) {
+						binding.addMorph(morph, scope);
+					}
+				});
+			},
+
+			willRenderNode: function willRenderNode(morph /*, renderer, scope*/) {
+
+				// Store morph so we can bind it when we get subexpressions, etc
+				_this.currentMorph = morph;
+			},
+
+			subexpr: function subexpr(renderer, scope, helperName, params, hash) {
+
+				// Loop through parameters to find Bindings
+				_underscore2.default.each(params, function (param) {
+					if (param instanceof _Binding2.default) {
+
+						// Add morph
+						if (renderer.currentMorph) param.addMorph(renderer.currentMorph, scope);
+					}
+				});
+
+				// Original behavior
+				return _htmlbarsStandalone2.default.Runtime.Hooks.Default.subexpr(renderer, scope, helperName, params, hash);
+			},
+
+			createFreshScope: function createFreshScope() {
+				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
+			},
+
+			createChildScope: function createChildScope(parentScope) {
+
+				// Create a new scope extending the parent
+				var scope = Object.create(parentScope);
+				scope.locals = Object.create(parentScope.locals);
+				scope.localPresent = Object.create(parentScope.localPresent);
+				scope.blocks = Object.create(parentScope.blocks);
+				scope.actions = Object.create(parentScope.actions);
+
+				// Check is parent is a view
+				if (parentScope.self instanceof _View2.default) {
+
+					// Bubble the actions
+					scope.actions = _underscore2.default.extend(scope.actions, parentScope.self.actions);
+
+					// No a component?
+					if (!(parentScope.self instanceof _Component2.default)) {
+						scope.view = parentScope.self;
+					} else {
+						scope.component = parentScope.self;
+						scope.view = scope.component.view;
+					}
+				}
+
+				return scope;
+			},
+
+			findHelper: function findHelper(renderer, scope, helperName) {
+
+				// Scope helper?
+				if (scope.self && typeof scope.self.getHelper === 'function') {
+					var helper = scope.self.getHelper(helperName);
+					if (helper) return helper;
+				}
+
+				// Use helper?
+				if (_Helpers2.default.User[helperName]) {
+					return _Helpers2.default.User[helperName];
+				}
+
+				// Chicken helper?
+				if (renderer.helpers[helperName]) {
+					return renderer.helpers[helperName];
+				}
+			},
+
+
+			lookupHelper: function lookupHelper(renderer, scope, helperName) {
+
+				// Find a helper
+				var helper = _this.hooks.findHelper(renderer, scope, helperName);
+				if (!helper) throw new Error('There is no helper registered with the name "' + helperName + '"');
+
+				// Create the wrapper
+				var proxy = new _HelperProxy2.default(helperName, helper, _this.helpers);
+				return proxy;
+			},
+
+			invokeHelper: function invokeHelper(morph, renderer, scope, visitor, params, attributeHash, helper, options) {
+
+				// Is it a component?
+				if (helper instanceof _ComponentDefinition2.default) {
+
+					// Call component hook
+					return {
+						value: _this.hooks.component(morph, renderer, scope, helper, params, attributeHash, options, visitor)
+					};
+				}
+
+				// Do we have a morph?
+				if (morph) {
+
+					// Loop through params to hook up bindings
+					_underscore2.default.each(params, function (value) {
+						if (value instanceof _Binding2.default) {
+							value.addMorph(morph, scope);
+						}
+					});
+
+					// And the attribute
+					_underscore2.default.each(attributeHash, function (value) {
+						if (value instanceof _Binding2.default) {
+							value.addMorph(morph, scope);
+						}
+					});
+				}
+
+				// Set arguments 
+				helper.setArguments(params, attributeHash, options, morph, renderer, scope, visitor);
+
+				// Invoke it once to see if the helper returns a value, or is a block-type helper
+				var helperResult = helper.invoke();
+				var helperValue = void 0;
+				if (helperResult === undefined) {
+
+					// No result, then we don't want to return a value
+					helperValue = undefined;
+				} else {
+
+					// A value was returned, meaning this helper is used as a value getter, and might need
+					// to be invoked again when bound values change: thus, return the proxy
+					helperValue = helper;
+				}
+
+				// Invoke the helper and give back the value
+				return {
+					value: helperValue,
+					link: !!helperValue
+				};
+			},
+
+			component: function component(morph, renderer, scope, tagName, params, attributeHash, options, visitor) {
+
+				////////////////////////////////////////////////////////////////
+				// Is the component already created, and is this a re-render? //
+				////////////////////////////////////////////////////////////////
+
+				var state = morph.getState();
+				if (state.component) {
+
+					state.component.scheduleRevalidate();
+					return;
+				}
+
+				///////////////////////////////////
+				// Create the component instance //
+				///////////////////////////////////
+
+				// Get definition
+				var definition = _Component2.default.registry.get(tagName);
+
+				// No known component?
+				if (!definition) {
+
+					// Do the component fallback.
+					var element = renderer.dom.createElement(tagName);
+					_underscore2.default.each(attributeHash, function (value, key) {
+						element.setAttribute(key, renderer.hooks.getValue(value));
+					});
+
+					var fragment = _htmlbarsStandalone2.default.Runtime.render(options.default, renderer, scope, {}).fragment;
+					element.appendChild(fragment);
+					morph.setNode(element);
+					return;
+				}
+
+				// Create a new scope and use the component as self
+				var newScope = renderer.hooks.createScope(renderer, scope);
+
+				// Are there attributes defined as an attribute?
+				if (attributeHash && attributeHash.attributes) {
+
+					// A binding?
+					var attrs = attributeHash.attributes;
+					if (attrs instanceof _Binding2.default) attrs = attrs.getValue();
+
+					// A hash?
+					if (attrs instanceof Object) {
+
+						// Replace
+						delete attributeHash.attributes;
+						_Utils2.default.each(attrs, function (value, key) {
+							attributeHash[key] = value;
+						});
+					}
+				}
+
+				// Create it
+				var component = new _Component2.default(definition.name, definition.source, morph, newScope, params, attributeHash, visitor, options, definition.initCallback, definition.methods, _this);
+				newScope.self = component;
+
+				// Now render it.
+				component.render();
+
+				// Store it.
+				state.component = component;
+			},
+
+			/**
+	   * Check if the given path is a known class (component, or block, inline)
+	   *
+	   * @method hooks.classify
+	   * @param  {Dom.Renderer} renderer 
+	   * @param  {Object} scope    
+	   * @param  {string} path     
+	   * @return {string}          
+	   */
+			classify: function classify(renderer, scope, path) {
+
+				// Is this a known component?
+				if (_Component2.default.registry.has(path)) return 'component';
+
+				// Nothing known.
+				return false;
+			},
+
+			getBlock: function getBlock(scope, key) {
+
+				// Is the block known?
+				var block = scope.blocks[key];
+				if (block) return block;
+
+				// Are we inside a component?
+				if (scope.self instanceof _Component2.default) {
+					return scope.self.getSubTemplate(key);
+				}
+
+				// Nothing there
+				return null;
+			},
+
+			getActionScope: function getActionScope(scope, key) {
+
+				// Check the scope
+				if (scope.actions && scope.actions[key]) {
+
+					return scope;
+				} else if (scope.locals.actions && scope.locals.actions[key]) {
+
+					// Use local action
+					return scope.locals;
+				} else if (scope.self.actions && scope.self.actions[key]) {
+
+					// Use that
+					return scope.self;
+				} else if (scope.view && scope.view.actions && scope.view.actions[key]) {
+
+					// Use the veiw
+					return scope.view;
+				} else {
+
+					return false;
+				}
+			},
+
+			getAction: function getAction(scope, key) {
+
+				var appliedScope = _this.hooks.getActionScope(scope, key);
+				if (appliedScope) {
+
+					// Get the action
+					return appliedScope.actions[key];
+				}
+				return false;
+			},
+
+			keywords: _underscore2.default.defaults({
+
+				/**
+	    * The action keyword creates an ActionBinding instance and 
+	    * stores it on the element. The `action` helper can then use 
+	    * this ActionBinding to apply it on the DOM.
+	    *
+	    * @method keywords.action
+	    */
+				action: function action(morph, renderer, scope, params, attributeHash) {
+
+					// Check binding
+					if (morph.actionBindings) return;
+
+					// Get action scope
+					var actionCallback = renderer.hooks.getAction(scope, params[0]);
+					if (!actionCallback) {
+
+						// Lazy action?
+						if (attributeHash.lazy === true) {
+
+							// Use current scope so send action lazily
+							actionCallback = function actionCallback() {
+								for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
+									args[_key] = arguments[_key];
+								}
+
+								scope.self.sendAction(params[0], args);
+							};
+						} else {
+
+							// Undefined action.
+							throw new Error('Could not find action "' + params[0] + '" within the scope');
+						}
+					}
+
+					// Get action
+					var parameters = params.slice(1);
+
+					// Create action binding
+					var binding = new _ActionBinding2.default(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
+					morph.actionBindings = binding;
+				}
+
+			}, _htmlbarsStandalone2.default.Runtime.Hooks.Default.keywords)
+
+		}, _htmlbarsStandalone2.default.Runtime.Hooks.Default);
+
+		/**
+	  * @property helpers
+	  * @type {Dom.Helpers}
+	  */
+		this.helpers = new _Helpers2.default(this);
+
+		/**
+	  * @property partials
+	  * @type {Object}
+	  */
+		this.partials = {};
+
+		/**
+	  * @property useFragmentCache
+	  * @default true
+	  * @type {Boolean}
+	  */
+		this.useFragmentCache = true;
+	};
+
+	module.exports = Renderer;
+
+/***/ }),
+/* 32 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_32__;
+
+/***/ }),
+/* 33 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _Obj2 = __webpack_require__(22);
+
+	var _Obj3 = _interopRequireDefault(_Obj2);
+
+	var _ClassMap = __webpack_require__(24);
+
+	var _ClassMap2 = _interopRequireDefault(_ClassMap);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Core
+	 */
+	var ObservableArray = function (_Obj) {
+		_inherits(ObservableArray, _Obj);
+
+		/**
+	  * An ObservableArray is a simple list that notifies listeners
+	  * of any changes in the list or any of it's observable items.
+	  *
+	  * @class Core.ObservableArray
+	  *
+	  * @constructor
+	  * @param  {Array}  [initValues=[]]        			 An array of values to initialize the object with
+	  * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
+	  */
+		function ObservableArray() {
+			var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+			var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+			_classCallCheck(this, ObservableArray);
+
+			// Properties
+			var _this = _possibleConstructorReturn(this, (ObservableArray.__proto__ || Object.getPrototypeOf(ObservableArray)).call(this));
+
+			_this.items = [];
+
+			// Single initvalue given
+			if (!(initValues instanceof Array)) initValues = [initValues];
+
+			// Import start values
+			_this.import(initValues, convertToObservables, true);
+
+			/**
+	   * Whenever this property is true, no notifications will be triggered
+	   * 
+	   * @attribute notificationsDisabled
+	   * @type {Boolean}
+	   */
+			_this.notificationsDisabled = false;
+
+			_this.isStudyingChildren = false;
+			_this.allowStudyChildren = true;
+			_this.childStudyCallback = function () {
+
+				// Trigger on.
+				_this._scheduleChanged();
+			};
+
+			return _this;
+		}
+
+		_createClass(ObservableArray, [{
+			key: 'import',
+			value: function _import(arr) {
+				var _this2 = this;
+
+				var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
+
+
+				// Go through to the object's first level
+				_underscore2.default.each(arr, function (value) {
+
+					// Is the value an array or object?
+					if ((Array.isArray(value) || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') && convertToObservables === true) {
+
+						// Array or object?
+						if (Array.isArray(value)) {
+
+							// Put a new observable array in there
+							_this2.items.push(new ObservableArray(value));
+						} else {
+
+							// Put a new observable in there
+							_this2.items.push(_ClassMap2.default.create('Observable', [value]));
+						}
+					} else {
+
+						// Just add the value (don't notify)
+						_this2.items.push(value);
+					}
+				});
+
+				// Trigger changes
+				if (!this.notificationsDisabled) {
+					this.trigger(ObservableArray.Events.Import);
+					this.trigger(ObservableArray.Events.Change);
+					this.trigger(ObservableArray.Events.Add, arr);
+				}
+
+				return this;
+			}
+		}, {
+			key: 'get',
+			value: function get(key) {
+
+				// Split
+				var parts = Number.isInteger(key) ? [key] : key.split(/\./);
+				var currentPart = parts.shift();
+
+				// Is it a wildcard?
+				var value = undefined;
+				if (currentPart === '*') {
+
+					// We will return an array containg all the values we retrieve!
+					var restKey = parts.join('.');
+					return _underscore2.default.map(this.items, function (item) {
+						return item.get(restKey);
+					});
+				} else if (Number.isInteger(currentPart) || currentPart.match(/^\d+$/)) {
+
+					// Get the value
+					value = this.items[currentPart];
+				} else {
+
+					throw new TypeError('Invalid key: ' + key);
+				}
+
+				// Value found?
+				if (value === undefined || parts.length === 0) {
+					return value;
+				}
+
+				// Check if the value is also an observable
+				if (ObservableArray.isObservable(value)) {
+
+					// Pass the rest along to go a level deeper
+					return value.get(parts.join('.'));
+				} else {
+
+					throw new Error('The found value for ' + key + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)));
+				}
+			}
+		}, {
+			key: 'set',
+			value: function set(key, value) {
+				var _this3 = this;
+
+				var convertToObservables = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+
+				// Convert?
+				if (convertToObservables === true && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.constructor === Object) {
+					value = _ClassMap2.default.create('Observable', value);
+				}
+
+				// Numeric?
+				if (Number.isInteger(key) || typeof key === 'string' && key.match(/^\d+$/)) {
+
+					// Set it
+					this.items[key] = value;
+					return this;
+				}
+
+				// Is there a dot in there?
+				if (typeof key === 'string' && key.match(/\.\w/)) {
+
+					////////////////////////
+					// Split and deep set //
+					////////////////////////
+
+					var parts = key.split(/\./);
+					var currentPart = parts.shift();
+
+					// Does the first key exist?
+					var item = this.items[currentPart];
+					if (item === undefined) {
+
+						// Should it be an array or an observable?
+						var newValue = void 0;
+						if (Number.isInteger(parts[0]) || typeof parts[0] === 'string' && parts[0].match(/^\d+$/)) {
+
+							// Create list (using classmap to prevent circular dependencies)
+							newValue = new ObservableArray();
+						} else {
+
+							// Create it
+							newValue = _ClassMap2.default.create('Observable');
+						}
+
+						// Study it
+						if (this.isStudyingChildren) {
+
+							newValue.study(function () {
+								_this3.trigger(ObservableArray.Events.Change);
+							});
+						}
+
+						// Store it
+						this.items[currentPart] = newValue;
+					}
+
+					// Do deep setting
+					this.get(currentPart).set(parts.join('.'), value);
+
+					return this;
+				}
+
+				throw new TypeError('Invalid key');
+			}
+
+			/**
+	   * Add one or more items to the array
+	   *
+	   * @method add
+	   * @param {...[mixed]} values One or more values to add
+	   * @chainable
+	   */
+
+		}, {
+			key: 'add',
+			value: function add() {
+				var _this4 = this;
+
+				// Is the last value a boolean?
+				var doNotNotify = false;
+
+				for (var _len = arguments.length, values = Array(_len), _key = 0; _key < _len; _key++) {
+					values[_key] = arguments[_key];
+				}
+
+				if (values.length > 1 && typeof values[values.length - 1] === 'boolean') {
+					doNotNotify = values.pop();
+				}
+
+				// Add items
+				_underscore2.default.each(values, function (value) {
+					_this4._add(value);
+				});
+
+				// Trigger events
+				if (!doNotNotify) {
+					this.trigger(ObservableArray.Events.Change);
+					this.trigger(ObservableArray.Events.Add, values);
+				}
+
+				return this;
+			}
+		}, {
+			key: '_add',
+			value: function _add(value) {
+				var _this5 = this;
+
+				// Add it.
+				this.items.push(value);
+
+				// Studying?
+				if (this.isStudyingChildren && this.allowStudyChildren) {
+					if (ObservableArray.isObservable(value)) value.study(this.childStudyCallback);
+				}
+
+				// Is it observable?
+				if (ObservableArray.isObservable(value)) {
+					value.on('change', function () {
+						_this5.trigger('change');
+					});
+				}
+
+				return this;
+			}
+
+			/**
+	   * Delete one or more items from the array
+	   *
+	   * @method delete
+	   * @param  {...[mixed]} values One or more values to delete
+	   * @chainable
+	   */
+
+		}, {
+			key: 'delete',
+			value: function _delete() {
+				var _this6 = this;
+
+				// Is the last value a boolean?
+				var doNotNotify = false;
+
+				for (var _len2 = arguments.length, values = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+					values[_key2] = arguments[_key2];
+				}
+
+				if (values.length > 1 && typeof values[values.length - 1] === 'boolean') {
+					doNotNotify = values.pop();
+				}
+
+				// Add items
+				_underscore2.default.each(values, function (value) {
+					_this6._delete(value);
+				});
+
+				// Studying?
+				if (this.isStudyingChildren) {
+					_underscore2.default.each(values, function (item) {
+
+						if (ObservableArray.isObservable(item)) item.neglect(_this6.childStudyCallback);
+					});
+				}
+
+				// Trigger events
+				if (!doNotNotify) {
+					this.trigger(ObservableArray.Events.Change);
+					this.trigger(ObservableArray.Events.Delete, values);
+				}
+
+				return this;
+			}
+		}, {
+			key: '_delete',
+			value: function _delete(value) {
+
+				this.items = _underscore2.default.without(this.items, value);
+			}
+
+			/**
+	   * Remove all items from the array
+	   *
+	   * @method empty
+	   * @chainable
+	   */
+
+		}, {
+			key: 'empty',
+			value: function empty() {
+				var _this7 = this;
+
+				// Values that are deleted
+				var deleted = _underscore2.default.difference(this.items, []);
+
+				// Remove all listeners
+				if (this.isStudyingChildren) {
+					_underscore2.default.each(this.items, function (item) {
+						item.neglect(_this7.childStudyCallback);
+					});
+				}
+
+				// Now clear
+				this.items = [];
+
+				// Trigger events
+				this.trigger(ObservableArray.Events.Change);
+				this.trigger(ObservableArray.Events.Delete, deleted);
+				this.trigger(ObservableArray.Events.Empty);
+
+				return this;
+			}
+
+			/**
+	   * Get the first item in the collection
+	   * 
+	   * @method first
+	   * @return {mixed} 
+	   */
+
+		}, {
+			key: 'first',
+			value: function first() {
+				return _underscore2.default.first(this.items);
+			}
+
+			/**
+	   * Get the last item in the collection
+	   *
+	   * @method last
+	   * @return {mixed} 
+	   */
+
+		}, {
+			key: 'last',
+			value: function last() {
+				return _underscore2.default.last(this.items);
+			}
+
+			/**
+	   * Listen for any changes in any of the object's attributes. 
+	   * The callback will receive an array containing the names of
+	   * all updates attributes. 
+	   *
+	   * Note: This is an alias of the 'changed' event, so calling
+	   * ```this.on('changed', callback)``` will achieve the same result.
+	   *
+	   * @example
+	   * 	// Initialize object
+	   * 	var obj = new Chicken.Core.Observable();
+	   * 	obj.set('foo', 'bar');
+	   * 	var childObj = new Chicken.Core.Observable();
+	   * 	childObj.set('free', 'willy');
+	   * 	obj.set('child', childObj);
+	   *
+	   * 	// Listen
+	   * 	obj.study((changedAttributes) {
+	   * 		console.log(changedAttributes);
+	   * 	});
+	   *
+	   * 	// Update attributes
+	   *	obj.set('foo', 'boo');                  // Will log ['foo']
+	   *	obj.get('child').set('free', 'tibet');  // Will log ['child']
+	   * 	childObj.set('foo', 'bee');             // Will log ['child']
+	   *
+	   * @method study
+	   * @param  {Function} callback
+	   * @chainable
+	   */
+
+		}, {
+			key: 'study',
+			value: function study(callback) {
+				var _this8 = this;
+
+				// Already studying?
+				if (!this.isStudyingChildren && this.allowStudyChildren) {
+
+					// Set
+					this.isStudyingChildren = true;
+
+					// Watch all current children
+					_underscore2.default.each(this.items, function (item) {
+						if (ObservableArray.isObservable(item)) item.study(_this8.childStudyCallback);
+					});
+				}
+
+				// Connect to change-event
+				return this.on('change', callback);
+			}
+
+			/**
+	   * Stop listening for changes on the object's attributes.
+	   *
+	   * Note: This is an alias of the 'changed' event, so calling
+	   * ```this.off('changed', callback)``` will achieve the same result.
+	   *
+	   * @example
+	   * 
+	   * 
+	   * @method neglect
+	   * @param  {Function} callback 
+	   * @chainable
+	   */
+
+		}, {
+			key: 'neglect',
+			value: function neglect(callback) {
+
+				// This is an alias of the 'changed' event
+				return this.off('change', callback);
+			}
+		}, {
+			key: 'toArray',
+			value: function toArray() {
+				var includedUids = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
+
+
+				return this.items.map(function (item) {
+
+					// Observable?
+					if (ObservableArray.isObservable(item)) {
+
+						// Already included?
+						var guid = _ClassMap2.default.get('Utils').uidFor(item);
+						if (_underscore2.default.indexOf(includedUids, guid) !== -1) {
+							return '...recursive(' + guid + ')...';
+						}
+						includedUids.push(guid);
+
+						// Array?
+						if (item instanceof ObservableArray) {
+							return item.toArray(includedUids);
+						} else {
+							return item.toObject(includedUids);
+						}
+					}
+
+					return item;
+				});
+			}
+
+			/**
+	   * Get a keyed array containing all items in this ObservableArray
+	   * by the value of given key.
+	   *
+	   * @method keyBy
+	   * @param  {string} key 	The attribute key. You can also use dot-notation in this key.
+	   * @return {Object}     
+	   */
+
+		}, {
+			key: 'keyBy',
+			value: function keyBy(key) {
+
+				// Loop it.
+				var result = {};
+				_underscore2.default.each(this.items, function (item) {
+					var keyValue = item.get(key);
+					if (keyValue) result[keyValue] = item;
+				});
+
+				return result;
+			}
+		}, {
+			key: 'sortBy',
+			value: function sortBy(keyOrCallback) {
+
+				// Is it a key?
+				var callback = keyOrCallback;
+				if (typeof keyOrCallback === 'string') {
+					callback = function callback(item) {
+						return item.get(keyOrCallback);
+					};
+				}
+
+				// Now sort!
+				this.items = _underscore2.default.sortBy(this.items, callback);
+				return this;
+			}
+		}, {
+			key: 'reverse',
+			value: function reverse() {
+				this.items.reverse();
+				return this;
+			}
+
+			/**
+	   * Get a keyed array containing ObservableArray's with values that have the same
+	   * value for given key.
+	   *
+	   * @method groupBy
+	   * @param  {string} keyOrCallback  The attribute key. You can also use dot-notation in this key.
+	   * @param  {string} [defaultGroup=default] The key under which to put items that have no value for given key
+	   * @param  {boolean} [makeObservable=false] 
+	   * @return {Object}
+	   */
+
+		}, {
+			key: 'groupBy',
+			value: function groupBy(keyOrCallback) {
+				var defaultGroup = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
+				var makeObservable = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
+
+
+				// Get called class
+				var MyClass = this.constructor;
+
+				// Loop it
+				var result = makeObservable ? _ClassMap2.default.create('Observable', []) : {};
+				_underscore2.default.each(this.items, function (item) {
+
+					// Get value
+					var keyValue = typeof keyOrCallback === 'function' ? keyOrCallback(item) : item.get(keyOrCallback);
+
+					// Nothing?
+					if (!keyValue) keyValue = defaultGroup;
+
+					// Map?
+					if (makeObservable) {
+
+						// Group known?
+						if (!result.get(keyValue)) result.set(keyValue, new MyClass());
+
+						// Add it
+						result.get(keyValue).add(item);
+					} else {
+
+						// Group known?
+						if (!result[keyValue]) result[keyValue] = new MyClass();
+
+						// Add it
+						result[keyValue].add(item);
+					}
+				});
+
+				return result;
+			}
+
+			/**
+	   * Get value for given valueAttribute key from all items
+	   * 
+	   *
+	   * @method list 
+	   * @param  {string} valueAttribute 
+	   * @param  {string} keyAttribute   
+	   * @return {[type]}                [description]
+	   */
+
+		}, {
+			key: 'list',
+			value: function list(valueAttribute) {
+				var keyAttribute = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				var result = keyAttribute ? {} : [];
+				_underscore2.default.each(this.items, function (item) {
+					if (keyAttribute) {
+						result[item.get(keyAttribute)] = item.get(valueAttribute);
+					} else {
+						result.push(item.get(valueAttribute));
+					}
+				});
+
+				return result;
+			}
+
+			/**
+	   * Get the lowest value for objects in this array
+	   *
+	   * @method getLowestValue
+	   * @param  {string}  key          
+	   * @return {mixed}
+	   */
+
+		}, {
+			key: 'getLowestValue',
+			value: function getLowestValue(key) {
+
+				// Get a list.
+				var list = this.list(key);
+				return _underscore2.default.min(list);
+			}
+		}, {
+			key: 'each',
+			value: function each(callback) {
+
+				_underscore2.default.each(this.items, callback);
+				return this;
+			}
+		}, {
+			key: 'reverseEach',
+			value: function reverseEach(callback) {
+
+				for (var q = this.items.length - 1; q >= 0; q--) {
+					callback.apply(null, [this.items[q]]);
+				}
+				return this;
+			}
+		}, {
+			key: 'find',
+			value: function find(idOrAttributeOrCallback) {
+				var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
+
+
+				// Callback?
+				if (typeof idOrAttributeOrCallback === 'function') {
+					return _underscore2.default.find(this.items, idOrAttributeOrCallback);
+				}
+
+				var attribute = 'id';
+				if (value === undefined) {
+					value = idOrAttributeOrCallback;
+				} else {
+					attribute = idOrAttributeOrCallback;
+				}
+
+				return _underscore2.default.find(this.items, function (item) {
+
+					if (_ClassMap2.default.isA(item, 'Observable') || item instanceof ObservableArray) {
+						return item.get(attribute) == value;
+					} else if (item instanceof Object) {
+						return item[attribute] == value;
+					} else {
+						return item == value;
+					}
+				});
+			}
+
+			/**
+	   * find object with empty attribute 
+	   *
+	   * @method findEmpty
+	   * @param  {string}	attribute 	the attribute checked for definition
+	   * @return {mixed}				the object containing the empty property or `undefined`
+	   */
+
+		}, {
+			key: 'findEmpty',
+			value: function findEmpty(attribute) {
+
+				return _underscore2.default.find(this.items, function (item) {
+
+					if (_ClassMap2.default.isA(item, 'Observable') || item instanceof ObservableArray) {
+						return !item.get(attribute);
+					} else if (item instanceof Object) {
+						return !item[attribute];
+					} else {
+						return false;
+					}
+				});
+			}
+		}, {
+			key: 'contains',
+			value: function contains(item) {
+				return _underscore2.default.contains(this.items, item);
+			}
+		}, {
+			key: 'sum',
+			value: function sum(callback) {
+				if (typeof callback === 'string') {
+					var key = callback;
+					callback = function callback(i) {
+						return i.get(key);
+					};
+				}
+				var values = _underscore2.default.map(this.items, callback);
+				return _underscore2.default.reduce(values, function (memo, num) {
+					return memo + num;
+				}, 0);
+			}
+		}, {
+			key: 'map',
+			value: function map(callback) {
+
+				return _underscore2.default.map(this.items, callback);
+			}
+		}, {
+			key: 'extend',
+			value: function extend(observableArray) {
+
+				return _underscore2.default.extend(this.items, observableArray.items);
+			}
+		}, {
+			key: 'filter',
+			value: function filter() {
+
+				// Parse arguments
+				if (arguments.length === 0) throw new Error('The filter method requires at least one argument.');
+				var callback = void 0;
+				var returnObservableArray = true;
+				if (typeof (arguments.length <= 0 ? undefined : arguments[0]) === 'function') {
+
+					// Use given callback method
+					callback = arguments.length <= 0 ? undefined : arguments[0];
+					if (arguments.length > 1) returnObservableArray = arguments.length <= 1 ? undefined : arguments[1];
+				} else if (typeof (arguments.length <= 0 ? undefined : arguments[0]) === 'string') {
+
+					// Create callback
+					var key = arguments.length <= 0 ? undefined : arguments[0];
+					var value = arguments.length <= 1 ? undefined : arguments[1];
+					callback = function callback(item) {
+						return item.get(key) == value;
+					};
+					if (arguments.length > 2) returnObservableArray = arguments.length <= 2 ? undefined : arguments[2];
+				}
+
+				// Do the filter
+				var result = _underscore2.default.filter(this.items, callback);
+				return returnObservableArray ? new ObservableArray(result, false) : result;
+			}
+		}, {
+			key: 'chunk',
+			value: function chunk() {
+				var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 20;
+
+
+				// Loop and add
+				var cls = this.constructor;
+				var chunks = new ObservableArray();
+				var chunk = new cls();
+				for (var i = 0; i < this.items.length; i++) {
+
+					// New chunk?
+					if (i > 0 && i % size === 0) {
+
+						// New chunk
+						chunks.add(chunk);
+						chunk = new cls();
+					}
+
+					// Add it
+					chunk.add(this.items[i]);
+				}
+				chunks.add(chunk);
+
+				return chunks;
+			}
+
+			/**
+	   * The number of items in the array
+	   * 
+	   * @property length
+	   * @type {Number}
+	   */
+
+		}, {
+			key: 'count',
+			value: function count() {
+				var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+				if (callback) {
+
+					// Count only those
+					var c = 0;
+					_underscore2.default.each(this.items, function (item) {
+						if (callback(item) === true) c++;
+					});
+					return c;
+				}
+				return this.length;
+			}
+		}, {
+			key: 'size',
+			value: function size() {
+				return this.length;
+			}
+		}, {
+			key: 'isObservable',
+			value: function isObservable() {
+				return true;
+			}
+		}, {
+			key: '_scheduleChanged',
+			value: function _scheduleChanged() {
+				var _this9 = this;
+
+				// Notifications disabled?
+				if (this.notificationsDisabled) return;
+
+				// Already something scheduled?
+				if (!this._scheduleChangedTimeout) {
+
+					// Schedule it
+					this._scheduleChangedTimeout = setTimeout(function () {
+
+						// Trigger it now!
+						_this9._scheduleChangedTimeout = false;
+						_this9._triggerChanged();
+					}, ObservableArray.ChangedDelay);
+				}
+			}
+		}, {
+			key: '_triggerChanged',
+			value: function _triggerChanged() {
+				this.trigger(ObservableArray.Events.Change);
+			}
+		}, {
+			key: 'length',
+			get: function get() {
+				return this.items.length;
+			}
+		}]);
+
+		return ObservableArray;
+	}(_Obj3.default);
+
+	////////////
+	// Events //
+	////////////
+
+	ObservableArray.Events = {
+
+		/**
+	  * This event is fired whenever anything changes in the array
+	  * of one of its observable items.
+	  * 
+	  * @event change
+	  */
+		Change: 'change',
+
+		/**
+	  * This event is fired whenever one or more items are added
+	  * 
+	  * @event add
+	  * @param {Array} values		The item values that were added
+	  */
+		Add: 'add',
+
+		/**
+	  * This event is fired whenever one or more items are deleted
+	  * 
+	  * @event delete
+	  * @param {Array} values		The item values that were deleted
+	  */
+		Delete: 'delete',
+
+		/**
+	  * This event is fired when the array is emptied. Not that the `delete`
+	  * event is also triggered, right before the `empty` event.
+	  *
+	  * @event empty
+	  */
+		Empty: 'empty',
+
+		/**
+	  * This event is fired whenever an import is completed
+	  *
+	  * @event import
+	  */
+		Import: 'import'
+
+	};
+
+	ObservableArray.isObservable = function (obj) {
+
+		return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
+	};
+	ObservableArray.ChangedDelay = 100;
+
+	_ClassMap2.default.register('ObservableArray', ObservableArray);
+
+	module.exports = ObservableArray;
+
+/***/ }),
+/* 34 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _jquery = __webpack_require__(19);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _Reference = __webpack_require__(23);
+
+	var _Reference2 = _interopRequireDefault(_Reference);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Dom
+	 */
+	var Binding = function () {
+
+		/**
+	  * @class Dom.Binding
+	  * 
+	  * @constructor
+	  * @param  {Dom.Renderer} 							renderer   
+	  * @param  {Core.Observable|Core.ObservableArray} 	observable 
+	  * @param  {string} 								path       	
+	  */
+		function Binding(renderer, observable, path) {
+			var _this = this;
+
+			_classCallCheck(this, Binding);
+
+			/**
+	   * The Renderer this Binding has been created by. This is 
+	   * used to be able to hook back into Rendere functions.
+	   *
+	   * @property renderer
+	   * @type {Dom.Renderer}
+	   */
+			this.renderer = renderer;
+
+			/**
+	   * The Observable (or ObservableArray) that contains the data.
+	   * 
+	   * @property observable
+	   * @type {Core.Observable|Core.ObservableArray}
+	   */
+			this.observable = observable;
+
+			/**
+	   * The path/key in the Observable to observe
+	   *
+	   * @property path
+	   * @type {string}
+	   */
+			this.path = typeof path === 'string' && path.length > 0 ? path : false;
+
+			/**
+	   * The list of 'morph' objects that are bound by this Binding. A
+	   * morph refers to a specific part of the DocumentFragment that can be
+	   * updated. These morphs are provides by the HTMLBars package.
+	   * 
+	   * @property morphs
+	   * @type {Set} 
+	   */
+			this.morphs = new Set();
+
+			////////////////
+			// Now watch! //
+			////////////////
+
+			// What to do when value changes
+			this.changeCallback = function () {
+
+				// Trigger updates for all morphs
+				_this.morphs.forEach(function (morph) {
+
+					morph.isDirty = true;
+					if (morph.view) morph.view.scheduleRevalidate();
+					if (morph.component) morph.component.scheduleRevalidate();
+				});
+			};
+
+			// Now listen to the object
+			if (this.path) {
+				try {
+					this.observable.observe(path, this.changeCallback);
+				} catch (ex) {
+					//...
+				}
+			} else {
+				this.observable.study(this.changeCallback);
+			}
+		}
+
+		/**
+	  * Get the current value of the data object
+	  *
+	  * @method getValue
+	  * @return {mixed}
+	  */
+
+
+		_createClass(Binding, [{
+			key: 'getValue',
+			value: function getValue() {
+
+				// Get a path value
+				if (this.path) {
+					return this.observable.get(this.path);
+				}
+
+				// Then return the whole thing
+				return this.observable;
+			}
+		}, {
+			key: 'setValue',
+			value: function setValue(value) {
+				var morph = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				if (morph) {
+
+					// Make sure the morph is not updated itself by this value setting
+					morph.lastValue = value;
+				}
+
+				return this.observable.set(this.path, value);
+			}
+		}, {
+			key: 'getReference',
+			value: function getReference() {
+				if (!this.reference) {
+					this.reference = new _Reference2.default(this.observable, this.path);
+				}
+				return this.reference;
+			}
+		}, {
+			key: 'destroy',
+			value: function destroy() {
+
+				// Unlisten the object
+				if (this.path) {
+					this.observable.disregard(this.path, this.changeCallback);
+				} else {
+					this.observable.neglect(this.changeCallback);
+				}
+			}
+
+			/**
+	   * Add a morph object to the list of morphs, so that it will
+	   * be updated when the data changes. And in cases when applicable,
+	   * vice-versa.
+	   *
+	   * @method addMorph
+	   * @param {HTMLBarsMorph} morph 
+	   * @param {object} scope
+	   */
+
+		}, {
+			key: 'addMorph',
+			value: function addMorph(morph, scope) {
+
+				// Is this an already bound morph?
+				if (this.morphs.has(morph)) return;
+
+				//////////////////////////////////////////
+				// Add the morph, for data->dom binding //
+				//////////////////////////////////////////
+
+				this.morphs.add(morph);
+
+				// Save the component and view
+				morph.view = scope.view || scope.self;
+				if (scope.component) morph.component = scope.component;
+
+				///////////////////////////////////////////
+				// Check node type for dom->data binding //
+				///////////////////////////////////////////
+
+				for (var key in Binding.TwoWay) {
+
+					// Check if it applies
+					var twoWay = Binding.TwoWay[key];
+					if (twoWay.match(morph)) {
+
+						// Let's bind!
+						twoWay.bind(this, morph);
+						break;
+					}
+				}
+			}
+		}]);
+
+		return Binding;
+	}();
+
+	Binding.TwoWay = {
+
+		InputValue: {
+			match: function match(morph) {
+				return morph.element && /^INPUT$/.test(morph.element.tagName) && morph.attrName === 'value' && /^text|search|date|time|password|number|range|email$/.test(morph.element.type);
+			},
+			bind: function bind(binding, morph) {
+
+				// Listen to key up, etc
+				var $element = (0, _jquery2.default)(morph.element);
+				var lastValue = $element.val();
+				$element.on('input keyup change paste', function () {
+					var v = $element.val();
+					if (v !== lastValue) {
+						binding.setValue(v, morph);
+						lastValue = v;
+					}
+				});
+			}
+		},
+
+		TextareaContent: {
+			match: function match(morph) {
+				return morph.contextualElement && /^TEXTAREA$/.test(morph.contextualElement.tagName) && morph.attributeName === undefined;
+			},
+			bind: function bind(binding, morph) {
+
+				// Listen to key up, etc
+				var $element = (0, _jquery2.default)(morph.contextualElement);
+				$element.on('keyup change paste', function () {
+					binding.setValue($element.val(), morph);
+				});
+			}
+
+		},
+
+		SelectValue: {
+			match: function match(morph) {
+				return morph.element && /^SELECT$/.test(morph.element.tagName) && morph.attrName === 'value';
+			},
+			bind: function bind(binding, morph) {
+
+				// Listen to change
+				var $element = (0, _jquery2.default)(morph.element);
+				$element.on('change', function () {
+					binding.setValue($element.val(), morph);
+				});
+			}
+
+		},
+
+		CheckboxChecked: {
+			match: function match(morph) {
+				return morph.element && /^INPUT$/.test(morph.element.tagName) && morph.attrName === 'checked' && /^checkbox$/.test(morph.element.type);
+			},
+			bind: function bind(binding, morph) {
+
+				// Listen to key up, etc
+				var $element = (0, _jquery2.default)(morph.element);
+				$element.on('change', function () {
+					binding.setValue($element.prop('checked'), morph);
+				});
+			}
+		}
+
+	};
+
+	module.exports = Binding;
+
+/***/ }),
+/* 35 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _jquery = __webpack_require__(19);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _uuidLib = __webpack_require__(36);
+
+	var _uuidLib2 = _interopRequireDefault(_uuidLib);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	/**
+	 * @module Dom
+	 */
+	var ActionBinding = function () {
+
+		/**
+	  * @class Dom.ActionBinding
+	  * 
+	  * @constructor
+	  */
+		function ActionBinding(renderer, morph, actionName, actionHandler, parameters, options, view) {
+			_classCallCheck(this, ActionBinding);
+
+			/**
+	   * @property renderer
+	   * @type {Dom.Renderer}
+	   */
+			this.renderer = renderer;
+
+			/**
+	   * @property morph
+	   * @type {HTMLBarsMorph}
+	   */
+			this.morph = morph;
+
+			/**
+	   * The name of the action on the view
+	   * 
+	   * @property actionName
+	   * @type {string}
+	   */
+			this.actionName = actionName;
+
+			/**
+	   * The function to call when the action is executed
+	   * 
+	   * @property actionHandler
+	   * @type {function}
+	   */
+			this.actionHandler = actionHandler;
+
+			/**
+	   * @property options
+	   * @type {object}
+	   */
+			this.options = _underscore2.default.defaults(options, {
+				preventDefault: true
+			});
+
+			/**
+	   * The parameters that will be passed along to the action handler.
+	   * 
+	   * @property parameters
+	   * @type {array}
+	   */
+			this.parameters = parameters;
+
+			/**
+	   * @property view
+	   * @type {Dom.View}
+	   */
+			this.view = view;
+
+			/**
+	   * The name of the event that is listened to on the element.
+	   * When not specifically configured in the binding itself, a default
+	   * event will be decided on, based on the element tag name. 
+	   * 
+	   * @property eventName
+	   * @type {string}
+	   */
+			this.eventName = options.on ? options.on : ActionBinding.getDefaultEventName(morph.element);
+
+			/**
+	   * Indicator whether the binding is applied
+	   * to the element
+	   * 
+	   * @property isListening
+	   * @type {Boolean}
+	   */
+			this.isListening = false;
+
+			/**
+	   * @property $element
+	   * @type {jQuery}
+	   */
+			this.$element = null;
+
+			/**
+	   * The unique identifier for this ActionBinding. This is used
+	   * by the Helper to retrieve this instance and automatically
+	   * generated in the constructor.
+	   * 
+	   * @property id
+	   * @type {string}
+	   */
+			this.id = ActionBinding.register(this);
+
+			// Store this binding on the element
+			morph.element.setAttribute('data-chicken-action', this.id);
+		}
+
+		_createClass(ActionBinding, [{
+			key: 'apply',
+			value: function apply() {
+				var _this = this;
+
+				// Already applied?
+				if (this.isListening === true) return this;
+				this.isListening = true;
+
+				// Get element
+				this.$element = (0, _jquery2.default)(this.morph.element);
+				this.$element.on(this.eventName, function (e) {
+
+					// Prevent default?
+					if (_this.options.preventDefault) e.preventDefault();
+
+					// Call the handler
+					var params = _underscore2.default.flatten([_underscore2.default.map(_this.parameters, function (value) {
+						return _this.renderer.hooks.getValue(value);
+					}), _this, _this.view, e]);
+					_this.actionHandler.apply(_this.view, params);
+				});
+
+				return this;
+			}
+		}]);
+
+		return ActionBinding;
+	}();
+
+	ActionBinding.registry = new Map();
+	ActionBinding.register = function (binding) {
+
+		// Generate id
+		var id = _uuidLib2.default.raw();
+		ActionBinding.registry.set(id, binding);
+		return id;
+	};
+	ActionBinding.get = function (id) {
+		return ActionBinding.registry.get(id);
+	};
+
+	ActionBinding.getDefaultEventName = function (element) {
+
+		// Specific one for this tag?
+		var eventName = ActionBinding.DefaultEventNames[element.tagName.toLowerCase()];
+
+		// Or the old click.
+		if (!eventName) eventName = 'click';
+		return eventName;
+	};
+	ActionBinding.DefaultEventNames = {
+
+		input: 'change keyup paste',
+		select: 'change',
+		form: 'submit'
+	};
+
+	module.exports = ActionBinding;
+
+/***/ }),
+/* 36 */
+/***/ (function(module, exports) {
+
+	var validator = new RegExp("^[a-z0-9]{32}$", "i");
+
+	function gen(count) {
+	  var out = "";
+	  for (var i=0; i<count; i++) {
+	    out += (((1+Math.random())*0x10000)|0).toString(16).substring(1);
+	  }
+	  return out;
+	}
+
+	function Uuid(uuid) {
+	  if (!uuid) throw new TypeError("Invalid argument; `value` has no value.");
+	    
+	  var value = Uuid.EMPTY;
+	  
+	  if (uuid && uuid instanceof Uuid) {
+	    value = Uuid.toString();
+
+	  } else if (uuid && Object.prototype.toString.call(uuid) === "[object String]" && Uuid.isUuid(uuid)) {
+	    value = uuid;
+	  }
+	  
+	  this.equals = function(other) {
+	    // Comparing string `value` against provided `uuid` will auto-call
+	    // toString on `uuid` for comparison
+	    return Uuid.isUuid(other) && value == other;
+	  };
+
+	  this.isEmpty = function() {
+	    return value === Uuid.EMPTY;
+	  };
+	  
+	  this.toString = function() {
+	    return value;
+	  };
+	  
+	  this.toJSON = function() {
+	    return value;
+	  };
+	  
+	  Object.defineProperty(this, "value", {
+	    get: function() { return value; },
+	    enumerable: true
+	  });
+	};
+
+	Object.defineProperty(Uuid, "EMPTY", {
+	  value: "00000000000000000000000000000000"
+	});
+
+	Uuid.isUuid = function(value) {
+	  return value && (value instanceof Uuid || validator.test(value.toString()));
+	};
+
+	Uuid.create = function() {
+	  return new Uuid(gen(8));
+	};
+
+	Uuid.raw = function() {
+	  return gen(8);
+	};
+
+	module.exports = Uuid;
+
+
+/***/ }),
+/* 37 */
+/***/ (function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
+
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
+
+	var _jquery = __webpack_require__(19);
+
+	var _jquery2 = _interopRequireDefault(_jquery);
+
+	var _underscore = __webpack_require__(20);
+
+	var _underscore2 = _interopRequireDefault(_underscore);
+
+	var _htmlbarsStandalone = __webpack_require__(32);
+
+	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
+
+	var _inflection = __webpack_require__(38);
+
+	var _inflection2 = _interopRequireDefault(_inflection);
+
+	var _Obj = __webpack_require__(22);
+
+	var _Obj2 = _interopRequireDefault(_Obj);
+
+	var _View2 = __webpack_require__(39);
+
+	var _View3 = _interopRequireDefault(_View2);
+
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+
+	/**
+	 * @module Dom
+	 */
+	var Component = function (_View) {
+		_inherits(Component, _View);
+
+		/**
+	  * @class Dom.Component
+	  * @extends Dom.View
+	  */
+		function Component(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates) {
+			var initCallback = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : null;
+			var methods = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : {};
+			var renderer = arguments.length > 10 && arguments[10] !== undefined ? arguments[10] : null;
+
+			_classCallCheck(this, Component);
+
+			/**
+	   * The tag-name that was used to initialize this component
+	   * 
+	   * @property name
+	   * @type {string}
+	   */
+			var _this = _possibleConstructorReturn(this, (Component.__proto__ || Object.getPrototypeOf(Component)).call(this, source, null, renderer));
+
+			_this.name = name;
+
+			/**
+	   * The HTMLBars morph that contains this component
+	   * 
+	   * @property morph
+	   * @type {HTMLBarsMorph}
+	   */
+			_this.morph = morph;
+
+			/**
+	   * The HTMLBars scope for this component
+	   * 
+	   * @property scope
+	   * @type {Object}
+	   */
+			_this.scope = scope;
+
+			/**
+	   * The list of non-keyed parameters used in this component
+	   * 
+	   * @property parameters
+	   * @type {array}
+	   */
+			_this.parameters = parameters;
+
+			/**
+	   * The attribute hash
+	   *
+	   * @property attributes
+	   * @type {object}
+	   */
+			_this.attributes = {};
+			_underscore2.default.each(attributeHash, function (value, key) {
+
+				// Autocast
+				if (value === 'true') {
+					value = true;
+				} else if (value === 'false') {
+					value = false;
+				}
+
+				// Set it.
+				_this.attributes[_inflection2.default.camelize(key.split('-').join('_'), true)] = value;
+			});
+
+			/**
+	   * The HTMLBars visitor that was used to initialize this component
+	   *
+	   * @property visitor
+	   * @type {object}
+	   */
+			_this.visitor = visitor;
+
+			/**
+	   * Sub-templates used to yield within the component
+	   *
+	   * @property subTemplates
+	   * @type {object}
+	   */
+			_this.subTemplates = subTemplates;
+
+			/**
+	   * The tagName that will be used when creating this component. The default
+	   * value is 'div', but this can be overruled in your handlebar template, or
+	   * in the initCallback of the component.
+	   * 
+	   * @property tagName
+	   * @type {String}
+	   */
+			_this.tagName = 'div';
+
+			/**
+	   * The CSS class(es) that will be added to the component upon creation. You can set
+	   * this value in the initCallback of the component.
+	   *
+	   * @property cssClass
+	   * @type {string}
+	   */
+			_this.cssClass = false;
+
+			/**
+	   * @property element
+	   * @type {DOMElement}
+	   */
+			_this.element = null;
+
+			/**
+	   * The component instance that wrap this component, if any.
+	   * 
+	   * @property parentComponent
+	   * @type {Dom.Component}
+	   */
+			_this.parentComponent = _this.scope.component;
+			_this.setSilently('parent', _this.parentComponent);
+
+			// Do I have a parent?
+			if (_this.parentComponent) {
+				_this.parentComponent.components[_this.getId()] = _this;
+				_this.attributes._ = _this.parentComponent;
+			}
+
+			/**
+	   * @property view
+	   * @type {Dom.View}
+	   */
+			_this.view = _this.scope.view;
+			if (_this.view) {
+				_this.view.components[_this.getId()] = _this;
+				if (!_this.parentComponent) _this.set('_', _this.view);
+				_this.attributes.$ = _this.view;
+			}
+
+			/**
+	   * The dom-object can be used to listen to dom events on the event
+	   * 
+	   * @property dom
+	   * @type {Core.Obj}
+	   */
+			_this.dom = new _Obj2.default();
+
+			/**
+	   * @property isDestroyed
+	   * @type {Boolean}
+	   */
+			_this.isDestroyed = false;
+
+			// Make attributes available
+			_this.with(_this.attributes);
+
+			// Add methods
+			_jquery2.default.extend(_this, methods);
+
+			// Before destroy
+			_this.hooks.beforeDestroy = [];
+
+			// Definition callback?
+			if (initCallback) {
+				initCallback.apply(_this);
+			}
+
+			return _this;
+		}
+
+		_createClass(Component, [{
+			key: 'getHelper',
+			value: function getHelper(key) {
+
+				// Me?
+				if (this.helpers[key]) return this.helpers[key];
+
+				// Parent component?
+				if (this.parentComponent) return this.parentComponent.getHelper(key);
+
+				// View
+				if (this.view) return this.view.getHelper(key);
+
+				return false;
+			}
+		}, {
+			key: 'findParentComponent',
+			value: function findParentComponent(key) {
+
+				// My parent?
+				if (this.parentComponent) {
+
+					// Am I the one you're looking for?
+					if (this.parentComponent.name === key) return this.parentComponent;
+
+					// Look higher up
+					return this.parentComponent.findParentComponent(key);
+				} else {
+
+					// No dice.
+					return false;
+				}
+			}
+		}, {
+			key: 'getId',
+			value: function getId() {
+
+				// Already set?
+				if (!this._id) {
+
+					// Set as attribute
+					var id = this.attributes.id;
+					if (id) {
+						this._id = id;
+					} else {
+
+						// Do it by name
+						var name = _inflection2.default.camelize(this.name.split('-').join('_'), true);
+						if (Component.instanceCounts[name] === undefined) Component.instanceCounts[name] = 0;
+						Component.instanceCounts[name]++;
+
+						this._id = name + Component.instanceCounts[name];
+					}
+				}
+				return this._id;
+			}
+		}, {
+			key: 'sendAction',
+			value: function sendAction() {
+				var _this2 = this;
+
+				var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
+
+
+				// No name given?
+				if (name === null) {
+					name = this.attributes.action;
+				}
+
+				// Get the callback.
+				var actionScope = this.renderer.hooks.getActionScope(this.scope, name);
+				if (!actionScope) throw new Error('[Component ' + this.name + '] Could not find action "' + name + '" within the scope');
+				var callback = actionScope.actions[name];
+
+				// Now call it.
+
+				for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+					args[_key - 1] = arguments[_key];
+				}
+
+				var params = _underscore2.default.flatten([_underscore2.default.map(args, function (value) {
+					return _this2.renderer.hooks.getValue(value);
+				}), this, actionScope]);
+				return callback.apply(actionScope instanceof _View3.default ? actionScope : this, params);
+			}
+		}, {
+			key: 'renderSync',
+			value: function renderSync() {
+				var _this3 = this;
+
+				// Before render hook
+				_underscore2.default.each(this.hooks.beforeRender, function (cb) {
+					cb.apply(_this3);
+				});
+
+				// Create the template
+				try {
+
+					// Render it
+					this.renderResult = this.getTemplate().render(this, this.renderer, {
+						scope: this.scope,
+						template: this.subTemplates.default
+					});
+					this.documentFragment = this.renderResult.fragment;
+				} catch (error) {
+
+					// Enrich error with element-path
+					var path = [];
+					var $el = (0, _jquery2.default)(this.renderer.currentMorph.element);
+					$el.parents().addBack().not('html').each(function () {
+						var entry = this.tagName.toLowerCase();
+						if (this.className) {
+							entry += '.' + this.className.replace(/ /g, '.');
+						}
+						path.push(entry);
+					});
+					path = path.join(' > ');
+
+					// Get template source
+					var source = this.source;
+					if (this.view) source = this.name + ' in ' + this.view.source;
+					var msg = 'Error in template "' + source + '" at "' + path + '":\n\t' + error + '\n';
+
+					// Add error stack			
+					/* eslint-disable no-console */
+					try {
+						console.warn(error.stack);
+					} catch (e) {} /* Nothing */
+					/* eslint-enable no-console */
+
+					this.rejectPromise('ready', msg);
+					return;
+				}
+
+				// Study the object
+				this.study(function () {
+					_this3.scheduleRevalidate();
+				});
+
+				// Create the element
+				this.element = document.createElement(this.tagName);
+				_underscore2.default.each(this.attributes, function (value, key) {
+
+					// Check value type
+					if (value === 'true') value = true;
+					if (value === 'false') value = false;
+
+					if (!(value instanceof Object) && _jquery2.default.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
+					if (value !== _this3.attributes[key]) {
+						_this3.attributes[key] = value;
+					}
+
+					// Is it a useful value?
+					if (key !== 'title' && (typeof value === 'string' || typeof value === 'number') && value.length < 64) {
+						var attrKey = _inflection2.default.underscore(key).split('_').join('-');
+						_this3.element.setAttribute(attrKey, value);
+					}
+				});
+
+				this.$element = (0, _jquery2.default)(this.element);
+				this.$element.append(this.documentFragment);
+
+				// CSS class
+				if (this.cssClass) this.$element.addClass(this.cssClass);
+
+				// Trigger beforeAdded
+				this.trigger('beforeAdd', this.$element);
+
+				// Put element in result
+				this.morph.setNode(this.$element[0]);
+
+				// Done.
+				this.trigger('added', this.$element);
+
+				// Enable DOM events
+				this.enableDomEvents();
+
+				// Find child components
+				if (_underscore2.default.size(this.components) > 0) {
+
+					// Wait for the children to complete first
+					var promises = _underscore2.default.map(this.components, function (child) {
+						return child.getPromise('ready');
+					});
+					Promise.all(promises).then(function () {
+						_this3.resolvePromise('ready');
+						_View3.default.any.trigger('render', _this3.$element);
+					});
+				} else {
+
+					// We are ready now.
+					this.resolvePromise('ready');
+					_View3.default.any.trigger('render', this.$element);
+				}
+			}
+		}, {
+			key: 'enableDomEvents',
+			value: function enableDomEvents() {
+				var _this4 = this;
+
+				// Loop through callbacks
+				this.dom._listeners.forEach(function (callbacks, name) {
+
+					// Proper event?
+					if (!_underscore2.default.contains(Component.DomEventNames, name)) {
+						throw new Error('The "' + name + '" event is not a valid DOM event.');
+					}
+
+					// Listen and connect.
+					_this4.$element.on(name, function () {
+						for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
+							args[_key2] = arguments[_key2];
+						}
+
+						args.unshift(name);
+						_this4.dom.trigger.apply(_this4.dom, args);
+					});
+				});
+			}
+		}, {
+			key: 'getSubTemplate',
+			value: function getSubTemplate(key) {
+
+				var block = _htmlbarsStandalone2.default.Util.Template.blockFor(_htmlbarsStandalone2.default.Runtime.render, this.subTemplates[key], {
+					scope: this.scope
+				});
+
+				return block;
+			}
+		}, {
+			key: 'getAttribute',
+			value: function getAttribute(key) {
+				var defaultValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+
+
+				var value = this.attributes[key];
+				if (value === undefined) value = defaultValue;
+				return value;
+			}
+		}, {
+			key: 'getAttributes',
+			value: function getAttributes() {
+				var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
+
+
+				// Get all keys with uiX
+				var result = {};
+				var regex = prefix ? new RegExp('^' + prefix + '[A-Z]') : false;
+				_underscore2.default.each(this.attributes, function (value, key) {
+
+					// Prefixed?
+					if (regex) {
+
+						// Match?
+						if (!regex.test(key)) return;
+
+						// Remove it
+						key = _underscore2.default.decapitalize(key.substr(prefix.length));
+					}
+
+					// Value
+					if (value !== null && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.getValue === 'function') {
+						value = value.getValue();
+					}
+
+					// Set it
+					result[key] = value;
+				});
+
+				return result;
+			}
+		}, {
+			key: 'get',
+			value: function get(key) {
+
+				// Do basics first
+				var value = _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key);
+
+				// Nothing?
+				if (value === undefined) {
+
+					// Bubble up.
+					if (this.parentComponent) {
+
+						return this.parentComponent.get(key);
+					} else if (this.view) {
+
+						return this.view.get(key);
+					}
+				}
+
+				return value;
+			}
+
+			/**
+	   * Set default values for component attributes. Use this in the initCallback.
+	   *
+	   * @method defaults
+	   * @param  {Object} hash   Key/value pairs
+	   * @chainable
+	   */
+
+		}, {
+			key: 'defaults',
+			value: function defaults(hash) {
+				var _this5 = this;
+
+				this.withoutNotifications(function () {
+					_underscore2.default.each(hash, function (value, key) {
+
+						// Set?
+						if (_this5.attributes[key] === undefined) {
+							_this5.set(key, value);
+						}
+					});
+				});
+			}
+		}, {
+			key: 'beforeDestroy',
+			value: function beforeDestroy(callback) {
+				this.hooks.beforeDestroy.push(callback);
+				return this;
+			}
+		}, {
+			key: 'destroy',
+			value: function destroy() {
+				var _this6 = this;
+
+				// I am destroyed
+				if (this.isDestroyed) return this;
+				this.isDestroyed = true;
+
+				// Call the hooks
+				_underscore2.default.each(this.hooks.beforeDestroy, function (cb) {
+					cb.apply(_this6);
+				});
+				return this;
+			}
+		}]);
+
+		return Component;
+	}(_View3.default);
+
+	Component.DomEventNames = [
+
+	// Touch events
+	'touchStart', 'touchMove', 'touchEnd', 'touchCancel',
+
+	// Keyboard
+	'keyDown', 'keyUp', 'keyPress',
+
+	// Mouse
+	'mouseDown', 'mouseUp', 'contextMenu', 'click', 'doubleClick', 'mouseMove', 'focusIn', 'focusOut', 'mouseEnter', 'mouseLeave',
+
+	// Form
+	'submit', 'change', 'focusIn', 'focusOut', 'input',
+
+	// HTML5
+	'dragStart', 'drag', 'dragEnter', 'dragLeave', 'dragOver', 'dragEnd', 'drop'];
+
+	Component.registry = new Map();
+
+	Component.instanceCounts = {};
+
+	module.exports = Component;
+
+/***/ }),
+/* 38 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -1886,6649 +9085,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 /***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-	var strictUriEncode = __webpack_require__(7);
-	var objectAssign = __webpack_require__(8);
-
-	function encoderForArrayFormat(opts) {
-		switch (opts.arrayFormat) {
-			case 'index':
-				return function (key, value, index) {
-					return value === null ? [
-						encode(key, opts),
-						'[',
-						index,
-						']'
-					].join('') : [
-						encode(key, opts),
-						'[',
-						encode(index, opts),
-						']=',
-						encode(value, opts)
-					].join('');
-				};
-
-			case 'bracket':
-				return function (key, value) {
-					return value === null ? encode(key, opts) : [
-						encode(key, opts),
-						'[]=',
-						encode(value, opts)
-					].join('');
-				};
-
-			default:
-				return function (key, value) {
-					return value === null ? encode(key, opts) : [
-						encode(key, opts),
-						'=',
-						encode(value, opts)
-					].join('');
-				};
-		}
-	}
-
-	function parserForArrayFormat(opts) {
-		var result;
-
-		switch (opts.arrayFormat) {
-			case 'index':
-				return function (key, value, accumulator) {
-					result = /\[(\d*)\]$/.exec(key);
-
-					key = key.replace(/\[\d*\]$/, '');
-
-					if (!result) {
-						accumulator[key] = value;
-						return;
-					}
-
-					if (accumulator[key] === undefined) {
-						accumulator[key] = {};
-					}
-
-					accumulator[key][result[1]] = value;
-				};
-
-			case 'bracket':
-				return function (key, value, accumulator) {
-					result = /(\[\])$/.exec(key);
-					key = key.replace(/\[\]$/, '');
-
-					if (!result) {
-						accumulator[key] = value;
-						return;
-					} else if (accumulator[key] === undefined) {
-						accumulator[key] = [value];
-						return;
-					}
-
-					accumulator[key] = [].concat(accumulator[key], value);
-				};
-
-			default:
-				return function (key, value, accumulator) {
-					if (accumulator[key] === undefined) {
-						accumulator[key] = value;
-						return;
-					}
-
-					accumulator[key] = [].concat(accumulator[key], value);
-				};
-		}
-	}
-
-	function encode(value, opts) {
-		if (opts.encode) {
-			return opts.strict ? strictUriEncode(value) : encodeURIComponent(value);
-		}
-
-		return value;
-	}
-
-	function keysSorter(input) {
-		if (Array.isArray(input)) {
-			return input.sort();
-		} else if (typeof input === 'object') {
-			return keysSorter(Object.keys(input)).sort(function (a, b) {
-				return Number(a) - Number(b);
-			}).map(function (key) {
-				return input[key];
-			});
-		}
-
-		return input;
-	}
-
-	exports.extract = function (str) {
-		return str.split('?')[1] || '';
-	};
-
-	exports.parse = function (str, opts) {
-		opts = objectAssign({arrayFormat: 'none'}, opts);
-
-		var formatter = parserForArrayFormat(opts);
-
-		// Create an object with no prototype
-		// https://github.com/sindresorhus/query-string/issues/47
-		var ret = Object.create(null);
-
-		if (typeof str !== 'string') {
-			return ret;
-		}
-
-		str = str.trim().replace(/^(\?|#|&)/, '');
-
-		if (!str) {
-			return ret;
-		}
-
-		str.split('&').forEach(function (param) {
-			var parts = param.replace(/\+/g, ' ').split('=');
-			// Firefox (pre 40) decodes `%3D` to `=`
-			// https://github.com/sindresorhus/query-string/pull/37
-			var key = parts.shift();
-			var val = parts.length > 0 ? parts.join('=') : undefined;
-
-			// missing `=` should be `null`:
-			// http://w3.org/TR/2012/WD-url-20120524/#collect-url-parameters
-			val = val === undefined ? null : decodeURIComponent(val);
-
-			formatter(decodeURIComponent(key), val, ret);
-		});
-
-		return Object.keys(ret).sort().reduce(function (result, key) {
-			var val = ret[key];
-			if (Boolean(val) && typeof val === 'object' && !Array.isArray(val)) {
-				// Sort object keys, not values
-				result[key] = keysSorter(val);
-			} else {
-				result[key] = val;
-			}
-
-			return result;
-		}, Object.create(null));
-	};
-
-	exports.stringify = function (obj, opts) {
-		var defaults = {
-			encode: true,
-			strict: true,
-			arrayFormat: 'none'
-		};
-
-		opts = objectAssign(defaults, opts);
-
-		var formatter = encoderForArrayFormat(opts);
-
-		return obj ? Object.keys(obj).sort().map(function (key) {
-			var val = obj[key];
-
-			if (val === undefined) {
-				return '';
-			}
-
-			if (val === null) {
-				return encode(key, opts);
-			}
-
-			if (Array.isArray(val)) {
-				var result = [];
-
-				val.slice().forEach(function (val2) {
-					if (val2 === undefined) {
-						return;
-					}
-
-					result.push(formatter(key, val2, result.length));
-				});
-
-				return result.join('&');
-			}
-
-			return encode(key, opts) + '=' + encode(val, opts);
-		}).filter(function (x) {
-			return x.length > 0;
-		}).join('&') : '';
-	};
-
-
-/***/ }),
-/* 7 */
-/***/ (function(module, exports) {
-
-	'use strict';
-	module.exports = function (str) {
-		return encodeURIComponent(str).replace(/[!'()*]/g, function (c) {
-			return '%' + c.charCodeAt(0).toString(16).toUpperCase();
-		});
-	};
-
-
-/***/ }),
-/* 8 */
-/***/ (function(module, exports) {
-
-	/*
-	object-assign
-	(c) Sindre Sorhus
-	@license MIT
-	*/
-
-	'use strict';
-	/* eslint-disable no-unused-vars */
-	var getOwnPropertySymbols = Object.getOwnPropertySymbols;
-	var hasOwnProperty = Object.prototype.hasOwnProperty;
-	var propIsEnumerable = Object.prototype.propertyIsEnumerable;
-
-	function toObject(val) {
-		if (val === null || val === undefined) {
-			throw new TypeError('Object.assign cannot be called with null or undefined');
-		}
-
-		return Object(val);
-	}
-
-	function shouldUseNative() {
-		try {
-			if (!Object.assign) {
-				return false;
-			}
-
-			// Detect buggy property enumeration order in older V8 versions.
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=4118
-			var test1 = new String('abc');  // eslint-disable-line no-new-wrappers
-			test1[5] = 'de';
-			if (Object.getOwnPropertyNames(test1)[0] === '5') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test2 = {};
-			for (var i = 0; i < 10; i++) {
-				test2['_' + String.fromCharCode(i)] = i;
-			}
-			var order2 = Object.getOwnPropertyNames(test2).map(function (n) {
-				return test2[n];
-			});
-			if (order2.join('') !== '0123456789') {
-				return false;
-			}
-
-			// https://bugs.chromium.org/p/v8/issues/detail?id=3056
-			var test3 = {};
-			'abcdefghijklmnopqrst'.split('').forEach(function (letter) {
-				test3[letter] = letter;
-			});
-			if (Object.keys(Object.assign({}, test3)).join('') !==
-					'abcdefghijklmnopqrst') {
-				return false;
-			}
-
-			return true;
-		} catch (err) {
-			// We don't expect any of the above to throw, but better to be safe.
-			return false;
-		}
-	}
-
-	module.exports = shouldUseNative() ? Object.assign : function (target, source) {
-		var from;
-		var to = toObject(target);
-		var symbols;
-
-		for (var s = 1; s < arguments.length; s++) {
-			from = Object(arguments[s]);
-
-			for (var key in from) {
-				if (hasOwnProperty.call(from, key)) {
-					to[key] = from[key];
-				}
-			}
-
-			if (getOwnPropertySymbols) {
-				symbols = getOwnPropertySymbols(from);
-				for (var i = 0; i < symbols.length; i++) {
-					if (propIsEnumerable.call(from, symbols[i])) {
-						to[symbols[i]] = from[symbols[i]];
-					}
-				}
-			}
-		}
-
-		return to;
-	};
-
-
-/***/ }),
-/* 9 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _moment = __webpack_require__(10);
-
-	var _moment2 = _interopRequireDefault(_moment);
-
-	var _queryString = __webpack_require__(6);
-
-	var _queryString2 = _interopRequireDefault(_queryString);
-
-	var _history = __webpack_require__(11);
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _Observable2 = __webpack_require__(24);
-
-	var _Observable3 = _interopRequireDefault(_Observable2);
-
-	var _SettingsObject = __webpack_require__(29);
-
-	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
-
-	var _ViewContainer = __webpack_require__(31);
-
-	var _ViewContainer2 = _interopRequireDefault(_ViewContainer);
-
-	var _Renderer = __webpack_require__(34);
-
-	var _Renderer2 = _interopRequireDefault(_Renderer);
-
-	var _ClassMap = __webpack_require__(27);
-
-	var _ClassMap2 = _interopRequireDefault(_ClassMap);
-
-	var _Router = __webpack_require__(53);
-
-	var _Router2 = _interopRequireDefault(_Router);
-
-	var _Element = __webpack_require__(32);
-
-	var _Element2 = _interopRequireDefault(_Element);
-
-	var _I18n = __webpack_require__(63);
-
-	var _I18n2 = _interopRequireDefault(_I18n);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; } //////////////////////
-	// Vendor libraries //
-	//////////////////////
-
-	// https://www.npmjs.com/package/history
-
-
-	/////////////////////
-	// Chicken classes //
-	/////////////////////
-
-	//////////////////////
-	// Class definitino //
-	//////////////////////
-
-	var _instance = undefined;
-
-	/**
-	 * The main Application class, used to create a Chicken application.
-	 *
-	 * @param {JQuery} $app - The target jQuery element to create application in
-	 * @param {Object} settings - Application settings object
-	 * @param {string} [settings.baseUrl=/] - The root uri of the application
-	 * @param {History} [history] Optional browser history instance. Will be created for you if you leave it null.
-	 * 
-	 */
-
-	var Application = function (_Observable) {
-		_inherits(Application, _Observable);
-
-		function Application($app, settings) {
-			var history = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-
-			_classCallCheck(this, Application);
-
-			var _this = _possibleConstructorReturn(this, (Application.__proto__ || Object.getPrototypeOf(Application)).call(this));
-
-			// Basics
-
-
-			_instance = _this;
-
-			////////////////
-			// Properties //
-			////////////////
-
-			/**
-	   * The jQuery element that is the Application
-	   * 
-	   * @property $app
-	   * @type {jQuery}
-	   */
-			_this.$app = $app ? $app : (0, _jquery2.default)('#application');
-
-			/**
-	   * All ViewContainers in the application. This is automatically
-	   * kept up to date to contain all and only still existing containers.
-	   *
-	   * @property viewContainers
-	   * @type {Object}
-	   */
-			_this.viewContainers = {};
-
-			/**
-	   * @property router
-	   * @type {Routing.Router}
-	   */
-			_this.router = new _Router2.default(_this);
-
-			/**
-	   * One or more Api.Api instances
-	   * 
-	   * @property apis
-	   * @type {Object}
-	   */
-			_this.apis = {};
-
-			/**
-	   * One or more Auth.Auth instances
-	   *
-	   * @property auths
-	   * @type {Object}
-	   */
-			_this.auths = {};
-
-			/**
-	   * Array of promises to fulfill before the application
-	   * can start.
-	   * 
-	   * @property loadPromises
-	   * @type {Array}
-	   */
-			_this.loadPromises = [];
-
-			/**
-	   * @property settings
-	   * @type {Core.SettingsObject}
-	   */
-			_this.settings = _SettingsObject2.default.create({
-
-				baseUrl: '/',
-
-				language: (0, _jquery2.default)('html').attr('lang'),
-
-				viewPath: 'views',
-				viewExtension: 'hbs',
-
-				elementLinkAttribute: 'link-to',
-
-				renderer: settings.renderer === undefined ? new _Renderer2.default() : null,
-
-				isCordovaApp: false // For use with Cordova
-
-			}, ['baseUrl', 'viewPath', 'viewExtension', 'renderer', 'elementLinkAttribute', 'isCordovaApp']).apply(settings);
-
-			/**
-	   * @property i18n
-	   * @type {Localization.I18n}
-	   */
-			_this.i18n = new _I18n2.default(_this.settings.get('language'));
-
-			/**
-	   * @property history
-	   * @type {History}
-	   */
-			_this.history = history;
-			if (!_this.history) {
-
-				// Cordova app?
-				if (_this.settings.get('isCordovaApp')) {
-
-					// Running actual app or previewing in browser?
-					if (document.URL.indexOf('http://') === -1 && document.URL.indexOf('https://') === -1) {
-
-						// Create a history in memory
-						_this.history = (0, _history.createMemoryHistory)();
-					} else {
-
-						// Create a history using #
-						_this.history = (0, _history.createHashHistory)();
-					}
-				} else {
-
-					// Create a browser history
-					_this.history = (0, _history.createBrowserHistory)();
-				}
-			}
-
-			/**
-	   * Used to tweak history without navigating away from the page
-	   * 
-	   * @property navigationDisabledOnce
-	   * @type {Boolean}
-	   */
-			_this.navigationDisabledOnce = false;
-
-			return _this;
-		}
-
-		_createClass(Application, [{
-			key: 'findViewContainers',
-			value: function findViewContainers() {
-				var _this2 = this;
-
-				var $element = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-
-				// No element to look in?
-				if (!$element) $element = this.$app;
-
-				// Find view containers
-				$element.find(_ViewContainer2.default.ElementSelector).each(function (index, el) {
-
-					// Create view container
-					var vc = new _ViewContainer2.default((0, _jquery2.default)(el), _this2);
-
-					// Already known?
-					if (_this2.viewContainers[vc.name]) {
-						throw new Error('There is already a view named "' + vc.name + '". It is not possible to have two views with the same name at the same time.');
-					}
-
-					// Store it.
-					_this2.viewContainers[vc.name] = vc;
-
-					// Initialize
-					vc.initialize();
-				});
-
-				return this;
-			}
-		}, {
-			key: 'updateViewContainers',
-			value: function updateViewContainers() {
-				var _this3 = this;
-
-				var $lookForNewOnesIn = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-
-				// Check if all old ones are still there
-				_underscore2.default.each(this.viewContainers, function (vc, key) {
-
-					// Removed?
-					if (!vc.isInDom()) {
-						delete _this3.viewContainers[key];
-					}
-				});
-
-				// Look for new ones
-				if ($lookForNewOnesIn) this.findViewContainers($lookForNewOnesIn);
-
-				return this;
-			}
-		}, {
-			key: 'getViewContainer',
-			value: function getViewContainer(key) {
-				return this.viewContainers[key];
-			}
-		}, {
-			key: 'routes',
-			value: function routes(callback) {
-
-				// Run callback with router
-				callback.apply(this.router, []);
-				return this;
-			}
-		}, {
-			key: 'api',
-			value: function api() {
-				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-				var apiInstance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-
-				// Get?
-				if (apiInstance === null) {
-					if (key === null) key = _underscore2.default.first(_underscore2.default.keys(this.apis));
-					return this.apis[key];
-				}
-
-				// Set
-				this.apis[key] = apiInstance;
-
-				return this;
-			}
-		}, {
-			key: 'auth',
-			value: function auth() {
-				var key = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-				var authInstance = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-
-				// Get?
-				if (authInstance === null) {
-					if (key === null) key = _underscore2.default.first(_underscore2.default.keys(this.auths));
-					return this.auths[key];
-				}
-
-				// Set
-				this.auths[key] = authInstance;
-
-				return this;
-			}
-		}, {
-			key: 'translations',
-			value: function translations(callback) {
-
-				callback.apply(this.i18n, [this.i18n]);
-				return this;
-			}
-		}, {
-			key: 'start',
-			value: function start() {
-				var _this4 = this;
-
-				// Enable momentJS
-				_moment2.default.locale(this.settings.get('language'));
-
-				// Add i18n to promises
-				this.loadPromises.unshift(this.i18n.load());
-
-				// Do auth initialization
-				_underscore2.default.each(this.auths, function (auth) {
-					_this4.loadPromises.unshift(auth.initialize());
-				});
-
-				// When all is done.
-				Promise.all(this.loadPromises).then(function () {
-
-					// Find initial view containers
-					_this4.findViewContainers();
-
-					// Update view containers whenever element contents are set.
-					_Element2.default.registerHook(function ($element) {
-
-						// Update view containers
-						_this4.updateViewContainers($element);
-
-						// Find links
-						$element.find('[' + _this4.settings.get('elementLinkAttribute') + ']').on('click', function (e) {
-
-							// Open the uri!
-							e.preventDefault();
-							var uri = (0, _jquery2.default)(e.target).attr('href');
-							_this4.goto(uri);
-						}).each(function (index, el) {
-
-							// Get uri
-							var $el = (0, _jquery2.default)(el);
-							var uri = $el.attr(_this4.settings.get('elementLinkAttribute'));
-							if (uri) {
-
-								// Store in href for easy visilbility, and remove link-to, so it won't be found again by this script
-								$el.removeAttr(_this4.settings.get('elementLinkAttribute'));
-								$el.attr('href', uri);
-							}
-						});
-					});
-
-					// Done!
-					_this4.resolvePromise('ready');
-
-					// Listen to browser's address bar
-					_this4.history.listen(function (location) {
-						_this4.router.handle(location);
-					});
-
-					// Start with current location
-					_this4.router.handle(_this4.history.location);
-				}, function (error) {
-
-					throw error;
-				});
-
-				return this;
-			}
-		}, {
-			key: 'gotoNamed',
-			value: function gotoNamed(name) {
-				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-				var query = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
-				var flash = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : {};
-				var transition = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-
-
-				// Find route
-				var route = this.router.namedRoutes.get(name);
-				if (!route) throw new Error('There is no route defined with the name "' + name + '"');
-
-				// Make uri
-				var uri = route.makeUrl(attributes);
-				return this.goto(uri, query, flash, false, transition);
-			}
-		}, {
-			key: 'transitionToNamed',
-			value: function transitionToNamed(name) {
-				var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
-				var transition = arguments[2];
-
-				return this.gotoNamed(name, attributes, null, {}, transition);
-			}
-		}, {
-			key: 'transitionTo',
-			value: function transitionTo(uri, transition) {
-				return this.goto(uri, null, {}, false, transition);
-			}
-		}, {
-			key: 'goto',
-			value: function goto(uri) {
-				var query = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-				var flash = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : {};
-				var doNotNavigate = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : false;
-				var transition = arguments.length > 4 && arguments[4] !== undefined ? arguments[4] : null;
-
-
-				// Query in the uri?
-				var search = _queryString2.default.extract(uri);
-				var params = {};
-				if (search.length > 0) {
-
-					// Parse objects
-					params = _queryString2.default.parse(search);
-
-					// Remove from uri
-					uri = uri.substr(0, uri.length - search.length - 1);
-				}
-
-				// Check the query
-				if (query) {
-
-					// Combine into params
-					if (typeof query === 'string') {
-						params = _jquery2.default.extend(params, _queryString2.default.parse(query));
-					} else {
-						params = _jquery2.default.extend(params, query);
-					}
-				}
-
-				// Stringify query
-				query = _queryString2.default.stringify(params);
-				if (query) query = '?' + query;
-
-				// External?		
-				if (uri.match(/^(http(s)?\:)?\/\//)) {
-					window.location = uri + (query || '');
-					return this;
-				}
-
-				// No navigating? Just add the state to history?
-				if (doNotNavigate) {
-
-					// Disable navigation
-					this.navigationDisabledOnce = true;
-				}
-
-				// Change the history state
-				this.history.push({
-					pathname: uri,
-					search: query,
-					state: {
-						flash: flash,
-						transition: transition
-					}
-				});
-
-				return this;
-			}
-		}, {
-			key: 'refresh',
-			value: function refresh() {
-				var _this5 = this;
-
-				var viewContainerKeys = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-
-				viewContainerKeys = viewContainerKeys || _underscore2.default.keys(this.viewContainers);
-
-				//clear the currentAction of all viewContainer
-				_underscore2.default.each(viewContainerKeys, function (viewContainerKey) {
-					_this5.viewContainers[viewContainerKey].currentAction = null;
-				});
-
-				// Start with current location
-				this.router.handle(this.history.location);
-			}
-		}, {
-			key: 'getCurrentUri',
-			value: function getCurrentUri() {
-
-				return this.history.location.pathname;
-			}
-		}, {
-			key: 'config',
-			value: function config() {
-
-				// Get all?
-				if (arguments.length === 0) {
-					return this.settings;
-				}
-
-				// Get one?
-				else if (arguments.length === 1) {
-						return this.settings.get(arguments.length <= 0 ? undefined : arguments[0]);
-					}
-
-					// Set?
-					else {
-							return this.settings.set(arguments.length <= 0 ? undefined : arguments[0], arguments.length <= 1 ? undefined : arguments[1]);
-						}
-			}
-		}, {
-			key: 'uri',
-			value: function uri() {
-				for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-					args[_key] = arguments[_key];
-				}
-
-				// Add baseUrl (except for cordova app)
-				if (!this.settings.get('isCordovaApp')) {
-					args.unshift(this.settings.get('baseUrl') === '/' ? '' : this.settings.get('baseUrl'));
-				}
-				var url = args.join('/');
-
-				// Was the last one an extension?
-				if (/^\.[a-z]+$/.test(_underscore2.default.last(args))) {
-
-					// Replace last slash
-					url = url.replace(/\/\.[a-z]+$/, _underscore2.default.last(args));
-				}
-				return url;
-			}
-		}]);
-
-		return Application;
-	}(_Observable3.default);
-
-	Application.getInstance = function () {
-		return _instance;
-	};
-
-	_ClassMap2.default.register('Application', Application);
-
-	module.exports = Application;
-
-/***/ }),
-/* 10 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_10__;
-
-/***/ }),
-/* 11 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-	exports.createPath = exports.parsePath = exports.locationsAreEqual = exports.createLocation = exports.createMemoryHistory = exports.createHashHistory = exports.createBrowserHistory = undefined;
-
-	var _LocationUtils = __webpack_require__(12);
-
-	Object.defineProperty(exports, 'createLocation', {
-	  enumerable: true,
-	  get: function get() {
-	    return _LocationUtils.createLocation;
-	  }
-	});
-	Object.defineProperty(exports, 'locationsAreEqual', {
-	  enumerable: true,
-	  get: function get() {
-	    return _LocationUtils.locationsAreEqual;
-	  }
-	});
-
-	var _PathUtils = __webpack_require__(15);
-
-	Object.defineProperty(exports, 'parsePath', {
-	  enumerable: true,
-	  get: function get() {
-	    return _PathUtils.parsePath;
-	  }
-	});
-	Object.defineProperty(exports, 'createPath', {
-	  enumerable: true,
-	  get: function get() {
-	    return _PathUtils.createPath;
-	  }
-	});
-
-	var _createBrowserHistory2 = __webpack_require__(16);
-
-	var _createBrowserHistory3 = _interopRequireDefault(_createBrowserHistory2);
-
-	var _createHashHistory2 = __webpack_require__(22);
-
-	var _createHashHistory3 = _interopRequireDefault(_createHashHistory2);
-
-	var _createMemoryHistory2 = __webpack_require__(23);
-
-	var _createMemoryHistory3 = _interopRequireDefault(_createMemoryHistory2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	exports.createBrowserHistory = _createBrowserHistory3.default;
-	exports.createHashHistory = _createHashHistory3.default;
-	exports.createMemoryHistory = _createMemoryHistory3.default;
-
-/***/ }),
-/* 12 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-	exports.locationsAreEqual = exports.createLocation = undefined;
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _resolvePathname = __webpack_require__(13);
-
-	var _resolvePathname2 = _interopRequireDefault(_resolvePathname);
-
-	var _valueEqual = __webpack_require__(14);
-
-	var _valueEqual2 = _interopRequireDefault(_valueEqual);
-
-	var _PathUtils = __webpack_require__(15);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var createLocation = exports.createLocation = function createLocation(path, state, key, currentLocation) {
-	  var location = void 0;
-	  if (typeof path === 'string') {
-	    // Two-arg form: push(path, state)
-	    location = (0, _PathUtils.parsePath)(path);
-	    location.state = state;
-	  } else {
-	    // One-arg form: push(location)
-	    location = _extends({}, path);
-
-	    if (location.pathname === undefined) location.pathname = '';
-
-	    if (location.search) {
-	      if (location.search.charAt(0) !== '?') location.search = '?' + location.search;
-	    } else {
-	      location.search = '';
-	    }
-
-	    if (location.hash) {
-	      if (location.hash.charAt(0) !== '#') location.hash = '#' + location.hash;
-	    } else {
-	      location.hash = '';
-	    }
-
-	    if (state !== undefined && location.state === undefined) location.state = state;
-	  }
-
-	  try {
-	    location.pathname = decodeURI(location.pathname);
-	  } catch (e) {
-	    if (e instanceof URIError) {
-	      throw new URIError('Pathname "' + location.pathname + '" could not be decoded. ' + 'This is likely caused by an invalid percent-encoding.');
-	    } else {
-	      throw e;
-	    }
-	  }
-
-	  if (key) location.key = key;
-
-	  if (currentLocation) {
-	    // Resolve incomplete/relative pathname relative to current location.
-	    if (!location.pathname) {
-	      location.pathname = currentLocation.pathname;
-	    } else if (location.pathname.charAt(0) !== '/') {
-	      location.pathname = (0, _resolvePathname2.default)(location.pathname, currentLocation.pathname);
-	    }
-	  } else {
-	    // When there is no prior location and pathname is empty, set it to /
-	    if (!location.pathname) {
-	      location.pathname = '/';
-	    }
-	  }
-
-	  return location;
-	};
-
-	var locationsAreEqual = exports.locationsAreEqual = function locationsAreEqual(a, b) {
-	  return a.pathname === b.pathname && a.search === b.search && a.hash === b.hash && a.key === b.key && (0, _valueEqual2.default)(a.state, b.state);
-	};
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	exports.__esModule = true;
-	function isAbsolute(pathname) {
-	  return pathname.charAt(0) === '/';
-	}
-
-	// About 1.5x faster than the two-arg version of Array#splice()
-	function spliceOne(list, index) {
-	  for (var i = index, k = i + 1, n = list.length; k < n; i += 1, k += 1) {
-	    list[i] = list[k];
-	  }
-
-	  list.pop();
-	}
-
-	// This implementation is based heavily on node's url.parse
-	function resolvePathname(to) {
-	  var from = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : '';
-
-	  var toParts = to && to.split('/') || [];
-	  var fromParts = from && from.split('/') || [];
-
-	  var isToAbs = to && isAbsolute(to);
-	  var isFromAbs = from && isAbsolute(from);
-	  var mustEndAbs = isToAbs || isFromAbs;
-
-	  if (to && isAbsolute(to)) {
-	    // to is absolute
-	    fromParts = toParts;
-	  } else if (toParts.length) {
-	    // to is relative, drop the filename
-	    fromParts.pop();
-	    fromParts = fromParts.concat(toParts);
-	  }
-
-	  if (!fromParts.length) return '/';
-
-	  var hasTrailingSlash = void 0;
-	  if (fromParts.length) {
-	    var last = fromParts[fromParts.length - 1];
-	    hasTrailingSlash = last === '.' || last === '..' || last === '';
-	  } else {
-	    hasTrailingSlash = false;
-	  }
-
-	  var up = 0;
-	  for (var i = fromParts.length; i >= 0; i--) {
-	    var part = fromParts[i];
-
-	    if (part === '.') {
-	      spliceOne(fromParts, i);
-	    } else if (part === '..') {
-	      spliceOne(fromParts, i);
-	      up++;
-	    } else if (up) {
-	      spliceOne(fromParts, i);
-	      up--;
-	    }
-	  }
-
-	  if (!mustEndAbs) for (; up--; up) {
-	    fromParts.unshift('..');
-	  }if (mustEndAbs && fromParts[0] !== '' && (!fromParts[0] || !isAbsolute(fromParts[0]))) fromParts.unshift('');
-
-	  var result = fromParts.join('/');
-
-	  if (hasTrailingSlash && result.substr(-1) !== '/') result += '/';
-
-	  return result;
-	}
-
-	exports.default = resolvePathname;
-	module.exports = exports['default'];
-
-/***/ }),
-/* 14 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	function valueEqual(a, b) {
-	  if (a === b) return true;
-
-	  if (a == null || b == null) return false;
-
-	  if (Array.isArray(a)) {
-	    return Array.isArray(b) && a.length === b.length && a.every(function (item, index) {
-	      return valueEqual(item, b[index]);
-	    });
-	  }
-
-	  var aType = typeof a === 'undefined' ? 'undefined' : _typeof(a);
-	  var bType = typeof b === 'undefined' ? 'undefined' : _typeof(b);
-
-	  if (aType !== bType) return false;
-
-	  if (aType === 'object') {
-	    var aValue = a.valueOf();
-	    var bValue = b.valueOf();
-
-	    if (aValue !== a || bValue !== b) return valueEqual(aValue, bValue);
-
-	    var aKeys = Object.keys(a);
-	    var bKeys = Object.keys(b);
-
-	    if (aKeys.length !== bKeys.length) return false;
-
-	    return aKeys.every(function (key) {
-	      return valueEqual(a[key], b[key]);
-	    });
-	  }
-
-	  return false;
-	}
-
-	exports.default = valueEqual;
-	module.exports = exports['default'];
-
-/***/ }),
-/* 15 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	exports.__esModule = true;
-	var addLeadingSlash = exports.addLeadingSlash = function addLeadingSlash(path) {
-	  return path.charAt(0) === '/' ? path : '/' + path;
-	};
-
-	var stripLeadingSlash = exports.stripLeadingSlash = function stripLeadingSlash(path) {
-	  return path.charAt(0) === '/' ? path.substr(1) : path;
-	};
-
-	var hasBasename = exports.hasBasename = function hasBasename(path, prefix) {
-	  return new RegExp('^' + prefix + '(\\/|\\?|#|$)', 'i').test(path);
-	};
-
-	var stripBasename = exports.stripBasename = function stripBasename(path, prefix) {
-	  return hasBasename(path, prefix) ? path.substr(prefix.length) : path;
-	};
-
-	var stripTrailingSlash = exports.stripTrailingSlash = function stripTrailingSlash(path) {
-	  return path.charAt(path.length - 1) === '/' ? path.slice(0, -1) : path;
-	};
-
-	var parsePath = exports.parsePath = function parsePath(path) {
-	  var pathname = path || '/';
-	  var search = '';
-	  var hash = '';
-
-	  var hashIndex = pathname.indexOf('#');
-	  if (hashIndex !== -1) {
-	    hash = pathname.substr(hashIndex);
-	    pathname = pathname.substr(0, hashIndex);
-	  }
-
-	  var searchIndex = pathname.indexOf('?');
-	  if (searchIndex !== -1) {
-	    search = pathname.substr(searchIndex);
-	    pathname = pathname.substr(0, searchIndex);
-	  }
-
-	  return {
-	    pathname: pathname,
-	    search: search === '?' ? '' : search,
-	    hash: hash === '#' ? '' : hash
-	  };
-	};
-
-	var createPath = exports.createPath = function createPath(location) {
-	  var pathname = location.pathname,
-	      search = location.search,
-	      hash = location.hash;
-
-
-	  var path = pathname || '/';
-
-	  if (search && search !== '?') path += search.charAt(0) === '?' ? search : '?' + search;
-
-	  if (hash && hash !== '#') path += hash.charAt(0) === '#' ? hash : '#' + hash;
-
-	  return path;
-	};
-
-/***/ }),
-/* 16 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _warning = __webpack_require__(17);
-
-	var _warning2 = _interopRequireDefault(_warning);
-
-	var _invariant = __webpack_require__(19);
-
-	var _invariant2 = _interopRequireDefault(_invariant);
-
-	var _LocationUtils = __webpack_require__(12);
-
-	var _PathUtils = __webpack_require__(15);
-
-	var _createTransitionManager = __webpack_require__(20);
-
-	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
-
-	var _DOMUtils = __webpack_require__(21);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var PopStateEvent = 'popstate';
-	var HashChangeEvent = 'hashchange';
-
-	var getHistoryState = function getHistoryState() {
-	  try {
-	    return window.history.state || {};
-	  } catch (e) {
-	    // IE 11 sometimes throws when accessing window.history.state
-	    // See https://github.com/ReactTraining/history/pull/289
-	    return {};
-	  }
-	};
-
-	/**
-	 * Creates a history object that uses the HTML5 history API including
-	 * pushState, replaceState, and the popstate event.
-	 */
-	var createBrowserHistory = function createBrowserHistory() {
-	  var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	  (0, _invariant2.default)(_DOMUtils.canUseDOM, 'Browser history needs a DOM');
-
-	  var globalHistory = window.history;
-	  var canUseHistory = (0, _DOMUtils.supportsHistory)();
-	  var needsHashChangeListener = !(0, _DOMUtils.supportsPopStateOnHashChange)();
-
-	  var _props$forceRefresh = props.forceRefresh,
-	      forceRefresh = _props$forceRefresh === undefined ? false : _props$forceRefresh,
-	      _props$getUserConfirm = props.getUserConfirmation,
-	      getUserConfirmation = _props$getUserConfirm === undefined ? _DOMUtils.getConfirmation : _props$getUserConfirm,
-	      _props$keyLength = props.keyLength,
-	      keyLength = _props$keyLength === undefined ? 6 : _props$keyLength;
-
-	  var basename = props.basename ? (0, _PathUtils.stripTrailingSlash)((0, _PathUtils.addLeadingSlash)(props.basename)) : '';
-
-	  var getDOMLocation = function getDOMLocation(historyState) {
-	    var _ref = historyState || {},
-	        key = _ref.key,
-	        state = _ref.state;
-
-	    var _window$location = window.location,
-	        pathname = _window$location.pathname,
-	        search = _window$location.search,
-	        hash = _window$location.hash;
-
-
-	    var path = pathname + search + hash;
-
-	    (0, _warning2.default)(!basename || (0, _PathUtils.hasBasename)(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".');
-
-	    if (basename) path = (0, _PathUtils.stripBasename)(path, basename);
-
-	    return (0, _LocationUtils.createLocation)(path, state, key);
-	  };
-
-	  var createKey = function createKey() {
-	    return Math.random().toString(36).substr(2, keyLength);
-	  };
-
-	  var transitionManager = (0, _createTransitionManager2.default)();
-
-	  var setState = function setState(nextState) {
-	    _extends(history, nextState);
-
-	    history.length = globalHistory.length;
-
-	    transitionManager.notifyListeners(history.location, history.action);
-	  };
-
-	  var handlePopState = function handlePopState(event) {
-	    // Ignore extraneous popstate events in WebKit.
-	    if ((0, _DOMUtils.isExtraneousPopstateEvent)(event)) return;
-
-	    handlePop(getDOMLocation(event.state));
-	  };
-
-	  var handleHashChange = function handleHashChange() {
-	    handlePop(getDOMLocation(getHistoryState()));
-	  };
-
-	  var forceNextPop = false;
-
-	  var handlePop = function handlePop(location) {
-	    if (forceNextPop) {
-	      forceNextPop = false;
-	      setState();
-	    } else {
-	      var action = 'POP';
-
-	      transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
-	        if (ok) {
-	          setState({ action: action, location: location });
-	        } else {
-	          revertPop(location);
-	        }
-	      });
-	    }
-	  };
-
-	  var revertPop = function revertPop(fromLocation) {
-	    var toLocation = history.location;
-
-	    // TODO: We could probably make this more reliable by
-	    // keeping a list of keys we've seen in sessionStorage.
-	    // Instead, we just default to 0 for keys we don't know.
-
-	    var toIndex = allKeys.indexOf(toLocation.key);
-
-	    if (toIndex === -1) toIndex = 0;
-
-	    var fromIndex = allKeys.indexOf(fromLocation.key);
-
-	    if (fromIndex === -1) fromIndex = 0;
-
-	    var delta = toIndex - fromIndex;
-
-	    if (delta) {
-	      forceNextPop = true;
-	      go(delta);
-	    }
-	  };
-
-	  var initialLocation = getDOMLocation(getHistoryState());
-	  var allKeys = [initialLocation.key];
-
-	  // Public interface
-
-	  var createHref = function createHref(location) {
-	    return basename + (0, _PathUtils.createPath)(location);
-	  };
-
-	  var push = function push(path, state) {
-	    (0, _warning2.default)(!((typeof path === 'undefined' ? 'undefined' : _typeof(path)) === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored');
-
-	    var action = 'PUSH';
-	    var location = (0, _LocationUtils.createLocation)(path, state, createKey(), history.location);
-
-	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
-	      if (!ok) return;
-
-	      var href = createHref(location);
-	      var key = location.key,
-	          state = location.state;
-
-
-	      if (canUseHistory) {
-	        globalHistory.pushState({ key: key, state: state }, null, href);
-
-	        if (forceRefresh) {
-	          window.location.href = href;
-	        } else {
-	          var prevIndex = allKeys.indexOf(history.location.key);
-	          var nextKeys = allKeys.slice(0, prevIndex === -1 ? 0 : prevIndex + 1);
-
-	          nextKeys.push(location.key);
-	          allKeys = nextKeys;
-
-	          setState({ action: action, location: location });
-	        }
-	      } else {
-	        (0, _warning2.default)(state === undefined, 'Browser history cannot push state in browsers that do not support HTML5 history');
-
-	        window.location.href = href;
-	      }
-	    });
-	  };
-
-	  var replace = function replace(path, state) {
-	    (0, _warning2.default)(!((typeof path === 'undefined' ? 'undefined' : _typeof(path)) === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored');
-
-	    var action = 'REPLACE';
-	    var location = (0, _LocationUtils.createLocation)(path, state, createKey(), history.location);
-
-	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
-	      if (!ok) return;
-
-	      var href = createHref(location);
-	      var key = location.key,
-	          state = location.state;
-
-
-	      if (canUseHistory) {
-	        globalHistory.replaceState({ key: key, state: state }, null, href);
-
-	        if (forceRefresh) {
-	          window.location.replace(href);
-	        } else {
-	          var prevIndex = allKeys.indexOf(history.location.key);
-
-	          if (prevIndex !== -1) allKeys[prevIndex] = location.key;
-
-	          setState({ action: action, location: location });
-	        }
-	      } else {
-	        (0, _warning2.default)(state === undefined, 'Browser history cannot replace state in browsers that do not support HTML5 history');
-
-	        window.location.replace(href);
-	      }
-	    });
-	  };
-
-	  var go = function go(n) {
-	    globalHistory.go(n);
-	  };
-
-	  var goBack = function goBack() {
-	    return go(-1);
-	  };
-
-	  var goForward = function goForward() {
-	    return go(1);
-	  };
-
-	  var listenerCount = 0;
-
-	  var checkDOMListeners = function checkDOMListeners(delta) {
-	    listenerCount += delta;
-
-	    if (listenerCount === 1) {
-	      (0, _DOMUtils.addEventListener)(window, PopStateEvent, handlePopState);
-
-	      if (needsHashChangeListener) (0, _DOMUtils.addEventListener)(window, HashChangeEvent, handleHashChange);
-	    } else if (listenerCount === 0) {
-	      (0, _DOMUtils.removeEventListener)(window, PopStateEvent, handlePopState);
-
-	      if (needsHashChangeListener) (0, _DOMUtils.removeEventListener)(window, HashChangeEvent, handleHashChange);
-	    }
-	  };
-
-	  var isBlocked = false;
-
-	  var block = function block() {
-	    var prompt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-	    var unblock = transitionManager.setPrompt(prompt);
-
-	    if (!isBlocked) {
-	      checkDOMListeners(1);
-	      isBlocked = true;
-	    }
-
-	    return function () {
-	      if (isBlocked) {
-	        isBlocked = false;
-	        checkDOMListeners(-1);
-	      }
-
-	      return unblock();
-	    };
-	  };
-
-	  var listen = function listen(listener) {
-	    var unlisten = transitionManager.appendListener(listener);
-	    checkDOMListeners(1);
-
-	    return function () {
-	      checkDOMListeners(-1);
-	      unlisten();
-	    };
-	  };
-
-	  var history = {
-	    length: globalHistory.length,
-	    action: 'POP',
-	    location: initialLocation,
-	    createHref: createHref,
-	    push: push,
-	    replace: replace,
-	    go: go,
-	    goBack: goBack,
-	    goForward: goForward,
-	    block: block,
-	    listen: listen
-	  };
-
-	  return history;
-	};
-
-	exports.default = createBrowserHistory;
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright 2014-2015, Facebook, Inc.
-	 * All rights reserved.
-	 *
-	 * This source code is licensed under the BSD-style license found in the
-	 * LICENSE file in the root directory of this source tree. An additional grant
-	 * of patent rights can be found in the PATENTS file in the same directory.
-	 */
-
-	'use strict';
-
-	/**
-	 * Similar to invariant but only logs a warning if the condition is not met.
-	 * This can be used to log issues in development environments in critical
-	 * paths. Removing the logging code for production environments will keep the
-	 * same logic and follow the same code paths.
-	 */
-
-	var warning = function() {};
-
-	if (process.env.NODE_ENV !== 'production') {
-	  warning = function(condition, format, args) {
-	    var len = arguments.length;
-	    args = new Array(len > 2 ? len - 2 : 0);
-	    for (var key = 2; key < len; key++) {
-	      args[key - 2] = arguments[key];
-	    }
-	    if (format === undefined) {
-	      throw new Error(
-	        '`warning(condition, format, ...args)` requires a warning ' +
-	        'message argument'
-	      );
-	    }
-
-	    if (format.length < 10 || (/^[s\W]*$/).test(format)) {
-	      throw new Error(
-	        'The warning format should be able to uniquely identify this ' +
-	        'warning. Please, use a more descriptive format than: ' + format
-	      );
-	    }
-
-	    if (!condition) {
-	      var argIndex = 0;
-	      var message = 'Warning: ' +
-	        format.replace(/%s/g, function() {
-	          return args[argIndex++];
-	        });
-	      if (typeof console !== 'undefined') {
-	        console.error(message);
-	      }
-	      try {
-	        // This error was thrown as a convenience so that you can use this stack
-	        // to find the callsite that caused this warning to fire.
-	        throw new Error(message);
-	      } catch(x) {}
-	    }
-	  };
-	}
-
-	module.exports = warning;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)))
-
-/***/ }),
-/* 18 */
-/***/ (function(module, exports) {
-
-	// shim for using process in browser
-	var process = module.exports = {};
-
-	// cached from whatever global is present so that test runners that stub it
-	// don't break things.  But we need to wrap it in a try catch in case it is
-	// wrapped in strict mode code which doesn't define any globals.  It's inside a
-	// function because try/catches deoptimize in certain engines.
-
-	var cachedSetTimeout;
-	var cachedClearTimeout;
-
-	function defaultSetTimout() {
-	    throw new Error('setTimeout has not been defined');
-	}
-	function defaultClearTimeout () {
-	    throw new Error('clearTimeout has not been defined');
-	}
-	(function () {
-	    try {
-	        if (typeof setTimeout === 'function') {
-	            cachedSetTimeout = setTimeout;
-	        } else {
-	            cachedSetTimeout = defaultSetTimout;
-	        }
-	    } catch (e) {
-	        cachedSetTimeout = defaultSetTimout;
-	    }
-	    try {
-	        if (typeof clearTimeout === 'function') {
-	            cachedClearTimeout = clearTimeout;
-	        } else {
-	            cachedClearTimeout = defaultClearTimeout;
-	        }
-	    } catch (e) {
-	        cachedClearTimeout = defaultClearTimeout;
-	    }
-	} ())
-	function runTimeout(fun) {
-	    if (cachedSetTimeout === setTimeout) {
-	        //normal enviroments in sane situations
-	        return setTimeout(fun, 0);
-	    }
-	    // if setTimeout wasn't available but was latter defined
-	    if ((cachedSetTimeout === defaultSetTimout || !cachedSetTimeout) && setTimeout) {
-	        cachedSetTimeout = setTimeout;
-	        return setTimeout(fun, 0);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedSetTimeout(fun, 0);
-	    } catch(e){
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't trust the global object when called normally
-	            return cachedSetTimeout.call(null, fun, 0);
-	        } catch(e){
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error
-	            return cachedSetTimeout.call(this, fun, 0);
-	        }
-	    }
-
-
-	}
-	function runClearTimeout(marker) {
-	    if (cachedClearTimeout === clearTimeout) {
-	        //normal enviroments in sane situations
-	        return clearTimeout(marker);
-	    }
-	    // if clearTimeout wasn't available but was latter defined
-	    if ((cachedClearTimeout === defaultClearTimeout || !cachedClearTimeout) && clearTimeout) {
-	        cachedClearTimeout = clearTimeout;
-	        return clearTimeout(marker);
-	    }
-	    try {
-	        // when when somebody has screwed with setTimeout but no I.E. maddness
-	        return cachedClearTimeout(marker);
-	    } catch (e){
-	        try {
-	            // When we are in I.E. but the script has been evaled so I.E. doesn't  trust the global object when called normally
-	            return cachedClearTimeout.call(null, marker);
-	        } catch (e){
-	            // same as above but when it's a version of I.E. that must have the global object for 'this', hopfully our context correct otherwise it will throw a global error.
-	            // Some versions of I.E. have different rules for clearTimeout vs setTimeout
-	            return cachedClearTimeout.call(this, marker);
-	        }
-	    }
-
-
-
-	}
-	var queue = [];
-	var draining = false;
-	var currentQueue;
-	var queueIndex = -1;
-
-	function cleanUpNextTick() {
-	    if (!draining || !currentQueue) {
-	        return;
-	    }
-	    draining = false;
-	    if (currentQueue.length) {
-	        queue = currentQueue.concat(queue);
-	    } else {
-	        queueIndex = -1;
-	    }
-	    if (queue.length) {
-	        drainQueue();
-	    }
-	}
-
-	function drainQueue() {
-	    if (draining) {
-	        return;
-	    }
-	    var timeout = runTimeout(cleanUpNextTick);
-	    draining = true;
-
-	    var len = queue.length;
-	    while(len) {
-	        currentQueue = queue;
-	        queue = [];
-	        while (++queueIndex < len) {
-	            if (currentQueue) {
-	                currentQueue[queueIndex].run();
-	            }
-	        }
-	        queueIndex = -1;
-	        len = queue.length;
-	    }
-	    currentQueue = null;
-	    draining = false;
-	    runClearTimeout(timeout);
-	}
-
-	process.nextTick = function (fun) {
-	    var args = new Array(arguments.length - 1);
-	    if (arguments.length > 1) {
-	        for (var i = 1; i < arguments.length; i++) {
-	            args[i - 1] = arguments[i];
-	        }
-	    }
-	    queue.push(new Item(fun, args));
-	    if (queue.length === 1 && !draining) {
-	        runTimeout(drainQueue);
-	    }
-	};
-
-	// v8 likes predictible objects
-	function Item(fun, array) {
-	    this.fun = fun;
-	    this.array = array;
-	}
-	Item.prototype.run = function () {
-	    this.fun.apply(null, this.array);
-	};
-	process.title = 'browser';
-	process.browser = true;
-	process.env = {};
-	process.argv = [];
-	process.version = ''; // empty string to avoid regexp issues
-	process.versions = {};
-
-	function noop() {}
-
-	process.on = noop;
-	process.addListener = noop;
-	process.once = noop;
-	process.off = noop;
-	process.removeListener = noop;
-	process.removeAllListeners = noop;
-	process.emit = noop;
-	process.prependListener = noop;
-	process.prependOnceListener = noop;
-
-	process.listeners = function (name) { return [] }
-
-	process.binding = function (name) {
-	    throw new Error('process.binding is not supported');
-	};
-
-	process.cwd = function () { return '/' };
-	process.chdir = function (dir) {
-	    throw new Error('process.chdir is not supported');
-	};
-	process.umask = function() { return 0; };
-
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	/* WEBPACK VAR INJECTION */(function(process) {/**
-	 * Copyright (c) 2013-present, Facebook, Inc.
-	 *
-	 * This source code is licensed under the MIT license found in the
-	 * LICENSE file in the root directory of this source tree.
-	 */
-
-	'use strict';
-
-	/**
-	 * Use invariant() to assert state which your program assumes to be true.
-	 *
-	 * Provide sprintf-style format (only %s is supported) and arguments
-	 * to provide information about what broke and what you were
-	 * expecting.
-	 *
-	 * The invariant message will be stripped in production, but the invariant
-	 * will remain to ensure logic does not differ in production.
-	 */
-
-	var invariant = function(condition, format, a, b, c, d, e, f) {
-	  if (process.env.NODE_ENV !== 'production') {
-	    if (format === undefined) {
-	      throw new Error('invariant requires an error message argument');
-	    }
-	  }
-
-	  if (!condition) {
-	    var error;
-	    if (format === undefined) {
-	      error = new Error(
-	        'Minified exception occurred; use the non-minified dev environment ' +
-	        'for the full error message and additional helpful warnings.'
-	      );
-	    } else {
-	      var args = [a, b, c, d, e, f];
-	      var argIndex = 0;
-	      error = new Error(
-	        format.replace(/%s/g, function() { return args[argIndex++]; })
-	      );
-	      error.name = 'Invariant Violation';
-	    }
-
-	    error.framesToPop = 1; // we don't care about invariant's own frame
-	    throw error;
-	  }
-	};
-
-	module.exports = invariant;
-
-	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(18)))
-
-/***/ }),
-/* 20 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	var _warning = __webpack_require__(17);
-
-	var _warning2 = _interopRequireDefault(_warning);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var createTransitionManager = function createTransitionManager() {
-	  var prompt = null;
-
-	  var setPrompt = function setPrompt(nextPrompt) {
-	    (0, _warning2.default)(prompt == null, 'A history supports only one prompt at a time');
-
-	    prompt = nextPrompt;
-
-	    return function () {
-	      if (prompt === nextPrompt) prompt = null;
-	    };
-	  };
-
-	  var confirmTransitionTo = function confirmTransitionTo(location, action, getUserConfirmation, callback) {
-	    // TODO: If another transition starts while we're still confirming
-	    // the previous one, we may end up in a weird state. Figure out the
-	    // best way to handle this.
-	    if (prompt != null) {
-	      var result = typeof prompt === 'function' ? prompt(location, action) : prompt;
-
-	      if (typeof result === 'string') {
-	        if (typeof getUserConfirmation === 'function') {
-	          getUserConfirmation(result, callback);
-	        } else {
-	          (0, _warning2.default)(false, 'A history needs a getUserConfirmation function in order to use a prompt message');
-
-	          callback(true);
-	        }
-	      } else {
-	        // Return false from a transition hook to cancel the transition.
-	        callback(result !== false);
-	      }
-	    } else {
-	      callback(true);
-	    }
-	  };
-
-	  var listeners = [];
-
-	  var appendListener = function appendListener(fn) {
-	    var isActive = true;
-
-	    var listener = function listener() {
-	      if (isActive) fn.apply(undefined, arguments);
-	    };
-
-	    listeners.push(listener);
-
-	    return function () {
-	      isActive = false;
-	      listeners = listeners.filter(function (item) {
-	        return item !== listener;
-	      });
-	    };
-	  };
-
-	  var notifyListeners = function notifyListeners() {
-	    for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-	      args[_key] = arguments[_key];
-	    }
-
-	    listeners.forEach(function (listener) {
-	      return listener.apply(undefined, args);
-	    });
-	  };
-
-	  return {
-	    setPrompt: setPrompt,
-	    confirmTransitionTo: confirmTransitionTo,
-	    appendListener: appendListener,
-	    notifyListeners: notifyListeners
-	  };
-	};
-
-	exports.default = createTransitionManager;
-
-/***/ }),
-/* 21 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	exports.__esModule = true;
-	var canUseDOM = exports.canUseDOM = !!(typeof window !== 'undefined' && window.document && window.document.createElement);
-
-	var addEventListener = exports.addEventListener = function addEventListener(node, event, listener) {
-	  return node.addEventListener ? node.addEventListener(event, listener, false) : node.attachEvent('on' + event, listener);
-	};
-
-	var removeEventListener = exports.removeEventListener = function removeEventListener(node, event, listener) {
-	  return node.removeEventListener ? node.removeEventListener(event, listener, false) : node.detachEvent('on' + event, listener);
-	};
-
-	var getConfirmation = exports.getConfirmation = function getConfirmation(message, callback) {
-	  return callback(window.confirm(message));
-	}; // eslint-disable-line no-alert
-
-	/**
-	 * Returns true if the HTML5 history API is supported. Taken from Modernizr.
-	 *
-	 * https://github.com/Modernizr/Modernizr/blob/master/LICENSE
-	 * https://github.com/Modernizr/Modernizr/blob/master/feature-detects/history.js
-	 * changed to avoid false negatives for Windows Phones: https://github.com/reactjs/react-router/issues/586
-	 */
-	var supportsHistory = exports.supportsHistory = function supportsHistory() {
-	  var ua = window.navigator.userAgent;
-
-	  if ((ua.indexOf('Android 2.') !== -1 || ua.indexOf('Android 4.0') !== -1) && ua.indexOf('Mobile Safari') !== -1 && ua.indexOf('Chrome') === -1 && ua.indexOf('Windows Phone') === -1) return false;
-
-	  return window.history && 'pushState' in window.history;
-	};
-
-	/**
-	 * Returns true if browser fires popstate on hash change.
-	 * IE10 and IE11 do not.
-	 */
-	var supportsPopStateOnHashChange = exports.supportsPopStateOnHashChange = function supportsPopStateOnHashChange() {
-	  return window.navigator.userAgent.indexOf('Trident') === -1;
-	};
-
-	/**
-	 * Returns false if using go(n) with hash history causes a full page reload.
-	 */
-	var supportsGoWithoutReloadUsingHash = exports.supportsGoWithoutReloadUsingHash = function supportsGoWithoutReloadUsingHash() {
-	  return window.navigator.userAgent.indexOf('Firefox') === -1;
-	};
-
-	/**
-	 * Returns true if a given popstate event is an extraneous WebKit event.
-	 * Accounts for the fact that Chrome on iOS fires real popstate events
-	 * containing undefined state when pressing the back button.
-	 */
-	var isExtraneousPopstateEvent = exports.isExtraneousPopstateEvent = function isExtraneousPopstateEvent(event) {
-	  return event.state === undefined && navigator.userAgent.indexOf('CriOS') === -1;
-	};
-
-/***/ }),
-/* 22 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _warning = __webpack_require__(17);
-
-	var _warning2 = _interopRequireDefault(_warning);
-
-	var _invariant = __webpack_require__(19);
-
-	var _invariant2 = _interopRequireDefault(_invariant);
-
-	var _LocationUtils = __webpack_require__(12);
-
-	var _PathUtils = __webpack_require__(15);
-
-	var _createTransitionManager = __webpack_require__(20);
-
-	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
-
-	var _DOMUtils = __webpack_require__(21);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var HashChangeEvent = 'hashchange';
-
-	var HashPathCoders = {
-	  hashbang: {
-	    encodePath: function encodePath(path) {
-	      return path.charAt(0) === '!' ? path : '!/' + (0, _PathUtils.stripLeadingSlash)(path);
-	    },
-	    decodePath: function decodePath(path) {
-	      return path.charAt(0) === '!' ? path.substr(1) : path;
-	    }
-	  },
-	  noslash: {
-	    encodePath: _PathUtils.stripLeadingSlash,
-	    decodePath: _PathUtils.addLeadingSlash
-	  },
-	  slash: {
-	    encodePath: _PathUtils.addLeadingSlash,
-	    decodePath: _PathUtils.addLeadingSlash
-	  }
-	};
-
-	var getHashPath = function getHashPath() {
-	  // We can't use window.location.hash here because it's not
-	  // consistent across browsers - Firefox will pre-decode it!
-	  var href = window.location.href;
-	  var hashIndex = href.indexOf('#');
-	  return hashIndex === -1 ? '' : href.substring(hashIndex + 1);
-	};
-
-	var pushHashPath = function pushHashPath(path) {
-	  return window.location.hash = path;
-	};
-
-	var replaceHashPath = function replaceHashPath(path) {
-	  var hashIndex = window.location.href.indexOf('#');
-
-	  window.location.replace(window.location.href.slice(0, hashIndex >= 0 ? hashIndex : 0) + '#' + path);
-	};
-
-	var createHashHistory = function createHashHistory() {
-	  var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-
-	  (0, _invariant2.default)(_DOMUtils.canUseDOM, 'Hash history needs a DOM');
-
-	  var globalHistory = window.history;
-	  var canGoWithoutReload = (0, _DOMUtils.supportsGoWithoutReloadUsingHash)();
-
-	  var _props$getUserConfirm = props.getUserConfirmation,
-	      getUserConfirmation = _props$getUserConfirm === undefined ? _DOMUtils.getConfirmation : _props$getUserConfirm,
-	      _props$hashType = props.hashType,
-	      hashType = _props$hashType === undefined ? 'slash' : _props$hashType;
-
-	  var basename = props.basename ? (0, _PathUtils.stripTrailingSlash)((0, _PathUtils.addLeadingSlash)(props.basename)) : '';
-
-	  var _HashPathCoders$hashT = HashPathCoders[hashType],
-	      encodePath = _HashPathCoders$hashT.encodePath,
-	      decodePath = _HashPathCoders$hashT.decodePath;
-
-
-	  var getDOMLocation = function getDOMLocation() {
-	    var path = decodePath(getHashPath());
-
-	    (0, _warning2.default)(!basename || (0, _PathUtils.hasBasename)(path, basename), 'You are attempting to use a basename on a page whose URL path does not begin ' + 'with the basename. Expected path "' + path + '" to begin with "' + basename + '".');
-
-	    if (basename) path = (0, _PathUtils.stripBasename)(path, basename);
-
-	    return (0, _LocationUtils.createLocation)(path);
-	  };
-
-	  var transitionManager = (0, _createTransitionManager2.default)();
-
-	  var setState = function setState(nextState) {
-	    _extends(history, nextState);
-
-	    history.length = globalHistory.length;
-
-	    transitionManager.notifyListeners(history.location, history.action);
-	  };
-
-	  var forceNextPop = false;
-	  var ignorePath = null;
-
-	  var handleHashChange = function handleHashChange() {
-	    var path = getHashPath();
-	    var encodedPath = encodePath(path);
-
-	    if (path !== encodedPath) {
-	      // Ensure we always have a properly-encoded hash.
-	      replaceHashPath(encodedPath);
-	    } else {
-	      var location = getDOMLocation();
-	      var prevLocation = history.location;
-
-	      if (!forceNextPop && (0, _LocationUtils.locationsAreEqual)(prevLocation, location)) return; // A hashchange doesn't always == location change.
-
-	      if (ignorePath === (0, _PathUtils.createPath)(location)) return; // Ignore this change; we already setState in push/replace.
-
-	      ignorePath = null;
-
-	      handlePop(location);
-	    }
-	  };
-
-	  var handlePop = function handlePop(location) {
-	    if (forceNextPop) {
-	      forceNextPop = false;
-	      setState();
-	    } else {
-	      var action = 'POP';
-
-	      transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
-	        if (ok) {
-	          setState({ action: action, location: location });
-	        } else {
-	          revertPop(location);
-	        }
-	      });
-	    }
-	  };
-
-	  var revertPop = function revertPop(fromLocation) {
-	    var toLocation = history.location;
-
-	    // TODO: We could probably make this more reliable by
-	    // keeping a list of paths we've seen in sessionStorage.
-	    // Instead, we just default to 0 for paths we don't know.
-
-	    var toIndex = allPaths.lastIndexOf((0, _PathUtils.createPath)(toLocation));
-
-	    if (toIndex === -1) toIndex = 0;
-
-	    var fromIndex = allPaths.lastIndexOf((0, _PathUtils.createPath)(fromLocation));
-
-	    if (fromIndex === -1) fromIndex = 0;
-
-	    var delta = toIndex - fromIndex;
-
-	    if (delta) {
-	      forceNextPop = true;
-	      go(delta);
-	    }
-	  };
-
-	  // Ensure the hash is encoded properly before doing anything else.
-	  var path = getHashPath();
-	  var encodedPath = encodePath(path);
-
-	  if (path !== encodedPath) replaceHashPath(encodedPath);
-
-	  var initialLocation = getDOMLocation();
-	  var allPaths = [(0, _PathUtils.createPath)(initialLocation)];
-
-	  // Public interface
-
-	  var createHref = function createHref(location) {
-	    return '#' + encodePath(basename + (0, _PathUtils.createPath)(location));
-	  };
-
-	  var push = function push(path, state) {
-	    (0, _warning2.default)(state === undefined, 'Hash history cannot push state; it is ignored');
-
-	    var action = 'PUSH';
-	    var location = (0, _LocationUtils.createLocation)(path, undefined, undefined, history.location);
-
-	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
-	      if (!ok) return;
-
-	      var path = (0, _PathUtils.createPath)(location);
-	      var encodedPath = encodePath(basename + path);
-	      var hashChanged = getHashPath() !== encodedPath;
-
-	      if (hashChanged) {
-	        // We cannot tell if a hashchange was caused by a PUSH, so we'd
-	        // rather setState here and ignore the hashchange. The caveat here
-	        // is that other hash histories in the page will consider it a POP.
-	        ignorePath = path;
-	        pushHashPath(encodedPath);
-
-	        var prevIndex = allPaths.lastIndexOf((0, _PathUtils.createPath)(history.location));
-	        var nextPaths = allPaths.slice(0, prevIndex === -1 ? 0 : prevIndex + 1);
-
-	        nextPaths.push(path);
-	        allPaths = nextPaths;
-
-	        setState({ action: action, location: location });
-	      } else {
-	        (0, _warning2.default)(false, 'Hash history cannot PUSH the same path; a new entry will not be added to the history stack');
-
-	        setState();
-	      }
-	    });
-	  };
-
-	  var replace = function replace(path, state) {
-	    (0, _warning2.default)(state === undefined, 'Hash history cannot replace state; it is ignored');
-
-	    var action = 'REPLACE';
-	    var location = (0, _LocationUtils.createLocation)(path, undefined, undefined, history.location);
-
-	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
-	      if (!ok) return;
-
-	      var path = (0, _PathUtils.createPath)(location);
-	      var encodedPath = encodePath(basename + path);
-	      var hashChanged = getHashPath() !== encodedPath;
-
-	      if (hashChanged) {
-	        // We cannot tell if a hashchange was caused by a REPLACE, so we'd
-	        // rather setState here and ignore the hashchange. The caveat here
-	        // is that other hash histories in the page will consider it a POP.
-	        ignorePath = path;
-	        replaceHashPath(encodedPath);
-	      }
-
-	      var prevIndex = allPaths.indexOf((0, _PathUtils.createPath)(history.location));
-
-	      if (prevIndex !== -1) allPaths[prevIndex] = path;
-
-	      setState({ action: action, location: location });
-	    });
-	  };
-
-	  var go = function go(n) {
-	    (0, _warning2.default)(canGoWithoutReload, 'Hash history go(n) causes a full page reload in this browser');
-
-	    globalHistory.go(n);
-	  };
-
-	  var goBack = function goBack() {
-	    return go(-1);
-	  };
-
-	  var goForward = function goForward() {
-	    return go(1);
-	  };
-
-	  var listenerCount = 0;
-
-	  var checkDOMListeners = function checkDOMListeners(delta) {
-	    listenerCount += delta;
-
-	    if (listenerCount === 1) {
-	      (0, _DOMUtils.addEventListener)(window, HashChangeEvent, handleHashChange);
-	    } else if (listenerCount === 0) {
-	      (0, _DOMUtils.removeEventListener)(window, HashChangeEvent, handleHashChange);
-	    }
-	  };
-
-	  var isBlocked = false;
-
-	  var block = function block() {
-	    var prompt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-	    var unblock = transitionManager.setPrompt(prompt);
-
-	    if (!isBlocked) {
-	      checkDOMListeners(1);
-	      isBlocked = true;
-	    }
-
-	    return function () {
-	      if (isBlocked) {
-	        isBlocked = false;
-	        checkDOMListeners(-1);
-	      }
-
-	      return unblock();
-	    };
-	  };
-
-	  var listen = function listen(listener) {
-	    var unlisten = transitionManager.appendListener(listener);
-	    checkDOMListeners(1);
-
-	    return function () {
-	      checkDOMListeners(-1);
-	      unlisten();
-	    };
-	  };
-
-	  var history = {
-	    length: globalHistory.length,
-	    action: 'POP',
-	    location: initialLocation,
-	    createHref: createHref,
-	    push: push,
-	    replace: replace,
-	    go: go,
-	    goBack: goBack,
-	    goForward: goForward,
-	    block: block,
-	    listen: listen
-	  };
-
-	  return history;
-	};
-
-	exports.default = createHashHistory;
-
-/***/ }),
-/* 23 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	exports.__esModule = true;
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
-
-	var _warning = __webpack_require__(17);
-
-	var _warning2 = _interopRequireDefault(_warning);
-
-	var _PathUtils = __webpack_require__(15);
-
-	var _LocationUtils = __webpack_require__(12);
-
-	var _createTransitionManager = __webpack_require__(20);
-
-	var _createTransitionManager2 = _interopRequireDefault(_createTransitionManager);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	var clamp = function clamp(n, lowerBound, upperBound) {
-	  return Math.min(Math.max(n, lowerBound), upperBound);
-	};
-
-	/**
-	 * Creates a history object that stores locations in memory.
-	 */
-	var createMemoryHistory = function createMemoryHistory() {
-	  var props = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-	  var getUserConfirmation = props.getUserConfirmation,
-	      _props$initialEntries = props.initialEntries,
-	      initialEntries = _props$initialEntries === undefined ? ['/'] : _props$initialEntries,
-	      _props$initialIndex = props.initialIndex,
-	      initialIndex = _props$initialIndex === undefined ? 0 : _props$initialIndex,
-	      _props$keyLength = props.keyLength,
-	      keyLength = _props$keyLength === undefined ? 6 : _props$keyLength;
-
-
-	  var transitionManager = (0, _createTransitionManager2.default)();
-
-	  var setState = function setState(nextState) {
-	    _extends(history, nextState);
-
-	    history.length = history.entries.length;
-
-	    transitionManager.notifyListeners(history.location, history.action);
-	  };
-
-	  var createKey = function createKey() {
-	    return Math.random().toString(36).substr(2, keyLength);
-	  };
-
-	  var index = clamp(initialIndex, 0, initialEntries.length - 1);
-	  var entries = initialEntries.map(function (entry) {
-	    return typeof entry === 'string' ? (0, _LocationUtils.createLocation)(entry, undefined, createKey()) : (0, _LocationUtils.createLocation)(entry, undefined, entry.key || createKey());
-	  });
-
-	  // Public interface
-
-	  var createHref = _PathUtils.createPath;
-
-	  var push = function push(path, state) {
-	    (0, _warning2.default)(!((typeof path === 'undefined' ? 'undefined' : _typeof(path)) === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to push when the 1st ' + 'argument is a location-like object that already has state; it is ignored');
-
-	    var action = 'PUSH';
-	    var location = (0, _LocationUtils.createLocation)(path, state, createKey(), history.location);
-
-	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
-	      if (!ok) return;
-
-	      var prevIndex = history.index;
-	      var nextIndex = prevIndex + 1;
-
-	      var nextEntries = history.entries.slice(0);
-	      if (nextEntries.length > nextIndex) {
-	        nextEntries.splice(nextIndex, nextEntries.length - nextIndex, location);
-	      } else {
-	        nextEntries.push(location);
-	      }
-
-	      setState({
-	        action: action,
-	        location: location,
-	        index: nextIndex,
-	        entries: nextEntries
-	      });
-	    });
-	  };
-
-	  var replace = function replace(path, state) {
-	    (0, _warning2.default)(!((typeof path === 'undefined' ? 'undefined' : _typeof(path)) === 'object' && path.state !== undefined && state !== undefined), 'You should avoid providing a 2nd state argument to replace when the 1st ' + 'argument is a location-like object that already has state; it is ignored');
-
-	    var action = 'REPLACE';
-	    var location = (0, _LocationUtils.createLocation)(path, state, createKey(), history.location);
-
-	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
-	      if (!ok) return;
-
-	      history.entries[history.index] = location;
-
-	      setState({ action: action, location: location });
-	    });
-	  };
-
-	  var go = function go(n) {
-	    var nextIndex = clamp(history.index + n, 0, history.entries.length - 1);
-
-	    var action = 'POP';
-	    var location = history.entries[nextIndex];
-
-	    transitionManager.confirmTransitionTo(location, action, getUserConfirmation, function (ok) {
-	      if (ok) {
-	        setState({
-	          action: action,
-	          location: location,
-	          index: nextIndex
-	        });
-	      } else {
-	        // Mimic the behavior of DOM histories by
-	        // causing a render after a cancelled POP.
-	        setState();
-	      }
-	    });
-	  };
-
-	  var goBack = function goBack() {
-	    return go(-1);
-	  };
-
-	  var goForward = function goForward() {
-	    return go(1);
-	  };
-
-	  var canGo = function canGo(n) {
-	    var nextIndex = history.index + n;
-	    return nextIndex >= 0 && nextIndex < history.entries.length;
-	  };
-
-	  var block = function block() {
-	    var prompt = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-	    return transitionManager.setPrompt(prompt);
-	  };
-
-	  var listen = function listen(listener) {
-	    return transitionManager.appendListener(listener);
-	  };
-
-	  var history = {
-	    length: entries.length,
-	    action: 'POP',
-	    location: entries[index],
-	    index: index,
-	    entries: entries,
-	    createHref: createHref,
-	    push: push,
-	    replace: replace,
-	    go: go,
-	    goBack: goBack,
-	    goForward: goForward,
-	    canGo: canGo,
-	    block: block,
-	    listen: listen
-	  };
-
-	  return history;
-	};
-
-	exports.default = createMemoryHistory;
-
-/***/ }),
-/* 24 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _Obj2 = __webpack_require__(25);
-
-	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	var _Reference = __webpack_require__(26);
-
-	var _Reference2 = _interopRequireDefault(_Reference);
-
-	var _ClassMap = __webpack_require__(27);
-
-	var _ClassMap2 = _interopRequireDefault(_ClassMap);
-
-	var _ComputedProperty = __webpack_require__(28);
-
-	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Core
-	 */
-	var Observable = function (_Obj) {
-		_inherits(Observable, _Obj);
-
-		/**
-	  * The basic object class that notifies **observers** and **students** about 
-	  * changes in its attributes. 
-	  *
-	  * ## Observers
-	  * An observer is an object (in actuality a callback) that watches for changes on 
-	  * a certain attribute or it's child attributes, in case of nested Observables. 
-	  * An observer can {{#crossLink "Core.Observable/disregard"}}{{/crossLink}} the attribute to stop watching.
-	  *
-	  * 	// Initialize object and watch for changes
-	  * 	var obj = new Chicken.Core.Observable();
-	  * 	obj.set('foo', 'bar');
-	  * 	var callback = () => {
-	  * 		alert('Changed: ' + obj.get('foo'));
-	  * 	};
-	  * 	obj.observe('foo', callback);
-	  * 	
-	  * 	// Change
-	  * 	obj.set('foo', 'boo'); // Will alert 'Changed: boo'
-	  * 	
-	  * 	// Stop watching
-	  * 	obj.disregard('foo', callback);
-	  * 	obj.set('foo', 'back-to-bar'); // Will not alert anthing
-	  *
-	  * ## Students
-	  * A student is an object (in actuality a callback) that watches for changes in
-	  * **any attribute** or any **child attribute**, in case of nested Observables.
-	  * An observer can **neglect** their study to stop wachting.
-	  *
-	  * 	// Initialize object
-	  * 	var obj = new Chicken.Core.Observable();
-	  * 	obj.set('foo', 'bar');
-	  * 	var childObj = new Chicken.Core.Observable();
-	  * 	childObj.set('free', 'willy');
-	  * 	obj.set('child', childObj);
-	  *
-	  * 	// Listen
-	  * 	var callback = (changedAttributes) {
-	  * 		console.log(changedAttributes);
-	  * 	};
-	  * 	obj.study(callback);
-	  *
-	  * 	// Update attributes
-	  *	obj.set('foo', 'boo');                  // Will log ['foo']
-	  *	obj.get('child').set('free', 'tibet');  // Will log ['child']
-	  * 	childObj.set('foo', 'bee');             // Will log ['child']
-	  *
-	  * 	// Neglect my study
-	  * 	obj.neglect(callback);
-	  * 	obj.set('foo', 'back to bar');          // Will not log anything
-	  *
-	  * @class Core.Observable
-	  * @extends Core.Object
-	  *
-	  * @constructor
-	  * @param  {Object}  [initValues={}]       			 A hash of key-value pairs to initialize the object with
-	  * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
-	  **/
-		function Observable() {
-			var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-			var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-			_classCallCheck(this, Observable);
-
-			////////////////
-			// Properties //
-			////////////////
-
-			/**
-	   * @property observers
-	   * @type {Map}
-	   */
-			var _this = _possibleConstructorReturn(this, (Observable.__proto__ || Object.getPrototypeOf(Observable)).call(this));
-
-			// Basics
-
-
-			_this.observers = new Map();
-
-			/**
-	   * @attribute attributes
-	   * @type {object}
-	   */
-			_this.attributes = {};
-
-			/**
-	   * Whenever this property is true, no notifications will be triggered
-	   * 
-	   * @attribute notificationsDisabled
-	   * @type {Boolean}
-	   */
-			_this.notificationsDisabled = false;
-
-			// Scheduling
-			_this._scheduleAttributesChangedTimeout = false;
-			_this._scheduleAttributesChangedAttributes = null;
-
-			////////////////////
-			// Initialization //
-			////////////////////
-
-			// Initialize values
-			_this.withoutNotifications(function () {
-				_this.import(initValues, convertToObservables);
-			});
-
-			// Properties for internal use
-			_this._bindings = {};
-
-			return _this;
-		}
-
-		////////////////////
-		// Public methods //
-		////////////////////
-
-		/**
-	  * Check if attribute is defined
-	  *
-	  * @method has
-	  * @param  {string}  key The name of the key to check
-	  * @return {Boolean}     True when the attribute has been defined
-	  */
-
-
-		_createClass(Observable, [{
-			key: 'has',
-			value: function has(key) {
-
-				// Split
-				var parts = Number.isInteger(key) ? [key] : key.split(/\./);
-				var currentPart = parts.shift();
-
-				// No deep shit?
-				if (parts.length === 0) return this._has(currentPart) !== undefined;
-
-				// Look deeper
-				var value = this._get(currentPart);
-
-				// No value
-				if (value === undefined) {
-					return false;
-				}
-
-				// Check if the value is also an observable
-				if (Observable.isObservable(value)) {
-
-					// Pass the rest along to go a level deeper
-					return value.has(parts.join('.'));
-				} else {
-
-					return false;
-				}
-			}
-		}, {
-			key: '_has',
-			value: function _has(key) {
-				return this.attributes[key] !== undefined;
-			}
-
-			/**
-	   * Get attribute from object
-	   *
-	   * @method get
-	   * @param  {string} key The name of the key to retrieve the value of. You can use dot-notation to use deep-getting
-	   * @return The value or undefined when the key is not set
-	   */
-
-		}, {
-			key: 'get',
-			value: function get(key) {
-
-				// Split
-				if (key === undefined) throw new TypeError('There was no key provided');
-				var parts = key;
-				if (typeof key === 'string') parts = key.split(/\./);
-				var currentPart = parts.shift();
-
-				// Get value
-				var value = this._get(currentPart);
-
-				// Nothing?
-				if (value === undefined) return;
-
-				// Is it a reference?
-				if (value instanceof _Reference2.default) {
-					value = value.getValue();
-				}
-
-				// Value found?
-				if (parts.length === 0) {
-
-					// Is it computed?
-					if (value instanceof _ComputedProperty2.default) {
-						return value.getValue();
-					}
-
-					// Return the value as is.
-					return value;
-				}
-
-				// Check if the value is also an observable
-				if (Observable.isObservable(value)) {
-
-					// Pass the rest along to go a level deeper
-					return value.get(parts.join('.'));
-				} else {
-
-					// Nothing to be retrieved
-					return;
-					//throw new Error('The found value for ' + currentPart + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value));
-				}
-			}
-		}, {
-			key: '_get',
-			value: function _get(key) {
-				return this.attributes[key];
-			}
-
-			/**
-	   * Set attribute on object. When you set a attribute on Observable, all
-	   * *observers* and *students* will be notified of the change.
-	   *
-	   * @method set
-	   * @param {string/array} key   	The name of the key to store the value of. You can use dot-notation to use deep-setting
-	   * @param {mixed} value 		The value to store
-	   * @param {boolean} [convertToObservables=false]
-	   *        						Whether to convert standard object values into Observable instances
-	   * @chainable
-	   */
-
-		}, {
-			key: 'set',
-			value: function set(key, value) {
-				var _this2 = this;
-
-				var convertToObservables = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-
-				// Object given?
-				if ((typeof key === 'undefined' ? 'undefined' : _typeof(key)) === 'object') {
-
-					// Loop and set each
-					_underscore2.default.each(key, function (v, k) {
-						_this2.set(k, v, convertToObservables);
-					});
-					return this;
-				}
-
-				// Convert?
-				if (convertToObservables === true && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value !== null) {
-					if (value.constructor === Object) {
-						value = new Observable(value);
-					} else if (Array.isArray(value)) {
-						value = _ClassMap2.default.create('ObservableArray', [value]);
-					}
-				}
-
-				// Is it a computed attribute
-				if (value instanceof _ComputedProperty2.default) {
-					value.initialize(key, this);
-				}
-
-				// Is there a dot in there?
-				if (typeof key === 'string' && key.match(/\.[\w]/)) {
-
-					////////////////////////
-					// Split and deep set //
-					////////////////////////
-
-					var parts = key.split(/\./);
-					var currentPart = parts.shift();
-
-					// Does the first key not exist?
-					if (this.attributes[currentPart] === undefined) {
-
-						// Should it be an array?
-						var newValue = void 0;
-						if (Number.isInteger(parts[0]) || typeof parts[0] === 'string' && parts[0].match(/^\d+$/)) {
-
-							// Create list (using classmap to prevent circular dependencies)
-							newValue = _ClassMap2.default.create('ObservableArray');
-						} else {
-
-							// Create it
-							newValue = new Observable();
-						}
-
-						// Store it
-						this.attributes[currentPart] = newValue;
-					}
-
-					// Do deep setting
-					this.get(currentPart).set(parts.join('.'), value);
-
-					return this;
-				}
-
-				// Now set the attribute
-				this.setAttribute(key, value, convertToObservables);
-
-				return this;
-			}
-		}, {
-			key: 'setAttribute',
-			value: function setAttribute(key, value) {
-				var _this3 = this;
-
-				// Is the value identical?
-				if (_ClassMap2.default.get('Utils').areEqual(value, this.get(key))) {
-					return this;
-				}
-
-				// Set it
-				this._set(key, value);
-
-				// Is the value observable?
-				if (Observable.isObservable(value)) {
-
-					// Study the object
-					value.study(function () {
-						_this3._scheduleAttributeChanged(key);
-					});
-				}
-
-				// Is the value a reference?
-				else if (value instanceof _Reference2.default) {
-
-						// Study the object
-						value.watch(function () {
-							_this3._scheduleAttributeChanged(key);
-						});
-					}
-
-				// Update attribute
-				this._scheduleAttributeChanged(key);
-
-				return this;
-			}
-		}, {
-			key: 'setIfChanged',
-			value: function setIfChanged(key, value) {
-
-				// Original
-				var originalValue = this.get(key);
-				if (originalValue == value) return this;
-
-				return this.set(key, value);
-			}
-		}, {
-			key: '_set',
-			value: function _set(key, value) {
-
-				// Is there a current value that is a reference?
-				if (this.attributes[key] instanceof _Reference2.default && !(value instanceof _Reference2.default)) {
-
-					// Write the referenced value
-					this.attributes[key].setValue(value);
-				} else {
-
-					// Store the value
-					this.attributes[key] = value;
-				}
-				return this;
-			}
-		}, {
-			key: 'setSilently',
-			value: function setSilently(key, value) {
-				var _this4 = this;
-
-				var convertToObservables = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-				return this.withoutNotifications(function () {
-					_this4.set(key, value, convertToObservables);
-				});
-			}
-		}, {
-			key: 'unset',
-			value: function unset(key) {
-
-				this._unset(key);
-
-				// Update attribute
-				this._scheduleAttributeChanged(key);
-
-				return this;
-			}
-		}, {
-			key: '_unset',
-			value: function _unset(key) {
-				delete this.attributes[key];
-			}
-		}, {
-			key: 'import',
-			value: function _import(obj) {
-				var _this5 = this;
-
-				var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-
-				// Import all items in hash
-				this.withoutNotifications(function () {
-					_underscore2.default.each(obj, function (value, key) {
-						_this5.set(key, value, convertToObservables);
-					});
-				});
-
-				// Notify!
-				if (!this.notificationsDisabled) this.trigger(Observable.Events.Import);
-
-				return this;
-			}
-		}, {
-			key: 'fill',
-			value: function fill(obj) {
-				var _this6 = this;
-
-				// Loop through object
-				_underscore2.default.each(obj, function (value, key) {
-
-					// Get existing value
-					if (_this6.has(key)) {
-
-						// Get value
-						var curValue = _this6.get(key);
-
-						// Observable?
-						if (curValue instanceof Observable) {
-							curValue.fill(value);
-						} else {
-							_this6.set(key, value, true);
-						}
-					} else {
-
-						// Just set it.
-						_this6.set(key, value, true);
-					}
-				});
-				return this;
-			}
-
-			/**
-	   * Increment given attribute's numeric value
-	   *
-	   * @method increment
-	   * @param  {string} key          
-	   * @param  {Number} by           (Default = 1)
-	   * @param  {Number} defaultValue (Default = 0)
-	   * @chainable
-	   */
-
-		}, {
-			key: 'increment',
-			value: function increment(key) {
-				var by = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-				var defaultValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-
-				var v = this.get(key);
-				if (v === undefined || typeof v !== 'number') v = defaultValue;
-				v += by;
-				this.set(key, v);
-				return this;
-			}
-
-			/**
-	   * Decrement given attribute's numeric value
-	   *
-	   * @method increment
-	   * @param  {string} key          
-	   * @param  {Number} by           (Default = 1)
-	   * @param  {Number} defaultValue (Default = 0)
-	   * @chainable
-	   */
-
-		}, {
-			key: 'decrement',
-			value: function decrement(key) {
-				var by = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1;
-				var defaultValue = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
-
-
-				var v = this.get(key);
-				if (v === undefined || typeof v !== 'number') v = defaultValue;
-				v -= by;
-				this.set(key, v);
-				return this;
-			}
-
-			/**
-	   * Toggle the given attribute's boolean value
-	   *
-	   * @method toggle
-	   * @param  {string}  key                
-	   * @param  {Boolean} valueWhenUndefined  (Default = true) What value to set when the attribute does not have a value yet
-	   * @chainable
-	   */
-
-		}, {
-			key: 'toggle',
-			value: function toggle(key) {
-				var valueWhenUndefined = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-
-				var v = this.get(key);
-				if (v === undefined || typeof v !== 'boolean') {
-					v = valueWhenUndefined;
-				} else {
-					v = !v;
-				}
-				this.set(key, v);
-				return this;
-			}
-
-			/**
-	   * Listen for any changes in any of the object's attributes. 
-	   * The callback will receive an array containing the names of
-	   * all updates attributes. 
-	   *
-	   * Note: This is an alias of the 'change' event, so calling
-	   * ```this.on('change', callback)``` will achieve the same result.
-	   *
-	   * @example
-	   * 	// Initialize object
-	   * 	var obj = new Chicken.Core.Observable();
-	   * 	obj.set('foo', 'bar');
-	   * 	var childObj = new Chicken.Core.Observable();
-	   * 	childObj.set('free', 'willy');
-	   * 	obj.set('child', childObj);
-	   *
-	   * 	// Listen
-	   * 	obj.study((changedAttributes) {
-	   * 		console.log(changedAttributes);
-	   * 	});
-	   *
-	   * 	// Update attributes
-	   *	obj.set('foo', 'boo');                  // Will log ['foo']
-	   *	obj.get('child').set('free', 'tibet');  // Will log ['child']
-	   * 	childObj.set('foo', 'bee');             // Will log ['child']
-	   *
-	   * @method study
-	   * @param  {Function} callback
-	   * @chainable
-	   */
-
-		}, {
-			key: 'study',
-			value: function study(callback) {
-
-				// This is an alias of the 'change' event
-				return this.on(Observable.Events.Change, callback);
-			}
-
-			/**
-	   * Stop listening for changes on the object's attributes.
-	   *
-	   * Note: This is an alias of the 'change' event, so calling
-	   * ```this.off('change', callback)``` will achieve the same result.
-	   *
-	   * @example
-	   * 
-	   * 
-	   * @method neglect
-	   * @param  {Function} callback 
-	   * @chainable
-	   */
-
-		}, {
-			key: 'neglect',
-			value: function neglect(callback) {
-
-				// This is an alias of the 'change' event
-				return this.off(Observable.Events.Change, callback);
-			}
-
-			/**
-	   * Observe the attribute with given key, so that callback is called
-	   * whenever the attribute or it's child attributes change.
-	   *
-	   * 	// Initialize object and watch for changes
-	   * 	var obj = new Chicken.Core.Observable();
-	   * 	obj.set('foo', 'bar');
-	   * 	var callback = () => {
-	   * 		alert('Changed: ' + obj.get('foo'));
-	   * 	};
-	   * 	obj.observe('foo', callback);
-	   * 	
-	   * 	// Change
-	   * 	obj.set('foo', 'boo'); // Will alert 'Changed: boo'
-	   * 	
-	   * @method observe
-	   * @param  {string|array}   key      The name of the attribute to observe
-	   * @param  {Function} callback 
-	   * @chainable
-	   */
-
-		}, {
-			key: 'observe',
-			value: function observe(keyOrKeys, callback) {
-				var _this7 = this;
-
-				////////////////////
-				// More than one? //
-				////////////////////
-
-				if (Array.isArray(keyOrKeys)) {
-					_underscore2.default.each(keyOrKeys, function (key) {
-						_this7.observe(key, callback);
-					});
-					return this;
-				}
-				var key = keyOrKeys;
-
-				//////////////////////////////
-				// Does the key have a dot? //
-				//////////////////////////////
-
-				var parts = key.split(/\./);
-				if (parts.length > 1) {
-
-					// Get the object concerned
-					var attrKey = parts.shift();
-					var obj = this.get(attrKey);
-					var objKey = parts.join('.');
-
-					// Is it an observable?
-					if (Observable.isObservable(obj) && obj.observe) {
-
-						// Observe this observable itself
-						this.observe(attrKey, callback);
-
-						// Go deeper
-						return obj.observe(objKey, callback);
-					}
-
-					throw new Error('Cannot observe property of non-existing object: ' + key);
-				}
-
-				//////////////////
-				// Add observer //
-				//////////////////
-
-				if (!this.observers.has(key)) {
-					this.observers.set(key, new Set());
-				}
-				var observers = this.observers.get(key);
-
-				// Add callback
-				observers.add(callback);
-
-				return this;
-			}
-
-			/**
-	   * Stop observing the attribute with given key, or any of it's
-	   * child attributes.
-	   *
-	   * @method disregard
-	   * @param  {string}   key      The name of the attribute to disregard
-	   * @param  {Function} callback 
-	   * @chainable
-	   */
-
-		}, {
-			key: 'disregard',
-			value: function disregard(key, callback) {
-
-				// Get the observers
-				var observers = this.observers.get(key);
-				if (observers === undefined) return this;
-
-				// Remove callback
-				observers.delete(callback);
-
-				return this;
-			}
-
-			/**
-	   * Get the Observable including all its children
-	   * as a native object.
-	   *
-	   * @method toObject
-	   * @return {object}
-	   */
-
-		}, {
-			key: 'toObject',
-			value: function toObject() {
-				var includedUids = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
-
-				var obj = {};
-				_underscore2.default.each(this.attributes, function (item, key) {
-
-					// Observable?
-					if (Observable.isObservable(item)) {
-
-						// Already included?
-						var guid = _ClassMap2.default.get('Utils').uidFor(item);
-						if (_underscore2.default.indexOf(includedUids, guid) !== -1) {
-							obj[key] = '...recursive(' + guid + ')...';
-							return;
-						}
-						includedUids.push(guid);
-
-						// Array?
-						if (item instanceof Observable) {
-							item = item.toObject(includedUids);
-						} else {
-							item = item.toArray(includedUids);
-						}
-					}
-
-					obj[key] = item;
-				});
-
-				return obj;
-			}
-
-			/**
-	   * Apply given callback for each attribute defined in this observable
-	   *
-	   * @method each
-	   * @param  {Function} callback
-	   * @chainable
-	   */
-
-		}, {
-			key: 'each',
-			value: function each(callback) {
-				var context = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-
-				_underscore2.default.each(this.attributes, callback, context);
-				return this;
-			}
-
-			/**
-	   * Execute given callback without triggering change notifications.
-	   * 
-	   * @method withoutNotifications
-	   * @param  {Function} callback 
-	   * @chainable
-	   */
-
-		}, {
-			key: 'withoutNotifications',
-			value: function withoutNotifications(callback) {
-
-				var wasDisabled = this.notificationsDisabled;
-				this.notificationsDisabled = true;
-
-				callback();
-
-				this.notificationsDisabled = wasDisabled;
-
-				return this;
-			}
-		}, {
-			key: 'clone',
-			value: function clone() {
-				var convertToObservables = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-
-
-				// Make copy!
-				var c = this.constructor;
-				var copy = new c(this.toObject(), convertToObservables);
-				return copy;
-			}
-
-			/////////////////////
-			// Private methods //
-			/////////////////////
-
-		}, {
-			key: '_scheduleAttributeChanged',
-			value: function _scheduleAttributeChanged(key) {
-				var _this8 = this;
-
-				// Notifications disabled?
-				if (this.notificationsDisabled) return;
-
-				// Already something scheduled?
-				if (!this._scheduleAttributesChangedTimeout) {
-
-					// Schedule it
-					this._scheduleAttributesChangedAttributes = [];
-					this._scheduleAttributesChangedTimeout = setTimeout(function () {
-
-						// Trigger it now!
-						_this8._scheduleAttributesChangedTimeout = false;
-						_this8._triggerAttributesChanged();
-					}, Observable.AttributeChangedDelay);
-				}
-
-				// Add attribute to the set
-				this._scheduleAttributesChangedAttributes.push(key);
-			}
-		}, {
-			key: '_triggerAttributesChanged',
-			value: function _triggerAttributesChanged() {
-				var _this9 = this;
-
-				// Notifications disabled?
-				if (this.notificationsDisabled) return;
-
-				// Clear for next time.
-				if (this._scheduleAttributesChangedTimeout) clearTimeout(this._scheduleAttributesChangedTimeout);
-				this._scheduleAttributesChangedTimeout = false;
-
-				// Check my attributes
-				var attrs = _underscore2.default.unique(this._scheduleAttributesChangedAttributes);
-				if (attrs) {
-
-					// Collect the observers, using a Set to make sure the same observer can't be called twice
-					var combinedObservers = new Set();
-					_underscore2.default.each(attrs, function (attr) {
-
-						// Get observers
-						var attrObservers = _this9.observers.get(attr);
-						if (attrObservers) {
-							attrObservers.forEach(function (observer) {
-
-								// Add it.
-								combinedObservers.add(observer);
-							});
-						}
-					});
-
-					// Did we have any observers?
-					combinedObservers.forEach(function (observer) {
-
-						// Now call it.
-						observer.apply(_this9);
-					});
-
-					// Students as well.
-					this.trigger(Observable.Events.Change, attrs);
-				}
-			}
-		}, {
-			key: 'isObservable',
-			value: function isObservable() {
-				return true;
-			}
-		}]);
-
-		return Observable;
-	}(_Obj3.default);
-
-	////////////
-	// Events //
-	////////////
-
-	Observable.Events = {
-
-		/**
-	  * This event is fired whenever anything changes in the array
-	  * of one of its observable items.
-	  * 
-	  * @event change
-	  */
-		Change: 'change',
-
-		/**
-	  * This event is fired whenever an import is completed
-	  *
-	  * @event import
-	  */
-		Import: 'import'
-
-	};
-
-	Observable.isObservable = function (obj) {
-
-		return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
-	};
-
-	Observable.AttributeChangedDelay = 1;
-
-	_ClassMap2.default.register('Observable', Observable);
-
-	module.exports = Observable;
-
-/***/ }),
-/* 25 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var promiseCount = 0;
-
-	var objectCount = 0;
-
-	/**
-	 * @module Core
-	 */
-
-	var Obj = function () {
-
-		/**
-	  * Basic object that can trigger events
-	  *
-	  * @class Core.Obj
-	  * @constructor
-	  */
-		function Obj() {
-			_classCallCheck(this, Obj);
-
-			// Init values
-			this._listeners = new Map();
-			this._promises = new Map();
-
-			this.__chickenUid_Obj = '**Obj' + ++objectCount + '**';
-		}
-
-		_createClass(Obj, [{
-			key: '__getUid',
-			value: function __getUid() {
-				return this.__chickenUid_Obj;
-			}
-
-			////////////////////
-			// Public methods //
-			////////////////////
-
-		}, {
-			key: 'promise',
-			value: function promise(key, callback) {
-
-				// Do the callback
-				var promise = this._getPromiseInfo(key);
-				callback.apply(null, [promise.resolve, promise.reject]);
-				return promise.promise;
-			}
-		}, {
-			key: 'resolvePromise',
-			value: function resolvePromise(key) {
-				for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-					args[_key - 1] = arguments[_key];
-				}
-
-				this._getPromiseInfo(key).resolve.apply(this, args);
-				return this;
-			}
-		}, {
-			key: 'rejectPromise',
-			value: function rejectPromise(key) {
-				for (var _len2 = arguments.length, args = Array(_len2 > 1 ? _len2 - 1 : 0), _key2 = 1; _key2 < _len2; _key2++) {
-					args[_key2 - 1] = arguments[_key2];
-				}
-
-				this._getPromiseInfo(key).reject.apply(this, args);
-				return this;
-			}
-		}, {
-			key: 'getPromise',
-			value: function getPromise(key) {
-				return this._getPromiseInfo(key).promise;
-			}
-		}, {
-			key: 'resetPromise',
-			value: function resetPromise(key) {
-				this._promises.delete(key);
-			}
-		}, {
-			key: '_getPromiseInfo',
-			value: function _getPromiseInfo(key) {
-
-				// Was the promise already defined
-				if (!this._promises.has(key)) {
-
-					// Store it
-					var p = {};
-					p.promise = new Promise(function (resolve, reject) {
-						p.resolve = resolve;
-						p.reject = reject;
-						p.id = promiseCount++;
-					});
-					this._promises.set(key, p);
-				}
-				return this._promises.get(key);
-			}
-		}, {
-			key: 'when',
-			value: function when() {
-				var _this = this;
-
-				for (var _len3 = arguments.length, args = Array(_len3), _key3 = 0; _key3 < _len3; _key3++) {
-					args[_key3] = arguments[_key3];
-				}
-
-				// The last one should be a callback
-				var successCallback = args.pop();
-				var failCallback = function failCallback(error) {
-					for (var _len4 = arguments.length, args = Array(_len4 > 1 ? _len4 - 1 : 0), _key4 = 1; _key4 < _len4; _key4++) {
-						args[_key4 - 1] = arguments[_key4];
-					}
-
-					throw new Error('Uncaught promise failure for ' + args.join(', ') + ': ' + error);
-				};
-				if (args.length > 1 && typeof _underscore2.default.last(args) === 'function') {
-					failCallback = successCallback;
-					successCallback = args.pop();
-				}
-
-				// Collect promises
-				var promises = [];
-				_underscore2.default.each(args, function (arg) {
-					promises.push(_this._getPromiseInfo(arg).promise);
-				});
-
-				// One?
-				if (promises.length === 1) {
-
-					// Simple.
-					promises[0].then(successCallback, failCallback);
-				} else {
-
-					// When all are done
-					Promise.all(promises).then(successCallback, failCallback);
-				}
-
-				return this;
-			}
-
-			/**
-	   * Add listener for chosen event
-	   *
-	   * @method on
-	   * @param  {string}   eventName The event name to listen for.
-	   * @param  {Function} callback  The function to call when the event occurs. Depending on the event, this 
-	   *                              callback can receive 0 or more arguments when called.
-	   * @example
-	   * 		obj.on('message', function(message) {
-	   * 			console.log(message);
-	   * 		});
-	   * @chainable
-	   */
-
-		}, {
-			key: 'on',
-			value: function on(eventName, callback) {
-
-				// Get the set
-				if (!this._listeners.has(eventName)) {
-					this._listeners.set(eventName, new Set());
-				}
-				var events = this._listeners.get(eventName);
-
-				// Add callback
-				events.add(callback);
-
-				// Chain
-				return this;
-			}
-
-			/**
-	   * Remove a previously added listener for chosen event
-	   *
-	   * @method off
-	   * @param  {string}   eventName The event name to remove listener for
-	   * @param  {Function} callback  The previously added callback to remove from listeners
-	   * @chainable
-	   */
-
-		}, {
-			key: 'off',
-			value: function off(eventName, callback) {
-
-				// Get the callbacks
-				var callbacks = this._listeners.get(eventName);
-				if (callbacks === undefined) return this;
-
-				// Remove callback
-				callbacks.delete(callback);
-
-				return this;
-			}
-
-			/**
-	   * Trigger calling of all registered callbacks for given event
-	   * with given arguments.
-	   *
-	   * @method trigger
-	   * @param  {string}    eventName The event name to trigger callbacks for
-	   * @param  {...mixed}  args      Zero or more arguments to pass along to each callback
-	   * @chainable
-	   */
-
-		}, {
-			key: 'trigger',
-			value: function trigger(eventName) {
-				var _this2 = this;
-
-				for (var _len5 = arguments.length, args = Array(_len5 > 1 ? _len5 - 1 : 0), _key5 = 1; _key5 < _len5; _key5++) {
-					args[_key5 - 1] = arguments[_key5];
-				}
-
-				// Get the callbacks
-				var callbacks = this._listeners.get(eventName);
-				if (callbacks === undefined) return this;
-
-				// Loop and call
-				callbacks.forEach(function (cb) {
-					cb.apply(_this2, args);
-				});
-
-				return this;
-			}
-
-			/////////////////////
-			// Private methods //
-			/////////////////////
-
-
-		}]);
-
-		return Obj;
-	}();
-
-	module.exports = Obj;
-
-/***/ }),
-/* 26 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	var Reference = function () {
-		function Reference(observable, path) {
-			_classCallCheck(this, Reference);
-
-			this.observable = observable;
-			this.path = path;
-		}
-
-		_createClass(Reference, [{
-			key: "getValue",
-			value: function getValue() {
-				return this.observable.get(this.path);
-			}
-		}, {
-			key: "setValue",
-			value: function setValue(value) {
-				this.observable.set(this.path, value);
-				return this;
-			}
-		}, {
-			key: "watch",
-			value: function watch(callback) {
-				this.observable.observe(this.path, callback);
-			}
-		}]);
-
-		return Reference;
-	}();
-
-	module.exports = Reference;
-
-/***/ }),
-/* 27 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
-	/**
-	 * @module Helpers
-	 */
-
-	var ClassMap = {
-
-		classes: new Map(),
-
-		get: function get(className) {
-			return this.classes.get(className);
-		},
-		register: function register(className, c) {
-			this.classes.set(className, c);
-			return this;
-		},
-		create: function create(className) {
-			var args = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-
-			var c = ClassMap.get(className);
-			if (c === undefined) throw new Error('The ' + className + ' class is not registered in the ClassMap');
-			return new (Function.prototype.bind.apply(c, [null].concat(_toConsumableArray(args))))();
-		},
-		isA: function isA(obj, className) {
-			var c = ClassMap.get(className);
-			if (c === undefined) throw new Error('The ' + className + ' class is not registered in the ClassMap');
-			return obj instanceof c;
-		}
-	};
-
-	module.exports = ClassMap;
-
-/***/ }),
-/* 28 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Core
-	 */
-	var ComputedProperty = function () {
-
-		/**
-	  * @class Core.ComputedProperty
-	  * 
-	  * @constructor
-	  * @param  {Array}   			dependencies 
-	  * @param  {Function} 			callback     	 
-	  */
-		function ComputedProperty(dependencies, callback) {
-			_classCallCheck(this, ComputedProperty);
-
-			/**
-	   * The Observable instance that this computed attribute is
-	   * a part of.
-	   * 
-	   * @property observable
-	   * @type {Core.Observable}
-	   */
-			this.observable = null;
-
-			/**
-	   * The attribute name within the Observable that this ComputedProperty
-	   * represents.
-	   * 
-	   * @property name
-	   * @type {string}
-	   */
-			this.name = null;
-
-			/**
-	   * The names of the attributes that this compution depends on. These
-	   * attributes will also be injected into the callback.
-	   *
-	   * @property dependencies
-	   * @type {array}
-	   */
-			this.dependencies = dependencies;
-
-			/**
-	   * The compution function that is called when the value is requested.
-	   *
-	   * @property callback
-	   * @type {Function}
-	   */
-			this.callback = callback;
-		}
-
-		/**
-	  * Get the current computed value 
-	  *
-	  * @method getValue
-	  * @return {mixed}
-	  */
-
-
-		_createClass(ComputedProperty, [{
-			key: 'getValue',
-			value: function getValue() {
-				var _this = this;
-
-				// Get dependency values
-				var args = [];
-				_underscore2.default.each(this.dependencies, function (dep) {
-					args.push(_this.observable.get(dep));
-				});
-
-				// Do the callback
-				return this.callback.apply(this.observable, args);
-			}
-
-			/**
-	   * Alias of `getValue`
-	   * 
-	   * @method toString
-	   * @return {mixed}
-	   */
-
-		}, {
-			key: 'toString',
-			value: function toString() {
-				return this.getValue();
-			}
-
-			/**
-	   * Make this property part of an Observable object, and 
-	   * start watching for changes.
-	   * 
-	   * @method initialize
-	   * @param {string} name 					The name op the property
-	   * @param {Core.Observable} observable 		The observable instance this property is a part of
-	   * @chainable
-	   */
-
-		}, {
-			key: 'initialize',
-			value: function initialize(name, observable) {
-				var _this2 = this;
-
-				// Localize
-				this.name = name;
-				this.observable = observable;
-
-				// Watch the properties
-				this.observable.observe(this.dependencies, function () {
-					_this2.observable._scheduleAttributeChanged(_this2.name);
-				});
-
-				return this;
-			}
-		}]);
-
-		return ComputedProperty;
-	}();
-
-	module.exports = ComputedProperty;
-
-/***/ }),
-/* 29 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _Observable2 = __webpack_require__(24);
-
-	var _Observable3 = _interopRequireDefault(_Observable2);
-
-	var _Chainable = __webpack_require__(30);
-
-	var _Chainable2 = _interopRequireDefault(_Chainable);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Core
-	 */
-	var SettingsObject = function (_Observable) {
-		_inherits(SettingsObject, _Observable);
-
-		/**
-	  * @class Core.SettingsObject
-	  * @extends Core.Observable
-	  *
-	  * @constructor
-	  * @param {object}  defaultSettings  	Initialize with these default settings
-	  * @param {array}   [allowedKeys] 		Optional array of allowed keys. By default all keys are allowed	 
-	  */
-		function SettingsObject() {
-			var defaultSettings = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-			var allowedKeys = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : [];
-
-			_classCallCheck(this, SettingsObject);
-
-			/**
-	   * @property allowedKeys
-	   * @type Array
-	   */
-			var _this = _possibleConstructorReturn(this, (SettingsObject.__proto__ || Object.getPrototypeOf(SettingsObject)).call(this, defaultSettings));
-
-			// Instantiate with default settings
-
-
-			_this.allowedKeys = allowedKeys;
-
-			_this.notificationsDisabled = true;
-
-			return _this;
-		}
-
-		/**
-	  * Apply given settings
-	  *
-	  * @method apply
-	  * @param {object} 	settings	A hash-object with keys and values
-	  * @chainable
-	  */
-
-
-		_createClass(SettingsObject, [{
-			key: 'apply',
-			value: function apply(settings) {
-				var _this2 = this;
-
-				// Apply each key individually
-				_underscore2.default.each(settings, function (value, key) {
-					_this2.set(key, value);
-				});
-
-				return this;
-			}
-
-			// Extra check for allowedKeys.
-
-		}, {
-			key: 'set',
-			value: function set(key, value) {
-
-				// Is it allowed?
-				if (this.allowedKeys && this.allowedKeys.length > 0 && !_underscore2.default.contains(this.allowedKeys, key)) {
-					throw new Error('This SettingsObject does not have a setting for "' + key + '". The allowed settings are: ' + this.allowedKeys.join(', '));
-				}
-
-				// Do it.
-				return _get(SettingsObject.prototype.__proto__ || Object.getPrototypeOf(SettingsObject.prototype), 'set', this).call(this, key, value);
-			}
-		}]);
-
-		return SettingsObject;
-	}(_Observable3.default);
-
-	module.exports = (0, _Chainable2.default)(SettingsObject);
-
-/***/ }),
-/* 30 */
-/***/ (function(module, exports) {
-
-	"use strict";
-
-	module.exports = function (cls) {
-
-		cls.create = function () {
-			for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-				args[_key] = arguments[_key];
-			}
-
-			return new (Function.prototype.bind.apply(cls, [null].concat(args)))();
-		};
-
-		return cls;
-	};
-
-/***/ }),
-/* 31 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _Obj = __webpack_require__(25);
-
-	var _Obj2 = _interopRequireDefault(_Obj);
-
-	var _Element2 = __webpack_require__(32);
-
-	var _Element3 = _interopRequireDefault(_Element2);
-
-	var _Transition = __webpack_require__(33);
-
-	var _Transition2 = _interopRequireDefault(_Transition);
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Dom
-	 */
-	var ViewContainer = function (_Element) {
-		_inherits(ViewContainer, _Element);
-
-		/**
-	  * A ViewContainer is en DomElement in your application that
-	  * can contain a rendered View. Each ViewContainer needs a 
-	  * unique name, and the main ViewContainer for the application
-	  * is always called 'main'.
-	  * 
-	  * @class Dom.ViewContainer 
-	  * @extends Core.Object
-	  *
-	  * @constructor
-	  * @param {jQuery} $element
-	  * @param {Application} application
-	  */
-		function ViewContainer($element, application) {
-			_classCallCheck(this, ViewContainer);
-
-			// Private props
-			var _this = _possibleConstructorReturn(this, (ViewContainer.__proto__ || Object.getPrototypeOf(ViewContainer)).call(this, $element, application));
-
-			_this._isLoading = false;
-
-			////////////////
-			// Properties //
-			////////////////
-
-			/**
-	   * The unique name you can use in your routes to target this
-	   * ViewContainer.
-	   * 
-	   * @property name
-	   * @type {string}
-	   */
-			_this.name = ViewContainer.getViewName($element);
-
-			/**
-	   * The Routing.Action that rendered the content that is currently
-	   * in this ViewContainer
-	   * 
-	   * @property currentAction
-	   * @type {Routing.Action}
-	   */
-			_this.currentAction = null;
-
-			/**
-	   * The default transition to use for this ViewContainer
-	   * 
-	   * @property defaultTransition
-	   * @type {string}
-	   */
-			_this.defaultTransition = $element.attr('transition');
-
-			/**
-	   * @property transitionsDisabled
-	   * @type {boolean}
-	   */
-			_this.transitionsDisabled = false;
-
-			/**
-	   * Currently active content 
-	   * 
-	   * @property $currentContent
-	   * @type {jQuery}
-	   */
-			_this.$currentContent = null;
-
-			_this.currentView = null;
-
-			return _this;
-		}
-
-		/**
-	  * Initialize the ViewContainer. 
-	  *
-	  * @method initialize
-	  * @chainable
-	  */
-
-
-		_createClass(ViewContainer, [{
-			key: 'initialize',
-			value: function initialize() {
-				this.$element.addClass(ViewContainer.Classes.Initialized);
-				return this;
-			}
-
-			/**
-	   * @method setActionContent
-	   * @param {string} 				content 			The (HTML) content to render
-	   * @param {boolean}				setLoadingFalse		Whether to set the loading-state to false
-	   * @chainable
-	   */
-
-		}, {
-			key: 'setContent',
-			value: function setContent(content) {
-				var _this2 = this;
-
-				var setLoadingFalse = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-
-				// Transition?
-				var transition = this.currentAction.transition;
-				if (!transition && transition !== false) {
-
-					// Use my default transition
-					transition = this.defaultTransition;
-				}
-
-				// No longer loading
-				if (setLoadingFalse) this.setLoading(false);
-
-				// Use transition?
-				this.transitionContent(content, transition).then(function () {
-
-					// Apply hooks
-					ViewContainer.any.trigger('render', _this2);
-				});
-
-				return this;
-			}
-		}, {
-			key: 'transitionContent',
-			value: function transitionContent(newContent, transitionName) {
-				var _this3 = this;
-
-				return new Promise(function (resolve) {
-
-					// Put content into container
-					var $newContent = (0, _jquery2.default)('<div class="view-container-element" />').html(newContent);
-
-					// No transition?
-					if (!transitionName || transitionName === 'none' || _this3.transitionsDisabled) {
-
-						// Remove old content
-						_this3._fireHooks('beforeRender');
-						_this3.$element.find('.view-container-element').remove();
-
-						// Set content now
-						_this3.$element.append($newContent);
-
-						// Switch!
-						_this3.$currentContent = $newContent;
-						_this3.trigger('content', newContent);
-						_this3._fireHooks('afterRender');
-
-						return resolve();
-					}
-
-					// Create transition
-					var transition = new _Transition2.default(_this3.$element, _this3.$currentContent, $newContent, transitionName);
-					_this3._fireHooks('beforeRender');
-					transition.play().then(function () {
-
-						// Remove old content
-						if (_this3.$currentContent) {
-							_this3.$currentContent.remove();
-						}
-
-						// Switch!
-						_this3.$currentContent = $newContent;
-						_this3.trigger('content', newContent);
-						_this3._fireHooks('afterRender');
-
-						// Done!
-						resolve();
-					});
-				});
-			}
-		}, {
-			key: 'setView',
-			value: function setView(view) {
-
-				this.currentView = view;
-				return this;
-			}
-		}, {
-			key: 'setAction',
-			value: function setAction(action) {
-				this.currentAction = action;
-				return this;
-			}
-		}, {
-			key: 'setLoading',
-			value: function setLoading() {
-				var loading = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : true;
-
-				this._isLoading = loading;
-				this.$element.toggleClass(ViewContainer.Classes.Loading, loading);
-				return this;
-			}
-		}, {
-			key: 'isLoading',
-			value: function isLoading() {
-				return this._isLoading;
-			}
-		}, {
-			key: 'isInDom',
-			value: function isInDom() {
-
-				return this.$element.closest(document.documentElement).length > 0;
-			}
-		}]);
-
-		return ViewContainer;
-	}(_Element3.default);
-
-	ViewContainer.Classes = {
-		Initialized: 'initialized',
-		Loading: 'loading'
-	};
-	ViewContainer.ElementSelector = 'view-container:not(.initialized),[view-container]:not(.initialized)';
-	ViewContainer.DefaultName = 'main';
-
-	ViewContainer.getViewName = function ($element) {
-
-		// Get it either from the name-attr or view-attr
-		var name = $element.is('view-container') ? $element.attr('name') : $element.attr('view-container');
-
-		// No?
-		if (!name) name = ViewContainer.DefaultName;
-
-		return name;
-	};
-
-	ViewContainer.any = new _Obj2.default();
-
-	module.exports = ViewContainer;
-
-/***/ }),
-/* 32 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _Obj2 = __webpack_require__(25);
-
-	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Dom
-	 */
-	var Element = function (_Obj) {
-		_inherits(Element, _Obj);
-
-		/**
-	  * @class Dom.Element
-	  * @extends Core.Obj
-	  *
-	  * @constructor
-	  * @param {jQuery} $element
-	  * @param {Application} [application]
-	  */
-		function Element($element) {
-			_classCallCheck(this, Element);
-
-			/**
-	   * The jQuery element that is the ViewContainer
-	   * 
-	   * @property $element
-	   * @type {jQuery}
-	   */
-			var _this = _possibleConstructorReturn(this, (Element.__proto__ || Object.getPrototypeOf(Element)).call(this));
-
-			_this.$element = $element;
-
-			return _this;
-		}
-
-		_createClass(Element, [{
-			key: 'setContent',
-			value: function setContent(content) {
-
-				// Fire the before hooks.
-				this._fireHooks('beforeRender');
-
-				// Set it
-				this.$element.html(content);
-				this.trigger('content', content);
-
-				// Fire the after hooks
-				this._fireHooks('afterRender');
-			}
-		}, {
-			key: '_fireHooks',
-			value: function _fireHooks(type) {
-				var _this2 = this;
-
-				_underscore2.default.each(Element.Hooks[type], function (callback) {
-
-					// Fire it.
-					callback.apply(_this2, [_this2.$element, _this2]);
-				});
-			}
-		}]);
-
-		return Element;
-	}(_Obj3.default);
-
-	Element.registerHook = function (callback) {
-		var type = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'afterRender';
-
-		Element.Hooks[type].push(callback);
-		return true;
-	};
-
-	Element.Hooks = {
-		beforeRender: [],
-		afterRender: []
-	};
-
-	module.exports = Element;
-
-/***/ }),
-/* 33 */
-/***/ (function(module, exports) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/** 
-	 * @module Dom
-	 */
-	var Transition = function () {
-	    function Transition($container, $fromContent, $toContent, name) {
-	        _classCallCheck(this, Transition);
-
-	        /**
-	         * @property $container
-	         * @type {jQuery}
-	         */
-	        this.$container = $container;
-
-	        this.$from = $fromContent;
-
-	        this.$to = $toContent;
-
-	        this.name = name;
-
-	        this.viewWidth = false;
-	        this.viewHeight = false;
-
-	        this.duration = null;
-
-	        // Existing?
-	        if (Transition[name] === undefined) {
-	            throw new Error('There is no Transition registered under the key "' + name + '"');
-	        }
-	    }
-
-	    _createClass(Transition, [{
-	        key: 'play',
-	        value: function play() {
-	            var _this = this;
-
-	            // Get obj
-	            var obj = Transition[this.name];
-
-	            // Generic preparation
-	            this._prepare();
-
-	            // Position content
-	            var newContentPosition = obj.newContentPosition || 'right';
-	            switch (newContentPosition) {
-
-	                case 'default':
-	                    this.$to.css({
-	                        left: 0,
-	                        top: 0
-	                    });
-	                    break;
-
-	                case 'transparent':
-	                    this.$to.css({
-	                        left: 0,
-	                        top: 0,
-	                        opacity: 0
-	                    });
-	                    break;
-
-	                case 'right':
-	                    this.$to.css({
-	                        left: this.viewWidth,
-	                        top: 0
-	                    });
-	                    break;
-
-	                case 'left':
-	                    this.$to.css({
-	                        left: -this.viewWidth,
-	                        top: 0
-	                    });
-	                    break;
-
-	                default:
-	                    throw new Error('Unknown newContentPosition: ' + newContentPosition);
-
-	            }
-
-	            // Add the new content
-	            this.$container.append(this.$to);
-
-	            // Now play it
-	            var result = obj.play(this, this.$from, this.$to);
-	            if (!result || !(result instanceof Promise)) throw new Error('Transition.' + this.name + '.play($from, $to) should return a Promise');
-	            result.then(function () {
-
-	                // Reset 
-	                _this._finish();
-	            });
-	            return result;
-	        }
-	    }, {
-	        key: '_prepare',
-	        value: function _prepare() {
-
-	            // Get width
-	            this.viewWidth = this.$container.width();
-	            this.viewHeight = this.$container.height();
-
-	            // Style container
-	            this.$container.css({
-	                position: 'relative',
-	                width: this.viewWidth,
-	                height: this.viewHeight,
-	                overflow: 'hidden'
-	            });
-
-	            // Set style to content
-	            if (this.$from) {
-	                this.$from.css({
-	                    position: 'absolute',
-	                    width: this.viewWidth,
-	                    height: this.viewHeight,
-	                    zIndex: 10
-	                });
-	            }
-	            this.$to.css({
-	                position: 'absolute',
-	                width: this.viewWidth,
-	                height: this.viewHeight,
-	                zIndex: 20
-	            });
-	        }
-	    }, {
-	        key: '_finish',
-	        value: function _finish() {
-
-	            this.$container.css({
-	                width: '',
-	                height: ''
-	            });
-	            this.$to.css({
-	                width: '',
-	                height: ''
-	            });
-	        }
-	    }]);
-
-	    return Transition;
-	}();
-
-	// ███████╗██╗     ██╗██████╗ ███████╗    ██╗     ███████╗███████╗████████╗
-	// ██╔════╝██║     ██║██╔══██╗██╔════╝    ██║     ██╔════╝██╔════╝╚══██╔══╝
-	// ███████╗██║     ██║██║  ██║█████╗      ██║     █████╗  █████╗     ██║   
-	// ╚════██║██║     ██║██║  ██║██╔══╝      ██║     ██╔══╝  ██╔══╝     ██║   
-	// ███████║███████╗██║██████╔╝███████╗    ███████╗███████╗██║        ██║   
-	// ╚══════╝╚══════╝╚═╝╚═════╝ ╚══════╝    ╚══════╝╚══════╝╚═╝        ╚═╝   
-	//                                                                         
-
-	Transition.slideLeft = {
-
-	    newContentPosition: 'right',
-	    play: function play(transition, $from, $to) {
-
-	        // Promise
-	        return new Promise(function (resolve) {
-
-	            // Options
-	            var options = {
-	                duration: transition.duration || 250
-	            };
-
-	            // Move out the old
-	            if ($from) {
-	                $from.animate({
-	                    left: -transition.viewWidth
-	                }, options);
-	            }
-
-	            // Move in the new
-	            options.complete = function () {
-	                resolve();
-	            };
-	            $to.animate({
-	                left: 0
-	            }, options);
-	        });
-	    }
-
-	};
-
-	// ███████╗██╗     ██╗██████╗ ███████╗    ██████╗ ██╗ ██████╗ ██╗  ██╗████████╗
-	// ██╔════╝██║     ██║██╔══██╗██╔════╝    ██╔══██╗██║██╔════╝ ██║  ██║╚══██╔══╝
-	// ███████╗██║     ██║██║  ██║█████╗      ██████╔╝██║██║  ███╗███████║   ██║   
-	// ╚════██║██║     ██║██║  ██║██╔══╝      ██╔══██╗██║██║   ██║██╔══██║   ██║   
-	// ███████║███████╗██║██████╔╝███████╗    ██║  ██║██║╚██████╔╝██║  ██║   ██║   
-	// ╚══════╝╚══════╝╚═╝╚═════╝ ╚══════╝    ╚═╝  ╚═╝╚═╝ ╚═════╝ ╚═╝  ╚═╝   ╚═╝   
-	//                                                                             
-	Transition.slideRight = {
-
-	    newContentPosition: 'left',
-	    play: function play(transition, $from, $to) {
-
-	        // Promise
-	        return new Promise(function (resolve) {
-
-	            // Options
-	            var options = {
-	                duration: transition.duration || 250
-	            };
-
-	            // Move out the old
-	            if ($from) {
-	                $from.animate({
-	                    left: transition.viewWidth
-	                }, options);
-	            }
-
-	            // Move in the new
-	            options.complete = function () {
-	                resolve();
-	            };
-	            $to.animate({
-	                left: 0
-	            }, options);
-	        });
-	    }
-
-	};
-
-	// ███████╗ █████╗ ██████╗ ███████╗
-	// ██╔════╝██╔══██╗██╔══██╗██╔════╝
-	// █████╗  ███████║██║  ██║█████╗  
-	// ██╔══╝  ██╔══██║██║  ██║██╔══╝  
-	// ██║     ██║  ██║██████╔╝███████╗
-	// ╚═╝     ╚═╝  ╚═╝╚═════╝ ╚══════╝
-	//                                 
-	Transition.fade = {
-
-	    newContentPosition: 'transparent',
-	    play: function play(transition, $from, $to) {
-
-	        // Promise
-	        return new Promise(function (resolve) {
-
-	            // Options
-	            var options = {
-	                duration: transition.duration || 250
-	            };
-
-	            // Move in the new
-	            options.complete = function () {
-	                resolve();
-	            };
-	            $to.animate({
-	                opacity: 1
-	            }, options);
-	        });
-	    }
-
-	};
-
-	module.exports = Transition;
-
-/***/ }),
-/* 34 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _htmlbarsStandalone = __webpack_require__(35);
-
-	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
-
-	var _Observable = __webpack_require__(24);
-
-	var _Observable2 = _interopRequireDefault(_Observable);
-
-	var _ObservableArray = __webpack_require__(36);
-
-	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
-
-	var _Binding = __webpack_require__(37);
-
-	var _Binding2 = _interopRequireDefault(_Binding);
-
-	var _ActionBinding = __webpack_require__(38);
-
-	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
-
-	var _Component = __webpack_require__(40);
-
-	var _Component2 = _interopRequireDefault(_Component);
-
-	var _ComponentDefinition = __webpack_require__(50);
-
-	var _ComponentDefinition2 = _interopRequireDefault(_ComponentDefinition);
-
-	var _HelperProxy = __webpack_require__(49);
-
-	var _HelperProxy2 = _interopRequireDefault(_HelperProxy);
-
-	var _Helpers = __webpack_require__(51);
-
-	var _Helpers2 = _interopRequireDefault(_Helpers);
-
-	var _View = __webpack_require__(41);
-
-	var _View2 = _interopRequireDefault(_View);
-
-	var _Utils = __webpack_require__(48);
-
-	var _Utils2 = _interopRequireDefault(_Utils);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Dom
-	 */
-	var Renderer =
-
-	/**
-	 * @class Dom.Renderer
-	 * 
-	 * @constructor
-	 */
-	function Renderer() {
-		var _this = this;
-
-		_classCallCheck(this, Renderer);
-
-		/**
-	  * @property dom
-	  * @type {HTMLBars.DOMHelper}
-	  */
-		this.dom = new _htmlbarsStandalone2.default.DOMHelper();
-
-		/**
-	  * Hooks are the way to configure the way HTMLBars renders your
-	  * templates. Renderer comes pre-configured with hooks that allow you
-	  * to bind to Observables (models) and ObservableArrays (collections).
-	  * 
-	  * @property hooks
-	  * @type {object}
-	  */
-		this.hooks = _underscore2.default.defaults({
-
-			/**
-	   * The `get` hook is responsible for retrieving Bindings from the data store.
-	   * 
-	   * @method hooks.get
-	   * @param  {Renderer} 	renderer   	The Renderer instance (this)
-	   * @param  {Scope} 		scope 		The Scope in which the `get` was called, 
-	   *                           		containing the data that is available in this Scope
-	   * @param  {string} 	path 		The path (key) of the variable to retrieve 		
-	   * @return {mixed}     	The retrieved value
-	   */
-			get: function get(renderer, scope, path) {
-
-				// Get first part
-				var keys = path.split(/\./);
-
-				// Look into local data
-				var appliedScope = scope.self;
-				if (scope.localPresent[keys[0]]) {
-					appliedScope = scope.locals[keys[0]];
-					keys.shift();
-					path = keys.join('.');
-				}
-				// Is data an observable?
-				if (appliedScope instanceof _Observable2.default && path.length > 0 || appliedScope instanceof _ObservableArray2.default) {
-
-					// Already a binding?
-					if (appliedScope._bindings === undefined) appliedScope._bindings = {};
-					if (appliedScope._bindings[path]) {
-
-						// Return existing binding
-						return appliedScope._bindings[path];
-					}
-
-					// Create a binding
-					var binding = new _Binding2.default(_this, appliedScope, path);
-
-					// Store it
-					appliedScope._bindings[path] = binding;
-
-					// Get the value
-					return binding;
-				} else if (path === '') {
-
-					// Return the scope itself
-					return appliedScope;
-				} else {
-
-					// Do native thing (deep-get)
-					var value = appliedScope;
-					for (var q = 0; q < keys.length; q++) {
-						if (value === undefined || value === null) return value;
-						value = value[keys[q]];
-					}
-				}
-
-				return value;
-			},
-
-			/**
-	   * Get value from reference (Binding)
-	   *
-	   * @method hooks.getValue
-	   * @param  {Binding} reference 
-	   * @return {mixed}           
-	   */
-			getValue: function getValue(reference) {
-
-				// Is it a binding?
-				if (reference instanceof _Binding2.default) return reference.getValue();
-
-				// A helper?
-				if (reference instanceof _HelperProxy2.default) return reference.invoke();
-
-				// Just a value
-				return reference;
-			},
-
-			/**
-	   * Link a morph to one or more values (in our case Bindings)
-	   *
-	   * @method hooks.linksRenderNode
-	   * @param  {HTMLBarsMorph} morph    
-	   * @param  {Dom.Renderer} renderer 
-	   * @param  {Scope} scope    
-	   * @param  {string} type   				Values can be `@range`, `@attribute`, or helper names
-	   * @param  {array} values     			Array of values that have been linked to the morph. The should be Binding instances
-	   * @return 
-	   */
-			linkRenderNode: function linkRenderNode(morph, renderer, scope, type, values) {
-
-				// Add this morph to all involved bindings
-				_underscore2.default.each(values, function (binding) {
-
-					// Is it a binding?
-					if (binding instanceof _Binding2.default) {
-						binding.addMorph(morph, scope);
-					}
-				});
-			},
-
-			willRenderNode: function willRenderNode(morph /*, renderer, scope*/) {
-
-				// Store morph so we can bind it when we get subexpressions, etc
-				_this.currentMorph = morph;
-			},
-
-			subexpr: function subexpr(renderer, scope, helperName, params, hash) {
-
-				// Loop through parameters to find Bindings
-				_underscore2.default.each(params, function (param) {
-					if (param instanceof _Binding2.default) {
-
-						// Add morph
-						if (renderer.currentMorph) param.addMorph(renderer.currentMorph, scope);
-					}
-				});
-
-				// Original behavior
-				return _htmlbarsStandalone2.default.Runtime.Hooks.Default.subexpr(renderer, scope, helperName, params, hash);
-			},
-
-			createFreshScope: function createFreshScope() {
-				return { self: null, blocks: {}, locals: {}, localPresent: {}, actions: {}, view: null };
-			},
-
-			createChildScope: function createChildScope(parentScope) {
-
-				// Create a new scope extending the parent
-				var scope = Object.create(parentScope);
-				scope.locals = Object.create(parentScope.locals);
-				scope.localPresent = Object.create(parentScope.localPresent);
-				scope.blocks = Object.create(parentScope.blocks);
-				scope.actions = Object.create(parentScope.actions);
-
-				// Check is parent is a view
-				if (parentScope.self instanceof _View2.default) {
-
-					// Bubble the actions
-					scope.actions = _underscore2.default.extend(scope.actions, parentScope.self.actions);
-
-					// No a component?
-					if (!(parentScope.self instanceof _Component2.default)) {
-						scope.view = parentScope.self;
-					} else {
-						scope.component = parentScope.self;
-						scope.view = scope.component.view;
-					}
-				}
-
-				return scope;
-			},
-
-			findHelper: function findHelper(renderer, scope, helperName) {
-
-				// Scope helper?
-				if (scope.self && typeof scope.self.getHelper === 'function') {
-					var helper = scope.self.getHelper(helperName);
-					if (helper) return helper;
-				}
-
-				// Use helper?
-				if (_Helpers2.default.User[helperName]) {
-					return _Helpers2.default.User[helperName];
-				}
-
-				// Chicken helper?
-				if (renderer.helpers[helperName]) {
-					return renderer.helpers[helperName];
-				}
-			},
-
-
-			lookupHelper: function lookupHelper(renderer, scope, helperName) {
-
-				// Find a helper
-				var helper = _this.hooks.findHelper(renderer, scope, helperName);
-				if (!helper) throw new Error('There is no helper registered with the name "' + helperName + '"');
-
-				// Create the wrapper
-				var proxy = new _HelperProxy2.default(helperName, helper, _this.helpers);
-				return proxy;
-			},
-
-			invokeHelper: function invokeHelper(morph, renderer, scope, visitor, params, attributeHash, helper, options) {
-
-				// Is it a component?
-				if (helper instanceof _ComponentDefinition2.default) {
-
-					// Call component hook
-					return {
-						value: _this.hooks.component(morph, renderer, scope, helper, params, attributeHash, options, visitor)
-					};
-				}
-
-				// Do we have a morph?
-				if (morph) {
-
-					// Loop through params to hook up bindings
-					_underscore2.default.each(params, function (value) {
-						if (value instanceof _Binding2.default) {
-							value.addMorph(morph, scope);
-						}
-					});
-
-					// And the attribute
-					_underscore2.default.each(attributeHash, function (value) {
-						if (value instanceof _Binding2.default) {
-							value.addMorph(morph, scope);
-						}
-					});
-				}
-
-				// Set arguments 
-				helper.setArguments(params, attributeHash, options, morph, renderer, scope, visitor);
-
-				// Invoke it once to see if the helper returns a value, or is a block-type helper
-				var helperResult = helper.invoke();
-				var helperValue = void 0;
-				if (helperResult === undefined) {
-
-					// No result, then we don't want to return a value
-					helperValue = undefined;
-				} else {
-
-					// A value was returned, meaning this helper is used as a value getter, and might need
-					// to be invoked again when bound values change: thus, return the proxy
-					helperValue = helper;
-				}
-
-				// Invoke the helper and give back the value
-				return {
-					value: helperValue,
-					link: !!helperValue
-				};
-			},
-
-			component: function component(morph, renderer, scope, tagName, params, attributeHash, options, visitor) {
-
-				////////////////////////////////////////////////////////////////
-				// Is the component already created, and is this a re-render? //
-				////////////////////////////////////////////////////////////////
-
-				var state = morph.getState();
-				if (state.component) {
-
-					state.component.scheduleRevalidate();
-					return;
-				}
-
-				///////////////////////////////////
-				// Create the component instance //
-				///////////////////////////////////
-
-				// Get definition
-				var definition = _Component2.default.registry.get(tagName);
-
-				// No known component?
-				if (!definition) {
-
-					// Do the component fallback.
-					var element = renderer.dom.createElement(tagName);
-					_underscore2.default.each(attributeHash, function (value, key) {
-						element.setAttribute(key, renderer.hooks.getValue(value));
-					});
-					var fragment = _htmlbarsStandalone2.default.Runtime.render(options.default, renderer, scope, {}).fragment;
-					element.appendChild(fragment);
-					morph.setNode(element);
-					return;
-				}
-
-				// Create a new scope and use the component as self
-				var newScope = renderer.hooks.createScope(renderer, scope);
-
-				// Are there attributes defined as an attribute?
-				if (attributeHash && attributeHash.attributes) {
-
-					// A binding?
-					var attrs = attributeHash.attributes;
-					if (attrs instanceof _Binding2.default) attrs = attrs.getValue();
-
-					// A hash?
-					if (attrs instanceof Object) {
-
-						// Replace
-						delete attributeHash.attributes;
-						_Utils2.default.each(attrs, function (value, key) {
-							attributeHash[key] = value;
-						});
-					}
-				}
-
-				// Create it
-				var component = new _Component2.default(definition.name, definition.source, morph, newScope, params, attributeHash, visitor, options, definition.initCallback, definition.methods, _this);
-				newScope.self = component;
-
-				// Now render it.
-				component.render();
-
-				// Store it.
-				state.component = component;
-			},
-
-			/**
-	   * Check if the given path is a known class (component, or block, inline)
-	   *
-	   * @method hooks.classify
-	   * @param  {Dom.Renderer} renderer 
-	   * @param  {Object} scope    
-	   * @param  {string} path     
-	   * @return {string}          
-	   */
-			classify: function classify(renderer, scope, path) {
-
-				// Is this a known component?
-				if (_Component2.default.registry.has(path)) return 'component';
-
-				// Nothing known.
-				return false;
-			},
-
-			getBlock: function getBlock(scope, key) {
-
-				// Is the block known?
-				var block = scope.blocks[key];
-				if (block) return block;
-
-				// Are we inside a component?
-				if (scope.self instanceof _Component2.default) {
-					return scope.self.getSubTemplate(key);
-				}
-
-				// Nothing there
-				return null;
-			},
-
-			getActionScope: function getActionScope(scope, key) {
-
-				// Check the scope
-				if (scope.actions && scope.actions[key]) {
-
-					return scope;
-				} else if (scope.locals.actions && scope.locals.actions[key]) {
-
-					// Use local action
-					return scope.locals;
-				} else if (scope.self.actions && scope.self.actions[key]) {
-
-					// Use that
-					return scope.self;
-				} else if (scope.view && scope.view.actions && scope.view.actions[key]) {
-
-					// Use the veiw
-					return scope.view;
-				} else {
-
-					return false;
-				}
-			},
-
-			getAction: function getAction(scope, key) {
-
-				var appliedScope = _this.hooks.getActionScope(scope, key);
-				if (appliedScope) {
-
-					// Get the action
-					return appliedScope.actions[key];
-				}
-				return false;
-			},
-
-			keywords: _underscore2.default.defaults({
-
-				/**
-	    * The action keyword creates an ActionBinding instance and 
-	    * stores it on the element. The `action` helper can then use 
-	    * this ActionBinding to apply it on the DOM.
-	    *
-	    * @method keywords.action
-	    */
-				action: function action(morph, renderer, scope, params, attributeHash) {
-
-					// Check binding
-					if (morph.actionBindings) return;
-
-					// Get action scope
-					var actionCallback = renderer.hooks.getAction(scope, params[0]);
-					if (!actionCallback) {
-
-						// Lazy action?
-						if (attributeHash.lazy === true) {
-
-							// Use current scope so send action lazily
-							actionCallback = function actionCallback() {
-								for (var _len = arguments.length, args = Array(_len), _key = 0; _key < _len; _key++) {
-									args[_key] = arguments[_key];
-								}
-
-								scope.self.sendAction(params[0], args);
-							};
-						} else {
-
-							// Undefined action.
-							throw new Error('Could not find action "' + params[0] + '" within the scope');
-						}
-					}
-
-					// Get action
-					var parameters = params.slice(1);
-
-					// Create action binding
-					var binding = new _ActionBinding2.default(renderer, morph, params[0], actionCallback, parameters, attributeHash, scope.self);
-					morph.actionBindings = binding;
-				}
-
-			}, _htmlbarsStandalone2.default.Runtime.Hooks.Default.keywords)
-
-		}, _htmlbarsStandalone2.default.Runtime.Hooks.Default);
-
-		/**
-	  * @property helpers
-	  * @type {Dom.Helpers}
-	  */
-		this.helpers = new _Helpers2.default(this);
-
-		/**
-	  * @property partials
-	  * @type {Object}
-	  */
-		this.partials = {};
-
-		/**
-	  * @property useFragmentCache
-	  * @default true
-	  * @type {Boolean}
-	  */
-		this.useFragmentCache = true;
-	};
-
-	module.exports = Renderer;
-
-/***/ }),
-/* 35 */
-/***/ (function(module, exports) {
-
-	module.exports = __WEBPACK_EXTERNAL_MODULE_35__;
-
-/***/ }),
-/* 36 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _Obj2 = __webpack_require__(25);
-
-	var _Obj3 = _interopRequireDefault(_Obj2);
-
-	var _ClassMap = __webpack_require__(27);
-
-	var _ClassMap2 = _interopRequireDefault(_ClassMap);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Core
-	 */
-	var ObservableArray = function (_Obj) {
-		_inherits(ObservableArray, _Obj);
-
-		/**
-	  * An ObservableArray is a simple list that notifies listeners
-	  * of any changes in the list or any of it's observable items.
-	  *
-	  * @class Core.ObservableArray
-	  *
-	  * @constructor
-	  * @param  {Array}  [initValues=[]]        			 An array of values to initialize the object with
-	  * @param  {Boolean} [convertToObservables=true]	 Whether to convert any Object and Array values in the `initValues` parameter into Observable and ObservableArray instance
-	  */
-		function ObservableArray() {
-			var initValues = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-			var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-			_classCallCheck(this, ObservableArray);
-
-			// Properties
-			var _this = _possibleConstructorReturn(this, (ObservableArray.__proto__ || Object.getPrototypeOf(ObservableArray)).call(this));
-
-			_this.items = [];
-
-			// Single initvalue given
-			if (!(initValues instanceof Array)) initValues = [initValues];
-
-			// Import start values
-			_this.import(initValues, convertToObservables, true);
-
-			/**
-	   * Whenever this property is true, no notifications will be triggered
-	   * 
-	   * @attribute notificationsDisabled
-	   * @type {Boolean}
-	   */
-			_this.notificationsDisabled = false;
-
-			_this.isStudyingChildren = false;
-			_this.allowStudyChildren = true;
-			_this.childStudyCallback = function () {
-
-				// Trigger on.
-				_this._scheduleChanged();
-			};
-
-			return _this;
-		}
-
-		_createClass(ObservableArray, [{
-			key: 'import',
-			value: function _import(arr) {
-				var _this2 = this;
-
-				var convertToObservables = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : true;
-
-
-				// Go through to the object's first level
-				_underscore2.default.each(arr, function (value) {
-
-					// Is the value an array or object?
-					if ((Array.isArray(value) || (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object') && convertToObservables === true) {
-
-						// Array or object?
-						if (Array.isArray(value)) {
-
-							// Put a new observable array in there
-							_this2.items.push(new ObservableArray(value));
-						} else {
-
-							// Put a new observable in there
-							_this2.items.push(_ClassMap2.default.create('Observable', [value]));
-						}
-					} else {
-
-						// Just add the value (don't notify)
-						_this2.items.push(value);
-					}
-				});
-
-				// Trigger changes
-				if (!this.notificationsDisabled) {
-					this.trigger(ObservableArray.Events.Import);
-					this.trigger(ObservableArray.Events.Change);
-					this.trigger(ObservableArray.Events.Add, arr);
-				}
-
-				return this;
-			}
-		}, {
-			key: 'get',
-			value: function get(key) {
-
-				// Split
-				var parts = Number.isInteger(key) ? [key] : key.split(/\./);
-				var currentPart = parts.shift();
-
-				// Is it a wildcard?
-				var value = undefined;
-				if (currentPart === '*') {
-
-					// We will return an array containg all the values we retrieve!
-					var restKey = parts.join('.');
-					return _underscore2.default.map(this.items, function (item) {
-						return item.get(restKey);
-					});
-				} else if (Number.isInteger(currentPart) || currentPart.match(/^\d+$/)) {
-
-					// Get the value
-					value = this.items[currentPart];
-				} else {
-
-					throw new TypeError('Invalid key: ' + key);
-				}
-
-				// Value found?
-				if (value === undefined || parts.length === 0) {
-					return value;
-				}
-
-				// Check if the value is also an observable
-				if (ObservableArray.isObservable(value)) {
-
-					// Pass the rest along to go a level deeper
-					return value.get(parts.join('.'));
-				} else {
-
-					throw new Error('The found value for ' + key + ' is not an Observable and cannot be used with dot-notation to retreive subvalues. Value is ' + (typeof value === 'undefined' ? 'undefined' : _typeof(value)));
-				}
-			}
-		}, {
-			key: 'set',
-			value: function set(key, value) {
-				var _this3 = this;
-
-				var convertToObservables = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-
-				// Convert?
-				if (convertToObservables === true && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && value.constructor === Object) {
-					value = _ClassMap2.default.create('Observable', value);
-				}
-
-				// Numeric?
-				if (Number.isInteger(key) || typeof key === 'string' && key.match(/^\d+$/)) {
-
-					// Set it
-					this.items[key] = value;
-					return this;
-				}
-
-				// Is there a dot in there?
-				if (typeof key === 'string' && key.match(/\.\w/)) {
-
-					////////////////////////
-					// Split and deep set //
-					////////////////////////
-
-					var parts = key.split(/\./);
-					var currentPart = parts.shift();
-
-					// Does the first key exist?
-					var item = this.items[currentPart];
-					if (item === undefined) {
-
-						// Should it be an array or an observable?
-						var newValue = void 0;
-						if (Number.isInteger(parts[0]) || typeof parts[0] === 'string' && parts[0].match(/^\d+$/)) {
-
-							// Create list (using classmap to prevent circular dependencies)
-							newValue = new ObservableArray();
-						} else {
-
-							// Create it
-							newValue = _ClassMap2.default.create('Observable');
-						}
-
-						// Study it
-						if (this.isStudyingChildren) {
-
-							newValue.study(function () {
-								_this3.trigger(ObservableArray.Events.Change);
-							});
-						}
-
-						// Store it
-						this.items[currentPart] = newValue;
-					}
-
-					// Do deep setting
-					this.get(currentPart).set(parts.join('.'), value);
-
-					return this;
-				}
-
-				throw new TypeError('Invalid key');
-			}
-
-			/**
-	   * Add one or more items to the array
-	   *
-	   * @method add
-	   * @param {...[mixed]} values One or more values to add
-	   * @chainable
-	   */
-
-		}, {
-			key: 'add',
-			value: function add() {
-				var _this4 = this;
-
-				// Is the last value a boolean?
-				var doNotNotify = false;
-
-				for (var _len = arguments.length, values = Array(_len), _key = 0; _key < _len; _key++) {
-					values[_key] = arguments[_key];
-				}
-
-				if (values.length > 1 && typeof values[values.length - 1] === 'boolean') {
-					doNotNotify = values.pop();
-				}
-
-				// Add items
-				_underscore2.default.each(values, function (value) {
-					_this4._add(value);
-				});
-
-				// Trigger events
-				if (!doNotNotify) {
-					this.trigger(ObservableArray.Events.Change);
-					this.trigger(ObservableArray.Events.Add, values);
-				}
-
-				return this;
-			}
-		}, {
-			key: '_add',
-			value: function _add(value) {
-				var _this5 = this;
-
-				// Add it.
-				this.items.push(value);
-
-				// Studying?
-				if (this.isStudyingChildren && this.allowStudyChildren) {
-					if (ObservableArray.isObservable(value)) value.study(this.childStudyCallback);
-				}
-
-				// Is it observable?
-				if (ObservableArray.isObservable(value)) {
-					value.on('change', function () {
-						_this5.trigger('change');
-					});
-				}
-
-				return this;
-			}
-
-			/**
-	   * Delete one or more items from the array
-	   *
-	   * @method delete
-	   * @param  {...[mixed]} values One or more values to delete
-	   * @chainable
-	   */
-
-		}, {
-			key: 'delete',
-			value: function _delete() {
-				var _this6 = this;
-
-				// Is the last value a boolean?
-				var doNotNotify = false;
-
-				for (var _len2 = arguments.length, values = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-					values[_key2] = arguments[_key2];
-				}
-
-				if (values.length > 1 && typeof values[values.length - 1] === 'boolean') {
-					doNotNotify = values.pop();
-				}
-
-				// Add items
-				_underscore2.default.each(values, function (value) {
-					_this6._delete(value);
-				});
-
-				// Studying?
-				if (this.isStudyingChildren) {
-					_underscore2.default.each(values, function (item) {
-
-						if (ObservableArray.isObservable(item)) item.neglect(_this6.childStudyCallback);
-					});
-				}
-
-				// Trigger events
-				if (!doNotNotify) {
-					this.trigger(ObservableArray.Events.Change);
-					this.trigger(ObservableArray.Events.Delete, values);
-				}
-
-				return this;
-			}
-		}, {
-			key: '_delete',
-			value: function _delete(value) {
-
-				this.items = _underscore2.default.without(this.items, value);
-			}
-
-			/**
-	   * Remove all items from the array
-	   *
-	   * @method empty
-	   * @chainable
-	   */
-
-		}, {
-			key: 'empty',
-			value: function empty() {
-				var _this7 = this;
-
-				// Values that are deleted
-				var deleted = _underscore2.default.difference(this.items, []);
-
-				// Remove all listeners
-				if (this.isStudyingChildren) {
-					_underscore2.default.each(this.items, function (item) {
-						item.neglect(_this7.childStudyCallback);
-					});
-				}
-
-				// Now clear
-				this.items = [];
-
-				// Trigger events
-				this.trigger(ObservableArray.Events.Change);
-				this.trigger(ObservableArray.Events.Delete, deleted);
-				this.trigger(ObservableArray.Events.Empty);
-
-				return this;
-			}
-
-			/**
-	   * Get the first item in the collection
-	   * 
-	   * @method first
-	   * @return {mixed} 
-	   */
-
-		}, {
-			key: 'first',
-			value: function first() {
-				return _underscore2.default.first(this.items);
-			}
-
-			/**
-	   * Get the last item in the collection
-	   *
-	   * @method last
-	   * @return {mixed} 
-	   */
-
-		}, {
-			key: 'last',
-			value: function last() {
-				return _underscore2.default.last(this.items);
-			}
-
-			/**
-	   * Listen for any changes in any of the object's attributes. 
-	   * The callback will receive an array containing the names of
-	   * all updates attributes. 
-	   *
-	   * Note: This is an alias of the 'changed' event, so calling
-	   * ```this.on('changed', callback)``` will achieve the same result.
-	   *
-	   * @example
-	   * 	// Initialize object
-	   * 	var obj = new Chicken.Core.Observable();
-	   * 	obj.set('foo', 'bar');
-	   * 	var childObj = new Chicken.Core.Observable();
-	   * 	childObj.set('free', 'willy');
-	   * 	obj.set('child', childObj);
-	   *
-	   * 	// Listen
-	   * 	obj.study((changedAttributes) {
-	   * 		console.log(changedAttributes);
-	   * 	});
-	   *
-	   * 	// Update attributes
-	   *	obj.set('foo', 'boo');                  // Will log ['foo']
-	   *	obj.get('child').set('free', 'tibet');  // Will log ['child']
-	   * 	childObj.set('foo', 'bee');             // Will log ['child']
-	   *
-	   * @method study
-	   * @param  {Function} callback
-	   * @chainable
-	   */
-
-		}, {
-			key: 'study',
-			value: function study(callback) {
-				var _this8 = this;
-
-				// Already studying?
-				if (!this.isStudyingChildren && this.allowStudyChildren) {
-
-					// Set
-					this.isStudyingChildren = true;
-
-					// Watch all current children
-					_underscore2.default.each(this.items, function (item) {
-						if (ObservableArray.isObservable(item)) item.study(_this8.childStudyCallback);
-					});
-				}
-
-				// Connect to change-event
-				return this.on('change', callback);
-			}
-
-			/**
-	   * Stop listening for changes on the object's attributes.
-	   *
-	   * Note: This is an alias of the 'changed' event, so calling
-	   * ```this.off('changed', callback)``` will achieve the same result.
-	   *
-	   * @example
-	   * 
-	   * 
-	   * @method neglect
-	   * @param  {Function} callback 
-	   * @chainable
-	   */
-
-		}, {
-			key: 'neglect',
-			value: function neglect(callback) {
-
-				// This is an alias of the 'changed' event
-				return this.off('change', callback);
-			}
-		}, {
-			key: 'toArray',
-			value: function toArray() {
-				var includedUids = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : [];
-
-
-				return this.items.map(function (item) {
-
-					// Observable?
-					if (ObservableArray.isObservable(item)) {
-
-						// Already included?
-						var guid = _ClassMap2.default.get('Utils').uidFor(item);
-						if (_underscore2.default.indexOf(includedUids, guid) !== -1) {
-							return '...recursive(' + guid + ')...';
-						}
-						includedUids.push(guid);
-
-						// Array?
-						if (item instanceof ObservableArray) {
-							return item.toArray(includedUids);
-						} else {
-							return item.toObject(includedUids);
-						}
-					}
-
-					return item;
-				});
-			}
-
-			/**
-	   * Get a keyed array containing all items in this ObservableArray
-	   * by the value of given key.
-	   *
-	   * @method keyBy
-	   * @param  {string} key 	The attribute key. You can also use dot-notation in this key.
-	   * @return {Object}     
-	   */
-
-		}, {
-			key: 'keyBy',
-			value: function keyBy(key) {
-
-				// Loop it.
-				var result = {};
-				_underscore2.default.each(this.items, function (item) {
-					var keyValue = item.get(key);
-					if (keyValue) result[keyValue] = item;
-				});
-
-				return result;
-			}
-		}, {
-			key: 'sortBy',
-			value: function sortBy(keyOrCallback) {
-
-				// Is it a key?
-				var callback = keyOrCallback;
-				if (typeof keyOrCallback === 'string') {
-					callback = function callback(item) {
-						return item.get(keyOrCallback);
-					};
-				}
-
-				// Now sort!
-				this.items = _underscore2.default.sortBy(this.items, callback);
-				return this;
-			}
-		}, {
-			key: 'reverse',
-			value: function reverse() {
-				this.items.reverse();
-				return this;
-			}
-
-			/**
-	   * Get a keyed array containing ObservableArray's with values that have the same
-	   * value for given key.
-	   *
-	   * @method groupBy
-	   * @param  {string} keyOrCallback  The attribute key. You can also use dot-notation in this key.
-	   * @param  {string} [defaultGroup=default] The key under which to put items that have no value for given key
-	   * @param  {boolean} [makeObservable=false] 
-	   * @return {Object}
-	   */
-
-		}, {
-			key: 'groupBy',
-			value: function groupBy(keyOrCallback) {
-				var defaultGroup = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 'default';
-				var makeObservable = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : false;
-
-
-				// Get called class
-				var MyClass = this.constructor;
-
-				// Loop it
-				var result = makeObservable ? _ClassMap2.default.create('Observable', []) : {};
-				_underscore2.default.each(this.items, function (item) {
-
-					// Get value
-					var keyValue = typeof keyOrCallback === 'function' ? keyOrCallback(item) : item.get(keyOrCallback);
-
-					// Nothing?
-					if (!keyValue) keyValue = defaultGroup;
-
-					// Map?
-					if (makeObservable) {
-
-						// Group known?
-						if (!result.get(keyValue)) result.set(keyValue, new MyClass());
-
-						// Add it
-						result.get(keyValue).add(item);
-					} else {
-
-						// Group known?
-						if (!result[keyValue]) result[keyValue] = new MyClass();
-
-						// Add it
-						result[keyValue].add(item);
-					}
-				});
-
-				return result;
-			}
-
-			/**
-	   * Get value for given valueAttribute key from all items
-	   * 
-	   *
-	   * @method list 
-	   * @param  {string} valueAttribute 
-	   * @param  {string} keyAttribute   
-	   * @return {[type]}                [description]
-	   */
-
-		}, {
-			key: 'list',
-			value: function list(valueAttribute) {
-				var keyAttribute = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-
-				var result = keyAttribute ? {} : [];
-				_underscore2.default.each(this.items, function (item) {
-					if (keyAttribute) {
-						result[item.get(keyAttribute)] = item.get(valueAttribute);
-					} else {
-						result.push(item.get(valueAttribute));
-					}
-				});
-
-				return result;
-			}
-
-			/**
-	   * Get the lowest value for objects in this array
-	   *
-	   * @method getLowestValue
-	   * @param  {string}  key          
-	   * @return {mixed}
-	   */
-
-		}, {
-			key: 'getLowestValue',
-			value: function getLowestValue(key) {
-
-				// Get a list.
-				var list = this.list(key);
-				return _underscore2.default.min(list);
-			}
-		}, {
-			key: 'each',
-			value: function each(callback) {
-
-				_underscore2.default.each(this.items, callback);
-				return this;
-			}
-		}, {
-			key: 'reverseEach',
-			value: function reverseEach(callback) {
-
-				for (var q = this.items.length - 1; q >= 0; q--) {
-					callback.apply(null, [this.items[q]]);
-				}
-				return this;
-			}
-		}, {
-			key: 'find',
-			value: function find(idOrAttributeOrCallback) {
-				var value = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : undefined;
-
-
-				// Callback?
-				if (typeof idOrAttributeOrCallback === 'function') {
-					return _underscore2.default.find(this.items, idOrAttributeOrCallback);
-				}
-
-				var attribute = 'id';
-				if (value === undefined) {
-					value = idOrAttributeOrCallback;
-				} else {
-					attribute = idOrAttributeOrCallback;
-				}
-
-				return _underscore2.default.find(this.items, function (item) {
-
-					if (_ClassMap2.default.isA(item, 'Observable') || item instanceof ObservableArray) {
-						return item.get(attribute) == value;
-					} else if (item instanceof Object) {
-						return item[attribute] == value;
-					} else {
-						return item == value;
-					}
-				});
-			}
-
-			/**
-	   * find object with empty attribute 
-	   *
-	   * @method findEmpty
-	   * @param  {string}	attribute 	the attribute checked for definition
-	   * @return {mixed}				the object containing the empty property or `undefined`
-	   */
-
-		}, {
-			key: 'findEmpty',
-			value: function findEmpty(attribute) {
-
-				return _underscore2.default.find(this.items, function (item) {
-
-					if (_ClassMap2.default.isA(item, 'Observable') || item instanceof ObservableArray) {
-						return !item.get(attribute);
-					} else if (item instanceof Object) {
-						return !item[attribute];
-					} else {
-						return false;
-					}
-				});
-			}
-		}, {
-			key: 'contains',
-			value: function contains(item) {
-				return _underscore2.default.contains(this.items, item);
-			}
-		}, {
-			key: 'sum',
-			value: function sum(callback) {
-				if (typeof callback === 'string') {
-					var key = callback;
-					callback = function callback(i) {
-						return i.get(key);
-					};
-				}
-				var values = _underscore2.default.map(this.items, callback);
-				return _underscore2.default.reduce(values, function (memo, num) {
-					return memo + num;
-				}, 0);
-			}
-		}, {
-			key: 'map',
-			value: function map(callback) {
-
-				return _underscore2.default.map(this.items, callback);
-			}
-		}, {
-			key: 'extend',
-			value: function extend(observableArray) {
-
-				return _underscore2.default.extend(this.items, observableArray.items);
-			}
-		}, {
-			key: 'filter',
-			value: function filter() {
-
-				// Parse arguments
-				if (arguments.length === 0) throw new Error('The filter method requires at least one argument.');
-				var callback = void 0;
-				var returnObservableArray = true;
-				if (typeof (arguments.length <= 0 ? undefined : arguments[0]) === 'function') {
-
-					// Use given callback method
-					callback = arguments.length <= 0 ? undefined : arguments[0];
-					if (arguments.length > 1) returnObservableArray = arguments.length <= 1 ? undefined : arguments[1];
-				} else if (typeof (arguments.length <= 0 ? undefined : arguments[0]) === 'string') {
-
-					// Create callback
-					var key = arguments.length <= 0 ? undefined : arguments[0];
-					var value = arguments.length <= 1 ? undefined : arguments[1];
-					callback = function callback(item) {
-						return item.get(key) == value;
-					};
-					if (arguments.length > 2) returnObservableArray = arguments.length <= 2 ? undefined : arguments[2];
-				}
-
-				// Do the filter
-				var result = _underscore2.default.filter(this.items, callback);
-				return returnObservableArray ? new ObservableArray(result, false) : result;
-			}
-		}, {
-			key: 'chunk',
-			value: function chunk() {
-				var size = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 20;
-
-
-				// Loop and add
-				var cls = this.constructor;
-				var chunks = new ObservableArray();
-				var chunk = new cls();
-				for (var i = 0; i < this.items.length; i++) {
-
-					// New chunk?
-					if (i > 0 && i % size === 0) {
-
-						// New chunk
-						chunks.add(chunk);
-						chunk = new cls();
-					}
-
-					// Add it
-					chunk.add(this.items[i]);
-				}
-				chunks.add(chunk);
-
-				return chunks;
-			}
-
-			/**
-	   * The number of items in the array
-	   * 
-	   * @property length
-	   * @type {Number}
-	   */
-
-		}, {
-			key: 'count',
-			value: function count() {
-				var callback = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-				if (callback) {
-
-					// Count only those
-					var c = 0;
-					_underscore2.default.each(this.items, function (item) {
-						if (callback(item) === true) c++;
-					});
-					return c;
-				}
-				return this.length;
-			}
-		}, {
-			key: 'size',
-			value: function size() {
-				return this.length;
-			}
-		}, {
-			key: 'isObservable',
-			value: function isObservable() {
-				return true;
-			}
-		}, {
-			key: '_scheduleChanged',
-			value: function _scheduleChanged() {
-				var _this9 = this;
-
-				// Notifications disabled?
-				if (this.notificationsDisabled) return;
-
-				// Already something scheduled?
-				if (!this._scheduleChangedTimeout) {
-
-					// Schedule it
-					this._scheduleChangedTimeout = setTimeout(function () {
-
-						// Trigger it now!
-						_this9._scheduleChangedTimeout = false;
-						_this9._triggerChanged();
-					}, ObservableArray.ChangedDelay);
-				}
-			}
-		}, {
-			key: '_triggerChanged',
-			value: function _triggerChanged() {
-				this.trigger(ObservableArray.Events.Change);
-			}
-		}, {
-			key: 'length',
-			get: function get() {
-				return this.items.length;
-			}
-		}]);
-
-		return ObservableArray;
-	}(_Obj3.default);
-
-	////////////
-	// Events //
-	////////////
-
-	ObservableArray.Events = {
-
-		/**
-	  * This event is fired whenever anything changes in the array
-	  * of one of its observable items.
-	  * 
-	  * @event change
-	  */
-		Change: 'change',
-
-		/**
-	  * This event is fired whenever one or more items are added
-	  * 
-	  * @event add
-	  * @param {Array} values		The item values that were added
-	  */
-		Add: 'add',
-
-		/**
-	  * This event is fired whenever one or more items are deleted
-	  * 
-	  * @event delete
-	  * @param {Array} values		The item values that were deleted
-	  */
-		Delete: 'delete',
-
-		/**
-	  * This event is fired when the array is emptied. Not that the `delete`
-	  * event is also triggered, right before the `empty` event.
-	  *
-	  * @event empty
-	  */
-		Empty: 'empty',
-
-		/**
-	  * This event is fired whenever an import is completed
-	  *
-	  * @event import
-	  */
-		Import: 'import'
-
-	};
-
-	ObservableArray.isObservable = function (obj) {
-
-		return (typeof obj === 'undefined' ? 'undefined' : _typeof(obj)) === 'object' && obj !== null && typeof obj.isObservable === 'function' && obj.isObservable() === true;
-	};
-	ObservableArray.ChangedDelay = 100;
-
-	_ClassMap2.default.register('ObservableArray', ObservableArray);
-
-	module.exports = ObservableArray;
-
-/***/ }),
-/* 37 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _Reference = __webpack_require__(26);
-
-	var _Reference2 = _interopRequireDefault(_Reference);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Dom
-	 */
-	var Binding = function () {
-
-		/**
-	  * @class Dom.Binding
-	  * 
-	  * @constructor
-	  * @param  {Dom.Renderer} 							renderer   
-	  * @param  {Core.Observable|Core.ObservableArray} 	observable 
-	  * @param  {string} 								path       	
-	  */
-		function Binding(renderer, observable, path) {
-			var _this = this;
-
-			_classCallCheck(this, Binding);
-
-			/**
-	   * The Renderer this Binding has been created by. This is 
-	   * used to be able to hook back into Rendere functions.
-	   *
-	   * @property renderer
-	   * @type {Dom.Renderer}
-	   */
-			this.renderer = renderer;
-
-			/**
-	   * The Observable (or ObservableArray) that contains the data.
-	   * 
-	   * @property observable
-	   * @type {Core.Observable|Core.ObservableArray}
-	   */
-			this.observable = observable;
-
-			/**
-	   * The path/key in the Observable to observe
-	   *
-	   * @property path
-	   * @type {string}
-	   */
-			this.path = typeof path === 'string' && path.length > 0 ? path : false;
-
-			/**
-	   * The list of 'morph' objects that are bound by this Binding. A
-	   * morph refers to a specific part of the DocumentFragment that can be
-	   * updated. These morphs are provides by the HTMLBars package.
-	   * 
-	   * @property morphs
-	   * @type {Set} 
-	   */
-			this.morphs = new Set();
-
-			////////////////
-			// Now watch! //
-			////////////////
-
-			// What to do when value changes
-			this.changeCallback = function () {
-
-				// Trigger updates for all morphs
-				_this.morphs.forEach(function (morph) {
-
-					morph.isDirty = true;
-					if (morph.view) morph.view.scheduleRevalidate();
-					if (morph.component) morph.component.scheduleRevalidate();
-				});
-			};
-
-			// Now listen to the object
-			if (this.path) {
-				try {
-					this.observable.observe(path, this.changeCallback);
-				} catch (ex) {
-					//...
-				}
-			} else {
-				this.observable.study(this.changeCallback);
-			}
-		}
-
-		/**
-	  * Get the current value of the data object
-	  *
-	  * @method getValue
-	  * @return {mixed}
-	  */
-
-
-		_createClass(Binding, [{
-			key: 'getValue',
-			value: function getValue() {
-
-				// Get a path value
-				if (this.path) {
-					return this.observable.get(this.path);
-				}
-
-				// Then return the whole thing
-				return this.observable;
-			}
-		}, {
-			key: 'setValue',
-			value: function setValue(value) {
-				var morph = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-
-				if (morph) {
-
-					// Make sure the morph is not updated itself by this value setting
-					morph.lastValue = value;
-				}
-
-				return this.observable.set(this.path, value);
-			}
-		}, {
-			key: 'getReference',
-			value: function getReference() {
-				if (!this.reference) {
-					this.reference = new _Reference2.default(this.observable, this.path);
-				}
-				return this.reference;
-			}
-		}, {
-			key: 'destroy',
-			value: function destroy() {
-
-				// Unlisten the object
-				if (this.path) {
-					this.observable.disregard(this.path, this.changeCallback);
-				} else {
-					this.observable.neglect(this.changeCallback);
-				}
-			}
-
-			/**
-	   * Add a morph object to the list of morphs, so that it will
-	   * be updated when the data changes. And in cases when applicable,
-	   * vice-versa.
-	   *
-	   * @method addMorph
-	   * @param {HTMLBarsMorph} morph 
-	   * @param {object} scope
-	   */
-
-		}, {
-			key: 'addMorph',
-			value: function addMorph(morph, scope) {
-
-				// Is this an already bound morph?
-				if (this.morphs.has(morph)) return;
-
-				//////////////////////////////////////////
-				// Add the morph, for data->dom binding //
-				//////////////////////////////////////////
-
-				this.morphs.add(morph);
-
-				// Save the component and view
-				morph.view = scope.view || scope.self;
-				if (scope.component) morph.component = scope.component;
-
-				///////////////////////////////////////////
-				// Check node type for dom->data binding //
-				///////////////////////////////////////////
-
-				for (var key in Binding.TwoWay) {
-
-					// Check if it applies
-					var twoWay = Binding.TwoWay[key];
-					if (twoWay.match(morph)) {
-
-						// Let's bind!
-						twoWay.bind(this, morph);
-						break;
-					}
-				}
-			}
-		}]);
-
-		return Binding;
-	}();
-
-	Binding.TwoWay = {
-
-		InputValue: {
-			match: function match(morph) {
-				return morph.element && /^INPUT$/.test(morph.element.tagName) && morph.attrName === 'value' && /^text|search|date|time|password|number|range|email$/.test(morph.element.type);
-			},
-			bind: function bind(binding, morph) {
-
-				// Listen to key up, etc
-				var $element = (0, _jquery2.default)(morph.element);
-				var lastValue = $element.val();
-				$element.on('input keyup change paste', function () {
-					var v = $element.val();
-					if (v !== lastValue) {
-						binding.setValue(v, morph);
-						lastValue = v;
-					}
-				});
-			}
-		},
-
-		TextareaContent: {
-			match: function match(morph) {
-				return morph.contextualElement && /^TEXTAREA$/.test(morph.contextualElement.tagName) && morph.attributeName === undefined;
-			},
-			bind: function bind(binding, morph) {
-
-				// Listen to key up, etc
-				var $element = (0, _jquery2.default)(morph.contextualElement);
-				$element.on('keyup change paste', function () {
-					binding.setValue($element.val(), morph);
-				});
-			}
-
-		},
-
-		SelectValue: {
-			match: function match(morph) {
-				return morph.element && /^SELECT$/.test(morph.element.tagName) && morph.attrName === 'value';
-			},
-			bind: function bind(binding, morph) {
-
-				// Listen to change
-				var $element = (0, _jquery2.default)(morph.element);
-				$element.on('change', function () {
-					binding.setValue($element.val(), morph);
-				});
-			}
-
-		},
-
-		CheckboxChecked: {
-			match: function match(morph) {
-				return morph.element && /^INPUT$/.test(morph.element.tagName) && morph.attrName === 'checked' && /^checkbox$/.test(morph.element.type);
-			},
-			bind: function bind(binding, morph) {
-
-				// Listen to key up, etc
-				var $element = (0, _jquery2.default)(morph.element);
-				$element.on('change', function () {
-					binding.setValue($element.prop('checked'), morph);
-				});
-			}
-		}
-
-	};
-
-	module.exports = Binding;
-
-/***/ }),
-/* 38 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _uuidLib = __webpack_require__(39);
-
-	var _uuidLib2 = _interopRequireDefault(_uuidLib);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	/**
-	 * @module Dom
-	 */
-	var ActionBinding = function () {
-
-		/**
-	  * @class Dom.ActionBinding
-	  * 
-	  * @constructor
-	  */
-		function ActionBinding(renderer, morph, actionName, actionHandler, parameters, options, view) {
-			_classCallCheck(this, ActionBinding);
-
-			/**
-	   * @property renderer
-	   * @type {Dom.Renderer}
-	   */
-			this.renderer = renderer;
-
-			/**
-	   * @property morph
-	   * @type {HTMLBarsMorph}
-	   */
-			this.morph = morph;
-
-			/**
-	   * The name of the action on the view
-	   * 
-	   * @property actionName
-	   * @type {string}
-	   */
-			this.actionName = actionName;
-
-			/**
-	   * The function to call when the action is executed
-	   * 
-	   * @property actionHandler
-	   * @type {function}
-	   */
-			this.actionHandler = actionHandler;
-
-			/**
-	   * @property options
-	   * @type {object}
-	   */
-			this.options = _underscore2.default.defaults(options, {
-				preventDefault: true
-			});
-
-			/**
-	   * The parameters that will be passed along to the action handler.
-	   * 
-	   * @property parameters
-	   * @type {array}
-	   */
-			this.parameters = parameters;
-
-			/**
-	   * @property view
-	   * @type {Dom.View}
-	   */
-			this.view = view;
-
-			/**
-	   * The name of the event that is listened to on the element.
-	   * When not specifically configured in the binding itself, a default
-	   * event will be decided on, based on the element tag name. 
-	   * 
-	   * @property eventName
-	   * @type {string}
-	   */
-			this.eventName = options.on ? options.on : ActionBinding.getDefaultEventName(morph.element);
-
-			/**
-	   * Indicator whether the binding is applied
-	   * to the element
-	   * 
-	   * @property isListening
-	   * @type {Boolean}
-	   */
-			this.isListening = false;
-
-			/**
-	   * @property $element
-	   * @type {jQuery}
-	   */
-			this.$element = null;
-
-			/**
-	   * The unique identifier for this ActionBinding. This is used
-	   * by the Helper to retrieve this instance and automatically
-	   * generated in the constructor.
-	   * 
-	   * @property id
-	   * @type {string}
-	   */
-			this.id = ActionBinding.register(this);
-
-			// Store this binding on the element
-			morph.element.setAttribute('data-chicken-action', this.id);
-		}
-
-		_createClass(ActionBinding, [{
-			key: 'apply',
-			value: function apply() {
-				var _this = this;
-
-				// Already applied?
-				if (this.isListening === true) return this;
-				this.isListening = true;
-
-				// Get element
-				this.$element = (0, _jquery2.default)(this.morph.element);
-				this.$element.on(this.eventName, function (e) {
-
-					// Prevent default?
-					if (_this.options.preventDefault) e.preventDefault();
-
-					// Call the handler
-					var params = _underscore2.default.flatten([_underscore2.default.map(_this.parameters, function (value) {
-						return _this.renderer.hooks.getValue(value);
-					}), _this, _this.view, e]);
-					_this.actionHandler.apply(_this.view, params);
-				});
-
-				return this;
-			}
-		}]);
-
-		return ActionBinding;
-	}();
-
-	ActionBinding.registry = new Map();
-	ActionBinding.register = function (binding) {
-
-		// Generate id
-		var id = _uuidLib2.default.raw();
-		ActionBinding.registry.set(id, binding);
-		return id;
-	};
-	ActionBinding.get = function (id) {
-		return ActionBinding.registry.get(id);
-	};
-
-	ActionBinding.getDefaultEventName = function (element) {
-
-		// Specific one for this tag?
-		var eventName = ActionBinding.DefaultEventNames[element.tagName.toLowerCase()];
-
-		// Or the old click.
-		if (!eventName) eventName = 'click';
-		return eventName;
-	};
-	ActionBinding.DefaultEventNames = {
-
-		input: 'change keyup paste',
-		select: 'change',
-		form: 'submit'
-	};
-
-	module.exports = ActionBinding;
-
-/***/ }),
 /* 39 */
-/***/ (function(module, exports) {
-
-	var validator = new RegExp("^[a-z0-9]{32}$", "i");
-
-	function gen(count) {
-	  var out = "";
-	  for (var i=0; i<count; i++) {
-	    out += (((1+Math.random())*0x10000)|0).toString(16).substring(1);
-	  }
-	  return out;
-	}
-
-	function Uuid(uuid) {
-	  if (!uuid) throw new TypeError("Invalid argument; `value` has no value.");
-	    
-	  var value = Uuid.EMPTY;
-	  
-	  if (uuid && uuid instanceof Uuid) {
-	    value = Uuid.toString();
-
-	  } else if (uuid && Object.prototype.toString.call(uuid) === "[object String]" && Uuid.isUuid(uuid)) {
-	    value = uuid;
-	  }
-	  
-	  this.equals = function(other) {
-	    // Comparing string `value` against provided `uuid` will auto-call
-	    // toString on `uuid` for comparison
-	    return Uuid.isUuid(other) && value == other;
-	  };
-
-	  this.isEmpty = function() {
-	    return value === Uuid.EMPTY;
-	  };
-	  
-	  this.toString = function() {
-	    return value;
-	  };
-	  
-	  this.toJSON = function() {
-	    return value;
-	  };
-	  
-	  Object.defineProperty(this, "value", {
-	    get: function() { return value; },
-	    enumerable: true
-	  });
-	};
-
-	Object.defineProperty(Uuid, "EMPTY", {
-	  value: "00000000000000000000000000000000"
-	});
-
-	Uuid.isUuid = function(value) {
-	  return value && (value instanceof Uuid || validator.test(value.toString()));
-	};
-
-	Uuid.create = function() {
-	  return new Uuid(gen(8));
-	};
-
-	Uuid.raw = function() {
-	  return gen(8);
-	};
-
-	module.exports = Uuid;
-
-
-/***/ }),
-/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -8537,624 +9094,47 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
-
-	var _jquery = __webpack_require__(1);
-
-	var _jquery2 = _interopRequireDefault(_jquery);
-
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _htmlbarsStandalone = __webpack_require__(35);
-
-	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
-
-	var _inflection = __webpack_require__(5);
-
-	var _inflection2 = _interopRequireDefault(_inflection);
-
-	var _Obj = __webpack_require__(25);
-
-	var _Obj2 = _interopRequireDefault(_Obj);
-
-	var _View2 = __webpack_require__(41);
-
-	var _View3 = _interopRequireDefault(_View2);
-
-	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
-
-	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
-
-	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
-
-	/**
-	 * @module Dom
-	 */
-	var Component = function (_View) {
-		_inherits(Component, _View);
-
-		/**
-	  * @class Dom.Component
-	  * @extends Dom.View
-	  */
-		function Component(name, source, morph, scope, parameters, attributeHash, visitor, subTemplates) {
-			var initCallback = arguments.length > 8 && arguments[8] !== undefined ? arguments[8] : null;
-			var methods = arguments.length > 9 && arguments[9] !== undefined ? arguments[9] : {};
-			var renderer = arguments.length > 10 && arguments[10] !== undefined ? arguments[10] : null;
-
-			_classCallCheck(this, Component);
-
-			/**
-	   * The tag-name that was used to initialize this component
-	   * 
-	   * @property name
-	   * @type {string}
-	   */
-			var _this = _possibleConstructorReturn(this, (Component.__proto__ || Object.getPrototypeOf(Component)).call(this, source, null, renderer));
-
-			_this.name = name;
-
-			/**
-	   * The HTMLBars morph that contains this component
-	   * 
-	   * @property morph
-	   * @type {HTMLBarsMorph}
-	   */
-			_this.morph = morph;
-
-			/**
-	   * The HTMLBars scope for this component
-	   * 
-	   * @property scope
-	   * @type {Object}
-	   */
-			_this.scope = scope;
-
-			/**
-	   * The list of non-keyed parameters used in this component
-	   * 
-	   * @property parameters
-	   * @type {array}
-	   */
-			_this.parameters = parameters;
-
-			/**
-	   * The attribute hash
-	   *
-	   * @property attributes
-	   * @type {object}
-	   */
-			_this.attributes = {};
-			_underscore2.default.each(attributeHash, function (value, key) {
-
-				// Autocast
-				if (value === 'true') {
-					value = true;
-				} else if (value === 'false') {
-					value = false;
-				}
-
-				// Set it.
-				_this.attributes[_inflection2.default.camelize(key.split('-').join('_'), true)] = value;
-			});
-
-			/**
-	   * The HTMLBars visitor that was used to initialize this component
-	   *
-	   * @property visitor
-	   * @type {object}
-	   */
-			_this.visitor = visitor;
-
-			/**
-	   * Sub-templates used to yield within the component
-	   *
-	   * @property subTemplates
-	   * @type {object}
-	   */
-			_this.subTemplates = subTemplates;
-
-			/**
-	   * The tagName that will be used when creating this component. The default
-	   * value is 'div', but this can be overruled in your handlebar template, or
-	   * in the initCallback of the component.
-	   * 
-	   * @property tagName
-	   * @type {String}
-	   */
-			_this.tagName = 'div';
-
-			/**
-	   * The CSS class(es) that will be added to the component upon creation. You can set
-	   * this value in the initCallback of the component.
-	   *
-	   * @property cssClass
-	   * @type {string}
-	   */
-			_this.cssClass = false;
-
-			/**
-	   * @property element
-	   * @type {DOMElement}
-	   */
-			_this.element = null;
-
-			/**
-	   * The component instance that wrap this component, if any.
-	   * 
-	   * @property parentComponent
-	   * @type {Dom.Component}
-	   */
-			_this.parentComponent = _this.scope.component;
-			_this.setSilently('parent', _this.parentComponent);
-
-			// Do I have a parent?
-			if (_this.parentComponent) {
-				_this.parentComponent.components[_this.getId()] = _this;
-				_this.attributes._ = _this.parentComponent;
-			}
-
-			/**
-	   * @property view
-	   * @type {Dom.View}
-	   */
-			_this.view = _this.scope.view;
-			if (_this.view) {
-				_this.view.components[_this.getId()] = _this;
-				if (!_this.parentComponent) _this.set('_', _this.view);
-				_this.attributes.$ = _this.view;
-			}
-
-			/**
-	   * The dom-object can be used to listen to dom events on the event
-	   * 
-	   * @property dom
-	   * @type {Core.Obj}
-	   */
-			_this.dom = new _Obj2.default();
-
-			/**
-	   * @property isDestroyed
-	   * @type {Boolean}
-	   */
-			_this.isDestroyed = false;
-
-			// Make attributes available
-			_this.with(_this.attributes);
-
-			// Add methods
-			_jquery2.default.extend(_this, methods);
-
-			// Before destroy
-			_this.hooks.beforeDestroy = [];
-
-			// Definition callback?
-			if (initCallback) {
-				initCallback.apply(_this);
-			}
-
-			return _this;
-		}
-
-		_createClass(Component, [{
-			key: 'getHelper',
-			value: function getHelper(key) {
-
-				// Me?
-				if (this.helpers[key]) return this.helpers[key];
-
-				// Parent component?
-				if (this.parentComponent) return this.parentComponent.getHelper(key);
-
-				// View
-				if (this.view) return this.view.getHelper(key);
-
-				return false;
-			}
-		}, {
-			key: 'findParentComponent',
-			value: function findParentComponent(key) {
-
-				// My parent?
-				if (this.parentComponent) {
-
-					// Am I the one you're looking for?
-					if (this.parentComponent.name === key) return this.parentComponent;
-
-					// Look higher up
-					return this.parentComponent.findParentComponent(key);
-				} else {
-
-					// No dice.
-					return false;
-				}
-			}
-		}, {
-			key: 'getId',
-			value: function getId() {
-
-				// Already set?
-				if (!this._id) {
-
-					// Set as attribute
-					var id = this.attributes.id;
-					if (id) {
-						this._id = id;
-					} else {
-
-						// Do it by name
-						var name = _inflection2.default.camelize(this.name.split('-').join('_'), true);
-						if (Component.instanceCounts[name] === undefined) Component.instanceCounts[name] = 0;
-						Component.instanceCounts[name]++;
-
-						this._id = name + Component.instanceCounts[name];
-					}
-				}
-				return this._id;
-			}
-		}, {
-			key: 'sendAction',
-			value: function sendAction() {
-				var _this2 = this;
-
-				var name = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
-
-
-				// No name given?
-				if (name === null) {
-					name = this.attributes.action;
-				}
-
-				// Get the callback.
-				var actionScope = this.renderer.hooks.getActionScope(this.scope, name);
-				if (!actionScope) throw new Error('[Component ' + this.name + '] Could not find action "' + name + '" within the scope');
-				var callback = actionScope.actions[name];
-
-				// Now call it.
-
-				for (var _len = arguments.length, args = Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
-					args[_key - 1] = arguments[_key];
-				}
-
-				var params = _underscore2.default.flatten([_underscore2.default.map(args, function (value) {
-					return _this2.renderer.hooks.getValue(value);
-				}), this, actionScope]);
-				return callback.apply(actionScope instanceof _View3.default ? actionScope : this, params);
-			}
-		}, {
-			key: 'renderSync',
-			value: function renderSync() {
-				var _this3 = this;
-
-				// Before render hook
-				_underscore2.default.each(this.hooks.beforeRender, function (cb) {
-					cb.apply(_this3);
-				});
-
-				// Create the template
-				try {
-
-					// Render it
-					this.renderResult = this.getTemplate().render(this, this.renderer, {
-						scope: this.scope,
-						template: this.subTemplates.default
-					});
-					this.documentFragment = this.renderResult.fragment;
-				} catch (error) {
-
-					// Enrich error with element-path
-					var path = [];
-					var $el = (0, _jquery2.default)(this.renderer.currentMorph.element);
-					$el.parents().addBack().not('html').each(function () {
-						var entry = this.tagName.toLowerCase();
-						if (this.className) {
-							entry += '.' + this.className.replace(/ /g, '.');
-						}
-						path.push(entry);
-					});
-					path = path.join(' > ');
-
-					// Get template source
-					var source = this.source;
-					if (this.view) source = this.name + ' in ' + this.view.source;
-					var msg = 'Error in template "' + source + '" at "' + path + '":\n\t' + error + '\n';
-
-					// Add error stack			
-					/* eslint-disable no-console */
-					console.warn(error.stack);
-					/* eslint-enable no-console */
-
-					this.rejectPromise('ready', msg);
-					return;
-				}
-
-				// Study the object
-				this.study(function () {
-					_this3.scheduleRevalidate();
-				});
-
-				// Create the element
-				this.element = document.createElement(this.tagName);
-				_underscore2.default.each(this.attributes, function (value, key) {
-
-					// Check value type
-					if (value === 'true') value = true;
-					if (value === 'false') value = false;
-
-					if (!(value instanceof Object) && _jquery2.default.isNumeric(value) && !/^0/.test(value)) value = parseFloat(value);
-					if (value !== _this3.attributes[key]) {
-						_this3.attributes[key] = value;
-					}
-
-					// Is it a useful value?
-					if (key !== 'title' && (typeof value === 'string' || typeof value === 'number') && value.length < 64) {
-						var attrKey = _inflection2.default.underscore(key).split('_').join('-');
-						_this3.element.setAttribute(attrKey, value);
-					}
-				});
-
-				this.$element = (0, _jquery2.default)(this.element);
-				this.$element.append(this.documentFragment);
-
-				// CSS class
-				if (this.cssClass) this.$element.addClass(this.cssClass);
-
-				// Trigger beforeAdded
-				this.trigger('beforeAdd', this.$element);
-
-				// Put element in result
-				this.morph.setNode(this.$element[0]);
-
-				// Done.
-				this.trigger('added', this.$element);
-
-				// Enable DOM events
-				this.enableDomEvents();
-
-				// Find child components
-				if (_underscore2.default.size(this.components) > 0) {
-
-					// Wait for the children to complete first
-					var promises = _underscore2.default.map(this.components, function (child) {
-						return child.getPromise('ready');
-					});
-					Promise.all(promises).then(function () {
-						_this3.resolvePromise('ready');
-						_View3.default.any.trigger('render', _this3.$element);
-					});
-				} else {
-
-					// We are ready now.
-					this.resolvePromise('ready');
-					_View3.default.any.trigger('render', this.$element);
-				}
-			}
-		}, {
-			key: 'enableDomEvents',
-			value: function enableDomEvents() {
-				var _this4 = this;
-
-				// Loop through callbacks
-				this.dom._listeners.forEach(function (callbacks, name) {
-
-					// Proper event?
-					if (!_underscore2.default.contains(Component.DomEventNames, name)) {
-						throw new Error('The "' + name + '" event is not a valid DOM event.');
-					}
-
-					// Listen and connect.
-					_this4.$element.on(name, function () {
-						for (var _len2 = arguments.length, args = Array(_len2), _key2 = 0; _key2 < _len2; _key2++) {
-							args[_key2] = arguments[_key2];
-						}
-
-						args.unshift(name);
-						_this4.dom.trigger.apply(_this4.dom, args);
-					});
-				});
-			}
-		}, {
-			key: 'getSubTemplate',
-			value: function getSubTemplate(key) {
-
-				var block = _htmlbarsStandalone2.default.Util.Template.blockFor(_htmlbarsStandalone2.default.Runtime.render, this.subTemplates[key], {
-					scope: this.scope
-				});
-
-				return block;
-			}
-		}, {
-			key: 'getAttribute',
-			value: function getAttribute(key) {
-				var defaultValue = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
-
-
-				var value = this.attributes[key];
-				if (value === undefined) value = defaultValue;
-				return value;
-			}
-		}, {
-			key: 'getAttributes',
-			value: function getAttributes() {
-				var prefix = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : false;
-
-
-				// Get all keys with uiX
-				var result = {};
-				var regex = prefix ? new RegExp('^' + prefix + '[A-Z]') : false;
-				_underscore2.default.each(this.attributes, function (value, key) {
-
-					// Prefixed?
-					if (regex) {
-
-						// Match?
-						if (!regex.test(key)) return;
-
-						// Remove it
-						key = _underscore2.default.decapitalize(key.substr(prefix.length));
-					}
-
-					// Value
-					if (value !== null && (typeof value === 'undefined' ? 'undefined' : _typeof(value)) === 'object' && typeof value.getValue === 'function') {
-						value = value.getValue();
-					}
-
-					// Set it
-					result[key] = value;
-				});
-
-				return result;
-			}
-		}, {
-			key: 'get',
-			value: function get(key) {
-
-				// Do basics first
-				var value = _get(Component.prototype.__proto__ || Object.getPrototypeOf(Component.prototype), 'get', this).call(this, key);
-
-				// Nothing?
-				if (value === undefined) {
-
-					// Bubble up.
-					if (this.parentComponent) {
-
-						return this.parentComponent.get(key);
-					} else if (this.view) {
-
-						return this.view.get(key);
-					}
-				}
-
-				return value;
-			}
-
-			/**
-	   * Set default values for component attributes. Use this in the initCallback.
-	   *
-	   * @method defaults
-	   * @param  {Object} hash   Key/value pairs
-	   * @chainable
-	   */
-
-		}, {
-			key: 'defaults',
-			value: function defaults(hash) {
-				var _this5 = this;
-
-				this.withoutNotifications(function () {
-					_underscore2.default.each(hash, function (value, key) {
-
-						// Set?
-						if (_this5.attributes[key] === undefined) {
-							_this5.set(key, value);
-						}
-					});
-				});
-			}
-		}, {
-			key: 'beforeDestroy',
-			value: function beforeDestroy(callback) {
-				this.hooks.beforeDestroy.push(callback);
-				return this;
-			}
-		}, {
-			key: 'destroy',
-			value: function destroy() {
-				var _this6 = this;
-
-				// I am destroyed
-				if (this.isDestroyed) return this;
-				this.isDestroyed = true;
-
-				// Call the hooks
-				_underscore2.default.each(this.hooks.beforeDestroy, function (cb) {
-					cb.apply(_this6);
-				});
-				return this;
-			}
-		}]);
-
-		return Component;
-	}(_View3.default);
-
-	Component.DomEventNames = [
-
-	// Touch events
-	'touchStart', 'touchMove', 'touchEnd', 'touchCancel',
-
-	// Keyboard
-	'keyDown', 'keyUp', 'keyPress',
-
-	// Mouse
-	'mouseDown', 'mouseUp', 'contextMenu', 'click', 'doubleClick', 'mouseMove', 'focusIn', 'focusOut', 'mouseEnter', 'mouseLeave',
-
-	// Form
-	'submit', 'change', 'focusIn', 'focusOut', 'input',
-
-	// HTML5
-	'dragStart', 'drag', 'dragEnter', 'dragLeave', 'dragOver', 'dragEnd', 'drop'];
-
-	Component.registry = new Map();
-
-	Component.instanceCounts = {};
-
-	module.exports = Component;
-
-/***/ }),
-/* 41 */
-/***/ (function(module, exports, __webpack_require__) {
-
-	'use strict';
-
-	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
-
-	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
-
-	var _underscore = __webpack_require__(2);
-
-	var _underscore2 = _interopRequireDefault(_underscore);
-
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _htmlbarsStandalone = __webpack_require__(35);
+	var _htmlbarsStandalone = __webpack_require__(32);
 
 	var _htmlbarsStandalone2 = _interopRequireDefault(_htmlbarsStandalone);
 
-	var _App = __webpack_require__(42);
+	var _App = __webpack_require__(40);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Observable2 = __webpack_require__(24);
+	var _Observable2 = __webpack_require__(21);
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _Binding = __webpack_require__(37);
+	var _Binding = __webpack_require__(34);
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
-	var _ApiCall = __webpack_require__(43);
+	var _ApiCall = __webpack_require__(41);
 
 	var _ApiCall2 = _interopRequireDefault(_ApiCall);
 
-	var _Obj = __webpack_require__(25);
+	var _Obj = __webpack_require__(22);
 
 	var _Obj2 = _interopRequireDefault(_Obj);
 
-	var _Model = __webpack_require__(45);
+	var _Model = __webpack_require__(43);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(47);
+	var _Collection = __webpack_require__(45);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _Utils = __webpack_require__(48);
+	var _Utils = __webpack_require__(46);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
@@ -9795,7 +9775,9 @@ return /******/ (function(modules) { // webpackBootstrap
 
 					// Add error stack			
 					/* eslint-disable no-console */
-					console.warn(error.stack);
+					try {
+						console.warn(error.stack);
+					} catch (e) {} /* Nothing */
 					/* eslint-enable no-console */
 
 					// Get template source
@@ -10015,12 +9997,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = View;
 
 /***/ }),
-/* 42 */
+/* 40 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _ClassMap = __webpack_require__(27);
+	var _ClassMap = __webpack_require__(24);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
@@ -10031,38 +10013,38 @@ return /******/ (function(modules) { // webpackBootstrap
 	};
 
 /***/ }),
-/* 43 */
+/* 41 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _queryString = __webpack_require__(6);
+	var _queryString = __webpack_require__(3);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _ApiError = __webpack_require__(44);
+	var _ApiError = __webpack_require__(42);
 
 	var _ApiError2 = _interopRequireDefault(_ApiError);
 
-	var _Obj2 = __webpack_require__(25);
+	var _Obj2 = __webpack_require__(22);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _Model = __webpack_require__(45);
+	var _Model = __webpack_require__(43);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(47);
+	var _Collection = __webpack_require__(45);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
@@ -10529,7 +10511,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ApiCall;
 
 /***/ }),
-/* 44 */
+/* 42 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -10606,7 +10588,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ApiError;
 
 /***/ }),
-/* 45 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -10615,51 +10597,51 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get2 = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _inflection = __webpack_require__(5);
+	var _inflection = __webpack_require__(38);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _moment = __webpack_require__(10);
+	var _moment = __webpack_require__(2);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _App = __webpack_require__(42);
+	var _App = __webpack_require__(40);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Observable2 = __webpack_require__(24);
+	var _Observable2 = __webpack_require__(21);
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _ObservableArray = __webpack_require__(36);
+	var _ObservableArray = __webpack_require__(33);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
-	var _ModelStore = __webpack_require__(46);
+	var _ModelStore = __webpack_require__(44);
 
 	var _ModelStore2 = _interopRequireDefault(_ModelStore);
 
-	var _Collection = __webpack_require__(47);
+	var _Collection = __webpack_require__(45);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _ClassMap = __webpack_require__(27);
+	var _ClassMap = __webpack_require__(24);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Utils = __webpack_require__(48);
+	var _Utils = __webpack_require__(46);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
-	var _ComputedProperty = __webpack_require__(28);
+	var _ComputedProperty = __webpack_require__(25);
 
 	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
 
@@ -12033,14 +12015,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Model;
 
 /***/ }),
-/* 46 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Obj2 = __webpack_require__(25);
+	var _Obj2 = __webpack_require__(22);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
@@ -12097,7 +12079,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelStore;
 
 /***/ }),
-/* 47 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -12108,15 +12090,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _ObservableArray2 = __webpack_require__(36);
+	var _ObservableArray2 = __webpack_require__(33);
 
 	var _ObservableArray3 = _interopRequireDefault(_ObservableArray2);
 
-	var _ClassMap = __webpack_require__(27);
+	var _ClassMap = __webpack_require__(24);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
@@ -12560,50 +12542,50 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Collection;
 
 /***/ }),
-/* 48 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; };
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _moment = __webpack_require__(10);
+	var _moment = __webpack_require__(2);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _queryString = __webpack_require__(6);
+	var _queryString = __webpack_require__(3);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
-	var _Observable = __webpack_require__(24);
+	var _Observable = __webpack_require__(21);
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(36);
+	var _ObservableArray = __webpack_require__(33);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
-	var _Binding = __webpack_require__(37);
+	var _Binding = __webpack_require__(34);
 
 	var _Binding2 = _interopRequireDefault(_Binding);
 
-	var _HelperProxy = __webpack_require__(49);
+	var _HelperProxy = __webpack_require__(47);
 
 	var _HelperProxy2 = _interopRequireDefault(_HelperProxy);
 
-	var _ComputedProperty = __webpack_require__(28);
+	var _ComputedProperty = __webpack_require__(25);
 
 	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
 
-	var _Reference = __webpack_require__(26);
+	var _Reference = __webpack_require__(23);
 
 	var _Reference2 = _interopRequireDefault(_Reference);
 
-	var _ClassMap = __webpack_require__(27);
+	var _ClassMap = __webpack_require__(24);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
@@ -12941,7 +12923,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Utils;
 
 /***/ }),
-/* 49 */
+/* 47 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -12983,12 +12965,12 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = HelperProxy;
 
 /***/ }),
-/* 50 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _App = __webpack_require__(42);
+	var _App = __webpack_require__(40);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -13051,7 +13033,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ComponentDefinition;
 
 /***/ }),
-/* 51 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -13060,47 +13042,47 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /* eslint no-console: ["error", { allow: ["log"] }] */
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _queryString = __webpack_require__(6);
+	var _queryString = __webpack_require__(3);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
-	var _inflection = __webpack_require__(5);
+	var _inflection = __webpack_require__(38);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _moment2 = __webpack_require__(10);
+	var _moment2 = __webpack_require__(2);
 
 	var _moment3 = _interopRequireDefault(_moment2);
 
-	var _filesize = __webpack_require__(52);
+	var _filesize = __webpack_require__(50);
 
 	var _filesize2 = _interopRequireDefault(_filesize);
 
-	var _ActionBinding = __webpack_require__(38);
+	var _ActionBinding = __webpack_require__(35);
 
 	var _ActionBinding2 = _interopRequireDefault(_ActionBinding);
 
-	var _Utils = __webpack_require__(48);
+	var _Utils = __webpack_require__(46);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
-	var _App = __webpack_require__(42);
+	var _App = __webpack_require__(40);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Observable = __webpack_require__(24);
+	var _Observable = __webpack_require__(21);
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(36);
+	var _ObservableArray = __webpack_require__(33);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -13894,60 +13876,60 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Helpers;
 
 /***/ }),
-/* 52 */
+/* 50 */
 /***/ (function(module, exports) {
 
 	!function(i,e){"object"==typeof module&&module.exports?module.exports=e():i.filesize=e()}("undefined"!=typeof window?window:this,function(){var i={iec:"_Ki_Mi_Gi_Ti_Pi_Ei_Zi_Yi",si:"_K_M_G_T_P_E_Z_Y"};return function(e,_,o){e=Math.abs(e),_||0===_||(_=1);var t="si"==o?1e3:1024,n=0;for(i[o]||(o="si");e>=t;)e/=t,++n;return e.toFixed(_)+" "+i[o].split("_")[n]+"b"}});
 
 /***/ }),
-/* 53 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _ApiError = __webpack_require__(44);
+	var _ApiError = __webpack_require__(42);
 
 	var _ApiError2 = _interopRequireDefault(_ApiError);
 
-	var _Obj2 = __webpack_require__(25);
+	var _Obj2 = __webpack_require__(22);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _SettingsObject = __webpack_require__(29);
+	var _SettingsObject = __webpack_require__(26);
 
 	var _SettingsObject2 = _interopRequireDefault(_SettingsObject);
 
-	var _Route = __webpack_require__(54);
+	var _Route = __webpack_require__(52);
 
 	var _Route2 = _interopRequireDefault(_Route);
 
-	var _RouteMatch = __webpack_require__(55);
+	var _RouteMatch = __webpack_require__(54);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
-	var _Request = __webpack_require__(60);
+	var _Request = __webpack_require__(59);
 
 	var _Request2 = _interopRequireDefault(_Request);
 
-	var _Middleware = __webpack_require__(61);
+	var _Middleware = __webpack_require__(60);
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
 
-	var _Service = __webpack_require__(62);
+	var _Service = __webpack_require__(61);
 
 	var _Service2 = _interopRequireDefault(_Service);
 
-	var _RoutingError = __webpack_require__(59);
+	var _RoutingError = __webpack_require__(58);
 
 	var _RoutingError2 = _interopRequireDefault(_RoutingError);
 
-	var _Redirect = __webpack_require__(57);
+	var _Redirect = __webpack_require__(56);
 
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 
@@ -14458,30 +14440,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Router;
 
 /***/ }),
-/* 54 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _xregexp = __webpack_require__(4);
+	var _xregexp = __webpack_require__(53);
 
 	var _xregexp2 = _interopRequireDefault(_xregexp);
 
-	var _Obj2 = __webpack_require__(25);
+	var _Obj2 = __webpack_require__(22);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _RouteMatch = __webpack_require__(55);
+	var _RouteMatch = __webpack_require__(54);
 
 	var _RouteMatch2 = _interopRequireDefault(_RouteMatch);
 
-	var _Model = __webpack_require__(45);
+	var _Model = __webpack_require__(43);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
@@ -15044,26 +15026,32 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Route;
 
 /***/ }),
-/* 55 */
+/* 53 */
+/***/ (function(module, exports) {
+
+	module.exports = __WEBPACK_EXTERNAL_MODULE_53__;
+
+/***/ }),
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _queryString = __webpack_require__(6);
+	var _queryString = __webpack_require__(3);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
-	var _Action = __webpack_require__(56);
+	var _Action = __webpack_require__(55);
 
 	var _Action2 = _interopRequireDefault(_Action);
 
-	var _Utils = __webpack_require__(48);
+	var _Utils = __webpack_require__(46);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
@@ -15287,7 +15275,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = RouteMatch;
 
 /***/ }),
-/* 56 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -15296,39 +15284,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _xregexp = __webpack_require__(4);
+	var _xregexp = __webpack_require__(53);
 
 	var _xregexp2 = _interopRequireDefault(_xregexp);
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _App = __webpack_require__(42);
+	var _App = __webpack_require__(40);
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Obj2 = __webpack_require__(25);
+	var _Obj2 = __webpack_require__(22);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
-	var _Redirect = __webpack_require__(57);
+	var _Redirect = __webpack_require__(56);
 
 	var _Redirect2 = _interopRequireDefault(_Redirect);
 
-	var _Controller = __webpack_require__(58);
+	var _Controller = __webpack_require__(57);
 
 	var _Controller2 = _interopRequireDefault(_Controller);
 
-	var _RoutingError = __webpack_require__(59);
+	var _RoutingError = __webpack_require__(58);
 
 	var _RoutingError2 = _interopRequireDefault(_RoutingError);
 
-	var _View = __webpack_require__(41);
+	var _View = __webpack_require__(39);
 
 	var _View2 = _interopRequireDefault(_View);
 
-	var _Utils = __webpack_require__(48);
+	var _Utils = __webpack_require__(46);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
@@ -15816,14 +15804,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Action;
 
 /***/ }),
-/* 57 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
@@ -15869,7 +15857,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Redirect;
 
 /***/ }),
-/* 58 */
+/* 57 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -15968,7 +15956,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Controller;
 
 /***/ }),
-/* 59 */
+/* 58 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -15992,18 +15980,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = RoutingError;
 
 /***/ }),
-/* 60 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _queryString = __webpack_require__(6);
+	var _queryString = __webpack_require__(3);
 
 	var _queryString2 = _interopRequireDefault(_queryString);
 
-	var _ClassMap = __webpack_require__(27);
+	var _ClassMap = __webpack_require__(24);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
@@ -16090,7 +16078,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Request;
 
 /***/ }),
-/* 61 */
+/* 60 */
 /***/ (function(module, exports) {
 
 	"use strict";
@@ -16124,14 +16112,14 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Middleware;
 
 /***/ }),
-/* 62 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _Observable2 = __webpack_require__(24);
+	var _Observable2 = __webpack_require__(21);
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
@@ -16199,7 +16187,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Service;
 
 /***/ }),
-/* 63 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16208,15 +16196,15 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Obj2 = __webpack_require__(25);
+	var _Obj2 = __webpack_require__(22);
 
 	var _Obj3 = _interopRequireDefault(_Obj2);
 
@@ -16283,6 +16271,26 @@ return /******/ (function(modules) { // webpackBootstrap
 				});
 
 				return this;
+			}
+		}, {
+			key: 'setBundle',
+			value: function setBundle(data) {
+				var key = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : null;
+				var language = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : null;
+
+
+				// Default language
+				if (!language) language = this.language;
+
+				// Is there a key?
+				if (key) {
+					var r = {};
+					r[key] = data;
+					data = r;
+				}
+
+				// Extend
+				_jquery2.default.extend(this.data[language], data);
 			}
 
 			/**
@@ -16537,30 +16545,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = I18n;
 
 /***/ }),
-/* 64 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Model = __webpack_require__(45);
+	var _Model = __webpack_require__(43);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _ApiCall = __webpack_require__(43);
+	var _ApiCall = __webpack_require__(41);
 
 	var _ApiCall2 = _interopRequireDefault(_ApiCall);
 
-	var _App = __webpack_require__(42);
+	var _App = __webpack_require__(40);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -16914,7 +16922,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Api;
 
 /***/ }),
-/* 65 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -16923,35 +16931,35 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _inflection = __webpack_require__(5);
+	var _inflection = __webpack_require__(38);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _Api2 = __webpack_require__(64);
+	var _Api2 = __webpack_require__(63);
 
 	var _Api3 = _interopRequireDefault(_Api2);
 
-	var _JsonApiCall = __webpack_require__(66);
+	var _JsonApiCall = __webpack_require__(65);
 
 	var _JsonApiCall2 = _interopRequireDefault(_JsonApiCall);
 
-	var _Model = __webpack_require__(45);
+	var _Model = __webpack_require__(43);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(47);
+	var _Collection = __webpack_require__(45);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _Utils = __webpack_require__(48);
+	var _Utils = __webpack_require__(46);
 
 	var _Utils2 = _interopRequireDefault(_Utils);
 
@@ -17421,22 +17429,22 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApi;
 
 /***/ }),
-/* 66 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _inflection = __webpack_require__(5);
+	var _inflection = __webpack_require__(38);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _moment = __webpack_require__(10);
+	var _moment = __webpack_require__(2);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _ApiCall2 = __webpack_require__(43);
+	var _ApiCall2 = __webpack_require__(41);
 
 	var _ApiCall3 = _interopRequireDefault(_ApiCall2);
 
@@ -17528,34 +17536,34 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JsonApiCall;
 
 /***/ }),
-/* 67 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _inflection = __webpack_require__(5);
+	var _inflection = __webpack_require__(38);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _Api2 = __webpack_require__(64);
+	var _Api2 = __webpack_require__(63);
 
 	var _Api3 = _interopRequireDefault(_Api2);
 
-	var _PrimitiveJsonApiCall = __webpack_require__(68);
+	var _PrimitiveJsonApiCall = __webpack_require__(67);
 
 	var _PrimitiveJsonApiCall2 = _interopRequireDefault(_PrimitiveJsonApiCall);
 
-	var _Model = __webpack_require__(45);
+	var _Model = __webpack_require__(43);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(47);
+	var _Collection = __webpack_require__(45);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
@@ -17858,18 +17866,18 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PrimitiveJsonApi;
 
 /***/ }),
-/* 68 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _inflection = __webpack_require__(5);
+	var _inflection = __webpack_require__(38);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _ApiCall2 = __webpack_require__(43);
+	var _ApiCall2 = __webpack_require__(41);
 
 	var _ApiCall3 = _interopRequireDefault(_ApiCall2);
 
@@ -17936,30 +17944,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PrimitiveJsonApiCall;
 
 /***/ }),
-/* 69 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _Observable2 = __webpack_require__(24);
+	var _Observable2 = __webpack_require__(21);
 
 	var _Observable3 = _interopRequireDefault(_Observable2);
 
-	var _Middleware = __webpack_require__(61);
+	var _Middleware = __webpack_require__(60);
 
 	var _Middleware2 = _interopRequireDefault(_Middleware);
 
-	var _App = __webpack_require__(42);
+	var _App = __webpack_require__(40);
 
 	var _App2 = _interopRequireDefault(_App);
 
@@ -18172,26 +18180,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Auth;
 
 /***/ }),
-/* 70 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _jquery = __webpack_require__(1);
+	var _jquery = __webpack_require__(19);
 
 	var _jquery2 = _interopRequireDefault(_jquery);
 
-	var _moment = __webpack_require__(10);
+	var _moment = __webpack_require__(2);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _Auth2 = __webpack_require__(69);
+	var _Auth2 = __webpack_require__(68);
 
 	var _Auth3 = _interopRequireDefault(_Auth2);
 
-	var _AuthError = __webpack_require__(71);
+	var _AuthError = __webpack_require__(70);
 
 	var _AuthError2 = _interopRequireDefault(_AuthError);
 
@@ -18625,7 +18633,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = JWTAuth;
 
 /***/ }),
-/* 71 */
+/* 70 */
 /***/ (function(module, exports) {
 
 	'use strict';
@@ -18678,26 +18686,26 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = AuthError;
 
 /***/ }),
-/* 72 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _moment = __webpack_require__(10);
+	var _moment = __webpack_require__(2);
 
 	var _moment2 = _interopRequireDefault(_moment);
 
-	var _Observable = __webpack_require__(24);
+	var _Observable = __webpack_require__(21);
 
 	var _Observable2 = _interopRequireDefault(_Observable);
 
-	var _ObservableArray = __webpack_require__(36);
+	var _ObservableArray = __webpack_require__(33);
 
 	var _ObservableArray2 = _interopRequireDefault(_ObservableArray);
 
@@ -18958,30 +18966,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelAttribute;
 
 /***/ }),
-/* 73 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _inflection = __webpack_require__(5);
+	var _inflection = __webpack_require__(38);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _ModelAttribute = __webpack_require__(72);
+	var _ModelAttribute = __webpack_require__(71);
 
 	var _ModelAttribute2 = _interopRequireDefault(_ModelAttribute);
 
-	var _Relationship = __webpack_require__(74);
+	var _Relationship = __webpack_require__(73);
 
 	var _Relationship2 = _interopRequireDefault(_Relationship);
 
-	var _ComputedProperty = __webpack_require__(28);
+	var _ComputedProperty = __webpack_require__(25);
 
 	var _ComputedProperty2 = _interopRequireDefault(_ComputedProperty);
 
@@ -19335,30 +19343,30 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = ModelDefinition;
 
 /***/ }),
-/* 74 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
 	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-	var _underscore = __webpack_require__(2);
+	var _underscore = __webpack_require__(20);
 
 	var _underscore2 = _interopRequireDefault(_underscore);
 
-	var _inflection = __webpack_require__(5);
+	var _inflection = __webpack_require__(38);
 
 	var _inflection2 = _interopRequireDefault(_inflection);
 
-	var _Model = __webpack_require__(45);
+	var _Model = __webpack_require__(43);
 
 	var _Model2 = _interopRequireDefault(_Model);
 
-	var _Collection = __webpack_require__(47);
+	var _Collection = __webpack_require__(45);
 
 	var _Collection2 = _interopRequireDefault(_Collection);
 
-	var _PivotCollection = __webpack_require__(75);
+	var _PivotCollection = __webpack_require__(74);
 
 	var _PivotCollection2 = _interopRequireDefault(_PivotCollection);
 
@@ -19715,7 +19723,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Relationship;
 
 /***/ }),
-/* 75 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -19724,11 +19732,11 @@ return /******/ (function(modules) { // webpackBootstrap
 
 	var _get = function get(object, property, receiver) { if (object === null) object = Function.prototype; var desc = Object.getOwnPropertyDescriptor(object, property); if (desc === undefined) { var parent = Object.getPrototypeOf(object); if (parent === null) { return undefined; } else { return get(parent, property, receiver); } } else if ("value" in desc) { return desc.value; } else { var getter = desc.get; if (getter === undefined) { return undefined; } return getter.call(receiver); } };
 
-	var _Collection2 = __webpack_require__(47);
+	var _Collection2 = __webpack_require__(45);
 
 	var _Collection3 = _interopRequireDefault(_Collection2);
 
-	var _Pivot = __webpack_require__(76);
+	var _Pivot = __webpack_require__(75);
 
 	var _Pivot2 = _interopRequireDefault(_Pivot);
 
@@ -19783,16 +19791,16 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = PivotCollection;
 
 /***/ }),
-/* 76 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 	'use strict';
 
-	var _ClassMap = __webpack_require__(27);
+	var _ClassMap = __webpack_require__(24);
 
 	var _ClassMap2 = _interopRequireDefault(_ClassMap);
 
-	var _Model2 = __webpack_require__(45);
+	var _Model2 = __webpack_require__(43);
 
 	var _Model3 = _interopRequireDefault(_Model2);
 
@@ -19890,7 +19898,7 @@ return /******/ (function(modules) { // webpackBootstrap
 	module.exports = Pivot;
 
 /***/ }),
-/* 77 */
+/* 76 */
 /***/ (function(module, exports) {
 
 	'use strict';

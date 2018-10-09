@@ -214,7 +214,7 @@ gulp.task('webpack', [], () => {
 
 	return gulp.src('src/main.js')
 		.pipe(webpack(webpackConfig).on('error', function(message) {
-			this.emit('end')
+			this.emit('end');
 		}))		
 		.pipe(gulp.dest('build/'));
 

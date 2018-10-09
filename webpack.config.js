@@ -12,7 +12,7 @@ module.exports = {
 	'externals': {
 		underscore: '_',
 		'underscore.string': 's',
-		jquery: '$',
+		jquery: '$',		
 		xregexp: 'XRegExp',
 		'htmlbars-standalone': 'HTMLBars',
 		moment: 'moment'
