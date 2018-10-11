@@ -139,7 +139,7 @@ class Observable extends Obj {
 		if (parts.length === 0) return this._has(currentPart) !== undefined;
 
 		// Look deeper
-		let value = this._get(currentPart);
+		let value = this.__get(currentPart);
 
 		// No value
 		if (value === undefined) {
@@ -180,7 +180,7 @@ class Observable extends Obj {
 		let currentPart = parts.shift();
 
 		// Get value
-		let value = this._get(currentPart);
+		let value = this.__get(currentPart);
 
 		// Nothing?
 		if (value === undefined) return;
@@ -217,7 +217,7 @@ class Observable extends Obj {
 		}
 
 	}
-	_get(key) {
+	__get(key) {
 		return this.attributes[key];
 	}
 
@@ -316,7 +316,7 @@ class Observable extends Obj {
 		}
 
 		// Set it
-		this._set(key, value);
+		this.__set(key, value);
 
 		// Is the value observable?
 		if (Observable.isObservable(value)) {
@@ -358,7 +358,7 @@ class Observable extends Obj {
 	}
 
 
-	_set(key, value) {
+	__set(key, value) {
 
 		// Is there a current value that is a reference?
 		if (this.attributes[key] instanceof Reference && !(value instanceof Reference)) {
@@ -401,7 +401,6 @@ class Observable extends Obj {
 
 
 	import(obj, convertToObservables = true) {
-
 		// Import all items in hash
 		this.withoutNotifications(() => {
 			_.each(obj, (value, key) => {

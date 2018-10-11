@@ -158,7 +158,7 @@ class Model extends Observable
 	// Get and set //
 	/////////////////
 
-	_get(key) {
+	__get(key) {
 
 		// Is there a getter?
 		let methodName = 'get' + inflection.camelize(key);
@@ -178,11 +178,11 @@ class Model extends Observable
 
 
 		// Nothing special. Do basics
-		return super._get(key);
+		return super.__get(key);
 
 	}
 
-	_set(key, value) {
+	__set(key, value) {
 		
 		// Is there a setter?
 		let methodName = 'set' + inflection.camelize(key);
@@ -220,7 +220,7 @@ class Model extends Observable
 			value = this.castValue(key, value);
 			
 			// Continue with it
-			super._set(key, value);
+			super.__set(key, value);
 			
 		}
 

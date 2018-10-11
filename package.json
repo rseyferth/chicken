@@ -2,7 +2,7 @@
   "name": "chickenjs",
   "version": "1.0.3",
   "description": "Chicken Javascript Webapp Framework",
-  "main": "src/main.js",
+  "main": "build/chicken.js",
   "repository": "https://github.com/rseyferth/chicken.git",
   "scripts": {
     "build": "rollup -c",

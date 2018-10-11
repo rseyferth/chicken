@@ -199,7 +199,7 @@ Binding.TwoWay = {
 			// Listen to key up, etc
 			var $element = $(morph.element);
 			var lastValue = $element.val();
-			$element.on('input keyup change paste', () => {
+			$element.on('input keyup keydown propertychange change paste', () => {
 				var v = $element.val();
 				if (v !== lastValue) {
 					binding.setValue(v, morph);

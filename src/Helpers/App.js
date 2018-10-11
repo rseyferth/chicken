@@ -1,5 +1,5 @@
-import ClassMap from '../Helpers/ClassMap';
+import Application from '../Application';
 
 export default function() {
-	return ClassMap.get('Application').getInstance();
+	return Application.getInstance();	
 };

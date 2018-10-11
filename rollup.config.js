@@ -7,21 +7,19 @@ export default {
     input: 'src/main.js',
     context: 'window',
     plugins: [
+        babel({
+            exclude: ['node_modules/**']
+        }),
         builtins(),
         resolve(), // so Rollup can find `ms`
         commonjs(), // so Rollup can convert `ms` to an ES module
-        babel({
-            exclude: ['node_modules/**']
-        })
     ],
+    external: ['jquery', 'underscore', 'xregexp', 'moment'],
     output: {
         file: 'build/chicken.js',
         name: 'Chicken',
         sourcemap: true,
-        globals: {
-            jquery: '$',
-            underscore: '_'
-        },
+        
         format: 'umd'
     }
   };
