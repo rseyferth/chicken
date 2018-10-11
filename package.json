@@ -1,6 +1,6 @@
 {
   "name": "chickenjs",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "Chicken Javascript Webapp Framework",
   "main": "build/chicken.js",
   "repository": "https://github.com/rseyferth/chicken.git",
@@ -28,7 +28,7 @@
     "history": "^4.7",
     "htmlbars": "^0.14.24",
     "htmlbars-standalone": "0.0.7",
-    "inflection": "^1.10.0",    
+    "inflection": "^1.10.0",
     "query-string": "^4.2.3",
     "underscore": "^1.8.3",
     "underscore.string": "^3.3.4",
