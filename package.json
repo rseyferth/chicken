@@ -11,6 +11,9 @@
   "author": "Ruben Seyferth <ruben.seyferth@gmail.com>",
   "license": "ISC",
   "devDependencies": {
+    "@babel/cli": "^7.1.2",
+    "@babel/core": "^7.1.2",
+    "@babel/preset-env": "^7.1.0",
     "babel-preset-env": "^1.7.0",
     "babelrc-rollup": "^3.0.0",
     "rollup": "^0.66.6",
@@ -20,9 +23,6 @@
     "rollup-plugin-node-resolve": "^3.4.0"
   },
   "dependencies": {
-    "@babel/cli": "^7.1.2",
-    "@babel/core": "^7.1.2",
-    "@babel/preset-env": "^7.1.0",
     "filesize.js": "^1.0.2",
     "handlebars": "^4.0.5",
     "history": "^4.7",
