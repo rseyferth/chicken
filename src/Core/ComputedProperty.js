@@ -113,4 +113,4 @@ class ComputedProperty
 
 }
 
-module.exports = ComputedProperty;
+export default ComputedProperty;

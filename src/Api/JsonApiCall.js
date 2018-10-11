@@ -63,4 +63,4 @@ class JsonApiCall extends ApiCall {
 
 
 }
-module.exports = JsonApiCall;
+export default JsonApiCall;

@@ -13,4 +13,4 @@ class RoutingError
 
 }
 
-module.exports = RoutingError;
+export default RoutingError;

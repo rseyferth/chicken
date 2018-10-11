@@ -372,4 +372,4 @@ let Utils = {
 
 ClassMap.register('Utils', Utils);
 
-module.exports = Utils;
+export default Utils;

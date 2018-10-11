@@ -1,6 +1,6 @@
 import _ from 'underscore';
 import $ from 'jquery';
-import HTMLBars from 'htmlbars-standalone';
+import { template, compile } from 'htmlbars/dist/cjs/htmlbars-compiler';
 
 import App from '../Helpers/App';
 import Observable from '../Core/Observable';
@@ -694,7 +694,7 @@ class View extends Observable
 
 		// Create
 		if (!this.template) {
-			this.template = HTMLBars.Compiler.compile(this.templateString);
+			this.template = compile(this.templateString);
 		}
 		return this.template;
 
@@ -895,4 +895,4 @@ View.AutoTranslationPrefix = false;
 View.any = new Obj();
 
 
-module.exports = View;
+export default View;

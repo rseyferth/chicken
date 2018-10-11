@@ -41,4 +41,4 @@ class PrimitiveJsonApiCall extends ApiCall {
 
 
 }
-module.exports = PrimitiveJsonApiCall;
+export default PrimitiveJsonApiCall;

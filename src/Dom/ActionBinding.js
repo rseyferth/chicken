@@ -176,4 +176,4 @@ ActionBinding.DefaultEventNames = {
 
 
 
-module.exports = ActionBinding;
+export default ActionBinding;

@@ -32,4 +32,4 @@ const ClassMap = {
 
 
 
-module.exports = ClassMap;
+export default ClassMap;

@@ -23,4 +23,4 @@ class FakeHistory
 
 }
 
-module.exports = FakeHistory;
+export default FakeHistory;

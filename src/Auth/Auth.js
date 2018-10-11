@@ -193,4 +193,4 @@ class Auth extends Observable
 
 
 
-module.exports = Auth;
+export default Auth;

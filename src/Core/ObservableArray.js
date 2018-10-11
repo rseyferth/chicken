@@ -894,4 +894,4 @@ ClassMap.register('ObservableArray', ObservableArray);
 
 
 
-module.exports = ObservableArray;
+export default ObservableArray;

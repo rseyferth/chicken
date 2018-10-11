@@ -264,4 +264,4 @@ Binding.TwoWay = {
 };
 
 
-module.exports = Binding;
+export default Binding;

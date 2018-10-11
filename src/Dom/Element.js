@@ -71,4 +71,4 @@ Element.Hooks = {
 };
 
 
-module.exports = Element;
+export default Element;

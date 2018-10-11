@@ -76,4 +76,4 @@ Controller.registry = new Map();
 
 
 
-module.exports = Controller;
+export default Controller;

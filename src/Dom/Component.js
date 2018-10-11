@@ -1,7 +1,10 @@
 import $ from 'jquery';
 import _ from 'underscore';
-import HTMLBars from 'htmlbars-standalone';
 import inflection from 'inflection';
+
+import render from 'htmlbars/dist/cjs/htmlbars-runtime/render';
+import { blockFor } from 'htmlbars/dist/cjs/htmlbars-util/template-utils';
+
 
 import Obj from '../Core/Obj';
 import View from '../Dom/View';
@@ -408,8 +411,8 @@ class Component extends View
 
 	getSubTemplate(key) {
 
-		let block = HTMLBars.Util.Template.blockFor(
-			HTMLBars.Runtime.render,
+		let block = blockFor(
+			render,
 			this.subTemplates[key],
 			{
 				scope: this.scope
@@ -562,4 +565,4 @@ Component.registry = new Map();
 
 Component.instanceCounts = {};
 
-module.exports = Component;
+export default Component;

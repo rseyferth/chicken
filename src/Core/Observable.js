@@ -879,4 +879,4 @@ Observable.AttributeChangedDelay = 1;
 
 ClassMap.register('Observable', Observable);
 
-module.exports = Observable;
+export default Observable;

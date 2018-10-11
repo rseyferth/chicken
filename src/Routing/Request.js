@@ -82,4 +82,4 @@ Request.cleanUri = (uri) => {
 };
 
 
-module.exports = Request;
+export default Request;

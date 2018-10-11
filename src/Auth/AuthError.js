@@ -39,4 +39,4 @@ class AuthError {
 	}
 
 }
-module.exports = AuthError;
+export default AuthError;

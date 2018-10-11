@@ -50,4 +50,4 @@ Service.get = (name) => {
 
 };
 
-module.exports = Service;
+export default Service;

@@ -22,4 +22,4 @@ class HelperProxy
 
 }
 
-module.exports = HelperProxy;
+export default HelperProxy;

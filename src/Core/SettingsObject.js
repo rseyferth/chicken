@@ -70,4 +70,4 @@ class SettingsObject extends Observable
 }
 
 
-module.exports = Chainable(SettingsObject);
+export default Chainable(SettingsObject);

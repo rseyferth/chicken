@@ -549,4 +549,4 @@ Route.ParameterType = {
 
 
 
-module.exports = Route;
+export default Route;

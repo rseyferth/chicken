@@ -1,5 +1,7 @@
 import _ from 'underscore';
-import HTMLBars from 'htmlbars-standalone';
+import DOMHelper from 'htmlbars/dist/cjs/dom-helper';
+import Hooks from 'htmlbars/dist/cjs/htmlbars-runtime/hooks';
+import render from 'htmlbars/dist/cjs/htmlbars-runtime/render';
 
 import Observable from '../Core/Observable';
 import ObservableArray from '../Core/ObservableArray';
@@ -29,7 +31,7 @@ class Renderer
 		 * @property dom
 		 * @type {HTMLBars.DOMHelper}
 		 */
-		this.dom = new HTMLBars.DOMHelper();
+		this.dom = new DOMHelper();
 
 		/**
 		 * Hooks are the way to configure the way HTMLBars renders your
@@ -170,7 +172,7 @@ class Renderer
 				});
 									
 				// Original behavior
-				return HTMLBars.Runtime.Hooks.Default.subexpr(renderer, scope, helperName, params, hash);
+				return Hooks.subexpr(renderer, scope, helperName, params, hash);
 
 			},
 
@@ -332,7 +334,7 @@ class Renderer
 						element.setAttribute(key, renderer.hooks.getValue(value));
 					});
 					
-					var fragment = HTMLBars.Runtime.render(options.default, renderer, scope, {}).fragment;
+					var fragment = render(options.default, renderer, scope, {}).fragment;
 					element.appendChild(fragment);
 					morph.setNode(element);
 					return;
@@ -519,9 +521,9 @@ class Renderer
 
 
 
-			}, HTMLBars.Runtime.Hooks.Default.keywords)
+			}, Hooks.keywords)
 
-		}, HTMLBars.Runtime.Hooks.Default);
+		}, Hooks);
 
 
 		/**
@@ -553,4 +555,4 @@ class Renderer
 }
 
 
-module.exports = Renderer;
+export default Renderer;

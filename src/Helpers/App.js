@@ -1,5 +1,5 @@
 import ClassMap from '../Helpers/ClassMap';
 
-module.exports = function() {
+export default function() {
 	return ClassMap.get('Application').getInstance();
 };

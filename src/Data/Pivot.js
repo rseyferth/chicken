@@ -89,4 +89,4 @@ Pivot.createFor = (model, pivotAttributes) => {
 };
 
 
-module.exports = Pivot;
+export default Pivot;

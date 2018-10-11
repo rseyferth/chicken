@@ -203,4 +203,4 @@ class Obj {
 
 }
 
-module.exports = Obj;
+export default Obj;

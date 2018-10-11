@@ -515,4 +515,4 @@ ClassMap.register('Application', Application);
 
 
 
-module.exports = Application;
+export default Application;

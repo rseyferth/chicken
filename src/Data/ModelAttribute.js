@@ -251,4 +251,4 @@ ModelAttribute.Translations = 'Translations';
 ModelAttribute.Model = 'Model';
 
 
-module.exports = ModelAttribute;
+export default ModelAttribute;

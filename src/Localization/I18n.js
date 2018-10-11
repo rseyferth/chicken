@@ -307,4 +307,4 @@ class I18n extends Obj {
 I18n.Cache = {};
 
 
-module.exports = I18n;
+export default I18n;

@@ -1353,4 +1353,4 @@ Model.UpdateDirtyDelay = 100;
 
 ClassMap.register('Model', Model);
 
-module.exports = Model;
+export default Model;

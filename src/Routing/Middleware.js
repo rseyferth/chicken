@@ -26,4 +26,4 @@ Middleware.register = (middleware, name = null) => {
 
 };
 
-module.exports = Middleware;
+export default Middleware;

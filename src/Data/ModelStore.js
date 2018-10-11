@@ -33,4 +33,4 @@ class ModelStore extends Obj
 
 
 }
-module.exports = ModelStore;
+export default ModelStore;

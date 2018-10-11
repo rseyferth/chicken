@@ -322,4 +322,4 @@ Relationship.HasManyMorph = 'HasManyMorph';
 
 
 
-module.exports = Relationship;
+export default Relationship;

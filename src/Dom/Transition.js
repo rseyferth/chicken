@@ -271,4 +271,4 @@ Transition.fade = {
 
 
 
-module.exports = Transition;
+export default Transition;

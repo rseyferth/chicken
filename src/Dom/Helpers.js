@@ -772,4 +772,4 @@ class Helpers
 Helpers.User = {};
 
 
-module.exports = Helpers;
+export default Helpers;

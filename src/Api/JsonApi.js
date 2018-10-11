@@ -483,4 +483,4 @@ class JsonApi extends Api
 
 
 }
-module.exports = JsonApi;
+export default JsonApi;

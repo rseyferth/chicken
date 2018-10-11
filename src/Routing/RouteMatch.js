@@ -227,4 +227,4 @@ class RouteMatch
 }
 
 
-module.exports = RouteMatch;
+export default RouteMatch;

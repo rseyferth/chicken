@@ -36,4 +36,4 @@ class PivotCollection extends Collection
 
 }
 
-module.exports = PivotCollection;
+export default PivotCollection;

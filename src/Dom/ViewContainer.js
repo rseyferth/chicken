@@ -238,4 +238,4 @@ ViewContainer.getViewName = ($element) => {
 ViewContainer.any = new Obj();
 
 
-module.exports = ViewContainer;
+export default ViewContainer;

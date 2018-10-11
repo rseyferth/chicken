@@ -60,7 +60,7 @@ class ComponentDefinition
 
 }
 
-module.exports = ComponentDefinition;
+export default ComponentDefinition;
 
 
 

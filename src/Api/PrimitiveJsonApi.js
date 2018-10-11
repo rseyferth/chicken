@@ -299,4 +299,4 @@ class PrimitiveJsonApi extends Api
 
 
 }
-module.exports = PrimitiveJsonApi;
+export default PrimitiveJsonApi;

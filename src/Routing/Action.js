@@ -522,4 +522,4 @@ Action.getControllerActionRegExp = () => {
 };
 
 
-module.exports = Action;
+export default Action;

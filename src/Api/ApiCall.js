@@ -437,4 +437,4 @@ ApiCall.hook = (type, callback) => {
 	ApiCall.hooks[type].push(callback);
 };
 
-module.exports = ApiCall;
+export default ApiCall;

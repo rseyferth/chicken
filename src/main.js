@@ -20,6 +20,8 @@ if (_ === undefined || typeof _ !== 'function') throw new Error('Error while ini
 if (XRegExp === undefined || typeof XRegExp !== 'function') throw new Error('Error while initializing Chicken: could not find global XRegExp. Was XRegExp not loaded?');
 if (s === undefined || typeof s !== 'function') throw new Error('Error while initializing Chicken: could not find global Underscore.string (s). Was Underscore.string not loaded?');
 
+_.mixin(s.exports());
+
 /////////////////////
 // Chicken Classes //
 /////////////////////
@@ -492,4 +494,4 @@ var Chicken = {
 };
 window.Chicken = Chicken;
 
-module.exports = Chicken;
+export default Chicken;

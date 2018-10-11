@@ -448,4 +448,4 @@ JWTAuth.Events = {
 };
 
 
-module.exports = JWTAuth;
+export default JWTAuth;

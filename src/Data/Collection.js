@@ -429,4 +429,4 @@ Collection.combine = (...collections) => {
 
 };
 
-module.exports = Collection;
+export default Collection;

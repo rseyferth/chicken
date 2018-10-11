@@ -544,4 +544,4 @@ class Router extends Obj
 }
 
 
-module.exports = Router;
+export default Router;

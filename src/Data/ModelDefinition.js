@@ -321,4 +321,4 @@ class ModelDefinition
 
 }
 
-module.exports = ModelDefinition;
+export default ModelDefinition;
