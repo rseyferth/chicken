@@ -287,7 +287,7 @@ class Application extends Observable {
 	start() {
 
 		// Enable momentJS
-		moment.locale(this.settings.get('language'));
+		if (this.settings.get('language')) moment.locale(this.settings.get('language'));
 		
 		// Add i18n to promises
 		this.loadPromises.unshift(this.i18n.load());

@@ -16,6 +16,12 @@ export default {
     ],
     external: ['jquery', 'underscore', 'xregexp', 'moment'],
     output: {
+        intro: `
+            moment = window.moment;
+            $ = window.$;
+            _ = window._;
+            XRegExp = window.XRegExp;
+        `,
         file: 'build/chicken.js',
         name: 'Chicken',
         sourcemap: true,

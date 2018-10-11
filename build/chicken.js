@@ -4,6 +4,12 @@
   (global.Chicken = factory(global._,global.$,global.moment,global.XRegExp));
 }(this, (function (_,$,moment,XRegExp) { 'use strict';
 
+  moment = window.moment;
+              $ = window.$;
+              _ = window._;
+              XRegExp = window.XRegExp;
+          
+
   _ = _ && _.hasOwnProperty('default') ? _['default'] : _;
   $ = $ && $.hasOwnProperty('default') ? $['default'] : $;
   moment = moment && moment.hasOwnProperty('default') ? moment['default'] : moment;
@@ -24725,7 +24731,7 @@
         var _this4 = this;
 
         // Enable momentJS
-        moment.locale(this.settings.get('language')); // Add i18n to promises
+        if (this.settings.get('language')) moment.locale(this.settings.get('language')); // Add i18n to promises
 
         this.loadPromises.unshift(this.i18n.load()); // Do auth initialization
 
