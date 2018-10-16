@@ -90,6 +90,11 @@ class ModelAttribute {
 
 			// Date or date time
 			case ModelAttribute.Date:
+				if (typeof value === 'string' && /^\d{4}-\d{2}-\d{2}/.test(value)) {
+					return moment(value.substr(0, 10));	
+				}
+				// Fall through to date-time
+
 			case ModelAttribute.DateTime:
 				return value && !moment.isMoment(value) ? moment(value) : value;
 
