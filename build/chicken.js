@@ -23654,6 +23654,12 @@
 
       this.flash = location.state ? location.state.flash : {};
       /**
+       * @property hash
+       * @type {string}
+       */
+
+      this.hash = location.hash || '';
+      /**
        * @property transition
        * @type {string|null}
        */
@@ -24019,7 +24025,7 @@
           Promise.all(actionPromises).then(function ()
           /*...results*/
           {
-            //@TODO What to do?
+            // Complete
             _this2.trigger('complete', [routeMatch]);
           }); // Reset navigation disabled
 

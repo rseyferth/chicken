@@ -101,7 +101,6 @@ class ComputedProperty
 		this.observable.observe(this.dependencies, () => {
 			this.observable._scheduleAttributeChanged(this.name);
 		});
-
 		return this;
 
 	}

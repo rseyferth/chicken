@@ -320,8 +320,8 @@ class Router extends Obj
 
 			// Listen to the result
 			Promise.all(actionPromises).then((/*...results*/) => {
-				
-				//@TODO What to do?
+			
+				// Complete
 				this.trigger('complete', [routeMatch]);
 
 			});
