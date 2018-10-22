@@ -56,8 +56,14 @@ class Request
 		 * @type {string}
 		 */
 		this.hash = location.hash || '';
-		
+		if (!this.hash && /#/.test(this.uri)) {
+			
+			// Split it of
+			let [uri, hash] = this.uri.split(/#/);
+			this.uri = uri;
+			this.hash = hash;			
 
+		}
 
 		/**
 		 * @property transition

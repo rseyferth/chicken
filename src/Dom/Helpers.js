@@ -157,6 +157,11 @@ class Helpers
 			uri = `${uri}?${query}`;
 
 		}
+
+		// Hash?
+		if (attributeHash.hash) {
+			uri = `${uri}#${attributeHash.hash}`;
+		}
 		
 		// Make the link
 		return this.link([uri], attributeHash, block);
