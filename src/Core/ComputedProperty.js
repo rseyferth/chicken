@@ -10,10 +10,11 @@ class ComputedProperty
 	 * @class Core.ComputedProperty
 	 * 
 	 * @constructor
-	 * @param  {Array}   			dependencies 
-	 * @param  {Function} 			callback     	 
+	 * @param  {Array} dependencies Array of property names to watch and pass as arguments to the callback
+	 * @param  {Function} callback Callback function that returns the value of the computed property
+	 * @param  {number}	debounce (default = 0) Number of milliseconds to debounce calls
 	 */
-	constructor(dependencies, callback) {
+	constructor(dependencies, callback, debounce = 0) {
 
 		/**
 		 * The Observable instance that this computed attribute is
@@ -50,7 +51,18 @@ class ComputedProperty
 		 */
 		this.callback = callback;
 
+		/**
+		 * @property debounce
+		 * @type {number}
+		 */
+		this.debounce = debounce;
+
+
+		this.dependenciesChanged = false;
+		this.cachedValue = undefined;
+
 	}
+
 
 	/**
 	 * Get the current computed value 
@@ -60,14 +72,21 @@ class ComputedProperty
 	 */
 	getValue() {
 
-		// Get dependency values
-		var args = [];
-		_.each(this.dependencies, (dep) => {
-			args.push(this.observable.get(dep));
-		});	
+		// Dependency changed?
+		if (this.dependenciesChanged || this.cachedValue === undefined) {
 
-		// Do the callback
-		return this.callback.apply(this.observable, args);
+			// Get dependency values
+			var args = [];
+			_.each(this.dependencies, (dep) => {
+				args.push(this.observable.get(dep));
+			});	
+
+			// Cache the value
+			this.dependenciesChanged = false;
+			this.cachedValue = this.callback.apply(this.observable, args);
+
+		}
+		return this.cachedValue;
 
 	}
 
@@ -99,10 +118,24 @@ class ComputedProperty
 
 		// Watch the properties
 		this.observable.observe(this.dependencies, () => {
-			this.observable._scheduleAttributeChanged(this.name);
+			this.debounce > 0 ? this.lazyTriggerChange() : this.triggerChange();
 		});
 		return this;
 
+	}
+
+	lazyTriggerChange() {
+		if (!this._lazyTriggerChange) this._lazyTriggerChange = _.debounce(() => {
+			this.triggerChange();
+		}, this.debounce);
+		console.log(this._lazyTriggerChange);
+		this._lazyTriggerChange();		
+	}
+
+	triggerChange() {
+		
+		this.dependenciesChanged = true;
+		this.observable._scheduleAttributeChanged(this.name);
 	}
 
 

@@ -405,9 +405,9 @@ var Chicken = {
 	},
 
 	
-	computed: (dependencies, callback) => {
-
-		return new ComputedProperty(dependencies, callback);
+	computed: (dependencies, callback, debounce) => {
+		
+		return new ComputedProperty(dependencies, callback, debounce);
 
 	},
 

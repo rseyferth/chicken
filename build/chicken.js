@@ -4981,10 +4981,13 @@
      * @class Core.ComputedProperty
      * 
      * @constructor
-     * @param  {Array}   			dependencies 
-     * @param  {Function} 			callback     	 
+     * @param  {Array} dependencies Array of property names to watch and pass as arguments to the callback
+     * @param  {Function} callback Callback function that returns the value of the computed property
+     * @param  {number}	debounce (default = 0) Number of milliseconds to debounce calls
      */
     function ComputedProperty(dependencies, callback) {
+      var debounce = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
+
       _classCallCheck(this, ComputedProperty);
 
       /**
@@ -5021,6 +5024,14 @@
        */
 
       this.callback = callback;
+      /**
+       * @property debounce
+       * @type {number}
+       */
+
+      this.debounce = debounce;
+      this.dependenciesChanged = false;
+      this.cachedValue = undefined;
     }
     /**
      * Get the current computed value 
@@ -5035,15 +5046,21 @@
       value: function getValue() {
         var _this = this;
 
-        // Get dependency values
-        var args = [];
+        // Dependency changed?
+        if (this.dependenciesChanged || this.cachedValue === undefined) {
+          // Get dependency values
+          var args = [];
 
-        _.each(this.dependencies, function (dep) {
-          args.push(_this.observable.get(dep));
-        }); // Do the callback
+          _.each(this.dependencies, function (dep) {
+            args.push(_this.observable.get(dep));
+          }); // Cache the value
 
 
-        return this.callback.apply(this.observable, args);
+          this.dependenciesChanged = false;
+          this.cachedValue = this.callback.apply(this.observable, args);
+        }
+
+        return this.cachedValue;
       }
       /**
        * Alias of `getValue`
@@ -5077,9 +5094,28 @@
         this.observable = observable; // Watch the properties
 
         this.observable.observe(this.dependencies, function () {
-          _this2.observable._scheduleAttributeChanged(_this2.name);
+          _this2.debounce > 0 ? _this2.lazyTriggerChange() : _this2.triggerChange();
         });
         return this;
+      }
+    }, {
+      key: "lazyTriggerChange",
+      value: function lazyTriggerChange() {
+        var _this3 = this;
+
+        if (!this._lazyTriggerChange) this._lazyTriggerChange = _.debounce(function () {
+          _this3.triggerChange();
+        }, this.debounce);
+        console.log(this._lazyTriggerChange);
+
+        this._lazyTriggerChange();
+      }
+    }, {
+      key: "triggerChange",
+      value: function triggerChange() {
+        this.dependenciesChanged = true;
+
+        this.observable._scheduleAttributeChanged(this.name);
       }
     }]);
 
@@ -27998,8 +28034,8 @@
       var uri = route.makeUrl(attributes);
       return new Redirect(uri);
     },
-    computed: function computed(dependencies, callback) {
-      return new ComputedProperty(dependencies, callback);
+    computed: function computed(dependencies, callback, debounce) {
+      return new ComputedProperty(dependencies, callback, debounce);
     },
     observable: function observable() {
       var data = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : null;
