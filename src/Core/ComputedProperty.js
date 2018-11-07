@@ -128,7 +128,6 @@ class ComputedProperty
 		if (!this._lazyTriggerChange) this._lazyTriggerChange = _.debounce(() => {
 			this.triggerChange();
 		}, this.debounce);
-		console.log(this._lazyTriggerChange);
 		this._lazyTriggerChange();		
 	}
 
