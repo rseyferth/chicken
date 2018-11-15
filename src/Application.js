@@ -367,6 +367,18 @@ class Application extends Observable {
 
 	}
 
+	openNamed(name, attributes = {}) {
+
+		// Find route
+		let route = this.router.namedRoutes.get(name);
+		if (!route) throw new Error('There is no route defined with the name "' + name + '"');
+
+		// Make uri
+		let uri = route.makeUrl(attributes);
+		window.open(uri);
+
+	}
+
 	transitionToNamed(name, attributes = {}, transition) {
 		return this.gotoNamed(name, attributes, null, {}, transition);
 	}

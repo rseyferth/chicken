@@ -5106,7 +5106,6 @@
         if (!this._lazyTriggerChange) this._lazyTriggerChange = _.debounce(function () {
           _this3.triggerChange();
         }, this.debounce);
-        console.log(this._lazyTriggerChange);
 
         this._lazyTriggerChange();
       }
@@ -24855,6 +24854,17 @@
 
         var uri = route.makeUrl(attributes);
         return this.goto(uri, query, flash, false, transition);
+      }
+    }, {
+      key: "openNamed",
+      value: function openNamed(name) {
+        var attributes = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : {};
+        // Find route
+        var route = this.router.namedRoutes.get(name);
+        if (!route) throw new Error('There is no route defined with the name "' + name + '"'); // Make uri
+
+        var uri = route.makeUrl(attributes);
+        window.open(uri);
       }
     }, {
       key: "transitionToNamed",
