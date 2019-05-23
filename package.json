@@ -1,6 +1,6 @@
 {
   "name": "chickenjs",
-  "version": "1.0.11",
+  "version": "1.0.12",
   "description": "Chicken Javascript Webapp Framework",
   "main": "build/chicken.js",
   "repository": "https://github.com/rseyferth/chicken.git",
