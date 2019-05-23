@@ -21201,7 +21201,7 @@
     /**
      * @class Dom.Helpers
      *
-     * @constructor 
+     * @constructor
      * @param  {Dom.Renderer} renderer
      */
     function Helpers(renderer) {
@@ -21404,7 +21404,7 @@
         }
       }
       /**
-       * @method if	 
+       * @method if
        */
 
     }, {
@@ -23674,7 +23674,7 @@
       } // Add the / back again
 
 
-      uri = '/' + uri;
+      if (!/^\//.test(uri)) uri = '/' + uri;
       /**
        * @property uri
        * @type {string}
@@ -24922,8 +24922,9 @@
         } // Change the history state
 
 
+        var url = "".concat(this.settings.get('baseUrl')).concat(uri).replace(/\/{2,}/, '/');
         this.history.push({
-          pathname: uri,
+          pathname: url,
           search: query,
           state: {
             flash: flash,

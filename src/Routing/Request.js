@@ -28,9 +28,8 @@ class Request
 		if (uri.length >= baseUrl.length && uri.substr(0, baseUrl.length)) {
 			uri = uri.substr(baseUrl.length);
 		}
-
 		// Add the / back again
-		uri = '/' + uri;
+		if (!/^\//.test(uri)) uri = '/' + uri;
 
 		/**
 		 * @property uri

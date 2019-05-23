@@ -433,8 +433,9 @@ class Application extends Observable {
 		}
 		
 		// Change the history state
+		const url = `${this.settings.get('baseUrl')}${uri}`.replace(/\/{2,}/, '/');
 		this.history.push({
-			pathname: uri,
+			pathname: url,
 			search: query,
 			state: {
 				flash: flash,

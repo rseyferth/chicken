@@ -22,7 +22,7 @@ class Helpers
 	/**
 	 * @class Dom.Helpers
 	 *
-	 * @constructor 
+	 * @constructor
 	 * @param  {Dom.Renderer} renderer
 	 */
 	constructor(renderer) {
@@ -35,11 +35,11 @@ class Helpers
 	/////////////
 
 	action(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-		
+
 		// There should be an ActionBinding for this element
 		let element = blocks.element;
 		if (element && element.getAttribute('data-chicken-action')) {
-			
+
 			// Get the action
 			var binding = ActionBinding.get(element.getAttribute('data-chicken-action'));
 			binding.apply();
@@ -60,7 +60,7 @@ class Helpers
 
 		// Check the event
 		let eventName = attributeHash.event ? this._getValue(attributeHash.event) : 'click';
-		
+
 		// Add listener
 		if (blocks.element) {
 
@@ -86,8 +86,8 @@ class Helpers
 				App().goto(uri, null, {}, false, transition);
 
 			});
-			
-			
+
+
 		}
 	}
 
@@ -139,7 +139,7 @@ class Helpers
 			let query = attributeHash.query;
 			if (typeof query === 'string') {
 				try {
-					
+
 					// Parse JSON
 					query = JSON.parse(query);
 
@@ -162,10 +162,10 @@ class Helpers
 		if (attributeHash.hash) {
 			uri = `${uri}#${attributeHash.hash}`;
 		}
-		
+
 		// Make the link
 		return this.link([uri], attributeHash, block);
-		
+
 
 	}
 
@@ -203,7 +203,7 @@ class Helpers
 
 		// Check uid for this each-block
 		var eachUid = Utils.uidFor(morph);
-		
+
 		// Get the value
 		let list = this._getValue(params[0]);
 		Utils.each(list, (item, i) => {
@@ -211,12 +211,12 @@ class Helpers
 			// Get a unique id for the item.
 			let uid = Utils.uidFor(item);
 			let itemKey = 'each:' + eachUid + ':' + i + ':' + uid;
-			
+
 			// Render item
 			blocks.template.yieldItem(itemKey, [item, i]);
 
 		});
-		
+
 	}
 
 	/**
@@ -226,7 +226,7 @@ class Helpers
 
 		// Check uid for this each-block
 		var eachUid = Utils.uidFor(morph);
-		
+
 		// Get the value
 		let list = this._getValue(params[0]);
 		Utils.reverseEach(list, (item, i) => {
@@ -234,12 +234,12 @@ class Helpers
 			// Get a unique id for the item.
 			let uid = Utils.uidFor(item);
 			let itemKey = 'each:' + eachUid + ':' + i + ':' + uid;
-			
+
 			// Render item
 			blocks.template.yieldItem(itemKey, [item, i]);
 
 		});
-		
+
 	}
 
 	repeat(params, attributeHash, blocks, morph) {
@@ -257,18 +257,18 @@ class Helpers
 	}
 
 	/**
-	 * @method if	 
+	 * @method if
 	 */
 	if(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
 
 		// Get the value
 		let value = this._getValue(params[0]);
-		return this._ifUnless(params, blocks, Utils.isTruthlike(value));		
+		return this._ifUnless(params, blocks, Utils.isTruthlike(value));
 
 	}
 
 	ifOne(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-		
+
 		let trueConditions = _.filter(this._getValue(params), (value) => {
 			return !!this._getValue(value);
 		});
@@ -277,7 +277,7 @@ class Helpers
 	}
 
 	ifAll(params, attributeHash, blocks /*, morph, renderer, scope, visitor*/) {
-		
+
 		let trueConditions = _.filter(this._getValue(params), (value) => {
 			return !!this._getValue(value);
 		});
@@ -309,7 +309,7 @@ class Helpers
 			} else {
 
 				return this._getValue(params[1]);
-				
+
 			}
 
 		} else {
@@ -317,7 +317,7 @@ class Helpers
 			// Render the inverse yield
 			if (blocks.inverse && blocks.inverse.yield) {
 				blocks.inverse.yield();
-			
+
 			// Or the inverse param
 			} else {
 				return this._getValue(params[2]);
@@ -358,7 +358,7 @@ class Helpers
 
 	}
 
-	
+
 
 
 	////////////
@@ -381,7 +381,7 @@ class Helpers
 		_.each(attributeHash, (value, key) => {
 			obj[key] = this._getValue(value);
 		});
-		
+
 		return obj;
 
 	}
@@ -531,7 +531,7 @@ class Helpers
 		for (let q = 1; q < params.length; q++) {
 			attributes.push(this._getValue(params[q]));
 		}
-	
+
 		// Any of those dirty?
 		return !!_.find(attributes, (attr) => {
 			return model.isDirty(attr);
@@ -556,7 +556,7 @@ class Helpers
 	/////////////
 
 	isNumeric(params) {
-		
+
 		let string = this._getValue(params[0]);
 		return /^-?\d*(\.\d+)?$/.test(string);
 
@@ -566,7 +566,7 @@ class Helpers
 
 		let string = this._getValue(params[0]);
 		let capitalFirstLetter = !!this._getValue(params[1]);
-		
+
 		return inflection.camelize(string, !capitalFirstLetter);
 
 	}
@@ -587,16 +587,16 @@ class Helpers
 
 		// First is method, second is str
 		let args = this._getValues(params);
-		let method = args.shift();		
+		let method = args.shift();
 		return _[method].apply(this, args);
 
 	}
-	
+
 
 	////////////
 	// Arrays //
 	////////////
-	
+
 	count(params) {
 
 		let value = this._getValue(params[0]);
@@ -629,7 +629,7 @@ class Helpers
 	momentFormat(params) {
 		let value = this._getValue(params[0]);
 		let format = this._getValue(params[1]);
-		if (moment.isMoment(value)){ 
+		if (moment.isMoment(value)){
 			return value.format(format);
 		} else {
 			return value;
@@ -642,10 +642,10 @@ class Helpers
 
 		if (moment.isMoment(moment1) && moment.isMoment(moment2)) {
 			return moment1.isAfter(moment2);
-		} 
-		
+		}
+
 		return false;
-		
+
 	}
 
 
@@ -661,16 +661,16 @@ class Helpers
 
 	add(params) {
 		let values = this._getValues(params);
-		return values.reduce((total, item) => { 
+		return values.reduce((total, item) => {
 			return item + total;
 		}, 0);
 	}
 	subtract(params) {
 		let values = this._getValues(params);
 		let startValue = values.shift();
-		return values.reduce((total, item) => { 
+		return values.reduce((total, item) => {
 			return total - item;
-		}, startValue);	
+		}, startValue);
 	}
 
 	numberFormat(params) {
@@ -689,12 +689,12 @@ class Helpers
 			return Math.round(value);
 		}
 	}
-	
+
 	max(params) {
 		let values = this._getValues(params);
 		return _.max(values);
 	}
-	
+
 	min(params) {
 		let values = this._getValues(params);
 		return _.min(values);
@@ -769,7 +769,7 @@ class Helpers
 		return result;
 	}
 
-	
+
 
 }
 

@@ -209,7 +209,7 @@ class Route extends Obj
 
 		// Am I an abstract route?
 		if (this.isAbstract()) return;
-
+			
 		// Does it match?
 		let match = XRegExp.exec(request.uri, this.getRegExp());
 

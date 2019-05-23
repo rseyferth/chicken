@@ -196,7 +196,7 @@ var Chicken = {
 
 			// Create app
 			var app = new Application(...args);
-
+			
 			// Store globally
 			Chicken.app = app;
 
